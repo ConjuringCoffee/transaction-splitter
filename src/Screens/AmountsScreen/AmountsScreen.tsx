@@ -9,13 +9,13 @@ import useLocalization from '../../Hooks/useLocalization';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { CategoryCombo, readCategoryCombos } from '../../Repository/CategoryComboRepository';
 import { nameSaveScreen } from '../../Helper/Navigation/ScreenNames';
-import { SplittingScreenStackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { AmountEntry, buildSaveTransactions } from '../../YnabApi/BuildSaveTransactions';
 import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
 import AmountCard from './AmountCard';
 
-type MyNavigationProp = StackNavigationProp<SplittingScreenStackParameterList, 'Amounts'>;
-type MyRouteProp = RouteProp<SplittingScreenStackParameterList, 'Amounts'>;
+type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
+type MyRouteProp = RouteProp<StackParameterList, 'Amounts'>;
 
 type Props = {
     navigation: MyNavigationProp;

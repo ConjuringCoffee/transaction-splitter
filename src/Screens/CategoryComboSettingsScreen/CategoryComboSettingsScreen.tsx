@@ -5,14 +5,14 @@ import React, { useEffect, useState } from 'react';
 import CustomScrollView from '../../Component/CustomScrollView';
 import LoadingComponent from '../../Component/LoadingComponent';
 import { CategoryCombo, CategoryInCategoryCombo, readCategoryCombos, saveCategoryCombos } from '../../Repository/CategoryComboRepository';
-import { CategoryComboSettingsScreenParameterList } from '../../Helper/Navigation/ScreenParameters';
 import useProfiles from '../../Hooks/useProfiles';
 import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
 import CategoryComboCard from './CategoryComboCard';
+import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 
 type ScreenName = 'Category Combinations Settings';
-type MyNavigationProp = StackNavigationProp<CategoryComboSettingsScreenParameterList, ScreenName>;
-type MyRouteProp = RouteProp<CategoryComboSettingsScreenParameterList, ScreenName>;
+type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
+type MyRouteProp = RouteProp<StackParameterList, ScreenName>;
 
 type Props = {
     navigation: MyNavigationProp;

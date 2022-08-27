@@ -3,7 +3,7 @@ import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import {
     nameSplittingScreen, nameAmountsScreen, nameSaveScreen, nameCategoryScreen,
     nameAccessTokenScreen, nameCalculatorScreen, nameCalculationHistoryScreen, nameProfileSettingsScreen,
-    nameCategoryComboSettingsScreen, nameSplittingScreenStack, nameCategoryComboSettingsScreenStack, nameCategoryComboScreen,
+    nameCategoryComboSettingsScreen, nameCategoryComboScreen, nameSettingsOverviewScreen,
 } from './ScreenNames';
 import * as ynab from 'ynab';
 
@@ -27,8 +27,9 @@ interface DebtorData {
     account: Account
 }
 
-type SplittingScreenStackParameterList = {
+type StackParameterList = {
     [nameSplittingScreen]: undefined;
+    [nameSettingsOverviewScreen]: undefined;
     [nameAmountsScreen]: {
         basicData: BasicData
     };
@@ -57,21 +58,9 @@ type SplittingScreenStackParameterList = {
         previousCalculations: Array<string>,
         onSelectCalculation: (calculation: string) => void
     }
-}
-
-type CategoryComboSettingsScreenParameterList = {
-    [nameCategoryComboSettingsScreen]: undefined;
-    [nameCategoryScreen]: {
-        categories: Array<Category>
-        onSelect: (categoryId?: string) => void
-    };
-}
-
-type DrawerParameterList = {
-    [nameSplittingScreenStack]: undefined;
     [nameAccessTokenScreen]: undefined;
     [nameProfileSettingsScreen]: undefined;
-    [nameCategoryComboSettingsScreenStack]: undefined;
+    [nameCategoryComboSettingsScreen]: undefined;
 }
 
-export type { DrawerParameterList, SplittingScreenStackParameterList, BasicData, CategoryComboSettingsScreenParameterList };
+export type { StackParameterList, BasicData };

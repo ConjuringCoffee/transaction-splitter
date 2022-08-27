@@ -8,14 +8,14 @@ import { Account, Budget } from "../../YnabApi/YnabApiWrapper";
 import { Button, Card, Layout, Radio, RadioGroup } from "@ui-kitten/components";
 import PayerAccountSelectionCard from "./PayerAccountSelectionCard";
 import GeneralSelectionCard from "./GeneralSelectionCard";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { SplittingScreenStackParameterList } from "../../Helper/Navigation/ScreenParameters";
+import { StackParameterList } from "../../Helper/Navigation/ScreenParameters";
 import { nameAmountsScreen } from "../../Helper/Navigation/ScreenNames";
 import BudgetsHelper from "../../Helper/BudgetsHelper";
 import BudgetHelper from "../../Helper/BudgetHelper";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface Props {
-    navigation: DrawerNavigationProp<SplittingScreenStackParameterList>,
+    navigation: StackNavigationProp<StackParameterList>,
     numberFormatSettings: NumberFormatSettings,
     profiles: [Profile, Profile],
     budgets: Budget[],

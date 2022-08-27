@@ -6,13 +6,13 @@ import { createTransaction } from '../../YnabApi/YnabApiWrapper';
 import { ScrollView } from 'react-native-gesture-handler';
 import TransactionCard from './TransactionCard';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SplittingScreenStackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { nameSplittingScreen } from '../../Helper/Navigation/ScreenNames';
 import useLocalization from '../../Hooks/useLocalization';
 import LoadingComponent from '../../Component/LoadingComponent';
 
-type MyNavigationProp = StackNavigationProp<SplittingScreenStackParameterList, 'Save'>;
-type MyRouteProp = RouteProp<SplittingScreenStackParameterList, 'Save'>;
+type MyNavigationProp = StackNavigationProp<StackParameterList, 'Save'>;
+type MyRouteProp = RouteProp<StackParameterList, 'Save'>;
 
 type Props = {
     navigation: MyNavigationProp;

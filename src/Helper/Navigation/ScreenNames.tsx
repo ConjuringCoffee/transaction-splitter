@@ -8,15 +8,12 @@ const nameCalculationHistoryScreen = 'Calculation History';
 const nameProfileSettingsScreen = 'Profile Settings';
 const nameCategoryComboSettingsScreen = 'Category Combinations Settings';
 const nameCategoryComboScreen = 'Category Combinations';
-
-const nameSplittingScreenStack = 'Splitting Stack';
-const nameCategoryComboSettingsScreenStack = 'Category Combo Settings Stack';
+const nameSettingsOverviewScreen = 'Settings Overview';
 
 export {
     nameSplittingScreen, nameSaveScreen, nameCategoryScreen, nameAmountsScreen,
     nameAccessTokenScreen, nameCalculatorScreen,
     nameCalculationHistoryScreen, nameProfileSettingsScreen,
     nameCategoryComboSettingsScreen,
-    nameSplittingScreenStack, nameCategoryComboSettingsScreenStack,
-    nameCategoryComboScreen,
+    nameCategoryComboScreen, nameSettingsOverviewScreen
 };

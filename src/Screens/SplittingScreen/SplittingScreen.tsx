@@ -1,17 +1,17 @@
 import React from 'react';
-import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RouteProp } from '@react-navigation/native';
 import LoadingComponent from '../../Component/LoadingComponent';
-import { SplittingScreenStackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 
 import useProfiles from '../../Hooks/useProfiles';
 import useBudgets from '../../Hooks/useBudgets';
 import useLocalization from '../../Hooks/useLocalization';
 import InitializedSplittingScreen from './InitializedSplittingScreen';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 interface Props {
-    navigation: DrawerNavigationProp<SplittingScreenStackParameterList>,
-    route: RouteProp<SplittingScreenStackParameterList, 'Split Transaction'>,
+    navigation: StackNavigationProp<StackParameterList>,
+    route: RouteProp<StackParameterList, 'Split Transaction'>,
 }
 
 const SplittingScreen = (props: Props) => {

@@ -4,15 +4,16 @@ import { Button } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import CustomScrollView from '../../Component/CustomScrollView';
 import LoadingComponent from '../../Component/LoadingComponent';
-import { DrawerParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { Profile, readProfiles, saveProfiles } from '../../Repository/ProfileRepository';
 import useBudgets from '../../Hooks/useBudgets';
 import { Budget } from '../../YnabApi/YnabApiWrapper';
 import ProfileCard from './ProfileCard';
 import BudgetHelper from '../../Helper/BudgetHelper';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 
-type MyNavigationProp = DrawerNavigationProp<DrawerParameterList, 'Profile Settings'>;
-type MyRouteProp = RouteProp<DrawerParameterList, 'Profile Settings'>;
+type MyNavigationProp = StackNavigationProp<StackParameterList, 'Profile Settings'>;
+type MyRouteProp = RouteProp<StackParameterList, 'Profile Settings'>;
 
 type Props = {
     navigation: MyNavigationProp;
