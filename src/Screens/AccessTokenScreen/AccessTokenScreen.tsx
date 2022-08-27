@@ -1,13 +1,13 @@
-import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { Button, Card, Input } from '@ui-kitten/components';
 import React, { useState, useEffect } from 'react';
 import LoadingComponent from '../../Component/LoadingComponent';
 import { getAccessTokenFromKeychain, saveAccessTokenToKeychain } from '../../Helper/AccessTokenHelper';
-import { DrawerParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 
-type MyNavigationProp = DrawerNavigationProp<DrawerParameterList, 'Access Token'>;
-type MyRouteProp = RouteProp<DrawerParameterList, 'Access Token'>;
+type MyNavigationProp = StackNavigationProp<StackParameterList, 'Access Token'>;
+type MyRouteProp = RouteProp<StackParameterList, 'Access Token'>;
 
 type Props = {
     navigation: MyNavigationProp;

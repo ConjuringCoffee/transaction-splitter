@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Icon, Layout, Text } from '@ui-kitten/components';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SplittingScreenStackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import CalculatorKeyboard from '../../Component/CalculatorKeyboard';
 import { ImageProps, StyleSheet } from 'react-native';
 import { calculateResult, Calculation } from '../../Helper/Calculation';
@@ -14,8 +14,8 @@ import LoadingComponent from '../../Component/LoadingComponent';
 type ScreenName = 'Calculator';
 
 type Props = {
-    navigation: StackNavigationProp<SplittingScreenStackParameterList, ScreenName>;
-    route: RouteProp<SplittingScreenStackParameterList, ScreenName>;
+    navigation: StackNavigationProp<StackParameterList, ScreenName>;
+    route: RouteProp<StackParameterList, ScreenName>;
 }
 
 const HistoryIcon = (props: Partial<ImageProps> | undefined) => (
