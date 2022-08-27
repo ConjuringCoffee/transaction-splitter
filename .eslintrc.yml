@@ -1,0 +1,40 @@
+env:
+  browser: true
+  es2021: true
+extends:
+  - plugin:react/recommended
+  - google
+parser: "@typescript-eslint/parser"
+parserOptions:
+  ecmaFeatures:
+    jsx: true
+  ecmaVersion: 13
+  sourceType: module
+plugins:
+  - react
+  - "@typescript-eslint"
+  - "react-hooks"
+rules:
+  max-len: off # Can't get it to work properly 
+    # - 1
+    # - code: 100
+    # - comments: 100
+    # - ignoreUrls: true
+  react/prop-types: off
+  require-jsdoc: off
+  indent: ["error", 4]
+  object-curly-spacing: 
+  - 2
+  - "always"
+  react-hooks/rules-of-hooks: 
+  - "error"
+  react-hooks/exhaustive-deps: 
+  - "warn"
+  operator-linebreak:
+  - 2
+  - "before"
+
+  # Base rule must be deactivated because it reports incorrect errors
+  # https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/no-invalid-this.md
+  no-invalid-this: "off"
+  @typescript-eslint/no-invalid-this: ["error"]
