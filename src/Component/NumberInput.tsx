@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Input } from '@ui-kitten/components';
 import { EvaSize, RenderProp } from '@ui-kitten/components/devsupport';
-import { ImageProps, StyleProp, TextProps, TextStyle } from 'react-native';
+import { ImageProps, StyleProp, TextStyle } from 'react-native';
 import { convertAmountFromText, convertAmountToText } from '../Helper/AmountHelper';
 import { NumberFormatSettings } from '../Hooks/useLocalization';
 
@@ -13,7 +13,7 @@ interface Props {
     size?: EvaSize,
     textStyle?: StyleProp<TextStyle>,
     style?: StyleProp<TextStyle>,
-    label?: React.ReactText | RenderProp<TextProps>,
+    label?: string,
     accessoryRight?: RenderProp<Partial<ImageProps>>,
 }
 

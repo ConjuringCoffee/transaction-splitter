@@ -1,5 +1,3 @@
-import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { RouteProp } from '@react-navigation/native';
 import { Button } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import CustomScrollView from '../../Component/CustomScrollView';
@@ -9,16 +7,6 @@ import useBudgets from '../../Hooks/useBudgets';
 import { Budget } from '../../YnabApi/YnabApiWrapper';
 import ProfileCard from './ProfileCard';
 import BudgetHelper from '../../Helper/BudgetHelper';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
-
-type MyNavigationProp = StackNavigationProp<StackParameterList, 'Profile Settings'>;
-type MyRouteProp = RouteProp<StackParameterList, 'Profile Settings'>;
-
-type Props = {
-    navigation: MyNavigationProp;
-    route: MyRouteProp;
-}
 
 interface EditableProfile {
     name: string,
@@ -27,7 +15,7 @@ interface EditableProfile {
     elegibleAccountIds: Array<string>,
 }
 
-const ProfileSettingsScreen = (props: Props) => {
+const ProfileSettingsScreen = () => {
     const [budgets] = useBudgets();
     const [editableProfiles, setEditableProfiles] = useState<EditableProfile[]>();
 
@@ -92,20 +80,18 @@ const ProfileSettingsScreen = (props: Props) => {
                         // Nothing new was selected
                         return;
                     }
-                    const budget = getBudget(budgetId);
+                    const newBudget = getBudget(budgetId);
 
                     setProfile({
                         ...profile,
-                        budgetId: budget.id,
-                        debtorAccountId: budget.accounts[0].id,
-                        elegibleAccountIds: budget.accounts.map((account) => account.id),
+                        budgetId: newBudget.id,
+                        debtorAccountId: newBudget.accounts[0].id,
+                        elegibleAccountIds: newBudget.accounts.map((account) => account.id),
                     });
                 }}
                 accounts={budgetHelper.getActiveOnBudgetAccounts()}
                 selectedDebtorAccountId={profile.debtorAccountId}
                 setDebtorAccountId={(accountId) => {
-                    const budget = getBudget(profile.budgetId);
-
                     const accounts = budget.accounts.find((a) => a.id === accountId);
 
                     if (!accounts) {
