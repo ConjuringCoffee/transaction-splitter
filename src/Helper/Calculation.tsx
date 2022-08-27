@@ -14,7 +14,7 @@ class Calculation {
         return this.calculationString;
     }
 
-    public addDigit (digit: number): void {
+    public addDigit(digit: number): void {
         this.calculationString = this.shouldZeroReplace()
             ? `${this.calculationString.slice(0, -1)}${digit}`
             : `${this.calculationString}${digit}`;
@@ -26,7 +26,7 @@ class Calculation {
         }
     }
 
-    public addOperator (operator: string): void {
+    public addOperator(operator: string): void {
 
         let newCalculationString = this.isLastCharacterAnOperator()
             ? this.calculationString.slice(0, -1)
@@ -40,21 +40,26 @@ class Calculation {
         if (this.calculationString === '') {
             return 0;
         }
-    
+
         if (this.isLastCharacterAnOperator()) {
             return new Calculation(this.calculationString.slice(0, -1), this.numberFormatSettings).getResult();
         } else {
+            // Make sure the eval below can't do anything except addition and subtraction
+            if (!this.calculationString.match(/^[\+\-\.0-9]+$/)) {
+                throw new Error('Calculation string contains illegal characters')
+            }
+
             const evalResult = eval(reverseNumberFormatSettingsFromLocale(this.calculationString, this.numberFormatSettings));
             // Avoid eval rounding errors, see answer by shawndumas:
             // https://stackoverflow.com/questions/1458633/how-to-deal-with-floating-point-number-precision-in-javascript
             return Math.round((evalResult) * 100) / 100;
         }
-    };
+    }
 
     private shouldZeroReplace(): boolean {
         const regex = /\d*\.*\d*$/g;
         const result = regex.exec(reverseNumberFormatSettingsFromLocale(this.calculationString, this.numberFormatSettings));
-    
+
         if (result === null || result.length === 0) {
             return false;
         } else if (result.length !== 1) {
@@ -62,19 +67,19 @@ class Calculation {
         } else {
             return result[0] === '0';
         }
-    };
+    }
 
     private canDecimalSeparatorBeAdded(): boolean {
         const regex = /(\d*\.\d*$)|([\+\-]$)/g;
         const result = regex.exec(reverseNumberFormatSettingsFromLocale(this.calculationString, this.numberFormatSettings));
-    
+
         return result === null || result.length === 0;
-    };
+    }
 
     private isLastCharacterAnOperator(): boolean {
         const lastCharacter = this.calculationString.slice(-1);
         return lastCharacter === '+' || lastCharacter === '-';
-    };
+    }
 }
 
 const calculateResult = (calculation: string, numberFormatSettings: NumberFormatSettings): number => {

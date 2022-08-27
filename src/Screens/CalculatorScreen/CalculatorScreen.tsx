@@ -5,7 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import CalculatorKeyboard from '../../Component/CalculatorKeyboard';
 import { ImageProps, StyleSheet } from 'react-native';
-import { calculateResult, Calculation } from '../../Helper/Calculation';
+import { Calculation } from '../../Helper/Calculation';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { nameCalculationHistoryScreen } from '../../Helper/Navigation/ScreenNames';
 import useLocalization from '../../Hooks/useLocalization';
