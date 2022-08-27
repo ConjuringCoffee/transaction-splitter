@@ -44,6 +44,11 @@ class Calculation {
         if (this.isLastCharacterAnOperator()) {
             return new Calculation(this.calculationString.slice(0, -1), this.numberFormatSettings).getResult();
         } else {
+            // Make sure the eval below can't do anything except addition and subtraction
+            if (!this.calculationString.match(/^[\+\-\.0-9]+$/)) {
+                throw new Error('Calculation string contains illegal characters')
+            }
+
             const evalResult = eval(reverseNumberFormatSettingsFromLocale(this.calculationString, this.numberFormatSettings));
             // Avoid eval rounding errors, see answer by shawndumas:
             // https://stackoverflow.com/questions/1458633/how-to-deal-with-floating-point-number-precision-in-javascript
