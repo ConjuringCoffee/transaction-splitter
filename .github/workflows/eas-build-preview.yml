@@ -1,6 +1,5 @@
 name: EAS Preview Build
-on: 
-workflow_dispatch:
+on: [workflow_dispatch]
 jobs:
   build:
     if: github.event.pull_request.draft == false
