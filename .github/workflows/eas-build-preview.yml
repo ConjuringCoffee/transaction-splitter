@@ -2,8 +2,8 @@ name: EAS Preview Build
 on:
   workflow_dispatch:
   push:
-    branches:
-      - '!main'
+    branches-ignore:
+      - main
 jobs:
   build:
     name: Install and build
