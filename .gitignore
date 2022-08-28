@@ -9,6 +9,7 @@ npm-debug.*
 *.orig.*
 web-build/
 coverage
+reports
 
 # macOS
 .DS_Store
