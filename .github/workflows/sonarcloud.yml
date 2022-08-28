@@ -20,6 +20,10 @@ jobs:
       - name: Install dependencies
         run: |
           npm ci
+      - name: Install jest globally
+        run:  npm install -g jest
+      - name: Run tests
+        run:  npm run test
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
