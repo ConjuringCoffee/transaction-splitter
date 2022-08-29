@@ -5,6 +5,7 @@ module.exports = {
     'reporters': ['default', ['jest-sonar', {
         outputDirectory: 'reports',
         outputName: 'test-report.xml',
-        reportedFilePath: 'absolute'
+        reportedFilePath: 'relative',
+        relativeRootDir: '<rootDir>/../'
     }]]
 };
