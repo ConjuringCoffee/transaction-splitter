@@ -7,7 +7,7 @@ const numberFormatSettings: NumberFormatSettings = {
 };
 
 const createCalculation = (calculationString: string): Calculation => {
-   return new Calculation(calculationString, numberFormatSettings);
+    return new Calculation(calculationString, numberFormatSettings);
 }
 
 test('Add single digit after operator', () => {
@@ -86,3 +86,7 @@ test('Rounding error of eval is avoided', () => {
     expect(calculation.getResult()).toBe(29.78);
 });
 
+test('See if CI notices this', () => {
+    const calculation = createCalculation('1+1');
+    expect(calculation.getResult()).toBe(3);
+});
