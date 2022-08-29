@@ -7,8 +7,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest",
-    "lint": "eslint .",
-    "build": "tsc --project tsconfig.build.json"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@eva-design/eva": "^2.1.1",
