@@ -85,8 +85,3 @@ test('Rounding error of eval is avoided', () => {
     const calculation = createCalculation('29,79-0,01');
     expect(calculation.getResult()).toBe(29.78);
 });
-
-test('See if CI notices this', () => {
-    const calculation = createCalculation('1+1');
-    expect(calculation.getResult()).toBe(3);
-});
