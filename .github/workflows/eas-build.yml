@@ -1,11 +1,13 @@
 name: EAS Build
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+  workflow_run:
+      workflows: [test]
+      branches: [main, dev/fix-build-job]
+      types:
+        - completed
 jobs:
   build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Install and build
     needs: test
     runs-on: ubuntu-latest
