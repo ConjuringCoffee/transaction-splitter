@@ -1,7 +1,7 @@
 name: EAS Build
 on:
   workflow_run:
-      workflows: [tests]
+      workflows: [Test]
       branches: [main, dev/fix-build-job]
       types:
         - completed
