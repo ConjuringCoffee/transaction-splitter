@@ -1,0 +1,58 @@
+name: CI
+on: push
+
+jobs:
+  test:
+    name: Execute tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+
+  sonarcloud:
+    name: Analyze on SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - name: Install dependencies
+        run: npm ci
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  
+  build:
+    name: Build on EAS
+    runs-on: ubuntu-latest
+    needs: [test, sonarcloud]
+    if: github.event_name != 'pull_request' && github.ref_name == 'main'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: npm
+      - name: Set up Expo and EAS
+        uses: expo/expo-github-action@v7
+        with:
+          expo-version: 5.x
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Build on EAS
+        run: eas build --platform android --non-interactive
