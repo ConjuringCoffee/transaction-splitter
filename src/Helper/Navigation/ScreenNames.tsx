@@ -1,19 +1,14 @@
-const nameSplittingScreen = 'Split Transaction';
-const nameSaveScreen = 'Save';
-const nameAmountsScreen = 'Amounts';
-const nameAccessTokenScreen = 'Access Token';
-const nameCategoryScreen = 'Category Selection';
-const nameCalculatorScreen = 'Calculator';
-const nameCalculationHistoryScreen = 'Calculation History';
-const nameProfileSettingsScreen = 'Profile Settings';
-const nameCategoryComboSettingsScreen = 'Category Combinations Settings';
-const nameCategoryComboScreen = 'Category Combinations';
-const nameSettingsOverviewScreen = 'Settings Overview';
-
-export {
-    nameSplittingScreen, nameSaveScreen, nameCategoryScreen, nameAmountsScreen,
-    nameAccessTokenScreen, nameCalculatorScreen,
-    nameCalculationHistoryScreen, nameProfileSettingsScreen,
-    nameCategoryComboSettingsScreen,
-    nameCategoryComboScreen, nameSettingsOverviewScreen
-};
+export class ScreenNames {
+    public static readonly splittingScreen = 'Split Transaction';
+    public static readonly saveScreen = 'Save';
+    public static readonly amountsScreen = 'Amounts';
+    public static readonly accessTokenScreen = 'Access Token';
+    public static readonly categoryScreen = 'Category Selection';
+    public static readonly calculatorScreen = 'Calculator';
+    public static readonly calculationHistoryScreen = 'Calculation History';
+    public static readonly profileSettingsScreen = 'Profile Settings';
+    public static readonly categoryComboSettingsScreen = 'Category Combinations Settings';
+    public static readonly editCategoryComboScreen = 'Edit Category Combo';
+    public static readonly categoryComboScreen = 'Category Combinations';
+    public static readonly settingsOverviewScreen = 'Settings Overview';
+}

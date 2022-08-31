@@ -3,11 +3,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Input, Layout, List, ListItem } from '@ui-kitten/components';
 import React, { useState } from 'react';
 import { CategoryCombo } from '../../Repository/CategoryComboRepository';
-import { SplittingScreenStackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 
 type ScreenName = 'Category Combinations';
-type MyNavigationProp = StackNavigationProp<SplittingScreenStackParameterList, ScreenName>;
-type MyRouteProp = RouteProp<SplittingScreenStackParameterList, ScreenName>;
+type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
+type MyRouteProp = RouteProp<StackParameterList, ScreenName>;
 
 type Props = {
     navigation: MyNavigationProp;

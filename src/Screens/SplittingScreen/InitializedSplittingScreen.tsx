@@ -9,7 +9,7 @@ import { Button, Card, Layout, Radio, RadioGroup } from "@ui-kitten/components";
 import PayerAccountSelectionCard from "./PayerAccountSelectionCard";
 import GeneralSelectionCard from "./GeneralSelectionCard";
 import { StackParameterList } from "../../Helper/Navigation/ScreenParameters";
-import { nameAmountsScreen } from "../../Helper/Navigation/ScreenNames";
+import { ScreenNames } from "../../Helper/Navigation/ScreenNames";
 import BudgetsHelper from "../../Helper/BudgetsHelper";
 import BudgetHelper from "../../Helper/BudgetHelper";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -68,7 +68,7 @@ const InitializedSplittingScreen = (props: Props) => {
         const debtorAccount = debtorBudgetHelper.getAccount(debtorProfile.debtorAccountId);
 
         props.navigation.navigate(
-            nameAmountsScreen,
+            ScreenNames.amountsScreen,
             {
                 basicData: {
                     payer: {

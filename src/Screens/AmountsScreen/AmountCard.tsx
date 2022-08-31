@@ -4,7 +4,7 @@ import { Category } from '../../YnabApi/YnabApiWrapper';
 import { ImageProps, StyleSheet } from 'react-native';
 import { Navigation } from './AmountsScreen';
 import RemoveIcon from '../../Component/RemoveIcon';
-import { nameCalculatorScreen, nameCategoryComboScreen, nameCategoryScreen } from '../../Helper/Navigation/ScreenNames';
+import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import SplitPercentInput from './SplitPercentInput';
 import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import NumberInput from '../../Component/NumberInput';
@@ -46,7 +46,7 @@ const CategoryLayout = (props: CategoryLayoutProps) => (
 
         <Button
             onPress={() => {
-                props.navigation.navigate(nameCategoryScreen, {
+                props.navigation.navigate(ScreenNames.categoryScreen, {
                     categories: props.categories,
                     onSelect: (categoryId?: string) => props.onSelect(categoryId),
                 });
@@ -101,7 +101,7 @@ const AmountCard = (props: Props) => {
                             accessoryLeft={CalculatorIcon}
                             onPress={() => {
                                 props.navigation.navigate(
-                                    nameCalculatorScreen,
+                                    ScreenNames.calculatorScreen,
                                     {
                                         currentAmount: props.amount,
                                         setAmount: props.setAmount,
@@ -131,7 +131,7 @@ const AmountCard = (props: Props) => {
                     style={styles.categoryComboButton}
                     accessoryLeft={CategoryComboIcon}
                     onPress={() => {
-                        props.navigation.navigate(nameCategoryComboScreen, {
+                        props.navigation.navigate(ScreenNames.categoryComboScreen, {
                             categoryCombos: props.categoryCombos,
                             onSelect: (categoryCombo) => {
                                 if (categoryCombo.categories.length !== 2) {

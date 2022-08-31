@@ -1,10 +1,6 @@
 import { Account, Budget, Category } from '../../YnabApi/YnabApiWrapper';
 import { CategoryCombo } from '../../Repository/CategoryComboRepository';
-import {
-    nameSplittingScreen, nameAmountsScreen, nameSaveScreen, nameCategoryScreen,
-    nameAccessTokenScreen, nameCalculatorScreen, nameCalculationHistoryScreen, nameProfileSettingsScreen,
-    nameCategoryComboSettingsScreen, nameCategoryComboScreen, nameSettingsOverviewScreen,
-} from './ScreenNames';
+import { ScreenNames } from './ScreenNames';
 import * as ynab from 'ynab';
 
 interface BasicData {
@@ -28,39 +24,44 @@ interface DebtorData {
 }
 
 type StackParameterList = {
-    [nameSplittingScreen]: undefined;
-    [nameSettingsOverviewScreen]: undefined;
-    [nameAmountsScreen]: {
+    [ScreenNames.splittingScreen]: undefined;
+    [ScreenNames.settingsOverviewScreen]: undefined;
+    [ScreenNames.amountsScreen]: {
         basicData: BasicData
     };
-    [nameSaveScreen]: {
+    [ScreenNames.saveScreen]: {
         basicData: BasicData
         payerCategories: Array<Category>
         debtorCategories: Array<Category>
         payerSaveTransaction: ynab.SaveTransaction
         debtorSaveTransaction: ynab.SaveTransaction
     };
-    [nameCategoryScreen]: {
+    [ScreenNames.categoryScreen]: {
         categories: Array<Category>
         onSelect: (categoryId?: string) => void
     };
-    [nameCategoryComboScreen]: {
+    [ScreenNames.categoryComboScreen]: {
         categoryCombos: CategoryCombo[],
         onSelect: (categoryCombo: CategoryCombo) => void
     }
-    [nameCalculatorScreen]: {
+    [ScreenNames.calculatorScreen]: {
         currentAmount: number,
         setAmount: (amount: number) => void
         previousCalculations: Array<string>
         setPreviousCalculations: (previousCalculations: Array<string>) => void
     }
-    [nameCalculationHistoryScreen]: {
+    [ScreenNames.calculationHistoryScreen]: {
         previousCalculations: Array<string>,
         onSelectCalculation: (calculation: string) => void
     }
-    [nameAccessTokenScreen]: undefined;
-    [nameProfileSettingsScreen]: undefined;
-    [nameCategoryComboSettingsScreen]: undefined;
+    [ScreenNames.accessTokenScreen]: undefined;
+    [ScreenNames.profileSettingsScreen]: undefined;
+    [ScreenNames.categoryComboSettingsScreen]: undefined;
+    [ScreenNames.editCategoryComboScreen]: {
+        categoryCombo?: CategoryCombo,
+        saveCategoryCombo: (categoryCombo: CategoryCombo) => void,
+        deleteCategoryCombo: () => void
+    }
 }
 
 export type { StackParameterList, BasicData };

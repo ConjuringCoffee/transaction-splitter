@@ -3,7 +3,7 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StackParameterList } from "../../Helper/Navigation/ScreenParameters";
 import { List, ListItem } from '@ui-kitten/components';
-import { nameAccessTokenScreen, nameCategoryComboSettingsScreen, nameProfileSettingsScreen } from '../../Helper/Navigation/ScreenNames';
+import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 
 type ScreenName = 'Settings Overview';
 
@@ -31,17 +31,17 @@ const SettingsOverviewScreen = ({ navigation }: Props) => {
         {
             title: 'Access Token',
             description: 'Necessary to access the YNAB API',
-            navigate: () => { navigation.navigate(nameAccessTokenScreen) }
+            navigate: () => { navigation.navigate(ScreenNames.accessTokenScreen) }
         },
         {
             title: 'Profiles',
             description: 'The two profiles to split the transactions to',
-            navigate: () => { navigation.navigate(nameProfileSettingsScreen) }
+            navigate: () => { navigation.navigate(ScreenNames.profileSettingsScreen) }
         },
         {
             title: 'Category Combinations',
             description: 'Combine categories of your profiles',
-            navigate: () => { navigation.navigate(nameCategoryComboSettingsScreen) }
+            navigate: () => { navigation.navigate(ScreenNames.categoryComboSettingsScreen) }
         }
     ]
 

@@ -3,15 +3,14 @@ import { Button, Input, Layout, List, ListItem } from '@ui-kitten/components';
 import { Category } from '../../YnabApi/YnabApiWrapper';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SplittingScreenStackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import RemoveIcon from '../../Component/RemoveIcon';
 import { StyleSheet } from 'react-native';
 
 type ScreenName = 'Category Selection';
 
-// TODO: Make this more type-safe for the CategoryComboSettingsStackParameterList
-type MyNavigationProp = StackNavigationProp<SplittingScreenStackParameterList, ScreenName>;
-type MyRouteProp = RouteProp<SplittingScreenStackParameterList, ScreenName>;
+type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
+type MyRouteProp = RouteProp<StackParameterList, ScreenName>;
 
 type Props = {
     navigation: MyNavigationProp;

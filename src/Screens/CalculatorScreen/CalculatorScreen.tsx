@@ -7,7 +7,7 @@ import CalculatorKeyboard from '../../Component/CalculatorKeyboard';
 import { ImageProps, StyleSheet } from 'react-native';
 import { Calculation } from '../../Helper/Calculation';
 import { convertAmountToText } from '../../Helper/AmountHelper';
-import { nameCalculationHistoryScreen } from '../../Helper/Navigation/ScreenNames';
+import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import useLocalization from '../../Hooks/useLocalization';
 import LoadingComponent from '../../Component/LoadingComponent';
 
@@ -65,7 +65,7 @@ const CalculatorScreen = ({ route, navigation }: Props) => {
                 <Button
                     onPress={() => {
                         navigation.navigate(
-                            nameCalculationHistoryScreen,
+                            ScreenNames.calculationHistoryScreen,
                             {
                                 previousCalculations: previousCalculations,
                                 onSelectCalculation: (selectedCalculation) => {

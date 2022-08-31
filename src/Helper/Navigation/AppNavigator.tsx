@@ -4,12 +4,7 @@ import SaveScreen from '../../Screens/SaveScreen/SaveScreen';
 import AmountsScreen from '../../Screens/AmountsScreen/AmountsScreen';
 import CategoryScreen from '../../Screens/CategoryScreen/CategoryScreen';
 import { createStackNavigator } from '@react-navigation/stack';
-import {
-    nameSplittingScreen, nameAmountsScreen, nameSaveScreen, nameCategoryScreen,
-    nameAccessTokenScreen, nameCalculatorScreen, nameCalculationHistoryScreen, nameProfileSettingsScreen,
-    nameCategoryComboSettingsScreen, nameCategoryComboScreen, nameSettingsOverviewScreen,
-} from './ScreenNames';
-import { StackParameterList as StackParameterList } from './ScreenParameters';
+import { StackParameterList } from './ScreenParameters';
 import AccessTokenScreen from '../../Screens/AccessTokenScreen/AccessTokenScreen';
 import CalculatorScreen from '../../Screens/CalculatorScreen/CalculatorScreen';
 import CalculationHistoryScreen from '../../Screens/CalculationHistoryScreen/CalculationHistoryScreen';
@@ -19,6 +14,8 @@ import CategoryComboScreen from '../../Screens/CategoryComboScreen/CategoryCombo
 import { Button } from '@ui-kitten/components';
 import SettingsOverviewScreen from '../../Screens/SettingsOverviewScreen/SettingsOverviewScreen';
 import SettingsIcon from '../../Component/SettingsIcon';
+import { EditCategoryComboScreen } from '../../Screens/EditCategoryComboScreen/EditCategoryComboScreen';
+import { ScreenNames } from './ScreenNames';
 
 const AppNavigator = () => {
     return (
@@ -32,13 +29,13 @@ const StackNavigator = () => {
     return (
         <stack.Navigator>
             <stack.Screen
-                name={nameSplittingScreen}
+                name={ScreenNames.splittingScreen}
                 component={SplittingScreen}
                 options={({ navigation }) => ({
                     title: 'Transaction Splitter',
                     headerRight: () => (
                         <Button
-                            onPress={() => navigation.navigate(nameSettingsOverviewScreen)}
+                            onPress={() => navigation.navigate(ScreenNames.settingsOverviewScreen)}
                             accessoryLeft={SettingsIcon}
                             size='large'
                             appearance='ghost' />
@@ -46,44 +43,48 @@ const StackNavigator = () => {
                 })}
             />
             <stack.Screen
-                name={nameSettingsOverviewScreen}
+                name={ScreenNames.settingsOverviewScreen}
                 component={SettingsOverviewScreen}
                 options={{ title: 'Settings' }} />
             <stack.Screen
-                name={nameAmountsScreen}
+                name={ScreenNames.amountsScreen}
                 component={AmountsScreen}
                 options={{ title: 'Enter amounts' }} />
             <stack.Screen
-                name={nameCategoryScreen}
+                name={ScreenNames.categoryScreen}
                 component={CategoryScreen}
                 options={{ title: 'Category' }} />
             <stack.Screen
-                name={nameCategoryComboScreen}
+                name={ScreenNames.categoryComboScreen}
                 component={CategoryComboScreen}
                 options={{ title: 'Category Combinations' }} />
             <stack.Screen
-                name={nameCalculatorScreen}
+                name={ScreenNames.calculatorScreen}
                 component={CalculatorScreen}
                 options={{ title: 'Calculate the amount' }} />
             <stack.Screen
-                name={nameCalculationHistoryScreen}
+                name={ScreenNames.calculationHistoryScreen}
                 component={CalculationHistoryScreen}
                 options={{ title: 'History' }} />
             <stack.Screen
-                name={nameSaveScreen}
+                name={ScreenNames.saveScreen}
                 component={SaveScreen}
                 options={{ title: 'Save' }} />
             <stack.Screen
-                name={nameAccessTokenScreen}
+                name={ScreenNames.accessTokenScreen}
                 component={AccessTokenScreen}
                 options={{ title: 'Access Token' }} />
             <stack.Screen
-                name={nameProfileSettingsScreen}
+                name={ScreenNames.profileSettingsScreen}
                 component={ProfileSettingsScreen}
                 options={{ title: 'Profile Settings' }} />
             <stack.Screen
-                name={nameCategoryComboSettingsScreen}
+                name={ScreenNames.categoryComboSettingsScreen}
                 component={CategoryComboSettingsScreen}
+                options={{ title: 'Category Combinations Settings' }} />
+            <stack.Screen
+                name={ScreenNames.editCategoryComboScreen}
+                component={EditCategoryComboScreen}
                 options={{ title: 'Category Combination Settings' }} />
         </stack.Navigator>
     );

@@ -1,6 +1,6 @@
 import { Button, Card, Input, Layout, Text } from '@ui-kitten/components';
 import React from 'react';
-import { nameCategoryScreen } from '../../Helper/Navigation/ScreenNames';
+import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { Profile } from '../../Repository/ProfileRepository';
 import { Category } from '../../YnabApi/YnabApiWrapper';
 import { EditableCategoryCombo, Navigation } from './CategoryComboSettingsScreen';
@@ -33,7 +33,7 @@ const CategoryLayout = (props: CategoryLayoutProps) => {
             </Text>
             <Button
                 onPress={() => {
-                    props.navigation.navigate(nameCategoryScreen, {
+                    props.navigation.navigate(ScreenNames.categoryScreen, {
                         categories: props.categories,
                         onSelect: (categoryId?: string) => props.onCategorySelect(categoryId),
                     });

@@ -8,11 +8,11 @@ import LoadingComponent from '../../Component/LoadingComponent';
 import useLocalization from '../../Hooks/useLocalization';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { CategoryCombo, readCategoryCombos } from '../../Repository/CategoryComboRepository';
-import { nameSaveScreen } from '../../Helper/Navigation/ScreenNames';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { AmountEntry, buildSaveTransactions } from '../../YnabApi/BuildSaveTransactions';
 import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
 import AmountCard from './AmountCard';
+import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Amounts'>;
@@ -176,7 +176,7 @@ const AmountsScreen = (props: Props) => {
                                 const saveTransactions = buildSaveTransactions(amountEntries, basicData);
 
                                 props.navigation.navigate(
-                                    nameSaveScreen,
+                                    ScreenNames.saveScreen,
                                     {
                                         basicData: basicData,
                                         payerSaveTransaction: saveTransactions.payer,
