@@ -1,6 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
+import { Card, Input } from '@ui-kitten/components';
+import React, { useState } from 'react';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 
 type ScreenName = 'Edit Category Combo';
@@ -13,11 +14,20 @@ type Props = {
 }
 
 export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
+    const [name, setName] = useState<string>(route.params.categoryCombo?.name ?? '');
+
     const {
         categoryCombo,
         saveCategoryCombo,
         deleteCategoryCombo
     } = route.params;
 
-    return <></>
+    return <>
+        <Card>
+            {/* <Input
+                value={name}
+                onChangeText={text => setName(text)}
+                label='Category Combination Name' /> */}
+        </Card>
+    </>
 }

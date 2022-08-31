@@ -1,14 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, Card } from '@ui-kitten/components';
+import { List, ListItem } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import CustomScrollView from '../../Component/CustomScrollView';
 import LoadingComponent from '../../Component/LoadingComponent';
-import { CategoryCombo, CategoryInCategoryCombo, readCategoryCombos, saveCategoryCombos } from '../../Repository/CategoryComboRepository';
+import { CategoryCombo, readCategoryCombos, saveCategoryCombos } from '../../Repository/CategoryComboRepository';
 import useProfiles from '../../Hooks/useProfiles';
 import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
-import CategoryComboCard from './CategoryComboCard';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 
 type ScreenName = 'Category Combinations Settings';
 type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
@@ -19,17 +18,22 @@ type Props = {
     route: MyRouteProp;
 }
 
-interface EditableCategoryCombo {
-    name: string,
-    categoryIdFirstProfile?: string,
-    categoryIdSecondProfile?: string
+// interface EditableCategoryCombo {
+//     name: string,
+//     categoryIdFirstProfile?: string,
+//     categoryIdSecondProfile?: string
+// }
+
+interface RenderItemProps {
+    item: CategoryCombo,
+    index: number
 }
 
-const CategoryComboSettingsScreen = (props: Props) => {
+export const CategoryComboSettingsScreen = (props: Props) => {
     const [profiles] = useProfiles();
     const [categoriesFirstProfile, setCategoriesFirstProfile] = useState<Category[]>();
     const [categoriesSecondProfile, setCategoriesSecondProfile] = useState<Category[]>();
-    const [categoryCombos, setCategoryCombos] = useState<EditableCategoryCombo[]>([]);
+    const [categoryCombos, setCategoryCombos] = useState<CategoryCombo[]>([]);
 
     const everythingLoaded = categoriesFirstProfile !== undefined
         && categoriesSecondProfile !== undefined
@@ -45,26 +49,12 @@ const CategoryComboSettingsScreen = (props: Props) => {
     }, [profiles]);
 
     useEffect(() => {
-        readCategoryCombos().then((combos) => {
-            const convertedCombos: EditableCategoryCombo[] = [];
-
-            combos.forEach((combo) => {
-                if (combo.categories.length !== 2) {
-                    throw new Error('Cannot handle category combos of not exactly 2');
-                }
-                convertedCombos.push({
-                    name: combo.name,
-                    categoryIdFirstProfile: combo.categories[0].id,
-                    categoryIdSecondProfile: combo.categories[1].id
-                });
-            });
-
-            setCategoryCombos(convertedCombos);
-        })
-            .catch((error) => {
-                console.error(error);
-                throw error;
-            });
+        readCategoryCombos().then(
+            combos => setCategoryCombos(combos)
+        ).catch((error) => {
+            console.error(error);
+            throw error;
+        });
     }, []);
 
     const initializeCategories = (budgetId: string, setCategories: (categories: Category[]) => void) => {
@@ -76,73 +66,111 @@ const CategoryComboSettingsScreen = (props: Props) => {
             });
     };
 
+    const renderItem = ({ item, index }: RenderItemProps) => (
+        <ListItem
+            title={`${item.name}`}
+            onPress={() => {
+                if (categoriesFirstProfile === undefined || categoriesSecondProfile === undefined) {
+                    throw Error('Categories must be initialized');
+                }
+
+                props.navigation.navigate(ScreenNames.editCategoryComboScreen, {
+                    categoryCombo: item,
+                    categoriesFirstProfile: categoriesFirstProfile,
+                    categoriesSecondProfile: categoriesSecondProfile,
+                    saveCategoryCombo: async (categoryCombo) => {
+                        const newCombos = [...categoryCombos];
+                        newCombos[index] = categoryCombo;
+
+                        setCategoryCombos(newCombos);
+                        await saveCategoryCombos(newCombos);
+                    },
+                    deleteCategoryCombo: async () => {
+                        const newCombos = [...categoryCombos];
+                        newCombos.splice(index, 1);
+
+                        setCategoryCombos(newCombos);
+                        await saveCategoryCombos(newCombos);
+                    }
+                })
+            }}
+        />
+    )
+
     return (
-        <CustomScrollView>
-            {everythingLoaded
-                ? <>
-                    {categoryCombos.map((categoryCombo, index) => {
-                        return <CategoryComboCard
-                            key={index}
-                            categoryCombo={categoryCombo}
-                            setCategoryCombo={(newCategoryCombo) => {
-                                const combos = [...categoryCombos];
-                                combos[index] = { ...newCategoryCombo };
-                                setCategoryCombos(combos);
-                            }}
-                            profiles={profiles}
-                            categoriesFirstProfile={categoriesFirstProfile}
-                            categoriesSecondProfile={categoriesSecondProfile}
-                            navigation={props.navigation}
-                        />;
-                    })}
-                    <Card>
-                        <Button
-                            onPress={() => {
-                                setCategoryCombos([...categoryCombos, {
-                                    name: '',
-                                    categoryIdFirstProfile: '',
-                                    categoryIdSecondProfile: '',
-                                }]);
-                            }}>
-                            Add
-                        </Button>
-                        <Button
-                            onPress={() => {
-                                // TODO: Check if saving is allowed before
-                                const categoryCombosToSave: CategoryCombo[] = [];
-
-                                categoryCombos.forEach((combo) => {
-                                    if (combo.categoryIdFirstProfile === undefined || combo.categoryIdSecondProfile === undefined) {
-                                        throw new Error('Combination is not filled out completely');
-                                    }
-
-                                    const categories: CategoryInCategoryCombo[] = [
-                                        {
-                                            id: combo.categoryIdFirstProfile,
-                                            budgetId: profiles[0].budgetId,
-                                        },
-                                        {
-                                            id: combo.categoryIdSecondProfile,
-                                            budgetId: profiles[1].budgetId,
-                                        },
-                                    ];
-
-                                    categoryCombosToSave.push({
-                                        name: combo.name,
-                                        categories: categories,
-                                    });
-                                });
-
-                                saveCategoryCombos(categoryCombosToSave);
-                            }}>
-                            Save
-                        </Button>
-                    </Card>
-                </>
-                : <LoadingComponent />}
-        </CustomScrollView >
+        <>
+            {
+                everythingLoaded ?
+                    <List
+                        data={categoryCombos}
+                        renderItem={renderItem}
+                    />
+                    : <LoadingComponent />}
+        </>
     );
-};
+    // <CustomScrollView>
+    //     {everythingLoaded
+    //         ? <>
+    //             {categoryCombos.map((categoryCombo, index) => {
+    //                 return <CategoryComboCard
+    //                     key={index}
+    //                     categoryCombo={categoryCombo}
+    //                     setCategoryCombo={(newCategoryCombo) => {
+    //                         const combos = [...categoryCombos];
+    //                         combos[index] = { ...newCategoryCombo };
+    //                         setCategoryCombos(combos);
+    //                     }}
+    //                     profiles={profiles}
+    //                     categoriesFirstProfile={categoriesFirstProfile}
+    //                     categoriesSecondProfile={categoriesSecondProfile}
+    //                     navigation={props.navigation}
+    //                 />;
+    //             })}
+    //             <Card>
+    //                 <Button
+    //                     onPress={() => {
+    //                         setCategoryCombos([...categoryCombos, {
+    //                             name: '',
+    //                             categoryIdFirstProfile: '',
+    //                             categoryIdSecondProfile: '',
+    //                         }]);
+    //                     }}>
+    //                     Add
+    //                 </Button>
+    //                 <Button
+    //                     onPress={() => {
+    //                         // TODO: Check if saving is allowed before
+    //                         const categoryCombosToSave: CategoryCombo[] = [];
 
-export type { MyNavigationProp as Navigation, EditableCategoryCombo };
-export default CategoryComboSettingsScreen;
+    //                         categoryCombos.forEach((combo) => {
+    //                             if (combo.categoryIdFirstProfile === undefined || combo.categoryIdSecondProfile === undefined) {
+    //                                 throw new Error('Combination is not filled out completely');
+    //                             }
+
+    //                             const categories: CategoryInCategoryCombo[] = [
+    //                                 {
+    //                                     id: combo.categoryIdFirstProfile,
+    //                                     budgetId: profiles[0].budgetId,
+    //                                 },
+    //                                 {
+    //                                     id: combo.categoryIdSecondProfile,
+    //                                     budgetId: profiles[1].budgetId,
+    //                                 },
+    //                             ];
+
+    //                             categoryCombosToSave.push({
+    //                                 name: combo.name,
+    //                                 categories: categories,
+    //                             });
+    //                         });
+
+    //                         saveCategoryCombos(categoryCombosToSave);
+    //                     }}>
+    //                     Save
+    //                 </Button>
+    //             </Card>
+    //         </>
+    //         : <LoadingComponent />}
+    // </CustomScrollView >
+    // );
+};

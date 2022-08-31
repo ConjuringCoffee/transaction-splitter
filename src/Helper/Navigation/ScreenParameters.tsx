@@ -59,8 +59,10 @@ type StackParameterList = {
     [ScreenNames.categoryComboSettingsScreen]: undefined;
     [ScreenNames.editCategoryComboScreen]: {
         categoryCombo?: CategoryCombo,
-        saveCategoryCombo: (categoryCombo: CategoryCombo) => void,
-        deleteCategoryCombo: () => void
+        categoriesFirstProfile: Category[],
+        categoriesSecondProfile: Category[],
+        saveCategoryCombo: (categoryCombo: CategoryCombo) => Promise<void>,
+        deleteCategoryCombo: () => Promise<void>
     }
 }
 

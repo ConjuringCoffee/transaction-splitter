@@ -9,13 +9,13 @@ import AccessTokenScreen from '../../Screens/AccessTokenScreen/AccessTokenScreen
 import CalculatorScreen from '../../Screens/CalculatorScreen/CalculatorScreen';
 import CalculationHistoryScreen from '../../Screens/CalculationHistoryScreen/CalculationHistoryScreen';
 import ProfileSettingsScreen from '../../Screens/ProfileSettingsScreen/ProfileSettingsScreen';
-import CategoryComboSettingsScreen from '../../Screens/CategoryComboSettingsScreen/CategoryComboSettingsScreen';
 import CategoryComboScreen from '../../Screens/CategoryComboScreen/CategoryComboScreen';
 import { Button } from '@ui-kitten/components';
 import SettingsOverviewScreen from '../../Screens/SettingsOverviewScreen/SettingsOverviewScreen';
 import SettingsIcon from '../../Component/SettingsIcon';
 import { EditCategoryComboScreen } from '../../Screens/EditCategoryComboScreen/EditCategoryComboScreen';
 import { ScreenNames } from './ScreenNames';
+import { CategoryComboSettingsScreen } from '../../Screens/CategoryComboSettingsScreen/CategoryComboSettingsScreen';
 
 const AppNavigator = () => {
     return (
