@@ -7,7 +7,7 @@ interface CategoryInCategoryCombo {
 }
 interface CategoryCombo {
     name: string,
-    categories: CategoryInCategoryCombo[]
+    categories: [CategoryInCategoryCombo, CategoryInCategoryCombo]
 }
 
 const storageKey = 'categoryCombos';
