@@ -2,6 +2,7 @@ import { Account, Budget, Category } from '../../YnabApi/YnabApiWrapper';
 import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import { ScreenNames } from './ScreenNames';
 import * as ynab from 'ynab';
+import { Profile } from '../../Repository/ProfileRepository';
 
 interface BasicData {
     payer: PayerData,
@@ -59,10 +60,11 @@ type StackParameterList = {
     [ScreenNames.categoryComboSettingsScreen]: undefined;
     [ScreenNames.editCategoryComboScreen]: {
         categoryCombo?: CategoryCombo,
+        profiles: [Profile, Profile]
         categoriesFirstProfile: Category[],
         categoriesSecondProfile: Category[],
         saveCategoryCombo: (categoryCombo: CategoryCombo) => Promise<void>,
-        deleteCategoryCombo: () => Promise<void>
+        deleteCategoryCombo?: () => Promise<void>
     }
 }
 
