@@ -28,7 +28,8 @@
     "react-native-svg": "12.3.0",
     "react-native-web": "~0.18.7",
     "url": "^0.11.0",
-    "ynab": "^1.25.0"
+    "ynab": "^1.25.0",
+    "expo-dev-client": "~1.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",
