@@ -64,7 +64,7 @@ type StackParameterList = {
         categoriesFirstProfile: Category[],
         categoriesSecondProfile: Category[],
         saveCategoryCombo: (categoryCombo: CategoryCombo) => Promise<void>,
-        deleteCategoryCombo: () => Promise<void>
+        deleteCategoryCombo?: () => Promise<void>
     }
 }
 

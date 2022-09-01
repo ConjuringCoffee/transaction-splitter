@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { List, ListItem } from '@ui-kitten/components';
+import { Button, List, ListItem } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import LoadingComponent from '../../Component/LoadingComponent';
 import { CategoryCombo, readCategoryCombos, saveCategoryCombos } from '../../Repository/CategoryComboRepository';
@@ -8,6 +8,7 @@ import useProfiles from '../../Hooks/useProfiles';
 import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
+import CreateIcon from '../../Component/CreateIcon';
 
 type ScreenName = 'Category Combinations Settings';
 export type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
@@ -23,7 +24,7 @@ interface RenderItemProps {
     index: number
 }
 
-export const CategoryComboSettingsScreen = (props: Props) => {
+export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
     const [profiles] = useProfiles();
     const [categoriesFirstProfile, setCategoriesFirstProfile] = useState<Category[]>();
     const [categoriesSecondProfile, setCategoriesSecondProfile] = useState<Category[]>();
@@ -32,6 +33,36 @@ export const CategoryComboSettingsScreen = (props: Props) => {
     const everythingLoaded = categoriesFirstProfile !== undefined
         && categoriesSecondProfile !== undefined
         && profiles !== undefined;
+
+    React.useLayoutEffect(() => {
+        if (!everythingLoaded) {
+            return;
+        }
+
+        navigation.setOptions({
+            headerRight: () => (
+                <Button
+                    onPress={() => {
+                        navigation.navigate(ScreenNames.editCategoryComboScreen, {
+                            profiles: profiles,
+                            categoriesFirstProfile: categoriesFirstProfile,
+                            categoriesSecondProfile: categoriesSecondProfile,
+                            saveCategoryCombo: async (categoryCombo) => {
+                                const newCombos = [...categoryCombos, categoryCombo];
+
+                                setCategoryCombos(newCombos);
+                                await saveCategoryCombos(newCombos);
+                            }
+                        });
+                    }}
+                    accessoryLeft={CreateIcon}
+                    size='small'
+                    appearance='outline'>
+                    Add
+                </Button>
+            ),
+        });
+    }, [everythingLoaded, navigation]);
 
     useEffect(() => {
         if (profiles === undefined) {
@@ -64,11 +95,11 @@ export const CategoryComboSettingsScreen = (props: Props) => {
         <ListItem
             title={`${item.name}`}
             onPress={() => {
-                if (categoriesFirstProfile === undefined || categoriesSecondProfile === undefined || profiles === undefined) {
+                if (!everythingLoaded) {
                     throw Error('Initialization was not done yet');
                 }
 
-                props.navigation.navigate(ScreenNames.editCategoryComboScreen, {
+                navigation.navigate(ScreenNames.editCategoryComboScreen, {
                     categoryCombo: item,
                     profiles: profiles,
                     categoriesFirstProfile: categoriesFirstProfile,
@@ -87,7 +118,7 @@ export const CategoryComboSettingsScreen = (props: Props) => {
                         setCategoryCombos(newCombos);
                         await saveCategoryCombos(newCombos);
                     }
-                })
+                });
             }}
         />
     )

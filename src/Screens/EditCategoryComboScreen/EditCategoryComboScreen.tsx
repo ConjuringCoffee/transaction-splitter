@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Button, Card, Input, Layout, Text } from '@ui-kitten/components';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { CategoryCombo } from '../../Repository/CategoryComboRepository';
@@ -65,6 +65,10 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
     }
 
     const deleteAndNavigate = async (): Promise<void> => {
+        if (!deleteCategoryCombo) {
+            throw Error('No deletion functionality');
+        }
+
         await deleteCategoryCombo();
         navigation.goBack();
     }
@@ -109,11 +113,13 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
                 Save
             </Button>
         </Card>
-        <Card>
-            <Button
-                onPress={() => deleteAndNavigate()}>
-                Delete
-            </Button>
-        </Card>
+        {deleteCategoryCombo ?
+            <Card>
+                <Button
+                    onPress={() => deleteAndNavigate()}>
+                    Delete
+                </Button>
+            </Card>
+            : null}
     </>
 }
