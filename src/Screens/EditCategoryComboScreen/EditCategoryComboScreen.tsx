@@ -73,6 +73,8 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
         navigation.goBack();
     }
 
+    const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile;
+
     return <>
         <Card>
             <Input
@@ -94,6 +96,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
         </Card>
         <Card>
             <Button
+                disabled={!readyToSave}
                 onPress={() => {
                     if (categoryIdFirstProfile && categoryIdSecondProfile) {
                         saveAndNavigate({
