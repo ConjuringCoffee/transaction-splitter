@@ -3,6 +3,7 @@ import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import { ScreenNames } from './ScreenNames';
 import * as ynab from 'ynab';
 import { Profile } from '../../Repository/ProfileRepository';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 
 interface BasicData {
     payer: PayerData,
@@ -67,5 +68,8 @@ type StackParameterList = {
         deleteCategoryCombo?: () => Promise<void>
     }
 }
+
+export type MyStackScreenProps<K extends keyof StackParameterList> = StackScreenProps<StackParameterList, K>;
+export type MyStackNavigationProp<K extends keyof StackParameterList> = StackNavigationProp<StackParameterList, K>;
 
 export type { StackParameterList, BasicData };

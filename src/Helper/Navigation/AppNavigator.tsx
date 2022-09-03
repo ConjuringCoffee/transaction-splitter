@@ -10,12 +10,11 @@ import CalculatorScreen from '../../Screens/CalculatorScreen/CalculatorScreen';
 import CalculationHistoryScreen from '../../Screens/CalculationHistoryScreen/CalculationHistoryScreen';
 import ProfileSettingsScreen from '../../Screens/ProfileSettingsScreen/ProfileSettingsScreen';
 import CategoryComboScreen from '../../Screens/CategoryComboScreen/CategoryComboScreen';
-import { Button } from '@ui-kitten/components';
 import SettingsOverviewScreen from '../../Screens/SettingsOverviewScreen/SettingsOverviewScreen';
-import SettingsIcon from '../../Component/SettingsIcon';
 import { EditCategoryComboScreen } from '../../Screens/EditCategoryComboScreen/EditCategoryComboScreen';
 import { ScreenNames } from './ScreenNames';
 import { CategoryComboSettingsScreen } from '../../Screens/CategoryComboSettingsScreen/CategoryComboSettingsScreen';
+import { NavigationBar } from './NavigationBar';
 
 const AppNavigator = () => {
     return (
@@ -30,62 +29,89 @@ const StackNavigator = () => {
         <stack.Navigator>
             <stack.Screen
                 name={ScreenNames.splittingScreen}
-                component={SplittingScreen}
-                options={({ navigation }) => ({
-                    title: 'Transaction Splitter',
-                    headerRight: () => (
-                        <Button
-                            onPress={() => navigation.navigate(ScreenNames.settingsOverviewScreen)}
-                            accessoryLeft={SettingsIcon}
-                            size='large'
-                            appearance='ghost' />
-                    ),
-                })}
-            />
+                component={SplittingScreen} />
             <stack.Screen
                 name={ScreenNames.settingsOverviewScreen}
                 component={SettingsOverviewScreen}
-                options={{ title: 'Settings' }} />
+                options={{
+                    header: (headerProps) => (<NavigationBar
+                        title='Settings'
+                        navigation={headerProps.navigation} />)
+                }} />
+
             <stack.Screen
                 name={ScreenNames.amountsScreen}
                 component={AmountsScreen}
-                options={{ title: 'Enter amounts' }} />
+                options={{
+                    header: (headerProps) => (<NavigationBar
+                        title='Enter amounts'
+                        navigation={headerProps.navigation} />)
+                }} />
             <stack.Screen
                 name={ScreenNames.categoryScreen}
-                component={CategoryScreen}
-                options={{ title: 'Category' }} />
+                component={CategoryScreen} />
             <stack.Screen
                 name={ScreenNames.categoryComboScreen}
                 component={CategoryComboScreen}
-                options={{ title: 'Category Combinations' }} />
+                options={{
+                    header: (headerProps) => (
+                        <NavigationBar
+                            title='Category Combinations'
+                            navigation={headerProps.navigation} />)
+                }} />
             <stack.Screen
                 name={ScreenNames.calculatorScreen}
                 component={CalculatorScreen}
-                options={{ title: 'Calculate the amount' }} />
+                options={{
+                    header: (headerProps) => (<NavigationBar
+                        title='Calculate the amount'
+                        navigation={headerProps.navigation} />)
+                }} />
             <stack.Screen
                 name={ScreenNames.calculationHistoryScreen}
                 component={CalculationHistoryScreen}
-                options={{ title: 'History' }} />
+                options={{
+                    header: (headerProps) => (<NavigationBar
+                        title='Calculation history'
+                        navigation={headerProps.navigation} />)
+                }} />
             <stack.Screen
                 name={ScreenNames.saveScreen}
                 component={SaveScreen}
-                options={{ title: 'Save' }} />
+                options={{
+                    header: (headerProps) => (<NavigationBar
+                        title='Save'
+                        navigation={headerProps.navigation} />)
+                }} />
             <stack.Screen
                 name={ScreenNames.accessTokenScreen}
                 component={AccessTokenScreen}
-                options={{ title: 'Access Token' }} />
+                options={{
+                    header: (headerProps) => (<NavigationBar
+                        title='Access token'
+                        navigation={headerProps.navigation} />)
+                }} />
             <stack.Screen
                 name={ScreenNames.profileSettingsScreen}
                 component={ProfileSettingsScreen}
-                options={{ title: 'Profile Settings' }} />
+                options={{
+                    header: (headerProps) => (<NavigationBar
+                        title='Profiles'
+                        subtitle='Settings'
+                        navigation={headerProps.navigation} />)
+                }} />
             <stack.Screen
                 name={ScreenNames.categoryComboSettingsScreen}
                 component={CategoryComboSettingsScreen}
-                options={{ title: 'Category Combinations Settings' }} />
+                options={{
+                    header: (headerProps) => (<NavigationBar
+                        title='Category Combinations'
+                        subtitle='Settings'
+                        navigation={headerProps.navigation} />)
+                }} />
             <stack.Screen
                 name={ScreenNames.editCategoryComboScreen}
-                component={EditCategoryComboScreen}
-                options={{ title: 'Category Combination Settings' }} />
+                component={EditCategoryComboScreen} />
         </stack.Navigator>
     );
 };

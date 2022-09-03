@@ -1,26 +1,20 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import { Category } from '../../YnabApi/YnabApiWrapper';
-import { TextInput, Appbar, List } from 'react-native-paper';
+import { TextInput, Appbar, List, Button } from 'react-native-paper';
 import { View, StyleSheet, Platform } from 'react-native';
+import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
+import { MyStackNavigationProp, MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 
 type ScreenName = 'Edit Category Combo';
-type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
-type MyRouteProp = RouteProp<StackParameterList, ScreenName>;
-
-type Props = {
-    navigation: MyNavigationProp;
-    route: MyRouteProp;
-}
 
 interface CategoryLayoutProps {
     profileName: string,
     categories: Category[],
-    navigation: MyNavigationProp,
+    navigation: MyStackNavigationProp<ScreenName>,
     selectedCategoryId?: string,
     onCategorySelect: (categoryId?: string) => void
 }
@@ -45,7 +39,7 @@ const CategoryLayout = (props: CategoryLayoutProps) => {
 
 const moreIconName = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
-export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
+export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) => {
     const {
         categoryCombo,
         saveCategoryCombo,
@@ -53,7 +47,9 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
         profiles,
         categoriesFirstProfile,
         categoriesSecondProfile
-    } = route.params;
+    } = props.route.params;
+
+    const { navigation } = props;
 
     const [name, setName] = useState<string>(categoryCombo?.name ?? '');
     const [categoryIdFirstProfile, setCategoryIdFirstProfile] = useState<string | undefined>(categoryCombo?.categories[0].id);
@@ -81,39 +77,51 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
 
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
 
+    const deleteAction = useCallback(() => {
+        return deleteCategoryCombo ?
+            <Appbar.Action
+                icon={moreIconName}
+                onPress={() => deleteAndNavigate()} />
+            : null;
+    }, [
+        deleteCategoryCombo,
+        deleteAndNavigate
+    ]);
+
     React.useLayoutEffect(() => {
         navigation.setOptions({
             header: () => (
-                <Appbar.Header>
-                    <Appbar.BackAction onPress={() => navigation.goBack()} />
-                    <Appbar.Content title="Edit" subtitle="Category Combination" />
-                    <Appbar.Action
-                        icon="content-save"
-                        disabled={!readyToSave}
-                        onPress={() => {
-                            if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
-                                throw new Error('Not ready to save yet');
-                            }
+                <NavigationBar
+                    title={'Edit'}
+                    subtitle={'Category Setting'}
+                    navigation={props.navigation}
+                    additions={
+                        [
+                            <Appbar.Action
+                                icon="content-save"
+                                disabled={!readyToSave}
+                                onPress={() => {
+                                    if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
+                                        throw new Error('Not ready to save yet');
+                                    }
 
-                            saveAndNavigate({
-                                name: name,
-                                categories: [
-                                    {
-                                        budgetId: profiles[0].budgetId,
-                                        id: categoryIdFirstProfile
-                                    },
-                                    {
-                                        budgetId: profiles[1].budgetId,
-                                        id: categoryIdSecondProfile
-                                    }]
-                            })
-                        }} />
-                    {deleteCategoryCombo &&
-                        <Appbar.Action
-                            icon={moreIconName}
-                            onPress={() => deleteAndNavigate()} />
+                                    saveAndNavigate({
+                                        name: name,
+                                        categories: [
+                                            {
+                                                budgetId: profiles[0].budgetId,
+                                                id: categoryIdFirstProfile
+                                            },
+                                            {
+                                                budgetId: profiles[1].budgetId,
+                                                id: categoryIdSecondProfile
+                                            }]
+                                    })
+                                }} />,
+                            deleteAction()
+                        ]
                     }
-                </Appbar.Header>
+                />
             ),
         });
     }, [
@@ -125,8 +133,8 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
         profiles,
         moreIconName,
         deleteCategoryCombo,
-        deleteAndNavigate,
-        saveAndNavigate
+        saveAndNavigate,
+        deleteAction
     ]);
 
     return (
