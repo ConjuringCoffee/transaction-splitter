@@ -1,12 +1,11 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Card } from '@ui-kitten/components';
 import React, { useState } from 'react';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import { Category } from '../../YnabApi/YnabApiWrapper';
-import { Button, TextInput, Text, Portal, FAB, Appbar } from 'react-native-paper';
+import { TextInput, Appbar, List } from 'react-native-paper';
 import { View, StyleSheet, Platform } from 'react-native';
 
 type ScreenName = 'Edit Category Combo';
@@ -30,25 +29,21 @@ const CategoryLayout = (props: CategoryLayoutProps) => {
     const categoryName = props.categories.find((c) => c.id === props.selectedCategoryId)?.name;
 
     return (
-        <>
-            <Text>
-                Category of {props.profileName}
-            </Text>
-            <Button
-                mode="contained"
-                onPress={() => {
-                    props.navigation.navigate(ScreenNames.categoryScreen, {
-                        categories: props.categories,
-                        onSelect: (categoryId?: string) => props.onCategorySelect(categoryId),
-                    });
-                }}>
-                {categoryName}
-            </Button>
-        </>
+        <List.Item
+            title={categoryName ?? 'None'}
+            description={`Category from ${props.profileName}`}
+            left={props => <List.Icon {...props} icon={categoryName ? 'check-circle-outline' : 'checkbox-blank-circle-outline'} />}
+            onPress={() => {
+                props.navigation.navigate(ScreenNames.categoryScreen, {
+                    categories: props.categories,
+                    onSelect: (categoryId?: string) => props.onCategorySelect(categoryId),
+                });
+            }}
+        />
     );
 };
 
-const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
+const moreIconName = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
 export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
     const {
@@ -109,7 +104,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
                         }} />
                     {deleteCategoryCombo &&
                         <Appbar.Action
-                            icon={MORE_ICON}
+                            icon={moreIconName}
                             onPress={() => deleteAndNavigate()} />
                     }
                 </Appbar.Header>
@@ -126,18 +121,21 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
                 value={name}
                 onChangeText={text => setName(text)}
                 label='Category Combination Name' />
-            <CategoryLayout
-                profileName={profiles[0].name}
-                categories={categoriesFirstProfile}
-                navigation={navigation}
-                selectedCategoryId={categoryIdFirstProfile}
-                onCategorySelect={categoryId => setCategoryIdFirstProfile(categoryId)} />
-            <CategoryLayout
-                profileName={profiles[1].name}
-                categories={categoriesSecondProfile}
-                navigation={navigation}
-                selectedCategoryId={categoryIdSecondProfile}
-                onCategorySelect={categoryId => setCategoryIdSecondProfile(categoryId)} />
+            <List.Section>
+                <List.Subheader>Categories</List.Subheader>
+                <CategoryLayout
+                    profileName={profiles[0].name}
+                    categories={categoriesFirstProfile}
+                    navigation={navigation}
+                    selectedCategoryId={categoryIdFirstProfile}
+                    onCategorySelect={categoryId => setCategoryIdFirstProfile(categoryId)} />
+                <CategoryLayout
+                    profileName={profiles[1].name}
+                    categories={categoriesSecondProfile}
+                    navigation={navigation}
+                    selectedCategoryId={categoryIdSecondProfile}
+                    onCategorySelect={categoryId => setCategoryIdSecondProfile(categoryId)} />
+            </List.Section>
         </View>
     );
 }
@@ -146,11 +144,5 @@ const styles = StyleSheet.create({
     container: {
         paddingVertical: 8,
         paddingHorizontal: 8
-    },
-    fab: {
-        position: "absolute",
-        margin: 25,
-        right: 0,
-        bottom: 0,
     }
 });
