@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, List, ListItem } from '@ui-kitten/components';
+import { List, ListItem } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import LoadingComponent from '../../Component/LoadingComponent';
 import { CategoryCombo, readCategoryCombos, saveCategoryCombos } from '../../Repository/CategoryComboRepository';
@@ -8,7 +8,8 @@ import useProfiles from '../../Hooks/useProfiles';
 import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import CreateIcon from '../../Component/CreateIcon';
+import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
+import { Appbar } from 'react-native-paper';
 
 type ScreenName = 'Category Combinations Settings';
 export type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
@@ -40,29 +41,37 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
         }
 
         navigation.setOptions({
-            headerRight: () => (
-                <Button
-                    onPress={() => {
-                        navigation.navigate(ScreenNames.editCategoryComboScreen, {
-                            profiles: profiles,
-                            categoriesFirstProfile: categoriesFirstProfile,
-                            categoriesSecondProfile: categoriesSecondProfile,
-                            saveCategoryCombo: async (categoryCombo) => {
-                                const newCombos = [...categoryCombos, categoryCombo];
+            header: () => (
+                <NavigationBar
+                    title='Category Combinations'
+                    navigation={navigation}
+                    additions={
+                        <Appbar.Action
+                            icon='plus'
+                            onPress={() => {
+                                navigation.navigate(ScreenNames.editCategoryComboScreen, {
+                                    profiles: profiles,
+                                    categoriesFirstProfile: categoriesFirstProfile,
+                                    categoriesSecondProfile: categoriesSecondProfile,
+                                    saveCategoryCombo: async (categoryCombo) => {
+                                        const newCombos = [...categoryCombos, categoryCombo];
 
-                                setCategoryCombos(newCombos);
-                                await saveCategoryCombos(newCombos);
-                            }
-                        });
-                    }}
-                    accessoryLeft={CreateIcon}
-                    size='small'
-                    appearance='outline'>
-                    Add
-                </Button>
-            ),
-        });
-    }, [everythingLoaded, navigation]);
+                                        setCategoryCombos(newCombos);
+                                        await saveCategoryCombos(newCombos);
+                                    }
+                                });
+                            }}
+                        />} />)
+        })
+    }, [
+        everythingLoaded,
+        navigation,
+        profiles,
+        categoriesFirstProfile,
+        categoriesSecondProfile,
+        setCategoryCombos,
+        saveCategoryCombos
+    ]);
 
     useEffect(() => {
         if (profiles === undefined) {
