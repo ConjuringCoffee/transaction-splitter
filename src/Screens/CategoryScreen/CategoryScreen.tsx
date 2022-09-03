@@ -6,6 +6,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import RemoveIcon from '../../Component/RemoveIcon';
 import { StyleSheet } from 'react-native';
+import { Appbar } from 'react-native-paper';
+import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 
 type ScreenName = 'Category Selection';
 
@@ -41,22 +43,23 @@ const CategoryScreen = ({ route, navigation }: Props) => {
     };
 
     React.useLayoutEffect(() => {
-        // TODO: Solve dependency issue to selectAndNavigateBack
         navigation.setOptions({
-            headerRight: () => (
-                <Button
-                    onPress={() => {
-                        selectAndNavigateBack(undefined);
-                    }}
-                    accessoryLeft={RemoveIcon}
-                    size='small'
-                    appearance='outline'
-                    style={styles.deselectButton}>
-                    Deselect
-                </Button>
+            header: () => (
+                <NavigationBar
+                    title={'Categories'}
+                    navigation={navigation}
+                    additions={
+                        <Appbar.Action
+                            onPress={() => selectAndNavigateBack(undefined)}
+                            icon='delete' />
+                    }
+                />
             ),
         });
-    }, [navigation, route.params.onSelect]);
+    }, [
+        navigation,
+        route.params.onSelect
+    ]);
 
     const renderItem = (props: RenderItemProps) => (
         <ListItem
