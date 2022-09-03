@@ -1,11 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, Card, Input, Layout, Text } from '@ui-kitten/components';
-import { useState } from 'react';
+import { Card } from '@ui-kitten/components';
+import React, { useState } from 'react';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import { Category } from '../../YnabApi/YnabApiWrapper';
+import { Button, TextInput, Text, Portal, FAB, Appbar } from 'react-native-paper';
+import { View, StyleSheet, Platform } from 'react-native';
 
 type ScreenName = 'Edit Category Combo';
 type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
@@ -28,11 +30,12 @@ const CategoryLayout = (props: CategoryLayoutProps) => {
     const categoryName = props.categories.find((c) => c.id === props.selectedCategoryId)?.name;
 
     return (
-        <Layout>
+        <>
             <Text>
                 Category of {props.profileName}
             </Text>
             <Button
+                mode="contained"
                 onPress={() => {
                     props.navigation.navigate(ScreenNames.categoryScreen, {
                         categories: props.categories,
@@ -41,9 +44,11 @@ const CategoryLayout = (props: CategoryLayoutProps) => {
                 }}>
                 {categoryName}
             </Button>
-        </Layout>
+        </>
     );
 };
+
+const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
 export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
     const {
@@ -73,11 +78,51 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
         navigation.goBack();
     }
 
-    const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile;
+    const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
 
-    return <>
-        <Card>
-            <Input
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            header: () => (
+                <Appbar.Header>
+                    <Appbar.BackAction onPress={() => navigation.goBack()} />
+                    <Appbar.Content title="Edit" subtitle="Category Combination" />
+                    <Appbar.Action
+                        icon="content-save"
+                        disabled={!readyToSave}
+                        onPress={() => {
+                            if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
+                                throw new Error('Not ready to save yet');
+                            }
+
+                            saveAndNavigate({
+                                name: name,
+                                categories: [
+                                    {
+                                        budgetId: profiles[0].budgetId,
+                                        id: categoryIdFirstProfile
+                                    },
+                                    {
+                                        budgetId: profiles[1].budgetId,
+                                        id: categoryIdSecondProfile
+                                    }]
+                            })
+                        }} />
+                    {deleteCategoryCombo &&
+                        <Appbar.Action
+                            icon={MORE_ICON}
+                            onPress={() => deleteAndNavigate()} />
+                    }
+                </Appbar.Header>
+            ),
+        });
+    }, [
+        navigation,
+        readyToSave
+    ]);
+
+    return (
+        <View style={styles.container}>
+            <TextInput
                 value={name}
                 onChangeText={text => setName(text)}
                 label='Category Combination Name' />
@@ -93,36 +138,19 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
                 navigation={navigation}
                 selectedCategoryId={categoryIdSecondProfile}
                 onCategorySelect={categoryId => setCategoryIdSecondProfile(categoryId)} />
-        </Card>
-        <Card>
-            <Button
-                disabled={!readyToSave}
-                onPress={() => {
-                    if (categoryIdFirstProfile && categoryIdSecondProfile) {
-                        saveAndNavigate({
-                            name: name,
-                            categories: [
-                                {
-                                    budgetId: profiles[0].budgetId,
-                                    id: categoryIdFirstProfile
-                                },
-                                {
-                                    budgetId: profiles[1].budgetId,
-                                    id: categoryIdSecondProfile
-                                }]
-                        })
-                    }
-                }}>
-                Save
-            </Button>
-        </Card>
-        {deleteCategoryCombo ?
-            <Card>
-                <Button
-                    onPress={() => deleteAndNavigate()}>
-                    Delete
-                </Button>
-            </Card>
-            : null}
-    </>
+        </View>
+    );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        paddingVertical: 8,
+        paddingHorizontal: 8
+    },
+    fab: {
+        position: "absolute",
+        margin: 25,
+        right: 0,
+        bottom: 0,
+    }
+});
