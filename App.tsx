@@ -31,8 +31,8 @@ const colorScheme = Appearance.getColorScheme();
 const themeToUse = colorScheme === 'dark' ? CombinedDarkTheme : CombinedDefaultTheme;
 const evaTheme = colorScheme === 'dark' ? eva.dark : eva.light;
 
-// Always use the dark color scheme because both light and dark mode require white font
-const statusBarColorScheme = "dark";
+// Always use the light color scheme because both light and dark mode require white font
+const statusBarColorScheme = "light";
 
 const App = () => {
     return (
