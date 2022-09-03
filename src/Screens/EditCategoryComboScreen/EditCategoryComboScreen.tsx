@@ -1,10 +1,8 @@
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import React, { Fragment, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import { Category } from '../../YnabApi/YnabApiWrapper';
-import { TextInput, Appbar, List, Button } from 'react-native-paper';
+import { TextInput, Appbar, List, Menu } from 'react-native-paper';
 import { View, StyleSheet, Platform } from 'react-native';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { MyStackNavigationProp, MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
@@ -54,6 +52,7 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
     const [name, setName] = useState<string>(categoryCombo?.name ?? '');
     const [categoryIdFirstProfile, setCategoryIdFirstProfile] = useState<string | undefined>(categoryCombo?.categories[0].id);
     const [categoryIdSecondProfile, setCategoryIdSecondProfile] = useState<string | undefined>(categoryCombo?.categories[1].id);
+    const [menuVisible, setMenuVisible] = React.useState<boolean>(false);
 
     const saveAndNavigate = useCallback(async (newCategoryCombo: CategoryCombo): Promise<void> => {
         await saveCategoryCombo(newCategoryCombo);
@@ -77,15 +76,30 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
 
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
 
-    const deleteAction = useCallback(() => {
+    const moreMenu = useCallback(() => {
         return deleteCategoryCombo ?
-            <Appbar.Action
-                icon={moreIconName}
-                onPress={() => deleteAndNavigate()} />
+            <Menu
+                visible={menuVisible}
+                onDismiss={() => setMenuVisible(false)}
+                anchor={
+                    <Appbar.Action
+                        icon={moreIconName}
+                        onPress={() => setMenuVisible(true)}
+                        // TODO: The usual color from the Appbar isn't transferred to this action and I don't know how to fix it
+                        color='white' />
+                } >
+                <Menu.Item title="Delete" onPress={() => {
+                    deleteAndNavigate();
+                    setMenuVisible(false);
+                }} />
+            </Menu >
             : null;
     }, [
+        menuVisible,
         deleteCategoryCombo,
-        deleteAndNavigate
+        deleteAndNavigate,
+        setMenuVisible,
+        moreIconName
     ]);
 
     React.useLayoutEffect(() => {
@@ -118,7 +132,7 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
                                             }]
                                     })
                                 }} />,
-                            deleteAction()
+                            moreMenu()
                         ]
                     }
                 />
@@ -134,7 +148,7 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
         moreIconName,
         deleteCategoryCombo,
         saveAndNavigate,
-        deleteAction
+        moreMenu
     ]);
 
     return (
