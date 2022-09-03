@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { CategoryCombo } from '../../Repository/CategoryComboRepository';
@@ -59,19 +59,25 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
     const [categoryIdFirstProfile, setCategoryIdFirstProfile] = useState<string | undefined>(categoryCombo?.categories[0].id);
     const [categoryIdSecondProfile, setCategoryIdSecondProfile] = useState<string | undefined>(categoryCombo?.categories[1].id);
 
-    const saveAndNavigate = async (newCategoryCombo: CategoryCombo): Promise<void> => {
+    const saveAndNavigate = useCallback(async (newCategoryCombo: CategoryCombo): Promise<void> => {
         await saveCategoryCombo(newCategoryCombo);
         navigation.goBack();
-    }
+    }, [
+        navigation,
+        saveCategoryCombo
+    ]);
 
-    const deleteAndNavigate = async (): Promise<void> => {
+    const deleteAndNavigate = useCallback(async () => {
         if (!deleteCategoryCombo) {
             throw Error('No deletion functionality');
         }
 
         await deleteCategoryCombo();
         navigation.goBack();
-    }
+    }, [
+        navigation,
+        deleteCategoryCombo
+    ]);
 
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
 
@@ -112,7 +118,15 @@ export const EditCategoryComboScreen = ({ navigation, route }: Props) => {
         });
     }, [
         navigation,
-        readyToSave
+        readyToSave,
+        name,
+        categoryIdFirstProfile,
+        categoryIdSecondProfile,
+        profiles,
+        moreIconName,
+        deleteCategoryCombo,
+        deleteAndNavigate,
+        saveAndNavigate
     ]);
 
     return (
