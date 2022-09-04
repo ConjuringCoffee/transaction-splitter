@@ -57,7 +57,7 @@ export const fetchProfiles = createAsyncThunk('profiles/fetchProfiles', async ()
 
 export const overwriteProfiles = createAsyncThunk<
     Profile[], Profile[]
->('categoryCombos/updateCategoryCombo', async (profiles) => {
+>('profiles/overwriteProfiles', async (profiles) => {
     return saveProfiles(profiles);
 });
 
