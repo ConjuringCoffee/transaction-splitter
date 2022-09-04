@@ -27,7 +27,7 @@ const initialState: CategoryCombosState = {
 }
 
 export const fetchCategoryCombos = createAsyncThunk('categoryCombos/fetchCategoryCombos', async () => {
-    return await readCategoryCombos();
+    return readCategoryCombos();
 });
 
 export const saveCategoryCombos = createAsyncThunk('categoryCombos/saveCategoryCombos', async (categoryCombos: CategoryCombo[]) => {

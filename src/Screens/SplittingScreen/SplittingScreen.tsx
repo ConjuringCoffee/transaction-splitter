@@ -2,16 +2,13 @@ import React from 'react';
 import { RouteProp } from '@react-navigation/native';
 import LoadingComponent from '../../Component/LoadingComponent';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
-
 import useProfiles from '../../Hooks/useProfiles';
 import useBudgets from '../../Hooks/useBudgets';
 import useLocalization from '../../Hooks/useLocalization';
 import InitializedSplittingScreen from './InitializedSplittingScreen';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
-import { Button } from '@ui-kitten/components';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import SettingsIcon from '../../Component/SettingsIcon';
 import { Appbar } from 'react-native-paper';
 
 interface Props {

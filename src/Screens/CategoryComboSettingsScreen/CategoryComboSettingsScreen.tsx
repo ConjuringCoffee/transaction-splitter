@@ -11,7 +11,7 @@ import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { ActivityIndicator, Appbar } from 'react-native-paper';
 import { fetchCategoryCombos, saveCategoryCombos, selectAllCategoryCombos, selectFetchStatus } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 
 type ScreenName = 'Category Combinations Settings';
 export type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
