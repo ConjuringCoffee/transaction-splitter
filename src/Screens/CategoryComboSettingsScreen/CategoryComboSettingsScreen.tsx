@@ -2,14 +2,13 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { List, ListItem } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import useProfiles from '../../Hooks/useProfiles';
 import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { ActivityIndicator, Appbar } from 'react-native-paper';
-import { addCategoryCombo, deleteCategoryCombo, fetchCategoryCombos, selectAllCategoryCombos, selectFetchStatus, updateCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, fetchCategoryCombos, selectAllCategoryCombos, selectCategoryComboFetchStatus, updateCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
 
@@ -34,7 +33,7 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
 
     const dispatch = useAppDispatch();
     const categoryCombos = useAppSelector(selectAllCategoryCombos);
-    const fetchStatus = useAppSelector(selectFetchStatus);
+    const fetchStatus = useAppSelector(selectCategoryComboFetchStatus);
 
     useEffect(() => {
         if (fetchStatus.status === 'idle') {

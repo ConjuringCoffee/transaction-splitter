@@ -1,9 +1,16 @@
 import { createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit";
-import { CategoryCombo, readCategoryCombos } from "../../../Repository/CategoryComboRepository";
 import { RootState } from "../../store";
 import * as SecureStore from 'expo-secure-store';
 import { isOneOf } from "../../isOneOf";
 
+interface CategoryInCategoryCombo {
+    id: string,
+    budgetId: string
+}
+export interface CategoryCombo {
+    name: string,
+    categories: [CategoryInCategoryCombo, CategoryInCategoryCombo]
+}
 interface CategoryCombosState {
     fetchStatus: {
         status: 'idle' | 'loading' | 'successful' | 'error'
@@ -30,9 +37,15 @@ const initialState: CategoryCombosState = {
 
 const storageKey = 'categoryCombos';
 
-export const fetchCategoryCombos = createAsyncThunk('categoryCombos/fetchCategoryCombos', async () => {
-    return readCategoryCombos();
-});
+const readCategoryCombos = async (): Promise<CategoryCombo[]> => {
+    const jsonValue = await SecureStore.getItemAsync(storageKey);
+
+    if (!jsonValue) {
+        return [];
+    }
+
+    return JSON.parse(jsonValue);
+};
 
 const saveCategoryCombos = async (categoryCombos: CategoryCombo[]): Promise<CategoryCombo[]> => {
     const jsonValue = JSON.stringify(categoryCombos);
@@ -40,6 +53,9 @@ const saveCategoryCombos = async (categoryCombos: CategoryCombo[]): Promise<Cate
     return categoryCombos;
 }
 
+export const fetchCategoryCombos = createAsyncThunk('categoryCombos/fetchCategoryCombos', async () => {
+    return readCategoryCombos();
+});
 export const updateCategoryCombo = createAsyncThunk<
     CategoryCombo[], { index: number, categoryCombo: CategoryCombo }, { state: RootState }
 >('categoryCombos/updateCategoryCombo', async ({ index, categoryCombo }, thunkAPI) => {
@@ -117,5 +133,5 @@ export const categoryCombosSlice = createSlice({
 export default categoryCombosSlice.reducer;
 
 export const selectAllCategoryCombos = (state: RootState) => state.categoryCombos.objects;
-export const selectFetchStatus = (state: RootState) => state.categoryCombos.fetchStatus;
-export const selectSaveStatus = (state: RootState) => state.categoryCombos.saveStatus;
+export const selectCategoryComboFetchStatus = (state: RootState) => state.categoryCombos.fetchStatus;
+export const selectCategoryComboSaveStatus = (state: RootState) => state.categoryCombos.saveStatus;

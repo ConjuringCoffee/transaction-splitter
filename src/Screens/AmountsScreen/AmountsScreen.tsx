@@ -7,12 +7,13 @@ import CustomScrollView from '../../Component/CustomScrollView';
 import LoadingComponent from '../../Component/LoadingComponent';
 import useLocalization from '../../Hooks/useLocalization';
 import { convertAmountToText } from '../../Helper/AmountHelper';
-import { CategoryCombo, readCategoryCombos } from '../../Repository/CategoryComboRepository';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { AmountEntry, buildSaveTransactions } from '../../YnabApi/BuildSaveTransactions';
 import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
 import AmountCard from './AmountCard';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { fetchCategoryCombos, selectAllCategoryCombos, selectCategoryComboFetchStatus } from '../../redux/features/categoryCombos/categoryCombosSlice';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Amounts'>;
@@ -27,9 +28,17 @@ const AmountsScreen = (props: Props) => {
     const [amountEntries, setAmountEntries] = useState<Array<AmountEntry>>([]);
     const [payerCategories, setPayerCategories] = useState<Array<Category> | undefined>();
     const [debtorCategories, setDebtorCategories] = useState<Array<Category> | undefined>();
-    const [categoryCombos, setCategoryCombos] = useState<CategoryCombo[]>();
 
+    const dispatch = useAppDispatch();
+    const categoryCombos = useAppSelector(selectAllCategoryCombos);
+    const fetchCategoryComboStatus = useAppSelector(selectCategoryComboFetchStatus);
     const basicData = props.route.params.basicData;
+
+    useEffect(() => {
+        if (fetchCategoryComboStatus.status === 'idle') {
+            dispatch(fetchCategoryCombos());
+        }
+    }, [fetchCategoryComboStatus, dispatch])
 
     useEffect(() => {
         getActiveCategories(basicData.payer.budget.id)
@@ -37,9 +46,6 @@ const AmountsScreen = (props: Props) => {
             .catch((error) => console.error(error));
         getActiveCategories(basicData.debtor.budget.id)
             .then(((categories) => setDebtorCategories(categories)))
-            .catch((error) => console.error(error));
-        readCategoryCombos()
-            .then((combos) => setCategoryCombos(combos))
             .catch((error) => console.error(error));
     }, [basicData]);
 
@@ -119,7 +125,7 @@ const AmountsScreen = (props: Props) => {
 
     return (
         <CustomScrollView>
-            {categoriesAreLoaded && numberFormatSettings
+            {categoriesAreLoaded && numberFormatSettings && fetchCategoryComboStatus.status === 'successful'
                 ? <Layout>
                     {amountEntries.map((amountEntry, index) => {
                         return <AmountCard
