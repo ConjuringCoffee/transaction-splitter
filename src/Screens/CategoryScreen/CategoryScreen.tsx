@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input, Layout, List, ListItem } from '@ui-kitten/components';
 import { Category } from '../../YnabApi/YnabApiWrapper';
-import { RouteProp } from '@react-navigation/native';
+import { CommonActions, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { StyleSheet } from 'react-native';
@@ -20,8 +20,6 @@ type Props = {
 
 const CategoryScreen = ({ route, navigation }: Props) => {
     const [nameFilter, setNameFilter] = useState<string>('');
-    const [navigatedBack, setNavigatedBack] = useState<boolean>(false);
-
     const categoriesToDisplay = route.params.categories.filter((category) => category.name.toLowerCase().includes(nameFilter.toLowerCase()));
 
     interface RenderItemProps {
@@ -30,14 +28,9 @@ const CategoryScreen = ({ route, navigation }: Props) => {
     }
 
     const selectAndNavigateBack = (categoryId: string | undefined): void => {
-        if (navigatedBack) {
-            // Avoid selecting the category multiple times if pressed multiple times fast
-            // Bug: This doesn't work for the button in the navigation header
-            return;
-        }
-
-        setNavigatedBack(true);
-        navigation.goBack();
+        // This prevents multiple fast button presses to navigate back multiple times
+        // Source: https://github.com/react-navigation/react-navigation/issues/6864#issuecomment-635686686
+        navigation.dispatch(state => ({ ...CommonActions.goBack(), target: state.key }));
         route.params.onSelect(categoryId);
     };
 
@@ -57,7 +50,7 @@ const CategoryScreen = ({ route, navigation }: Props) => {
         });
     }, [
         navigation,
-        route.params.onSelect
+        selectAndNavigateBack
     ]);
 
     const renderItem = (props: RenderItemProps) => (

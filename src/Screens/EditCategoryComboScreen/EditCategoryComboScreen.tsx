@@ -6,6 +6,7 @@ import { View, StyleSheet, Platform } from 'react-native';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { MyStackNavigationProp, MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { CommonActions } from '@react-navigation/native';
 
 type ScreenName = 'Edit Category Combo';
 
@@ -54,25 +55,25 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
     const [categoryIdSecondProfile, setCategoryIdSecondProfile] = useState<string | undefined>(categoryCombo?.categories[1].id);
     const [menuVisible, setMenuVisible] = React.useState<boolean>(false);
 
-    const saveAndNavigate = useCallback(async (newCategoryCombo: CategoryCombo): Promise<void> => {
-        await saveCategoryCombo(newCategoryCombo);
-        navigation.goBack();
-    }, [
-        navigation,
-        saveCategoryCombo
-    ]);
+    const navigateBack = () => {
+        // This prevents multiple fast button presses to navigate back multiple times
+        // Source: https://github.com/react-navigation/react-navigation/issues/6864#issuecomment-635686686
+        navigation.dispatch(state => ({ ...CommonActions.goBack(), target: state.key }));
+    }
 
-    const deleteAndNavigate = useCallback(async () => {
+    const saveAndNavigate = async (newCategoryCombo: CategoryCombo): Promise<void> => {
+        await saveCategoryCombo(newCategoryCombo);
+        navigateBack();
+    };
+
+    const deleteAndNavigate = async () => {
         if (!deleteCategoryCombo) {
             throw Error('No deletion functionality');
         }
 
         await deleteCategoryCombo();
-        navigation.goBack();
-    }, [
-        navigation,
-        deleteCategoryCombo
-    ]);
+        navigateBack();
+    };
 
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
 
