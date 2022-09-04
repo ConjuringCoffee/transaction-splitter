@@ -102,13 +102,7 @@ const StackNavigator = () => {
                 }} />
             <stack.Screen
                 name={ScreenNames.categoryComboSettingsScreen}
-                component={CategoryComboSettingsScreen}
-                options={{
-                    header: (headerProps) => (<NavigationBar
-                        title='Category Combinations'
-                        subtitle='Settings'
-                        navigation={headerProps.navigation} />)
-                }} />
+                component={CategoryComboSettingsScreen} />
             <stack.Screen
                 name={ScreenNames.editCategoryComboScreen}
                 component={EditCategoryComboScreen} />
