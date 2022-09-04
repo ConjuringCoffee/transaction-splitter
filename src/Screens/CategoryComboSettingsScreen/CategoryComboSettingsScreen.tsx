@@ -9,7 +9,7 @@ import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { ActivityIndicator, Appbar } from 'react-native-paper';
-import { fetchCategoryCombos, saveCategoryCombos, selectAllCategoryCombos, selectFetchStatus } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { addCategoryCombo, deleteCategoryCombo, fetchCategoryCombos, selectAllCategoryCombos, selectFetchStatus, updateCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
 
@@ -62,9 +62,7 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
                     categoriesFirstProfile: categoriesFirstProfile,
                     categoriesSecondProfile: categoriesSecondProfile,
                     saveCategoryCombo: async (categoryCombo) => {
-                        const newCombos = [...categoryCombos, categoryCombo];
-
-                        dispatch(saveCategoryCombos(newCombos));
+                        dispatch(addCategoryCombo(categoryCombo));
                     }
                 });
             }}
@@ -84,8 +82,7 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
         profiles,
         categoriesFirstProfile,
         categoriesSecondProfile,
-        dispatch,
-        saveCategoryCombos
+        dispatch
     ]);
 
     useEffect(() => {
@@ -120,16 +117,10 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
                     categoriesFirstProfile: categoriesFirstProfile,
                     categoriesSecondProfile: categoriesSecondProfile,
                     saveCategoryCombo: async (categoryCombo) => {
-                        const newCombos = [...categoryCombos];
-                        newCombos[index] = categoryCombo;
-
-                        dispatch(saveCategoryCombos(newCombos));
+                        dispatch(updateCategoryCombo({ index, categoryCombo }));
                     },
                     deleteCategoryCombo: async () => {
-                        const newCombos = [...categoryCombos];
-                        newCombos.splice(index, 1);
-
-                        dispatch(saveCategoryCombos(newCombos));
+                        dispatch(deleteCategoryCombo(index));
                     }
                 });
             }}

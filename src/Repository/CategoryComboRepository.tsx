@@ -22,10 +22,5 @@ const readCategoryCombos = async (): Promise<CategoryCombo[]> => {
     return JSON.parse(jsonValue);
 };
 
-const saveCategoryCombos = async (categoryCombination: CategoryCombo[]) => {
-    const jsonValue = JSON.stringify(categoryCombination);
-    await SecureStore.setItemAsync(storageKey, jsonValue, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
-};
-
 export type { CategoryCombo, CategoryInCategoryCombo };
-export { readCategoryCombos, saveCategoryCombos };
+export { readCategoryCombos };

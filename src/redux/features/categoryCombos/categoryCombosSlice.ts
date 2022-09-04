@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit";
-import { CategoryCombo, readCategoryCombos, saveCategoryCombos as saveCategoryCombosRepo } from "../../../Repository/CategoryComboRepository";
+import { CategoryCombo, readCategoryCombos } from "../../../Repository/CategoryComboRepository";
 import { RootState } from "../../store";
+import * as SecureStore from 'expo-secure-store';
+import { isOneOf } from "../../isOneOf";
 
 interface CategoryCombosState {
     fetchStatus: {
@@ -26,14 +28,43 @@ const initialState: CategoryCombosState = {
     objects: [],
 }
 
+const storageKey = 'categoryCombos';
+
 export const fetchCategoryCombos = createAsyncThunk('categoryCombos/fetchCategoryCombos', async () => {
     return readCategoryCombos();
 });
 
-export const saveCategoryCombos = createAsyncThunk('categoryCombos/saveCategoryCombos', async (categoryCombos: CategoryCombo[]) => {
-    await saveCategoryCombosRepo(categoryCombos);
+const saveCategoryCombos = async (categoryCombos: CategoryCombo[]): Promise<CategoryCombo[]> => {
+    const jsonValue = JSON.stringify(categoryCombos);
+    await SecureStore.setItemAsync(storageKey, jsonValue, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
     return categoryCombos;
-})
+}
+
+export const updateCategoryCombo = createAsyncThunk<
+    CategoryCombo[], { index: number, categoryCombo: CategoryCombo }, { state: RootState }
+>('categoryCombos/updateCategoryCombo', async ({ index, categoryCombo }, thunkAPI) => {
+    const newCategoryCombos = [...thunkAPI.getState().categoryCombos.objects];
+    newCategoryCombos[index] = categoryCombo;
+
+    return saveCategoryCombos(newCategoryCombos);
+});
+
+export const addCategoryCombo = createAsyncThunk<
+    CategoryCombo[], CategoryCombo, { state: RootState }
+>('categoryCombos/addCategoryCombo', async (categoryCombo, thunkAPI) => {
+    const newCategoryCombos = [...thunkAPI.getState().categoryCombos.objects, categoryCombo];
+
+    return saveCategoryCombos(newCategoryCombos);
+});
+
+export const deleteCategoryCombo = createAsyncThunk<
+    CategoryCombo[], number, { state: RootState }
+>('categoryCombos/deleteCategoryCombo', async (index, thunkAPI) => {
+    const newCategoryCombos = [...thunkAPI.getState().categoryCombos.objects];
+    newCategoryCombos.splice(index, 1);
+
+    return saveCategoryCombos(newCategoryCombos);
+});
 
 export const categoryCombosSlice = createSlice({
     name: 'categoryCombos',
@@ -61,20 +92,20 @@ export const categoryCombosSlice = createSlice({
                     error: action.error
                 }
             })
-            .addCase(saveCategoryCombos.pending, (state) => {
+            .addMatcher(isOneOf([updateCategoryCombo.pending, addCategoryCombo.pending, deleteCategoryCombo.pending]), (state) => {
                 state.saveStatus = {
                     status: 'loading',
                     error: null
                 }
             })
-            .addCase(saveCategoryCombos.fulfilled, (state, action) => {
+            .addMatcher(isOneOf([updateCategoryCombo.fulfilled, addCategoryCombo.fulfilled, deleteCategoryCombo.fulfilled]), (state, action) => {
                 state.saveStatus = {
                     status: 'successful',
                     error: null
                 }
                 state.objects = action.payload;
             })
-            .addCase(saveCategoryCombos.rejected, (state, action) => {
+            .addMatcher(isOneOf([updateCategoryCombo.rejected, addCategoryCombo.rejected, deleteCategoryCombo.rejected]), (state, action) => {
                 state.saveStatus = {
                     status: 'error',
                     error: action.error
