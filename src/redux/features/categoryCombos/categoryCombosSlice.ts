@@ -56,10 +56,11 @@ const saveCategoryCombos = async (categoryCombos: CategoryCombo[]): Promise<Cate
 export const fetchCategoryCombos = createAsyncThunk('categoryCombos/fetchCategoryCombos', async () => {
     return readCategoryCombos();
 });
+
 export const updateCategoryCombo = createAsyncThunk<
     CategoryCombo[], { index: number, categoryCombo: CategoryCombo }, { state: RootState }
->('categoryCombos/updateCategoryCombo', async ({ index, categoryCombo }, thunkAPI) => {
-    const newCategoryCombos = [...thunkAPI.getState().categoryCombos.objects];
+>('categoryCombos/updateCategoryCombo', async ({ index, categoryCombo }, { getState }) => {
+    const newCategoryCombos = [...getState().categoryCombos.objects];
     newCategoryCombos[index] = categoryCombo;
 
     return saveCategoryCombos(newCategoryCombos);

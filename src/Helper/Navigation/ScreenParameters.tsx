@@ -1,9 +1,9 @@
 import { Account, Budget, Category } from '../../YnabApi/YnabApiWrapper';
 import { ScreenNames } from './ScreenNames';
 import * as ynab from 'ynab';
-import { Profile } from '../../Repository/ProfileRepository';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { Profile } from '../../redux/features/profiles/profilesSlice';
 
 interface BasicData {
     payer: PayerData,
@@ -61,7 +61,7 @@ type StackParameterList = {
     [ScreenNames.categoryComboSettingsScreen]: undefined;
     [ScreenNames.editCategoryComboScreen]: {
         categoryCombo?: CategoryCombo,
-        profiles: [Profile, Profile]
+        profiles: Profile[]
         categoriesFirstProfile: Category[],
         categoriesSecondProfile: Category[],
         saveCategoryCombo: (categoryCombo: CategoryCombo) => Promise<void>,
