@@ -44,7 +44,8 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
 
     const everythingLoaded = categoriesFirstProfile !== undefined
         && categoriesSecondProfile !== undefined
-        && profiles !== undefined;
+        && profiles !== undefined
+        && fetchStatus.status === 'successful';
 
     React.useLayoutEffect(() => {
         let additions: JSX.Element | null = null;
