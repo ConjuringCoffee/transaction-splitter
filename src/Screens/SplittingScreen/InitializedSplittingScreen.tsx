@@ -3,7 +3,6 @@ import CustomScrollView from "../../Component/CustomScrollView";
 import NumberInput from "../../Component/NumberInput";
 import { NumberFormatSettings } from "../../Hooks/useLocalization";
 import { StyleSheet } from 'react-native';
-import { Profile } from "../../Repository/ProfileRepository";
 import { Account, Budget } from "../../YnabApi/YnabApiWrapper";
 import { Button, Card, Layout, Radio, RadioGroup } from "@ui-kitten/components";
 import PayerAccountSelectionCard from "./PayerAccountSelectionCard";
@@ -13,11 +12,12 @@ import { ScreenNames } from "../../Helper/Navigation/ScreenNames";
 import BudgetsHelper from "../../Helper/BudgetsHelper";
 import BudgetHelper from "../../Helper/BudgetHelper";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { Profile } from "../../redux/features/profiles/profilesSlice";
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,
     numberFormatSettings: NumberFormatSettings,
-    profiles: [Profile, Profile],
+    profiles: Profile[],
     budgets: Budget[],
 }
 

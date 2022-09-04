@@ -2,11 +2,12 @@ import { Button } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import CustomScrollView from '../../Component/CustomScrollView';
 import LoadingComponent from '../../Component/LoadingComponent';
-import { Profile, readProfiles, saveProfiles } from '../../Repository/ProfileRepository';
 import useBudgets from '../../Hooks/useBudgets';
 import { Budget } from '../../YnabApi/YnabApiWrapper';
 import ProfileCard from './ProfileCard';
 import BudgetHelper from '../../Helper/BudgetHelper';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { fetchProfiles, overwriteProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 
 interface EditableProfile {
     name: string,
@@ -28,23 +29,28 @@ const ProfileSettingsScreen = () => {
         });
     };
 
+    const dispatch = useAppDispatch();
+
+    const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
+    const profiles = useAppSelector(selectAllProfiles);
+
     useEffect(() => {
-        if (!budgets) {
-            return;
+        if (profilesFetchStatus.status === 'idle') {
+            dispatch(fetchProfiles());
+        } else if (profilesFetchStatus.status === 'successful') {
+            if (!budgets) {
+                return;
+            }
+            if (profiles.length === 2) {
+                setEditableProfiles(profiles);
+            } else {
+                const defaultEditableProfiles = [
+                    createDefaultProfile(budgets[0]),
+                    createDefaultProfile(budgets[1])];
+                setEditableProfiles(defaultEditableProfiles);
+            }
         }
-        readProfiles()
-            .then((profiles) => {
-                if (profiles.length === 2) {
-                    setEditableProfiles(profiles);
-                } else {
-                    const defaultEditableProfiles = [
-                        createDefaultProfile(budgets[0]),
-                        createDefaultProfile(budgets[1])];
-                    setEditableProfiles(defaultEditableProfiles);
-                }
-            })
-            .catch((error) => console.error(error));
-    }, [budgets]);
+    }, [profilesFetchStatus, dispatch, budgets, profiles]);
 
     const getBudget = (budgetId: string): Budget => {
         if (!budgets) {
@@ -134,8 +140,7 @@ const ProfileSettingsScreen = () => {
                     if (editableProfiles === undefined) {
                         throw new Error('Impossible to get here');
                     }
-                    const newProfiles: Array<Profile> = editableProfiles;
-                    saveProfiles(newProfiles);
+                    dispatch(overwriteProfiles(editableProfiles));
                 }}>
                 Save
             </Button>

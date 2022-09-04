@@ -2,7 +2,6 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { List, ListItem } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import useProfiles from '../../Hooks/useProfiles';
 import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
@@ -11,6 +10,7 @@ import { ActivityIndicator, Appbar } from 'react-native-paper';
 import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, fetchCategoryCombos, selectAllCategoryCombos, selectCategoryComboFetchStatus, updateCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
+import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 
 type ScreenName = 'Category Combinations Settings';
 export type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
@@ -27,25 +27,34 @@ interface RenderItemProps {
 }
 
 export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
-    const [profiles] = useProfiles();
     const [categoriesFirstProfile, setCategoriesFirstProfile] = useState<Category[]>();
     const [categoriesSecondProfile, setCategoriesSecondProfile] = useState<Category[]>();
 
     const dispatch = useAppDispatch();
+
+    const categoryCombosFetchStatus = useAppSelector(selectCategoryComboFetchStatus);
     const categoryCombos = useAppSelector(selectAllCategoryCombos);
-    const fetchStatus = useAppSelector(selectCategoryComboFetchStatus);
+
+    const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
+    const profiles = useAppSelector(selectAllProfiles);
 
     useEffect(() => {
-        if (fetchStatus.status === 'idle') {
+        if (categoryCombosFetchStatus.status === 'idle') {
             dispatch(fetchCategoryCombos());
         }
-    }, [fetchStatus, dispatch])
+    }, [categoryCombosFetchStatus, dispatch]);
 
+    useEffect(() => {
+        if (profilesFetchStatus.status === 'idle') {
+            dispatch(fetchProfiles());
+        }
+    }, [profilesFetchStatus, dispatch]);
 
     const everythingLoaded = categoriesFirstProfile !== undefined
         && categoriesSecondProfile !== undefined
-        && profiles !== undefined
-        && fetchStatus.status === 'successful';
+        && profilesFetchStatus.status === 'successful'
+        && profiles.length === 2
+        && categoryCombosFetchStatus.status === 'successful';
 
     React.useLayoutEffect(() => {
         let additions: JSX.Element | null = null;

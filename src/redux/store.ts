@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import categoryCombosSlice from './features/categoryCombos/categoryCombosSlice';
+import profilesSlice from './features/profiles/profilesSlice';
 
 export const store = configureStore({
     reducer: {
-        categoryCombos: categoryCombosSlice
+        categoryCombos: categoryCombosSlice,
+        profiles: profilesSlice
     }
 });
 
