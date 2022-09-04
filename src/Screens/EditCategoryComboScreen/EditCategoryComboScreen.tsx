@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import { Category } from '../../YnabApi/YnabApiWrapper';
 import { TextInput, Appbar, List, Menu } from 'react-native-paper';
 import { View, StyleSheet, Platform } from 'react-native';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { MyStackNavigationProp, MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
+import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 
 type ScreenName = 'Edit Category Combo';
 

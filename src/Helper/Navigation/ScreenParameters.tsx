@@ -1,9 +1,9 @@
 import { Account, Budget, Category } from '../../YnabApi/YnabApiWrapper';
-import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import { ScreenNames } from './ScreenNames';
 import * as ynab from 'ynab';
 import { Profile } from '../../Repository/ProfileRepository';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
+import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 
 interface BasicData {
     payer: PayerData,

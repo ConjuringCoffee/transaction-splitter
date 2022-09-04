@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Input, Layout, List, ListItem } from '@ui-kitten/components';
+import { Input, Layout, List, ListItem } from '@ui-kitten/components';
 import { Category } from '../../YnabApi/YnabApiWrapper';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
-import RemoveIcon from '../../Component/RemoveIcon';
 import { StyleSheet } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';

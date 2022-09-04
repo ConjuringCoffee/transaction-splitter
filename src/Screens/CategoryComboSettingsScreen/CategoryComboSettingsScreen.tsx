@@ -2,14 +2,15 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { List, ListItem } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import LoadingComponent from '../../Component/LoadingComponent';
-import { CategoryCombo, readCategoryCombos, saveCategoryCombos } from '../../Repository/CategoryComboRepository';
 import useProfiles from '../../Hooks/useProfiles';
 import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
-import { Appbar } from 'react-native-paper';
+import { ActivityIndicator, Appbar } from 'react-native-paper';
+import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, fetchCategoryCombos, selectAllCategoryCombos, selectCategoryComboFetchStatus, updateCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { View } from 'react-native';
 
 type ScreenName = 'Category Combinations Settings';
 export type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
@@ -29,39 +30,51 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
     const [profiles] = useProfiles();
     const [categoriesFirstProfile, setCategoriesFirstProfile] = useState<Category[]>();
     const [categoriesSecondProfile, setCategoriesSecondProfile] = useState<Category[]>();
-    const [categoryCombos, setCategoryCombos] = useState<CategoryCombo[]>([]);
+
+    const dispatch = useAppDispatch();
+    const categoryCombos = useAppSelector(selectAllCategoryCombos);
+    const fetchStatus = useAppSelector(selectCategoryComboFetchStatus);
+
+    useEffect(() => {
+        if (fetchStatus.status === 'idle') {
+            dispatch(fetchCategoryCombos());
+        }
+    }, [fetchStatus, dispatch])
+
 
     const everythingLoaded = categoriesFirstProfile !== undefined
         && categoriesSecondProfile !== undefined
-        && profiles !== undefined;
+        && profiles !== undefined
+        && fetchStatus.status === 'successful';
 
     React.useLayoutEffect(() => {
-        if (!everythingLoaded) {
-            return;
-        }
+        let additions: JSX.Element | null = null;
+
+        additions = (<Appbar.Action
+            icon='plus'
+            disabled={!everythingLoaded}
+            onPress={() => {
+                if (!everythingLoaded) {
+                    throw Error('Initialization was not done yet');
+                }
+                navigation.navigate(ScreenNames.editCategoryComboScreen, {
+                    profiles: profiles,
+                    categoriesFirstProfile: categoriesFirstProfile,
+                    categoriesSecondProfile: categoriesSecondProfile,
+                    saveCategoryCombo: async (categoryCombo) => {
+                        dispatch(addCategoryCombo(categoryCombo));
+                    }
+                });
+            }}
+        />);
 
         navigation.setOptions({
             header: () => (
                 <NavigationBar
                     title='Category Combinations'
+                    subtitle='Settings'
                     navigation={navigation}
-                    additions={
-                        <Appbar.Action
-                            icon='plus'
-                            onPress={() => {
-                                navigation.navigate(ScreenNames.editCategoryComboScreen, {
-                                    profiles: profiles,
-                                    categoriesFirstProfile: categoriesFirstProfile,
-                                    categoriesSecondProfile: categoriesSecondProfile,
-                                    saveCategoryCombo: async (categoryCombo) => {
-                                        const newCombos = [...categoryCombos, categoryCombo];
-
-                                        setCategoryCombos(newCombos);
-                                        await saveCategoryCombos(newCombos);
-                                    }
-                                });
-                            }}
-                        />} />)
+                    additions={additions} />)
         })
     }, [
         everythingLoaded,
@@ -69,8 +82,7 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
         profiles,
         categoriesFirstProfile,
         categoriesSecondProfile,
-        setCategoryCombos,
-        saveCategoryCombos
+        dispatch
     ]);
 
     useEffect(() => {
@@ -81,15 +93,6 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
         initializeCategories(profiles[0].budgetId, setCategoriesFirstProfile);
         initializeCategories(profiles[1].budgetId, setCategoriesSecondProfile);
     }, [profiles]);
-
-    useEffect(() => {
-        readCategoryCombos().then(
-            combos => setCategoryCombos(combos)
-        ).catch((error) => {
-            console.error(error);
-            throw error;
-        });
-    }, []);
 
     const initializeCategories = (budgetId: string, setCategories: (categories: Category[]) => void) => {
         getActiveCategories(budgetId)
@@ -114,18 +117,10 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
                     categoriesFirstProfile: categoriesFirstProfile,
                     categoriesSecondProfile: categoriesSecondProfile,
                     saveCategoryCombo: async (categoryCombo) => {
-                        const newCombos = [...categoryCombos];
-                        newCombos[index] = categoryCombo;
-
-                        setCategoryCombos(newCombos);
-                        await saveCategoryCombos(newCombos);
+                        dispatch(updateCategoryCombo({ index, categoryCombo }));
                     },
                     deleteCategoryCombo: async () => {
-                        const newCombos = [...categoryCombos];
-                        newCombos.splice(index, 1);
-
-                        setCategoryCombos(newCombos);
-                        await saveCategoryCombos(newCombos);
+                        dispatch(deleteCategoryCombo(index));
                     }
                 });
             }}
@@ -133,14 +128,16 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
     )
 
     return (
-        <>
+        <View>
             {
                 everythingLoaded ?
                     <List
                         data={categoryCombos}
                         renderItem={renderItem}
                     />
-                    : <LoadingComponent />}
-        </>
+                    : <ActivityIndicator />
+            }
+        </View>
     );
 };
+

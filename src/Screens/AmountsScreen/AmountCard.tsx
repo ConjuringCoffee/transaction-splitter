@@ -6,9 +6,9 @@ import { Navigation } from './AmountsScreen';
 import RemoveIcon from '../../Component/RemoveIcon';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import SplitPercentInput from './SplitPercentInput';
-import { CategoryCombo } from '../../Repository/CategoryComboRepository';
 import NumberInput from '../../Component/NumberInput';
 import { NumberFormatSettings } from '../../Hooks/useLocalization';
+import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 
 interface Props {
     // TODO: Pass AmountEntry instead of all these separate variables

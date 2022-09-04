@@ -17,6 +17,8 @@ import {
 } from 'react-native-paper';
 import merge from 'deepmerge';
 import { StatusBar } from 'expo-status-bar';
+import { Provider as ReduxProvider } from 'react-redux';
+import { store } from './src/redux/store';
 
 LogBox.ignoreLogs([
     // Ignore this because we don't use state persistence or deep screen linking,
@@ -36,16 +38,18 @@ const statusBarColorScheme = "light";
 
 const App = () => {
     return (
-        <PaperProvider theme={themeToUse}>
-            <IconRegistry icons={EvaIconsPack} />
-            <ApplicationProvider {...eva} theme={evaTheme}>
-                <NavigationContainer theme={themeToUse}>
-                    {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
-                    <StatusBar style={statusBarColorScheme} />
-                    <AppNavigator />
-                </NavigationContainer>
-            </ApplicationProvider>
-        </PaperProvider>
+        <ReduxProvider store={store}>
+            <PaperProvider theme={themeToUse}>
+                <IconRegistry icons={EvaIconsPack} />
+                <ApplicationProvider {...eva} theme={evaTheme}>
+                    <NavigationContainer theme={themeToUse}>
+                        {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
+                        <StatusBar style={statusBarColorScheme} />
+                        <AppNavigator />
+                    </NavigationContainer>
+                </ApplicationProvider>
+            </PaperProvider>
+        </ReduxProvider>
     );
 };
 
