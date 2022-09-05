@@ -18,14 +18,33 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "splash": {
+        "image": "./assets/splash.png",
+        "backgroundColor": "#FFFFFF",
+        "dark": {
+          "image": "./assets/splash.png",
+          "backgroundColor": "#000000"
+        }
+      }
+    },
+    "androidStatusBar": {
+      "translucent": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#5C9CA4"
       },
-      "package": "com.conjuringcoffee.transactionsplitter"
+      "package": "com.conjuringcoffee.transactionsplitter",
+      "splash": {
+        "image": "./assets/splash.png",
+        "backgroundColor": "#FFFFFF",
+        "dark": {
+          "image": "./assets/splash.png",
+          "backgroundColor": "#000000"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
