@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "transaction-splitter",
+    "name": "Transaction Splitter",
     "slug": "transaction-splitter",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,7 +23,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#5C9CA4"
       },
       "package": "com.conjuringcoffee.transactionsplitter"
     },
