@@ -9,10 +9,11 @@ import PayerAccountSelectionCard from "./PayerAccountSelectionCard";
 import GeneralSelectionCard from "./GeneralSelectionCard";
 import { StackParameterList } from "../../Helper/Navigation/ScreenParameters";
 import { ScreenNames } from "../../Helper/Navigation/ScreenNames";
-import BudgetsHelper from "../../Helper/BudgetsHelper";
 import BudgetHelper from "../../Helper/BudgetHelper";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Profile } from "../../redux/features/profiles/profilesSlice";
+import { useAppSelector } from "../../redux/hooks";
+import { selectBudgetById } from "../../redux/features/ynab/ynabSlice";
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,
@@ -29,8 +30,6 @@ const InitializedSplittingScreen = (props: Props) => {
     const [date, setDate] = useState<Date>(new Date());
     const [memo, setMemo] = useState<string>('[Generated]');
 
-    const budgetsHelper = new BudgetsHelper(props.budgets);
-
     const getPayerProfile = (): Profile => {
         return props.profiles[payerProfileIndex];
     };
@@ -42,7 +41,7 @@ const InitializedSplittingScreen = (props: Props) => {
 
     const getElegibleAccounts = (): Account[] => {
         const payerProfile = getPayerProfile();
-        const payerBudget = budgetsHelper.getBudget(payerProfile.budgetId);
+        const payerBudget = useAppSelector((state) => selectBudgetById(state, payerProfile.budgetId));
 
         const payerBudgetHelper = new BudgetHelper(payerBudget);
         const activeOnBudgetAccounts = payerBudgetHelper.getActiveOnBudgetAccounts();
@@ -56,14 +55,14 @@ const InitializedSplittingScreen = (props: Props) => {
 
     const navigateToAmountsScreen = () => {
         const payerProfile = getPayerProfile();
-        const payerBudget = budgetsHelper.getBudget(payerProfile.budgetId);
+        const payerBudget = useAppSelector((state) => selectBudgetById(state, payerProfile.budgetId));
 
         const payerBudgetHelper = new BudgetHelper(payerBudget);
         const payerAccount = payerBudgetHelper.getAccount(payerAccountID);
         const payerTransferAccount = payerBudgetHelper.getAccount(payerProfile.debtorAccountId);
 
         const debtorProfile = getDebtorProfile();
-        const debtorBudget = budgetsHelper.getBudget(debtorProfile.budgetId);
+        const debtorBudget = useAppSelector((state) => selectBudgetById(state, debtorProfile.budgetId));
         const debtorBudgetHelper = new BudgetHelper(debtorBudget);
         const debtorAccount = debtorBudgetHelper.getAccount(debtorProfile.debtorAccountId);
 

@@ -54,3 +54,12 @@ export default ynabSlice.reducer;
 
 export const selectBudgets = (state: RootState) => state.ynab.budgets;
 export const selectBudgetsFetchStatus = (state: RootState) => state.ynab.fetchBudgetsStatus;
+export const selectBudgetById = (state: RootState, budgetId: string) => {
+    const budget = state.ynab.budgets.find((budget) => budget.id === budgetId);
+
+    if (!budget) {
+        throw new Error(`Expected to find a budget for ID ${budgetId}, but did not`);
+    }
+
+    return budget;
+}
