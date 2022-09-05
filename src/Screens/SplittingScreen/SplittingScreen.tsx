@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import LoadingComponent from '../../Component/LoadingComponent';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
-import useBudgets from '../../Hooks/useBudgets';
 import useLocalization from '../../Hooks/useLocalization';
 import InitializedSplittingScreen from './InitializedSplittingScreen';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -11,6 +10,7 @@ import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { Appbar } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
+import { fetchBudgets, selectBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,
@@ -18,13 +18,21 @@ interface Props {
 }
 
 const SplittingScreen = (props: Props) => {
-    const { numberFormatSettings } = useLocalization();
-    const [budgets] = useBudgets();
-
     const dispatch = useAppDispatch();
+
+    const { numberFormatSettings } = useLocalization();
+
+    const budgets = useAppSelector(selectBudgets);
+    const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
 
     const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
     const profiles = useAppSelector(selectAllProfiles);
+
+    useEffect(() => {
+        if (budgetsFetchStatus.status === 'idle') {
+            dispatch(fetchBudgets());
+        }
+    }, [budgetsFetchStatus, dispatch]);
 
     useEffect(() => {
         if (profilesFetchStatus.status === 'idle') {
@@ -53,7 +61,7 @@ const SplittingScreen = (props: Props) => {
     return (
         <>
             {numberFormatSettings
-                && budgets
+                && budgetsFetchStatus.status === 'successful'
                 && profilesFetchStatus.status === 'successful'
                 && profiles.length === 2
                 ? <InitializedSplittingScreen

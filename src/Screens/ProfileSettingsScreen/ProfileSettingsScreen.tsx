@@ -2,12 +2,12 @@ import { Button } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import CustomScrollView from '../../Component/CustomScrollView';
 import LoadingComponent from '../../Component/LoadingComponent';
-import useBudgets from '../../Hooks/useBudgets';
 import { Budget } from '../../YnabApi/YnabApiWrapper';
 import ProfileCard from './ProfileCard';
 import BudgetHelper from '../../Helper/BudgetHelper';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchProfiles, overwriteProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
+import { fetchBudgets, selectBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
 
 interface EditableProfile {
     name: string,
@@ -17,22 +17,21 @@ interface EditableProfile {
 }
 
 const ProfileSettingsScreen = () => {
-    const [budgets] = useBudgets();
+    const dispatch = useAppDispatch();
+
     const [editableProfiles, setEditableProfiles] = useState<EditableProfile[]>();
 
-    const createDefaultProfile = (budget: Budget): EditableProfile => {
-        return ({
-            name: budget.name,
-            budgetId: budget.id,
-            debtorAccountId: budget.accounts[0].id,
-            elegibleAccountIds: budget.accounts.map((account) => account.id),
-        });
-    };
-
-    const dispatch = useAppDispatch();
+    const budgets = useAppSelector(selectBudgets);
+    const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
 
     const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
     const profiles = useAppSelector(selectAllProfiles);
+
+    useEffect(() => {
+        if (budgetsFetchStatus.status === 'idle') {
+            dispatch(fetchBudgets());
+        }
+    }, [budgetsFetchStatus, dispatch]);
 
     useEffect(() => {
         if (profilesFetchStatus.status === 'idle') {
@@ -51,6 +50,15 @@ const ProfileSettingsScreen = () => {
             }
         }
     }, [profilesFetchStatus, dispatch, budgets, profiles]);
+
+    const createDefaultProfile = (budget: Budget): EditableProfile => {
+        return ({
+            name: budget.name,
+            budgetId: budget.id,
+            debtorAccountId: budget.accounts[0].id,
+            elegibleAccountIds: budget.accounts.map((account) => account.id),
+        });
+    };
 
     const getBudget = (budgetId: string): Budget => {
         if (!budgets) {

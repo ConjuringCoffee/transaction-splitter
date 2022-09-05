@@ -187,4 +187,4 @@ const createTransaction = async (budgetId: string, saveTransaction: ynab.SaveTra
 };
 
 export type { Account, Category, Budget };
-export { getBudgetsWithAccountsFromApi, createTransaction, getCategories, getActiveCategories };
+export { getBudgetsWithAccountsFromApi, createTransaction, getActiveCategories };
