@@ -2,12 +2,11 @@ import { Button } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import CustomScrollView from '../../Component/CustomScrollView';
 import LoadingComponent from '../../Component/LoadingComponent';
-import useBudgets from '../../Hooks/useBudgets';
-import { Budget } from '../../YnabApi/YnabApiWrapper';
+import { Account, Budget } from '../../YnabApi/YnabApiWrapper';
 import ProfileCard from './ProfileCard';
-import BudgetHelper from '../../Helper/BudgetHelper';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchProfiles, overwriteProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
+import { fetchBudgets, selectBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
 
 interface EditableProfile {
     name: string,
@@ -17,22 +16,21 @@ interface EditableProfile {
 }
 
 const ProfileSettingsScreen = () => {
-    const [budgets] = useBudgets();
+    const dispatch = useAppDispatch();
+
     const [editableProfiles, setEditableProfiles] = useState<EditableProfile[]>();
 
-    const createDefaultProfile = (budget: Budget): EditableProfile => {
-        return ({
-            name: budget.name,
-            budgetId: budget.id,
-            debtorAccountId: budget.accounts[0].id,
-            elegibleAccountIds: budget.accounts.map((account) => account.id),
-        });
-    };
-
-    const dispatch = useAppDispatch();
+    const budgets = useAppSelector(selectBudgets);
+    const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
 
     const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
     const profiles = useAppSelector(selectAllProfiles);
+
+    useEffect(() => {
+        if (budgetsFetchStatus.status === 'idle') {
+            dispatch(fetchBudgets());
+        }
+    }, [budgetsFetchStatus, dispatch]);
 
     useEffect(() => {
         if (profilesFetchStatus.status === 'idle') {
@@ -52,11 +50,17 @@ const ProfileSettingsScreen = () => {
         }
     }, [profilesFetchStatus, dispatch, budgets, profiles]);
 
-    const getBudget = (budgetId: string): Budget => {
-        if (!budgets) {
-            throw Error('Impossible: Should be impossible if no budgets were read');
-        }
+    const createDefaultProfile = (budget: Budget): EditableProfile => {
+        return ({
+            name: budget.name,
+            budgetId: budget.id,
+            debtorAccountId: budget.accounts[0].id,
+            elegibleAccountIds: budget.accounts.map((account) => account.id),
+        });
+    };
 
+    const getBudget = (budgetId: string): Budget => {
+        // TODO: Replace this with selector from ynabSlice
         const budget = budgets.find((b) => b.id === budgetId);
 
         if (!budget) {
@@ -66,9 +70,13 @@ const ProfileSettingsScreen = () => {
         return budget;
     };
 
+    const getActiveOnBudgetAccounts = (budget: Budget): Account[] => {
+        // TODO: Replace this with selector from ynabSlice
+        return budget.accounts.filter((e) => e.onBudget && !e.closed && !e.deleted);
+    }
+
     const createProfileCard = (avaliableBudgets: Array<Budget>, profile: EditableProfile, setProfile: (profile: EditableProfile) => void) => {
         const budget = getBudget(profile.budgetId);
-        const budgetHelper = new BudgetHelper(budget);
 
         return (
             <ProfileCard
@@ -95,7 +103,7 @@ const ProfileSettingsScreen = () => {
                         elegibleAccountIds: newBudget.accounts.map((account) => account.id),
                     });
                 }}
-                accounts={budgetHelper.getActiveOnBudgetAccounts()}
+                accounts={getActiveOnBudgetAccounts(budget)}
                 selectedDebtorAccountId={profile.debtorAccountId}
                 setDebtorAccountId={(accountId) => {
                     const accounts = budget.accounts.find((a) => a.id === accountId);

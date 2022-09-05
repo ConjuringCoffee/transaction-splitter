@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import categoryCombosSlice from './features/categoryCombos/categoryCombosSlice';
 import profilesSlice from './features/profiles/profilesSlice';
+import ynabSlice from './features/ynab/ynabSlice';
 
 export const store = configureStore({
     reducer: {
         categoryCombos: categoryCombosSlice,
-        profiles: profilesSlice
+        profiles: profilesSlice,
+        ynab: ynabSlice
     }
 });
 
