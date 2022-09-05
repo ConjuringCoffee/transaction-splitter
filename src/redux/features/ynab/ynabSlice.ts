@@ -63,3 +63,20 @@ export const selectBudgetById = (state: RootState, budgetId: string) => {
 
     return budget;
 }
+
+export const selectAccountById = (state: RootState, budgetId: string, accountId: string) => {
+    const budget = selectBudgetById(state, budgetId);
+
+    const account = budget.accounts.find((account) => account.id === accountId);
+
+    if (!account) {
+        throw new Error(`Expected to find an account for ID ${accountId} in budget ${budget.name}, but did not`);
+    }
+
+    return account;
+}
+
+export const selectActiveAccounts = (state: RootState, budgetId: string) => {
+    const budget = selectBudgetById(state, budgetId);
+    return budget.accounts.filter((account) => account.onBudget && !account.closed && !account.deleted);
+}
