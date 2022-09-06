@@ -9,11 +9,11 @@ import useLocalization from '../../Hooks/useLocalization';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { AmountEntry, buildSaveTransactions } from '../../YnabApi/BuildSaveTransactions';
-import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
 import AmountCard from './AmountCard';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchCategoryCombos, selectAllCategoryCombos, selectCategoryComboFetchStatus } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { fetchCategories, selectActiveCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Amounts'>;
@@ -26,28 +26,40 @@ type Props = {
 const AmountsScreen = (props: Props) => {
     const { numberFormatSettings } = useLocalization();
     const [amountEntries, setAmountEntries] = useState<Array<AmountEntry>>([]);
-    const [payerCategories, setPayerCategories] = useState<Array<Category> | undefined>();
-    const [debtorCategories, setDebtorCategories] = useState<Array<Category> | undefined>();
 
     const dispatch = useAppDispatch();
+
     const categoryCombos = useAppSelector(selectAllCategoryCombos);
     const fetchCategoryComboStatus = useAppSelector(selectCategoryComboFetchStatus);
+
     const basicData = props.route.params.basicData;
+    const payerBudgetId = basicData.payer.budget.id;
+    const debtorBudgetId = basicData.debtor.budget.id;
+
+    const payerCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, payerBudgetId));
+    const payerCategories = useAppSelector((state) => selectActiveCategories(state, payerBudgetId));
+
+    const debtorCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, debtorBudgetId));
+    const debtorCategories = useAppSelector((state) => selectActiveCategories(state, debtorBudgetId));
+
 
     useEffect(() => {
         if (fetchCategoryComboStatus.status === 'idle') {
             dispatch(fetchCategoryCombos());
         }
-    }, [fetchCategoryComboStatus, dispatch])
+    }, [fetchCategoryComboStatus, dispatch]);
 
     useEffect(() => {
-        getActiveCategories(basicData.payer.budget.id)
-            .then(((categories) => setPayerCategories(categories)))
-            .catch((error) => console.error(error));
-        getActiveCategories(basicData.debtor.budget.id)
-            .then(((categories) => setDebtorCategories(categories)))
-            .catch((error) => console.error(error));
-    }, [basicData]);
+        if (payerCategoriesFetchStatus === 'idle') {
+            dispatch(fetchCategories(payerBudgetId));
+        }
+    }, [payerCategoriesFetchStatus, dispatch, payerBudgetId]);
+
+    useEffect(() => {
+        if (debtorCategoriesFetchStatus === 'idle') {
+            dispatch(fetchCategories(debtorBudgetId));
+        }
+    }, [debtorCategoriesFetchStatus, dispatch, debtorBudgetId]);
 
     const addAmountEntry = (amount?: number) => {
         const entries = [...amountEntries, {
@@ -121,7 +133,7 @@ const AmountsScreen = (props: Props) => {
     const okayToContinue = isOkayToContinue(remainingAmount);
     const addingDisabled = remainingAmount === 0;
 
-    const categoriesAreLoaded = payerCategories !== undefined && debtorCategories !== undefined && categoryCombos !== undefined;
+    const categoriesAreLoaded = payerCategoriesFetchStatus === 'successful' && debtorCategoriesFetchStatus === 'successful';
 
     return (
         <CustomScrollView>

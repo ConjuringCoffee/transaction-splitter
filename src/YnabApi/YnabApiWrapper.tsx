@@ -23,11 +23,6 @@ interface Budget {
     accounts: Array<Account>;
 }
 
-const getActiveCategories = async (budgetId: string): Promise<Category[]> => {
-    const categories = await getCategories(budgetId);
-    return categories.filter((category, index) => !category.deleted && !category.hidden);
-};
-
 const getCategoriesGroupedByCategoryGroup = async (apiKey: string, budgetId: string): Promise<ynab.CategoryGroupWithCategories[]> => {
     const ynabAPI = new ynab.API(apiKey);
     const response = await ynabAPI.categories.getCategories(budgetId);
@@ -187,4 +182,4 @@ const createTransaction = async (budgetId: string, saveTransaction: ynab.SaveTra
 };
 
 export type { Account, Category, Budget };
-export { getBudgetsWithAccountsFromApi, createTransaction, getActiveCategories };
+export { getBudgetsWithAccountsFromApi, createTransaction, getCategories };
