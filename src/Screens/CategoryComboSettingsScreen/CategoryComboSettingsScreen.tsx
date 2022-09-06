@@ -1,8 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { List, ListItem } from '@ui-kitten/components';
-import React, { useEffect, useState } from 'react';
-import { Category, getActiveCategories } from '../../YnabApi/YnabApiWrapper';
+import React, { useEffect } from 'react';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
@@ -11,6 +10,7 @@ import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, fetchCategoryComb
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
 import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
+import { fetchCategories, selectActiveCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 
 type ScreenName = 'Category Combinations Settings';
 export type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
@@ -27,9 +27,6 @@ interface RenderItemProps {
 }
 
 export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
-    const [categoriesFirstProfile, setCategoriesFirstProfile] = useState<Category[]>();
-    const [categoriesSecondProfile, setCategoriesSecondProfile] = useState<Category[]>();
-
     const dispatch = useAppDispatch();
 
     const categoryCombosFetchStatus = useAppSelector(selectCategoryComboFetchStatus);
@@ -37,6 +34,12 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
 
     const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
     const profiles = useAppSelector(selectAllProfiles);
+
+    const categoriesFirstProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profiles[0]?.budgetId));
+    const categoriesFirstProfile = useAppSelector((state) => selectActiveCategories(state, profiles[0]?.budgetId));
+
+    const categoriesSecondProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profiles[1]?.budgetId));
+    const categoriesSecondProfile = useAppSelector((state) => selectActiveCategories(state, profiles[1]?.budgetId));
 
     useEffect(() => {
         if (categoryCombosFetchStatus.status === 'idle') {
@@ -50,8 +53,21 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
         }
     }, [profilesFetchStatus, dispatch]);
 
+    useEffect(() => {
+        if (profilesFetchStatus.status === 'successful' && categoriesFirstProfileFetchStatus === 'idle') {
+            dispatch(fetchCategories(profiles[0].budgetId));
+        }
+    }, [profilesFetchStatus, dispatch, profiles, categoriesFirstProfileFetchStatus]);
+
+    useEffect(() => {
+        if (profilesFetchStatus.status === 'successful' && categoriesSecondProfileFetchStatus === 'idle') {
+            dispatch(fetchCategories(profiles[1].budgetId));
+        }
+    }, [profilesFetchStatus, dispatch, profiles, categoriesSecondProfileFetchStatus]);
+
     const everythingLoaded = categoriesFirstProfile !== undefined
-        && categoriesSecondProfile !== undefined
+        && categoriesFirstProfileFetchStatus === 'successful'
+        && categoriesSecondProfileFetchStatus === 'successful'
         && profilesFetchStatus.status === 'successful'
         && profiles.length === 2
         && categoryCombosFetchStatus.status === 'successful';
@@ -93,24 +109,6 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
         categoriesSecondProfile,
         dispatch
     ]);
-
-    useEffect(() => {
-        if (profiles === undefined) {
-            return;
-        }
-
-        initializeCategories(profiles[0].budgetId, setCategoriesFirstProfile);
-        initializeCategories(profiles[1].budgetId, setCategoriesSecondProfile);
-    }, [profiles]);
-
-    const initializeCategories = (budgetId: string, setCategories: (categories: Category[]) => void) => {
-        getActiveCategories(budgetId)
-            .then(((categories) => setCategories(categories)))
-            .catch((error) => {
-                console.error(error);
-                throw error;
-            });
-    };
 
     const renderItem = ({ item, index }: RenderItemProps) => (
         <ListItem
