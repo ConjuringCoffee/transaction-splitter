@@ -32,7 +32,7 @@ const collectSaveSubtransaction = (collectedSaveSubTransactions: ynab.SaveSubTra
 
 const buildSaveTransactions = (amountEntries: AmountEntry[], basicData: BasicData): SaveTransactions => {
     const payerSaveTransaction: ynab.SaveTransaction = {
-        account_id: basicData.payer.account.id,
+        account_id: basicData.payer.accountId,
         date: basicData.date,
         amount: 0,
         payee_name: basicData.payeeName,
@@ -42,7 +42,7 @@ const buildSaveTransactions = (amountEntries: AmountEntry[], basicData: BasicDat
     };
 
     const debtorSaveTransaction: ynab.SaveTransaction = {
-        account_id: basicData.debtor.account.id,
+        account_id: basicData.debtor.accountId,
         date: basicData.date,
         amount: 0,
         payee_name: basicData.payeeName,
@@ -78,7 +78,7 @@ const buildSaveTransactions = (amountEntries: AmountEntry[], basicData: BasicDat
                 {
                     amount: dividedAmount.remainingAmount,
                     memo: amountEntry.memo,
-                    payee_id: basicData.payer.transferAccount.transferPayeeID,
+                    payee_id: basicData.payer.transferAccountPayeeId,
                 });
             collectSaveSubtransaction(
                 debtorSaveTransaction.subtransactions,
@@ -101,7 +101,7 @@ const buildSaveTransactions = (amountEntries: AmountEntry[], basicData: BasicDat
                 {
                     amount: apiAmount,
                     memo: amountEntry.memo,
-                    payee_id: basicData.payer.transferAccount.transferPayeeID,
+                    payee_id: basicData.payer.transferAccountPayeeId,
                 });
             collectSaveSubtransaction(
                 debtorSaveTransaction.subtransactions,

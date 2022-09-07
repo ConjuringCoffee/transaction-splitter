@@ -1,4 +1,4 @@
-import { Account, Budget, Category } from '../../YnabApi/YnabApiWrapper';
+import { Category } from '../../YnabApi/YnabApiWrapper';
 import { ScreenNames } from './ScreenNames';
 import * as ynab from 'ynab';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
@@ -6,23 +6,20 @@ import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombo
 import { Profile } from '../../redux/features/profiles/profilesSlice';
 
 interface BasicData {
-    payer: PayerData,
-    debtor: DebtorData,
+    payer: {
+        budgetId: string,
+        accountId: string,
+        transferAccountId: string,
+        transferAccountPayeeId: string
+    },
+    debtor: {
+        budgetId: string,
+        accountId: string,
+    },
     payeeName: string,
     date: string,
     memo: string
     totalAmount: number
-}
-
-interface PayerData {
-    budget: Budget,
-    account: Account,
-    transferAccount: Account
-}
-
-interface DebtorData {
-    budget: Budget,
-    account: Account
 }
 
 type StackParameterList = {
@@ -33,8 +30,6 @@ type StackParameterList = {
     };
     [ScreenNames.saveScreen]: {
         basicData: BasicData
-        payerCategories: Array<Category>
-        debtorCategories: Array<Category>
         payerSaveTransaction: ynab.SaveTransaction
         debtorSaveTransaction: ynab.SaveTransaction
     };

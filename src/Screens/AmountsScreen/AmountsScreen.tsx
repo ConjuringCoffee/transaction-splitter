@@ -33,8 +33,8 @@ const AmountsScreen = (props: Props) => {
     const fetchCategoryComboStatus = useAppSelector(selectCategoryComboFetchStatus);
 
     const basicData = props.route.params.basicData;
-    const payerBudgetId = basicData.payer.budget.id;
-    const debtorBudgetId = basicData.debtor.budget.id;
+    const payerBudgetId = basicData.payer.budgetId;
+    const debtorBudgetId = basicData.debtor.budgetId;
 
     const payerCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, payerBudgetId));
     const payerCategories = useAppSelector((state) => selectActiveCategories(state, payerBudgetId));
@@ -144,8 +144,8 @@ const AmountsScreen = (props: Props) => {
                             key={index}
                             numberFormatSettings={numberFormatSettings}
                             amount={amountEntry.amount}
-                            payerBudgetId={basicData.payer.budget.id}
-                            debtorBudgetId={basicData.debtor.budget.id}
+                            payerBudgetId={basicData.payer.budgetId}
+                            debtorBudgetId={basicData.debtor.budgetId}
                             setAmount={(amount) => setAmount(index, amount)}
                             setMemo={(memo) => setMemo(index, memo)}
                             categoryCombos={categoryCombos}
@@ -199,8 +199,6 @@ const AmountsScreen = (props: Props) => {
                                         basicData: basicData,
                                         payerSaveTransaction: saveTransactions.payer,
                                         debtorSaveTransaction: saveTransactions.debtor,
-                                        payerCategories: payerCategories,
-                                        debtorCategories: debtorCategories,
                                     },
                                 );
                             }}>
