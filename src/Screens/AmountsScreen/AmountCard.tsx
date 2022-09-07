@@ -35,7 +35,7 @@ interface Props {
 interface CategoryLayoutProps {
     label: string,
     text: string,
-    categories: Array<Category>,
+    budgetId: string,
     onSelect: (id?: string) => void,
     navigation: Navigation
 }
@@ -47,7 +47,7 @@ const CategoryLayout = (props: CategoryLayoutProps) => (
         <Button
             onPress={() => {
                 props.navigation.navigate(ScreenNames.categoryScreen, {
-                    categories: props.categories,
+                    budgetId: props.budgetId,
                     onSelect: (categoryId?: string) => props.onSelect(categoryId),
                 });
             }}>
@@ -123,7 +123,7 @@ const AmountCard = (props: Props) => {
                 <CategoryLayout
                     label='Payer Category'
                     text={payerCategory?.name ? payerCategory?.name : ''}
-                    categories={props.payerCategories}
+                    budgetId={props.payerBudgetId}
                     onSelect={props.setPayerCategoryId}
                     navigation={props.navigation} />
                 <Button
@@ -153,7 +153,7 @@ const AmountCard = (props: Props) => {
                 <CategoryLayout
                     label='Debtor Category'
                     text={debtorCategory?.name ? debtorCategory?.name : ''}
-                    categories={props.debtorCategories}
+                    budgetId={props.debtorBudgetId}
                     onSelect={props.setDebtorCategoryId}
                     navigation={props.navigation} />
             </Layout>
