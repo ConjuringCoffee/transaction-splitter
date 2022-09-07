@@ -10,6 +10,8 @@ import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import useLocalization from '../../Hooks/useLocalization';
 import LoadingComponent from '../../Component/LoadingComponent';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
+import { useAppSelector } from '../../redux/hooks';
+import { selectAccountById, selectActiveCategories, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Save'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Save'>;
@@ -37,8 +39,12 @@ const SaveScreen = ({ navigation, route }: Props) => {
     const { basicData } = route.params;
     const { payerSaveTransaction } = route.params;
     const { debtorSaveTransaction } = route.params;
-    const { payerCategories } = route.params;
-    const { debtorCategories } = route.params;
+
+    const payerBudget = useAppSelector((state) => selectBudgetById(state, basicData.payer.budgetId));
+    const debtorBudget = useAppSelector((state) => selectBudgetById(state, basicData.debtor.budgetId));
+    const payerTransferAccount = useAppSelector((state) => selectAccountById(state, basicData.payer.budgetId, basicData.payer.transferAccountId));
+    const payerCategories = useAppSelector((state) => selectActiveCategories(state, basicData.payer.budgetId));
+    const debtorCategories = useAppSelector((state) => selectActiveCategories(state, basicData.debtor.budgetId));
 
     useEffect(() => {
         if (payerTransactionSaveStatus === SaveStatus.Success && debtorTransactionSaveStatus === SaveStatus.Success) {
@@ -60,9 +66,9 @@ const SaveScreen = ({ navigation, route }: Props) => {
                             title='Payer transaction'
                             basicData={basicData}
                             saveTransaction={payerSaveTransaction}
-                            budget={basicData.payer.budget}
+                            budget={payerBudget}
                             categories={payerCategories}
-                            transferAccount={basicData.payer.transferAccount} />
+                            transferAccount={payerTransferAccount} />
 
                         <TransactionCard
                             numberFormatSettings={numberFormatSettings}
@@ -70,7 +76,7 @@ const SaveScreen = ({ navigation, route }: Props) => {
                             title='Debtor transaction'
                             basicData={basicData}
                             saveTransaction={debtorSaveTransaction}
-                            budget={basicData.debtor.budget}
+                            budget={debtorBudget}
                             categories={debtorCategories} />
                     </ScrollView>
                     <Button
@@ -81,7 +87,7 @@ const SaveScreen = ({ navigation, route }: Props) => {
                             setPayerTransactionStatus('info');
                             setDebtorTransactionStatus('info');
 
-                            createTransaction(basicData.payer.budget.id, payerSaveTransaction)
+                            createTransaction(basicData.payer.budgetId, payerSaveTransaction)
                                 .then(() => {
                                     setPayerTransactionStatus('success');
                                     setPayerTransactionSaveStatus(SaveStatus.Success);
@@ -91,7 +97,7 @@ const SaveScreen = ({ navigation, route }: Props) => {
                                     setPayerTransactionSaveStatus(SaveStatus.Failure);
                                 });
 
-                            createTransaction(basicData.debtor.budget.id, debtorSaveTransaction)
+                            createTransaction(basicData.debtor.budgetId, debtorSaveTransaction)
                                 .then(() => {
                                     setDebtorTransactionStatus('success');
                                     setDebtorTransactionSaveStatus(SaveStatus.Success);

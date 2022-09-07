@@ -3,7 +3,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Input, Layout, List, ListItem } from '@ui-kitten/components';
 import React, { useState } from 'react';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
-import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { CategoryCombo, selectAllCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { useAppSelector } from '../../redux/hooks';
 
 type ScreenName = 'Category Combinations';
 type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
@@ -17,7 +18,9 @@ type Props = {
 const CategoryComboScreen = ({ route, navigation }: Props) => {
     const [nameFilter, setNameFilter] = useState<string>('');
     const [navigatedBack, setNavigatedBack] = useState<boolean>(false);
-    const categoryCombosToDisplay = route.params.categoryCombos.filter((combo) => combo.name.toLowerCase().includes(nameFilter.toLowerCase()));
+
+    const categoryCombos = useAppSelector(selectAllCategoryCombos);
+    const categoryCombosToDisplay = categoryCombos.filter((combo) => combo.name.toLowerCase().includes(nameFilter.toLowerCase()));
 
     interface RenderItemProps {
         item: CategoryCombo,

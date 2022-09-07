@@ -33,12 +33,8 @@ const InitializedSplittingScreen = (props: Props) => {
 
     const payerBudget = useAppSelector((state) => selectBudgetById(state, payerProfile.budgetId));
     const [payerAccountID, setPayerAccountID] = useState<string>(payerBudget.accounts[0].id);
-
-    const payerAccount = useAppSelector((state) => selectAccountById(state, payerProfile.budgetId, payerAccountID));
     const payerTransferAccount = useAppSelector((state) => selectAccountById(state, payerProfile.budgetId, payerProfile.debtorAccountId));
-
     const debtorBudget = useAppSelector((state) => selectBudgetById(state, debtorProfile.budgetId));
-    const debtorAccount = useAppSelector((state) => selectAccountById(state, debtorProfile.budgetId, debtorProfile.debtorAccountId));
 
     const activeOnBudgetAccounts = useAppSelector((state) => selectActiveAccounts(state, payerProfile.budgetId));
     const elegibleAccounts = activeOnBudgetAccounts.filter((account) => payerProfile.elegibleAccountIds.find((id) => id === account.id));
@@ -53,13 +49,14 @@ const InitializedSplittingScreen = (props: Props) => {
             {
                 basicData: {
                     payer: {
-                        budget: payerBudget,
-                        account: payerAccount,
-                        transferAccount: payerTransferAccount,
+                        budgetId: payerProfile.budgetId,
+                        accountId: payerAccountID,
+                        transferAccountId: payerProfile.debtorAccountId,
+                        transferAccountPayeeId: payerTransferAccount.transferPayeeID
                     },
                     debtor: {
-                        budget: debtorBudget,
-                        account: debtorAccount,
+                        budgetId: debtorProfile.budgetId,
+                        accountId: debtorProfile.debtorAccountId,
                     },
                     payeeName,
                     date: toIsoDateString(date),

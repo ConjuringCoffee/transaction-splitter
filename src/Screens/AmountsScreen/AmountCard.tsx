@@ -8,7 +8,6 @@ import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import SplitPercentInput from './SplitPercentInput';
 import NumberInput from '../../Component/NumberInput';
 import { NumberFormatSettings } from '../../Hooks/useLocalization';
-import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 
 interface Props {
     // TODO: Pass AmountEntry instead of all these separate variables
@@ -19,7 +18,6 @@ interface Props {
     debtorBudgetId: string,
     setAmount: (amount: number) => void,
     setMemo: (memo: string) => void,
-    categoryCombos: CategoryCombo[],
     payerCategories: Array<Category>,
     payerCategoryId: string | undefined,
     setPayerCategoryId: (id: string | undefined) => void,
@@ -35,7 +33,7 @@ interface Props {
 interface CategoryLayoutProps {
     label: string,
     text: string,
-    categories: Array<Category>,
+    budgetId: string,
     onSelect: (id?: string) => void,
     navigation: Navigation
 }
@@ -47,7 +45,7 @@ const CategoryLayout = (props: CategoryLayoutProps) => (
         <Button
             onPress={() => {
                 props.navigation.navigate(ScreenNames.categoryScreen, {
-                    categories: props.categories,
+                    budgetId: props.budgetId,
                     onSelect: (categoryId?: string) => props.onSelect(categoryId),
                 });
             }}>
@@ -123,7 +121,7 @@ const AmountCard = (props: Props) => {
                 <CategoryLayout
                     label='Payer Category'
                     text={payerCategory?.name ? payerCategory?.name : ''}
-                    categories={props.payerCategories}
+                    budgetId={props.payerBudgetId}
                     onSelect={props.setPayerCategoryId}
                     navigation={props.navigation} />
                 <Button
@@ -132,7 +130,6 @@ const AmountCard = (props: Props) => {
                     accessoryLeft={CategoryComboIcon}
                     onPress={() => {
                         props.navigation.navigate(ScreenNames.categoryComboScreen, {
-                            categoryCombos: props.categoryCombos,
                             onSelect: (categoryCombo) => {
                                 if (categoryCombo.categories.length !== 2) {
                                     throw new Error('Cannot handle combinations not consisting of exactly two categories');
@@ -153,7 +150,7 @@ const AmountCard = (props: Props) => {
                 <CategoryLayout
                     label='Debtor Category'
                     text={debtorCategory?.name ? debtorCategory?.name : ''}
-                    categories={props.debtorCategories}
+                    budgetId={props.debtorBudgetId}
                     onSelect={props.setDebtorCategoryId}
                     navigation={props.navigation} />
             </Layout>

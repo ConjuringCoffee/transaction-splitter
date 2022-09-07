@@ -10,7 +10,7 @@ import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, fetchCategoryComb
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
 import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
-import { fetchCategories, selectActiveCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
+import { fetchCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 
 type ScreenName = 'Category Combinations Settings';
 export type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
@@ -36,10 +36,7 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
     const profiles = useAppSelector(selectAllProfiles);
 
     const categoriesFirstProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profiles[0]?.budgetId));
-    const categoriesFirstProfile = useAppSelector((state) => selectActiveCategories(state, profiles[0]?.budgetId));
-
     const categoriesSecondProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profiles[1]?.budgetId));
-    const categoriesSecondProfile = useAppSelector((state) => selectActiveCategories(state, profiles[1]?.budgetId));
 
     useEffect(() => {
         if (categoryCombosFetchStatus.status === 'idle') {
@@ -65,8 +62,8 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
         }
     }, [profilesFetchStatus, dispatch, profiles, categoriesSecondProfileFetchStatus]);
 
-    const everythingLoaded = categoriesFirstProfile !== undefined
-        && categoriesFirstProfileFetchStatus === 'successful'
+    const everythingLoaded =
+        categoriesFirstProfileFetchStatus === 'successful'
         && categoriesSecondProfileFetchStatus === 'successful'
         && profilesFetchStatus.status === 'successful'
         && profiles.length === 2
@@ -84,8 +81,6 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
                 }
                 navigation.navigate(ScreenNames.editCategoryComboScreen, {
                     profiles: profiles,
-                    categoriesFirstProfile: categoriesFirstProfile,
-                    categoriesSecondProfile: categoriesSecondProfile,
                     saveCategoryCombo: async (categoryCombo) => {
                         dispatch(addCategoryCombo(categoryCombo));
                     }
@@ -105,8 +100,6 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
         everythingLoaded,
         navigation,
         profiles,
-        categoriesFirstProfile,
-        categoriesSecondProfile,
         dispatch
     ]);
 
@@ -121,8 +114,6 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
                 navigation.navigate(ScreenNames.editCategoryComboScreen, {
                     categoryCombo: item,
                     profiles: profiles,
-                    categoriesFirstProfile: categoriesFirstProfile,
-                    categoriesSecondProfile: categoriesSecondProfile,
                     saveCategoryCombo: async (categoryCombo) => {
                         dispatch(updateCategoryCombo({ index, categoryCombo }));
                     },
