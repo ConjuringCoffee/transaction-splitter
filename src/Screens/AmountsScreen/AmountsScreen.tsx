@@ -29,7 +29,6 @@ const AmountsScreen = (props: Props) => {
 
     const dispatch = useAppDispatch();
 
-    const categoryCombos = useAppSelector(selectAllCategoryCombos);
     const fetchCategoryComboStatus = useAppSelector(selectCategoryComboFetchStatus);
 
     const basicData = props.route.params.basicData;
@@ -148,7 +147,6 @@ const AmountsScreen = (props: Props) => {
                             debtorBudgetId={basicData.debtor.budgetId}
                             setAmount={(amount) => setAmount(index, amount)}
                             setMemo={(memo) => setMemo(index, memo)}
-                            categoryCombos={categoryCombos}
                             payerCategories={payerCategories}
                             payerCategoryId={amountEntry.payerCategoryId}
                             setPayerCategoryId={(categoryId) => setPayerCategoryId(index, categoryId)}
