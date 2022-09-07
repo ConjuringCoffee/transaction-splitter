@@ -1,4 +1,3 @@
-import { Category } from '../../YnabApi/YnabApiWrapper';
 import { ScreenNames } from './ScreenNames';
 import * as ynab from 'ynab';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
@@ -34,7 +33,7 @@ type StackParameterList = {
         debtorSaveTransaction: ynab.SaveTransaction
     };
     [ScreenNames.categoryScreen]: {
-        categories: Array<Category>
+        budgetId: string
         onSelect: (categoryId?: string) => void
     };
     [ScreenNames.categoryComboScreen]: {
@@ -57,8 +56,6 @@ type StackParameterList = {
     [ScreenNames.editCategoryComboScreen]: {
         categoryCombo?: CategoryCombo,
         profiles: Profile[]
-        categoriesFirstProfile: Category[],
-        categoriesSecondProfile: Category[],
         saveCategoryCombo: (categoryCombo: CategoryCombo) => Promise<void>,
         deleteCategoryCombo?: () => Promise<void>
     }

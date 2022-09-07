@@ -1,25 +1,27 @@
 import React, { useCallback, useState } from 'react';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import { Category } from '../../YnabApi/YnabApiWrapper';
 import { TextInput, Appbar, List, Menu } from 'react-native-paper';
 import { View, StyleSheet, Platform } from 'react-native';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { MyStackNavigationProp, MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { CommonActions } from '@react-navigation/native';
+import { useAppSelector } from '../../redux/hooks';
+import { selectActiveCategories } from '../../redux/features/ynab/ynabSlice';
 
 type ScreenName = 'Edit Category Combo';
 
 interface CategoryLayoutProps {
     profileName: string,
-    categories: Category[],
+    budgetId: string,
     navigation: MyStackNavigationProp<ScreenName>,
     selectedCategoryId?: string,
     onCategorySelect: (categoryId?: string) => void
 }
 
 const CategoryLayout = (props: CategoryLayoutProps) => {
-    const categoryName = props.categories.find((c) => c.id === props.selectedCategoryId)?.name;
+    const categories = useAppSelector((state) => selectActiveCategories(state, props.budgetId));
+    const categoryName = categories.find((c) => c.id === props.selectedCategoryId)?.name;
 
     return (
         <List.Item
@@ -28,7 +30,7 @@ const CategoryLayout = (props: CategoryLayoutProps) => {
             left={props => <List.Icon {...props} icon={categoryName ? 'check-circle-outline' : 'checkbox-blank-circle-outline'} />}
             onPress={() => {
                 props.navigation.navigate(ScreenNames.categoryScreen, {
-                    categories: props.categories,
+                    budgetId: props.budgetId,
                     onSelect: (categoryId?: string) => props.onCategorySelect(categoryId),
                 });
             }}
@@ -44,8 +46,6 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
         saveCategoryCombo,
         deleteCategoryCombo,
         profiles,
-        categoriesFirstProfile,
-        categoriesSecondProfile
     } = props.route.params;
 
     const { navigation } = props;
@@ -162,13 +162,13 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
                 <List.Subheader>Categories</List.Subheader>
                 <CategoryLayout
                     profileName={profiles[0].name}
-                    categories={categoriesFirstProfile}
+                    budgetId={profiles[0].budgetId}
                     navigation={navigation}
                     selectedCategoryId={categoryIdFirstProfile}
                     onCategorySelect={categoryId => setCategoryIdFirstProfile(categoryId)} />
                 <CategoryLayout
                     profileName={profiles[1].name}
-                    categories={categoriesSecondProfile}
+                    budgetId={profiles[1].budgetId}
                     navigation={navigation}
                     selectedCategoryId={categoryIdSecondProfile}
                     onCategorySelect={categoryId => setCategoryIdSecondProfile(categoryId)} />

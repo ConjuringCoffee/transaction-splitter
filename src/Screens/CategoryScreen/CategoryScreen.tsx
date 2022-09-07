@@ -7,6 +7,8 @@ import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { StyleSheet } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
+import { useAppSelector } from '../../redux/hooks';
+import { selectActiveCategories } from '../../redux/features/ynab/ynabSlice';
 
 type ScreenName = 'Category Selection';
 
@@ -20,7 +22,8 @@ type Props = {
 
 const CategoryScreen = ({ route, navigation }: Props) => {
     const [nameFilter, setNameFilter] = useState<string>('');
-    const categoriesToDisplay = route.params.categories.filter((category) => category.name.toLowerCase().includes(nameFilter.toLowerCase()));
+    const categories = useAppSelector((state) => selectActiveCategories(state, route.params.budgetId));
+    const categoriesToDisplay = categories.filter((category) => category.name.toLowerCase().includes(nameFilter.toLowerCase()));
 
     interface RenderItemProps {
         item: Category,
