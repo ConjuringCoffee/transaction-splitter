@@ -1,8 +1,8 @@
 import { Card, CheckBox, Input } from '@ui-kitten/components';
 import React from 'react';
 import { Account, Budget } from '../../YnabApi/YnabApiWrapper';
-import AccountSelect from '../../Component/AccountSelect';
-import BudgetSelect from '../../Component/BudgetSelect';
+import { AccountSelect } from '../../Component/AccountSelect';
+import { BudgetSelect } from '../../Component/BudgetSelect';
 
 interface Props {
     budgets: Array<Budget>,
@@ -17,7 +17,7 @@ interface Props {
     setElegibleAccountIds: (accountIds: Array<string>) => void
 }
 
-const ProfileCard = (props: Props) => {
+export const ProfileCard = (props: Props) => {
     return (
         <Card>
             <Input
@@ -57,5 +57,3 @@ const ProfileCard = (props: Props) => {
         </Card>
     );
 };
-
-export default ProfileCard;

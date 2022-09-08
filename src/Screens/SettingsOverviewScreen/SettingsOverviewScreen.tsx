@@ -1,7 +1,6 @@
-import React from 'react';
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { StackParameterList } from "../../Helper/Navigation/ScreenParameters";
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { List, ListItem } from '@ui-kitten/components';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 
@@ -26,39 +25,45 @@ interface RenderItemProps {
     index: number
 }
 
-const SettingsOverviewScreen = ({ navigation }: Props) => {
+export const SettingsOverviewScreen = ({ navigation }: Props) => {
     const settingEntries: SettingEntry[] = [
         {
             title: 'Access Token',
             description: 'Necessary to access the YNAB API',
-            navigate: () => { navigation.navigate(ScreenNames.ACCESS_TOKEN_SCREEN) }
+            navigate: () => {
+                navigation.navigate(ScreenNames.ACCESS_TOKEN_SCREEN);
+            },
         },
         {
             title: 'Profiles',
             description: 'The two profiles to split the transactions to',
-            navigate: () => { navigation.navigate(ScreenNames.PROFILE_SETTINGS_SCREEN) }
+            navigate: () => {
+                navigation.navigate(ScreenNames.PROFILE_SETTINGS_SCREEN);
+            },
         },
         {
             title: 'Category Combinations',
             description: 'Combine categories of your profiles',
-            navigate: () => { navigation.navigate(ScreenNames.CATEGORY_COMBO_SETTINGS_SCREEN) }
-        }
-    ]
+            navigate: () => {
+                navigation.navigate(ScreenNames.CATEGORY_COMBO_SETTINGS_SCREEN);
+            },
+        },
+    ];
 
     const renderItem = ({ item }: RenderItemProps) => (
         <ListItem
             title={`${item.title}`}
             description={`${item.description}`}
-            onPress={() => { item.navigate() }}
+            onPress={() => {
+                item.navigate();
+            }}
         />
-    )
+    );
 
     return (
         <List
             data={settingEntries}
             renderItem={renderItem}
         />
-    )
-}
-
-export default SettingsOverviewScreen;
+    );
+};

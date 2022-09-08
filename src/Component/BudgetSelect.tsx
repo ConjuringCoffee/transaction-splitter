@@ -23,26 +23,26 @@ const renderOption = (budget: Budget) => (
         key={budget.id} />
 );
 
-export const BudgetSelect = (props: Props) => {
-    const budgetIdentifiers = concatenateIdentifiers(props.budgets);
+export const BudgetSelect = ({ selectedBudgetId, budgets, onBudgetSelect, style, label }: Props) => {
+    const budgetIdentifiers = concatenateIdentifiers(budgets);
 
     useEffect(() => {
-        if (props.selectedBudgetId === undefined || props.budgets.findIndex((e) => e.id === props.selectedBudgetId) === -1) {
-            props.onBudgetSelect(props.budgets[0].id);
+        if (selectedBudgetId === undefined || budgets.findIndex((e) => e.id === selectedBudgetId) === -1) {
+            onBudgetSelect(budgets[0].id);
         }
-    }, [budgetIdentifiers, props]);
+    }, [budgetIdentifiers, selectedBudgetId, budgets, onBudgetSelect]);
 
     const onSelect = (newIndexPath: IndexPath | IndexPath[]) => {
         if (!(newIndexPath instanceof IndexPath)) {
             throw new Error('Unexpected type of IndexPath');
         }
-        props.onBudgetSelect(props.budgets[newIndexPath.row].id);
+        onBudgetSelect(budgets[newIndexPath.row].id);
     };
 
     let index = 0;
 
-    if (props.selectedBudgetId !== undefined) {
-        index = props.budgets.findIndex((e) => e.id === props.selectedBudgetId);
+    if (selectedBudgetId !== undefined) {
+        index = budgets.findIndex((e) => e.id === selectedBudgetId);
 
         if (index === -1) {
             index = 0;
@@ -50,16 +50,16 @@ export const BudgetSelect = (props: Props) => {
     }
 
     const indexPath = new IndexPath(index);
-    const displayValue = props.budgets[indexPath.row].name;
+    const displayValue = budgets[indexPath.row].name;
 
     return (
         <Select
-            style={props.style}
-            label={props.label}
+            style={style}
+            label={label}
             value={displayValue}
             selectedIndex={indexPath}
             onSelect={(newIndexPath) => onSelect(newIndexPath)}>
-            {props.budgets.map(renderOption)}
+            {budgets.map(renderOption)}
         </Select>
     );
 };

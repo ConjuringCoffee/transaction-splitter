@@ -54,7 +54,7 @@ const getBudgetsWithAccountsFromApi = async (): Promise<Budget[]> => {
     const ynabAPI = new ynab.API(apiKey);
     const response = await ynabAPI.budgets.getBudgets(true);
 
-    return response.data.budgets.map((budgetSummary, budgetIndex: number) => {
+    return response.data.budgets.map((budgetSummary) => {
         let accounts: Array<Account> = [];
 
         if (budgetSummary.accounts != undefined) {
@@ -126,7 +126,7 @@ const verifySavedTransaction = async (
         && saveTransaction.subtransactions.length > 0) {
         // This is a split and I don't know how else to recognize it as such
 
-        saveTransaction.subtransactions.forEach((saveSubtransaction, saveSubtransactionIndex) => {
+        saveTransaction.subtransactions.forEach((saveSubtransaction) => {
             if (saveTransaction.subtransactions == undefined) {
                 throw new Error('Impossible to get here');
             }

@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import LoadingComponent from '../../Component/LoadingComponent';
+import { useEffect, useLayoutEffect } from 'react';
+import { LoadingComponent } from '../../Component/LoadingComponent';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
-import useLocalization from '../../Hooks/useLocalization';
-import InitializedSplittingScreen from './InitializedSplittingScreen';
+import { useLocalization } from '../../Hooks/useLocalization';
+import { InitializedSplittingScreen } from './InitializedSplittingScreen';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { Appbar } from 'react-native-paper';
@@ -36,7 +36,7 @@ export const SplittingScreen = (props: MyStackScreenProps<ScreenName>) => {
         }
     }, [profilesFetchStatus, dispatch]);
 
-    React.useLayoutEffect(() => {
+    useLayoutEffect(() => {
         props.navigation.setOptions({
             header: () => (
                 <NavigationBar
@@ -50,9 +50,7 @@ export const SplittingScreen = (props: MyStackScreenProps<ScreenName>) => {
                 />
             ),
         });
-    }, [
-        props.navigation,
-    ]);
+    }, [props.navigation]);
 
     return (
         <>

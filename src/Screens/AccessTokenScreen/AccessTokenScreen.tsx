@@ -1,20 +1,9 @@
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { Button, Card, Input } from '@ui-kitten/components';
 import React, { useState, useEffect } from 'react';
-import LoadingComponent from '../../Component/LoadingComponent';
+import { LoadingComponent } from '../../Component/LoadingComponent';
 import { getAccessTokenFromKeychain, saveAccessTokenToKeychain } from '../../Helper/AccessTokenHelper';
-import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 
-type MyNavigationProp = StackNavigationProp<StackParameterList, 'Access Token'>;
-type MyRouteProp = RouteProp<StackParameterList, 'Access Token'>;
-
-type Props = {
-    navigation: MyNavigationProp;
-    route: MyRouteProp;
-}
-
-const AccessTokenScreen = (props: Props) => {
+export const AccessTokenScreen = () => {
     const [isLoadingAccessToken, setLoadingAccessToken] = useState<boolean>(false);
     const [accessToken, setAccessToken] = useState<string>('');
 
@@ -51,5 +40,3 @@ const AccessTokenScreen = (props: Props) => {
         </Card>
     );
 };
-
-export default AccessTokenScreen;

@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit";
-import { RootState } from "../../store";
+import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
+import { RootState } from '../../store';
 import * as SecureStore from 'expo-secure-store';
-import { isOneOf } from "../../isOneOf";
-import { LoadingStatus } from "../../../Helper/LoadingStatus";
+import { isOneOf } from '../../isOneOf';
+import { LoadingStatus } from '../../../Helper/LoadingStatus';
 
 interface CategoryInCategoryCombo {
     id: string,
@@ -27,14 +27,14 @@ interface CategoryCombosState {
 const initialState: CategoryCombosState = {
     fetchStatus: {
         status: LoadingStatus.IDLE,
-        error: null
+        error: null,
     },
     saveStatus: {
         status: LoadingStatus.IDLE,
-        error: null
+        error: null,
     },
     objects: [],
-}
+};
 
 const STORAGE_KEY = 'categoryCombos';
 
@@ -52,7 +52,7 @@ const saveCategoryCombos = async (categoryCombos: CategoryCombo[]): Promise<Cate
     const jsonValue = JSON.stringify(categoryCombos);
     await SecureStore.setItemAsync(STORAGE_KEY, jsonValue, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
     return categoryCombos;
-}
+};
 
 export const fetchCategoryCombos = createAsyncThunk('categoryCombos/fetchCategoryCombos', async () => {
     return readCategoryCombos();
@@ -94,45 +94,43 @@ export const categoryCombosSlice = createSlice({
             .addCase(fetchCategoryCombos.pending, (state) => {
                 state.fetchStatus = {
                     status: LoadingStatus.LOADING,
-                    error: null
+                    error: null,
                 };
             })
             .addCase(fetchCategoryCombos.fulfilled, (state, action) => {
                 state.fetchStatus = {
                     status: LoadingStatus.SUCCESSFUL,
-                    error: null
-                }
+                    error: null,
+                };
                 state.objects = action.payload;
             })
             .addCase(fetchCategoryCombos.rejected, (state, action) => {
                 state.fetchStatus = {
                     status: LoadingStatus.ERROR,
-                    error: action.error
-                }
+                    error: action.error,
+                };
             })
             .addMatcher(isOneOf([updateCategoryCombo.pending, addCategoryCombo.pending, deleteCategoryCombo.pending]), (state) => {
                 state.saveStatus = {
                     status: LoadingStatus.LOADING,
-                    error: null
-                }
+                    error: null,
+                };
             })
             .addMatcher(isOneOf([updateCategoryCombo.fulfilled, addCategoryCombo.fulfilled, deleteCategoryCombo.fulfilled]), (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.SUCCESSFUL,
-                    error: null
-                }
+                    error: null,
+                };
                 state.objects = action.payload;
             })
             .addMatcher(isOneOf([updateCategoryCombo.rejected, addCategoryCombo.rejected, deleteCategoryCombo.rejected]), (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.ERROR,
-                    error: action.error
-                }
-            })
-    }
-})
-
-export default categoryCombosSlice.reducer;
+                    error: action.error,
+                };
+            });
+    },
+});
 
 export const selectAllCategoryCombos = (state: RootState) => state.categoryCombos.objects;
 export const selectCategoryComboFetchStatus = (state: RootState) => state.categoryCombos.fetchStatus;

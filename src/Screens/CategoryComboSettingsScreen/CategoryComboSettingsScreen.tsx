@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
@@ -59,7 +59,7 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         && profiles.length === 2
         && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
 
-    React.useLayoutEffect(() => {
+    useLayoutEffect(() => {
         const additions = (
             <Appbar.Action
                 icon={ADD_ICON}

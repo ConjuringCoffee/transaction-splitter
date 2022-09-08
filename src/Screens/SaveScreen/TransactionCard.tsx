@@ -55,7 +55,7 @@ const AmountCard = (props: AmountCardProps) => {
         </ Card>);
 };
 
-const TransactionCard = (props: TransactionCardProps) => {
+export const TransactionCard = (props: TransactionCardProps) => {
     const amountCards = () => {
         if (props.saveTransaction.subtransactions === undefined) {
             const target = props.categories.find((category) => category.id === props.saveTransaction.category_id)?.name;
@@ -159,5 +159,3 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
     },
 });
-
-export default TransactionCard;

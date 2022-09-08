@@ -15,7 +15,7 @@ const DateIcon = (props: Partial<ImageProps> | undefined) => (
     <Icon {...props} name='calendar' />
 );
 
-const GeneralSelectionCard = (props: Props) => {
+export const GeneralSelectionCard = (props: Props) => {
     const formatDateService = new NativeDateService('en', { format: 'DD.MM.YYYY' });
 
     return (
@@ -45,5 +45,3 @@ const GeneralSelectionCard = (props: Props) => {
         </Card>
     );
 };
-
-export default GeneralSelectionCard;

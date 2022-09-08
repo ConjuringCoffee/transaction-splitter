@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Icon, Layout, Text } from '@ui-kitten/components';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
-import CalculatorKeyboard from '../../Component/CalculatorKeyboard';
+import { CalculatorKeyboard } from '../../Component/CalculatorKeyboard';
 import { ImageProps, StyleSheet } from 'react-native';
 import { Calculation } from '../../Helper/Calculation';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import useLocalization from '../../Hooks/useLocalization';
-import LoadingComponent from '../../Component/LoadingComponent';
+import { useLocalization } from '../../Hooks/useLocalization';
+import { LoadingComponent } from '../../Component/LoadingComponent';
 
 type ScreenName = 'Calculator';
 
@@ -22,15 +22,16 @@ const HistoryIcon = (props: Partial<ImageProps> | undefined) => (
     <Icon {...props} name='clock-outline' />
 );
 
-const CalculatorScreen = ({ route, navigation }: Props) => {
+export const CalculatorScreen = ({ route, navigation }: Props) => {
     const { numberFormatSettings } = useLocalization();
     const [currentCalculation, setCurrentCalculation] = useState<string>('');
 
-    // Not cool to duplicate the state from the previous screen, but I don't know how else to do it
+    // TODO: Do not duplicate the state from the previous screen
     const [previousCalculations, setPreviousCalculations] = useState<Array<string>>([]);
 
     const { currentAmount } = route.params;
     const { setAmount } = route.params;
+    const routePreviousCalculations = route.params.previousCalculations;
 
     useEffect(() => {
         if (!numberFormatSettings) {
@@ -48,18 +49,22 @@ const CalculatorScreen = ({ route, navigation }: Props) => {
         } else {
             setCurrentCalculation(convertAmountToText(currentAmount, numberFormatSettings));
         }
-    }, [numberFormatSettings]);
+    }, [numberFormatSettings, previousCalculations, currentAmount, setCurrentCalculation]);
 
     useEffect(() => {
-        setPreviousCalculations(route.params.previousCalculations);
-    }, []);
+        setPreviousCalculations(routePreviousCalculations);
+    }, [routePreviousCalculations]);
 
     useEffect(() => {
         route.params.setPreviousCalculations(previousCalculations);
+    }, [previousCalculations, route.params]);
+
+    const addPreviousCalculation = useCallback((calculation: string) => {
+        const calculations = [...previousCalculations, calculation];
+        setPreviousCalculations(calculations);
     }, [previousCalculations]);
 
     React.useLayoutEffect(() => {
-        // TODO: Solve dependency issue to addPreviousCalculation
         navigation.setOptions({
             headerRight: () => (
                 <Button
@@ -83,12 +88,7 @@ const CalculatorScreen = ({ route, navigation }: Props) => {
                     appearance='outline' />
             ),
         });
-    }, [navigation, previousCalculations, currentCalculation]);
-
-    const addPreviousCalculation = (calculation: string) => {
-        const calculations = [...previousCalculations, calculation];
-        setPreviousCalculations(calculations);
-    };
+    }, [navigation, previousCalculations, currentCalculation, addPreviousCalculation]);
 
     const onDigitPress = (digit: number): void => {
         if (!numberFormatSettings) {
@@ -120,7 +120,7 @@ const CalculatorScreen = ({ route, navigation }: Props) => {
         const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
         newCalculation.addOperator(operator);
         setCurrentCalculation(newCalculation.getCalculationString());
-    }
+    };
 
     const onOperatorSubtractPress = (): void => {
         addOperatorToCurrentCalculation('-');
@@ -206,5 +206,3 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
 });
-
-export default CalculatorScreen;

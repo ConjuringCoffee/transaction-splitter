@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import CustomScrollView from "../../Component/CustomScrollView";
-import NumberInput from "../../Component/NumberInput";
-import { NumberFormatSettings } from "../../Hooks/useLocalization";
+import { useState } from 'react';
+import { CustomScrollView } from '../../Component/CustomScrollView';
+import { NumberInput } from '../../Component/NumberInput';
+import { NumberFormatSettings } from '../../Hooks/useLocalization';
 import { StyleSheet } from 'react-native';
-import { Budget } from "../../YnabApi/YnabApiWrapper";
-import { Button, Card, Layout, Radio, RadioGroup } from "@ui-kitten/components";
-import PayerAccountSelectionCard from "./PayerAccountSelectionCard";
-import GeneralSelectionCard from "./GeneralSelectionCard";
-import { StackParameterList } from "../../Helper/Navigation/ScreenParameters";
-import { ScreenNames } from "../../Helper/Navigation/ScreenNames";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { Profile } from "../../redux/features/profiles/profilesSlice";
-import { useAppSelector } from "../../redux/hooks";
-import { selectAccountById, selectActiveAccounts, selectBudgetById } from "../../redux/features/ynab/ynabSlice";
+import { Budget } from '../../YnabApi/YnabApiWrapper';
+import { Button, Card, Layout, Radio, RadioGroup } from '@ui-kitten/components';
+import { PayerAccountSelectionCard } from './PayerAccountSelectionCard';
+import { GeneralSelectionCard } from './GeneralSelectionCard';
+import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Profile } from '../../redux/features/profiles/profilesSlice';
+import { useAppSelector } from '../../redux/hooks';
+import { selectAccountById, selectActiveAccounts, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,
@@ -21,7 +21,7 @@ interface Props {
     budgets: Budget[],
 }
 
-const InitializedSplittingScreen = (props: Props) => {
+export const InitializedSplittingScreen = (props: Props) => {
     const [payerProfileIndex, setPayerProfileIndex] = useState<number>(0);
     const [payeeName, setPayeeName] = useState<string>('');
     const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -52,7 +52,7 @@ const InitializedSplittingScreen = (props: Props) => {
                         budgetId: payerProfile.budgetId,
                         accountId: payerAccountID,
                         transferAccountId: payerProfile.debtorAccountId,
-                        transferAccountPayeeId: payerTransferAccount.transferPayeeID
+                        transferAccountPayeeId: payerTransferAccount.transferPayeeID,
                     },
                     debtor: {
                         budgetId: debtorProfile.budgetId,
@@ -110,7 +110,7 @@ const InitializedSplittingScreen = (props: Props) => {
             </Layout>
         </CustomScrollView>
     );
-}
+};
 
 const styles = StyleSheet.create({
     amountText: {
@@ -128,5 +128,3 @@ const toIsoDateString = (date: Date): string => {
 
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 };
-
-export default InitializedSplittingScreen;

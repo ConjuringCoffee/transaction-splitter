@@ -1,7 +1,7 @@
 import * as Localization from 'expo-localization';
 import { useEffect, useState } from 'react';
 
-interface NumberFormatSettings {
+export interface NumberFormatSettings {
     decimalSeparator: string,
     groupingSeparator: string,
 }
@@ -10,7 +10,7 @@ interface Return {
     numberFormatSettings?: NumberFormatSettings,
 }
 
-const useLocalization = (): Return => {
+export const useLocalization = (): Return => {
     const [numberFormatSettings, setNumberFormatSettings] = useState<NumberFormatSettings>();
 
     useEffect(() => {
@@ -25,6 +25,3 @@ const useLocalization = (): Return => {
         numberFormatSettings: numberFormatSettings,
     };
 };
-
-export type { NumberFormatSettings };
-export default useLocalization;

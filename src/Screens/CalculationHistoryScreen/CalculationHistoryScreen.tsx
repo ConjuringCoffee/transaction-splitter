@@ -13,7 +13,7 @@ type Props = {
     route: MyRouteProp;
 }
 
-const CalculationHistoryScreen = ({ route, navigation }: Props) => {
+export const CalculationHistoryScreen = ({ route, navigation }: Props) => {
     const { previousCalculations } = route.params;
 
     interface RenderItemProps {
@@ -38,5 +38,3 @@ const CalculationHistoryScreen = ({ route, navigation }: Props) => {
         </Layout>
     );
 };
-
-export default CalculationHistoryScreen;

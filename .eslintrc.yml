@@ -28,13 +28,17 @@ rules:
   - 2
   - "always"
   react-hooks/rules-of-hooks: error
-  react-hooks/exhaustive-deps: warn
+  react-hooks/exhaustive-deps: error
   operator-linebreak:
   - 2
   - "before"
   react/react-in-jsx-scope: off # Not needed since we're using >= React 17
   import/no-default-export: error
   import/export: error
+  
   # Base rule must be deactivated because it reports incorrect errors: https://typescript-eslint.io/rules/no-invalid-this/
   no-invalid-this: off
-  "@typescript-eslint/no-invalid-this": ["error"]
+  "@typescript-eslint/no-invalid-this": error
+
+  no-unused-vars: off
+  "@typescript-eslint/no-unused-vars": error
