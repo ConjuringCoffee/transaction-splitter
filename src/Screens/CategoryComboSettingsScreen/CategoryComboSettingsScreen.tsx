@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
 import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 import { fetchCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
-import { LoadingStatus } from '../../Helper/Status';
+import { LoadingStatus } from '../../Helper/LoadingStatus';
 
 type ScreenName = 'Category Combinations Settings';
 

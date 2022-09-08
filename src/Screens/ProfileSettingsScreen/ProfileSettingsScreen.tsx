@@ -7,7 +7,7 @@ import ProfileCard from './ProfileCard';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchProfiles, overwriteProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 import { fetchBudgets, selectBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
-import { LoadingStatus } from '../../Helper/Status';
+import { LoadingStatus } from '../../Helper/LoadingStatus';
 
 interface EditableProfile {
     name: string,

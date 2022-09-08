@@ -14,7 +14,7 @@ import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchCategoryCombos, selectCategoryComboFetchStatus } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { fetchCategories, selectActiveCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
-import { LoadingStatus } from '../../Helper/Status';
+import { LoadingStatus } from '../../Helper/LoadingStatus';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Amounts'>;

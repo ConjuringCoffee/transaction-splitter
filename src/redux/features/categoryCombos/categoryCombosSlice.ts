@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit
 import { RootState } from "../../store";
 import * as SecureStore from 'expo-secure-store';
 import { isOneOf } from "../../isOneOf";
-import { LoadingStatus } from "../../../Helper/Status";
+import { LoadingStatus } from "../../../Helper/LoadingStatus";
 
 interface CategoryInCategoryCombo {
     id: string,

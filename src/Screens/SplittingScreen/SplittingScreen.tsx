@@ -11,7 +11,7 @@ import { Appbar } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 import { fetchBudgets, selectBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
-import { LoadingStatus } from '../../Helper/Status';
+import { LoadingStatus } from '../../Helper/LoadingStatus';
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,

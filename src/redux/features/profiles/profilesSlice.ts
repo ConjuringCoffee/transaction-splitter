@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit";
 import * as SecureStore from 'expo-secure-store';
-import { LoadingStatus } from "../../../Helper/Status";
+import { LoadingStatus } from "../../../Helper/LoadingStatus";
 import { RootState } from "../../store";
 
 export interface Profile {
