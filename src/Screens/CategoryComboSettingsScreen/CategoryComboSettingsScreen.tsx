@@ -1,11 +1,8 @@
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { List, ListItem } from '@ui-kitten/components';
 import React, { useEffect } from 'react';
-import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
-import { ActivityIndicator, Appbar } from 'react-native-paper';
+import { ActivityIndicator, Appbar, List } from 'react-native-paper';
 import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, fetchCategoryCombos, selectAllCategoryCombos, selectCategoryComboFetchStatus, updateCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
@@ -13,20 +10,8 @@ import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../
 import { fetchCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 
 type ScreenName = 'Category Combinations Settings';
-export type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
-type MyRouteProp = RouteProp<StackParameterList, ScreenName>;
 
-type Props = {
-    navigation: MyNavigationProp;
-    route: MyRouteProp;
-}
-
-interface RenderItemProps {
-    item: CategoryCombo,
-    index: number
-}
-
-export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
+export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
 
     const categoryCombosFetchStatus = useAppSelector(selectCategoryComboFetchStatus);
@@ -103,16 +88,14 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
         dispatch
     ]);
 
-    const renderItem = ({ item, index }: RenderItemProps) => (
-        <ListItem
-            title={`${item.name}`}
+    const renderItem = (categoryCombo: CategoryCombo, index: number) => (
+        <List.Item
+            // TODO: Generate key in categoryCombosSlice for each categoryCombo and use it here
+            key={index}
+            title={categoryCombo.name}
             onPress={() => {
-                if (!everythingLoaded) {
-                    throw Error('Initialization was not done yet');
-                }
-
                 navigation.navigate(ScreenNames.editCategoryComboScreen, {
-                    categoryCombo: item,
+                    categoryCombo: categoryCombo,
                     profiles: profiles,
                     saveCategoryCombo: async (categoryCombo) => {
                         dispatch(updateCategoryCombo({ index, categoryCombo }));
@@ -128,11 +111,10 @@ export const CategoryComboSettingsScreen = ({ navigation, route }: Props) => {
     return (
         <View>
             {
-                everythingLoaded ?
-                    <List
-                        data={categoryCombos}
-                        renderItem={renderItem}
-                    />
+                everythingLoaded
+                    ? <List.Section>
+                        {categoryCombos.map(renderItem)}
+                    </List.Section>
                     : <ActivityIndicator />
             }
         </View>

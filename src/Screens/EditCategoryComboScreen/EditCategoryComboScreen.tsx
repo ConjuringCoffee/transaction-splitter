@@ -38,7 +38,7 @@ const CategoryLayout = (props: CategoryLayoutProps) => {
     );
 };
 
-const moreIconName = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
+const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
 export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) => {
     const {
@@ -84,7 +84,7 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
                 onDismiss={() => setMenuVisible(false)}
                 anchor={
                     <Appbar.Action
-                        icon={moreIconName}
+                        icon={MORE_ICON}
                         onPress={() => setMenuVisible(true)}
                         // TODO: The usual color from the Appbar isn't transferred to this action and I don't know how to fix it
                         color='white' />
@@ -102,7 +102,7 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
         deleteCategoryCombo,
         deleteAndNavigate,
         setMenuVisible,
-        moreIconName
+        MORE_ICON
     ]);
 
     React.useLayoutEffect(() => {
@@ -148,7 +148,7 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
         categoryIdFirstProfile,
         categoryIdSecondProfile,
         profiles,
-        moreIconName,
+        MORE_ICON,
         deleteCategoryCombo,
         saveAndNavigate,
         moreMenu
