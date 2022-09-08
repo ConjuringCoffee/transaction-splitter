@@ -12,6 +12,10 @@ import { LoadingStatus } from '../../Helper/LoadingStatus';
 
 type ScreenName = 'Category Combinations Settings';
 
+const SCREEN_TITLE = 'Category Combinations';
+const SCREEN_SUBTITLE = 'Settings';
+const ADD_ICON = 'plus';
+
 export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
 
@@ -58,12 +62,9 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
     React.useLayoutEffect(() => {
         const additions = (
             <Appbar.Action
-                icon='plus'
+                icon={ADD_ICON}
                 disabled={!everythingLoaded}
                 onPress={() => {
-                    if (!everythingLoaded) {
-                        throw Error('Initialization was not done yet');
-                    }
                     navigation.navigate(ScreenNames.editCategoryComboScreen, {
                         profiles: profiles,
                         saveCategoryCombo: async (categoryCombo) => {
@@ -76,8 +77,8 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         navigation.setOptions({
             header: () => (
                 <NavigationBar
-                    title='Category Combinations'
-                    subtitle='Settings'
+                    title={SCREEN_TITLE}
+                    subtitle={SCREEN_SUBTITLE}
                     navigation={navigation}
                     additions={additions} />)
         })
@@ -88,7 +89,7 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         dispatch
     ]);
 
-    const renderItem = (categoryCombo: CategoryCombo, index: number) => (
+    const renderListItem = (categoryCombo: CategoryCombo, index: number) => (
         <List.Item
             // TODO: Generate key in categoryCombosSlice for each categoryCombo and use it here
             key={index}
@@ -113,7 +114,7 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
             {
                 everythingLoaded
                     ? <List.Section>
-                        {categoryCombos.map(renderItem)}
+                        {categoryCombos.map(renderListItem)}
                     </List.Section>
                     : <ActivityIndicator />
             }
