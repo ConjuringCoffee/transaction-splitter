@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit";
 import * as SecureStore from 'expo-secure-store';
+import { LoadingStatus } from "../../../Helper/LoadingStatus";
 import { RootState } from "../../store";
 
 export interface Profile {
@@ -11,11 +12,11 @@ export interface Profile {
 
 interface ProfilesState {
     fetchStatus: {
-        status: 'idle' | 'loading' | 'successful' | 'error'
+        status: LoadingStatus
         error: SerializedError | null
     },
     saveStatus: {
-        status: 'idle' | 'loading' | 'successful' | 'error'
+        status: LoadingStatus
         error: SerializedError | null
     },
     objects: Profile[]
@@ -23,20 +24,20 @@ interface ProfilesState {
 
 const initialState: ProfilesState = {
     fetchStatus: {
-        status: 'idle',
+        status: LoadingStatus.IDLE,
         error: null
     },
     saveStatus: {
-        status: 'idle',
+        status: LoadingStatus.IDLE,
         error: null
     },
     objects: [],
 }
 
-const storageKey = 'profiles';
+const STORAGE_KEY = 'profiles';
 
 const readProfiles = async (): Promise<Profile[]> => {
-    const jsonValue = await SecureStore.getItemAsync(storageKey);
+    const jsonValue = await SecureStore.getItemAsync(STORAGE_KEY);
 
     if (!jsonValue) {
         return [];
@@ -47,7 +48,7 @@ const readProfiles = async (): Promise<Profile[]> => {
 
 const saveProfiles = async (profiles: Profile[]): Promise<Profile[]> => {
     const jsonValue = JSON.stringify(profiles);
-    await SecureStore.setItemAsync(storageKey, jsonValue, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
+    await SecureStore.setItemAsync(STORAGE_KEY, jsonValue, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
     return profiles;
 };
 
@@ -69,39 +70,39 @@ export const profilesSlice = createSlice({
         builder
             .addCase(fetchProfiles.pending, (state) => {
                 state.fetchStatus = {
-                    status: 'loading',
+                    status: LoadingStatus.LOADING,
                     error: null
                 };
             })
             .addCase(fetchProfiles.fulfilled, (state, action) => {
                 state.fetchStatus = {
-                    status: 'successful',
+                    status: LoadingStatus.SUCCESSFUL,
                     error: null
                 }
                 state.objects = action.payload;
             })
             .addCase(fetchProfiles.rejected, (state, action) => {
                 state.fetchStatus = {
-                    status: 'error',
+                    status: LoadingStatus.ERROR,
                     error: action.error
                 }
             })
             .addCase(overwriteProfiles.pending, (state) => {
                 state.saveStatus = {
-                    status: 'loading',
+                    status: LoadingStatus.LOADING,
                     error: null
                 };
             })
             .addCase(overwriteProfiles.fulfilled, (state, action) => {
                 state.saveStatus = {
-                    status: 'successful',
+                    status: LoadingStatus.SUCCESSFUL,
                     error: null
                 }
                 state.objects = action.payload;
             })
             .addCase(overwriteProfiles.rejected, (state, action) => {
                 state.saveStatus = {
-                    status: 'error',
+                    status: LoadingStatus.ERROR,
                     error: action.error
                 }
             })

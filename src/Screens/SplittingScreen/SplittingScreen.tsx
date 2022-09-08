@@ -11,6 +11,7 @@ import { Appbar } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 import { fetchBudgets, selectBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
+import { LoadingStatus } from '../../Helper/LoadingStatus';
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,
@@ -29,13 +30,13 @@ const SplittingScreen = (props: Props) => {
     const profiles = useAppSelector(selectAllProfiles);
 
     useEffect(() => {
-        if (budgetsFetchStatus.status === 'idle') {
+        if (budgetsFetchStatus.status === LoadingStatus.IDLE) {
             dispatch(fetchBudgets());
         }
     }, [budgetsFetchStatus, dispatch]);
 
     useEffect(() => {
-        if (profilesFetchStatus.status === 'idle') {
+        if (profilesFetchStatus.status === LoadingStatus.IDLE) {
             dispatch(fetchProfiles());
         }
     }, [profilesFetchStatus, dispatch]);
@@ -61,8 +62,8 @@ const SplittingScreen = (props: Props) => {
     return (
         <>
             {numberFormatSettings
-                && budgetsFetchStatus.status === 'successful'
-                && profilesFetchStatus.status === 'successful'
+                && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL
+                && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
                 && profiles.length === 2
                 ? <InitializedSplittingScreen
                     navigation={props.navigation}

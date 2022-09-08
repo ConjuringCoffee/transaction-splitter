@@ -8,47 +8,26 @@ import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombo
 import { CommonActions } from '@react-navigation/native';
 import { useAppSelector } from '../../redux/hooks';
 import { selectActiveCategories } from '../../redux/features/ynab/ynabSlice';
+import { selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
 
 type ScreenName = 'Edit Category Combo';
 
-interface CategoryLayoutProps {
-    profileName: string,
-    budgetId: string,
-    navigation: MyStackNavigationProp<ScreenName>,
-    selectedCategoryId?: string,
-    onCategorySelect: (categoryId?: string) => void
-}
+const SCREEN_TITLE = 'Edit';
+const SCREEN_SUBTITLE = 'Category Combination';
 
-const CategoryLayout = (props: CategoryLayoutProps) => {
-    const categories = useAppSelector((state) => selectActiveCategories(state, props.budgetId));
-    const categoryName = categories.find((c) => c.id === props.selectedCategoryId)?.name;
+const ICON_MORE = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
+const ICON_SAVE = 'content-save';
+const ICON_CATEGORY_SET = 'check-circle-outline';
+const ICON_CATEGORY_NOT_SET = 'checkbox-blank-circle-outline';
 
-    return (
-        <List.Item
-            title={categoryName ?? 'None'}
-            description={`Category from ${props.profileName}`}
-            left={props => <List.Icon {...props} icon={categoryName ? 'check-circle-outline' : 'checkbox-blank-circle-outline'} />}
-            onPress={() => {
-                props.navigation.navigate(ScreenNames.categoryScreen, {
-                    budgetId: props.budgetId,
-                    onSelect: (categoryId?: string) => props.onCategorySelect(categoryId),
-                });
-            }}
-        />
-    );
-};
-
-const moreIconName = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
-
-export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) => {
+export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
     const {
         categoryCombo,
         saveCategoryCombo,
         deleteCategoryCombo,
-        profiles,
-    } = props.route.params;
+    } = route.params;
 
-    const { navigation } = props;
+    const profiles = useAppSelector(selectAllProfiles);
 
     const [name, setName] = useState<string>(categoryCombo?.name ?? '');
     const [categoryIdFirstProfile, setCategoryIdFirstProfile] = useState<string | undefined>(categoryCombo?.categories[0].id);
@@ -68,7 +47,7 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
 
     const deleteAndNavigate = async () => {
         if (!deleteCategoryCombo) {
-            throw Error('No deletion functionality');
+            throw new Error('You were not supposed to be able to call this function');
         }
 
         await deleteCategoryCombo();
@@ -84,15 +63,18 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
                 onDismiss={() => setMenuVisible(false)}
                 anchor={
                     <Appbar.Action
-                        icon={moreIconName}
+                        icon={ICON_MORE}
                         onPress={() => setMenuVisible(true)}
                         // TODO: The usual color from the Appbar isn't transferred to this action and I don't know how to fix it
                         color='white' />
                 } >
-                <Menu.Item title="Delete" onPress={() => {
-                    deleteAndNavigate();
-                    setMenuVisible(false);
-                }} />
+                <Menu.Item
+                    key='delete'
+                    title="Delete"
+                    onPress={() => {
+                        deleteAndNavigate();
+                        setMenuVisible(false);
+                    }} />
             </Menu >
             : null;
     }, [
@@ -100,42 +82,43 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
         deleteCategoryCombo,
         deleteAndNavigate,
         setMenuVisible,
-        moreIconName
+        ICON_MORE
     ]);
 
     React.useLayoutEffect(() => {
+        const additions = [
+            <Appbar.Action
+                key='add'
+                icon={ICON_SAVE}
+                disabled={!readyToSave}
+                onPress={() => {
+                    if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
+                        throw new Error('Not ready to save yet');
+                    }
+
+                    saveAndNavigate({
+                        name: name,
+                        categories: [
+                            {
+                                budgetId: profiles[0].budgetId,
+                                id: categoryIdFirstProfile
+                            },
+                            {
+                                budgetId: profiles[1].budgetId,
+                                id: categoryIdSecondProfile
+                            }]
+                    })
+                }} />,
+            moreMenu()
+        ];
+
         navigation.setOptions({
             header: () => (
                 <NavigationBar
-                    title={'Edit'}
-                    subtitle={'Category Setting'}
-                    navigation={props.navigation}
-                    additions={
-                        [
-                            <Appbar.Action
-                                icon="content-save"
-                                disabled={!readyToSave}
-                                onPress={() => {
-                                    if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
-                                        throw new Error('Not ready to save yet');
-                                    }
-
-                                    saveAndNavigate({
-                                        name: name,
-                                        categories: [
-                                            {
-                                                budgetId: profiles[0].budgetId,
-                                                id: categoryIdFirstProfile
-                                            },
-                                            {
-                                                budgetId: profiles[1].budgetId,
-                                                id: categoryIdSecondProfile
-                                            }]
-                                    })
-                                }} />,
-                            moreMenu()
-                        ]
-                    }
+                    title={SCREEN_TITLE}
+                    subtitle={SCREEN_SUBTITLE}
+                    navigation={navigation}
+                    additions={additions}
                 />
             ),
         });
@@ -146,7 +129,6 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
         categoryIdFirstProfile,
         categoryIdSecondProfile,
         profiles,
-        moreIconName,
         deleteCategoryCombo,
         saveAndNavigate,
         moreMenu
@@ -183,3 +165,30 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8
     }
 });
+
+interface CategoryLayoutProps {
+    profileName: string,
+    budgetId: string,
+    navigation: MyStackNavigationProp<ScreenName>,
+    selectedCategoryId?: string,
+    onCategorySelect: (categoryId?: string) => void
+}
+
+const CategoryLayout = (props: CategoryLayoutProps) => {
+    const categories = useAppSelector((state) => selectActiveCategories(state, props.budgetId));
+    const categoryName = categories.find((c) => c.id === props.selectedCategoryId)?.name;
+
+    return (
+        <List.Item
+            title={categoryName ?? 'None'}
+            description={`Category from ${props.profileName}`}
+            left={props => <List.Icon {...props} icon={categoryName ? ICON_CATEGORY_SET : ICON_CATEGORY_NOT_SET} />}
+            onPress={() => {
+                props.navigation.navigate(ScreenNames.categoryScreen, {
+                    budgetId: props.budgetId,
+                    onSelect: (categoryId?: string) => props.onCategorySelect(categoryId),
+                });
+            }}
+        />
+    );
+};
