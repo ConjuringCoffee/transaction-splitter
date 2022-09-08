@@ -7,6 +7,7 @@ import ProfileCard from './ProfileCard';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchProfiles, overwriteProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 import { fetchBudgets, selectBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
+import { LoadingStatus } from '../../Helper/Status';
 
 interface EditableProfile {
     name: string,
@@ -33,9 +34,9 @@ const ProfileSettingsScreen = () => {
     }, [budgetsFetchStatus, dispatch]);
 
     useEffect(() => {
-        if (profilesFetchStatus.status === 'idle') {
+        if (profilesFetchStatus.status === LoadingStatus.IDLE) {
             dispatch(fetchProfiles());
-        } else if (profilesFetchStatus.status === 'successful') {
+        } else if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL) {
             if (!budgets) {
                 return;
             }

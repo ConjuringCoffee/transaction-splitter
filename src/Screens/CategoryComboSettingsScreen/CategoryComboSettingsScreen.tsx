@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
 import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 import { fetchCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
-import { Status } from '../../Helper/Status';
+import { LoadingStatus } from '../../Helper/Status';
 
 type ScreenName = 'Category Combinations Settings';
 
@@ -25,25 +25,25 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
     const categoriesSecondProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profiles[1]?.budgetId));
 
     useEffect(() => {
-        if (categoryCombosFetchStatus.status === Status.IDLE) {
+        if (categoryCombosFetchStatus.status === LoadingStatus.IDLE) {
             dispatch(fetchCategoryCombos());
         }
     }, [categoryCombosFetchStatus, dispatch]);
 
     useEffect(() => {
-        if (profilesFetchStatus.status === 'idle') {
+        if (profilesFetchStatus.status === LoadingStatus.IDLE) {
             dispatch(fetchProfiles());
         }
     }, [profilesFetchStatus, dispatch]);
 
     useEffect(() => {
-        if (profilesFetchStatus.status === 'successful' && categoriesFirstProfileFetchStatus === 'idle') {
+        if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL && categoriesFirstProfileFetchStatus === 'idle') {
             dispatch(fetchCategories(profiles[0].budgetId));
         }
     }, [profilesFetchStatus, dispatch, profiles, categoriesFirstProfileFetchStatus]);
 
     useEffect(() => {
-        if (profilesFetchStatus.status === 'successful' && categoriesSecondProfileFetchStatus === 'idle') {
+        if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL && categoriesSecondProfileFetchStatus === 'idle') {
             dispatch(fetchCategories(profiles[1].budgetId));
         }
     }, [profilesFetchStatus, dispatch, profiles, categoriesSecondProfileFetchStatus]);
@@ -51,9 +51,9 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
     const everythingLoaded =
         categoriesFirstProfileFetchStatus === 'successful'
         && categoriesSecondProfileFetchStatus === 'successful'
-        && profilesFetchStatus.status === 'successful'
+        && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
         && profiles.length === 2
-        && categoryCombosFetchStatus.status === Status.SUCCESSFUL;
+        && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
 
     React.useLayoutEffect(() => {
         let additions: JSX.Element | null = null;

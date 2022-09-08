@@ -14,7 +14,7 @@ import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchCategoryCombos, selectCategoryComboFetchStatus } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { fetchCategories, selectActiveCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
-import { Status } from '../../Helper/Status';
+import { LoadingStatus } from '../../Helper/Status';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Amounts'>;
@@ -44,7 +44,7 @@ const AmountsScreen = (props: Props) => {
 
 
     useEffect(() => {
-        if (fetchCategoryComboStatus.status === Status.IDLE) {
+        if (fetchCategoryComboStatus.status === LoadingStatus.IDLE) {
             dispatch(fetchCategoryCombos());
         }
     }, [fetchCategoryComboStatus, dispatch]);
@@ -137,7 +137,7 @@ const AmountsScreen = (props: Props) => {
 
     return (
         <CustomScrollView>
-            {categoriesAreLoaded && numberFormatSettings && fetchCategoryComboStatus.status === Status.SUCCESSFUL
+            {categoriesAreLoaded && numberFormatSettings && fetchCategoryComboStatus.status === LoadingStatus.SUCCESSFUL
                 ? <Layout>
                     {amountEntries.map((amountEntry, index) => {
                         return <AmountCard
