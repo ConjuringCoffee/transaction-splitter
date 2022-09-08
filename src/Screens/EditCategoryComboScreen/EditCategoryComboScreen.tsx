@@ -89,10 +89,12 @@ export const EditCategoryComboScreen = (props: MyStackScreenProps<ScreenName>) =
                         // TODO: The usual color from the Appbar isn't transferred to this action and I don't know how to fix it
                         color='white' />
                 } >
-                <Menu.Item title="Delete" onPress={() => {
-                    deleteAndNavigate();
-                    setMenuVisible(false);
-                }} />
+                <Menu.Item
+                    key='delete'
+                    title="Delete" onPress={() => {
+                        deleteAndNavigate();
+                        setMenuVisible(false);
+                    }} />
             </Menu >
             : null;
     }, [
