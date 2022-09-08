@@ -113,7 +113,7 @@ const AmountCard = (props: Props) => {
                     style={styles.removeButton}
                     appearance='ghost'
                     size='large'
-                    accessoryLeft={RemoveIcon}
+                    accessoryLeft={<Icon {...props} name='trash-2-outline' />}
                     onPress={() => props.onRemovePress()} />
             </Layout>
 

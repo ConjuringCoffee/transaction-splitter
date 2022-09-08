@@ -23,14 +23,14 @@ const renderOption = (budget: Budget) => (
         key={budget.id} />
 );
 
-const BudgetSelect = (props: Props) => {
+export const BudgetSelect = (props: Props) => {
     const budgetIdentifiers = concatenateIdentifiers(props.budgets);
 
     useEffect(() => {
         if (props.selectedBudgetId === undefined || props.budgets.findIndex((e) => e.id === props.selectedBudgetId) === -1) {
             props.onBudgetSelect(props.budgets[0].id);
         }
-    }, [budgetIdentifiers]);
+    }, [budgetIdentifiers, props]);
 
     const onSelect = (newIndexPath: IndexPath | IndexPath[]) => {
         if (!(newIndexPath instanceof IndexPath)) {
@@ -63,5 +63,3 @@ const BudgetSelect = (props: Props) => {
         </Select>
     );
 };
-
-export default BudgetSelect;

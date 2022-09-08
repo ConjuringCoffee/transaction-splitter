@@ -2,7 +2,7 @@ import { Spinner } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const LoadingComponent = () => {
+export const LoadingComponent = () => {
     return (
         <View style={styles.loading}>
             <Spinner />
@@ -16,5 +16,3 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 });
-
-export default LoadingComponent;

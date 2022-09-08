@@ -21,14 +21,14 @@ const renderOption = (account: Account) => (
         key={account.id} />
 );
 
-const AccountSelect = (props: Props) => {
+export const AccountSelect = (props: Props) => {
     const accountIdentifiers = concatenateIdentifiers(props.accounts);
 
     useEffect(() => {
         if (props.selectedAccountId === undefined || props.accounts.findIndex((e) => e.id === props.selectedAccountId) === -1) {
             props.onAccountSelect(props.accounts[0].id);
         }
-    }, [accountIdentifiers]);
+    }, [accountIdentifiers, props]);
 
     const onSelect = (newIndexPath: IndexPath | IndexPath[]) => {
         if (!(newIndexPath instanceof IndexPath)) {
@@ -60,5 +60,3 @@ const AccountSelect = (props: Props) => {
         </Select>
     );
 };
-
-export default AccountSelect;

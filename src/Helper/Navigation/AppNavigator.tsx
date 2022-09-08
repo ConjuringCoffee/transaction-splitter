@@ -1,5 +1,5 @@
 import React from 'react';
-import SplittingScreen from '../../Screens/SplittingScreen/SplittingScreen';
+import { SplittingScreen } from '../../Screens/SplittingScreen/SplittingScreen';
 import SaveScreen from '../../Screens/SaveScreen/SaveScreen';
 import AmountsScreen from '../../Screens/AmountsScreen/AmountsScreen';
 import CategoryScreen from '../../Screens/CategoryScreen/CategoryScreen';
@@ -16,7 +16,7 @@ import { ScreenNames } from './ScreenNames';
 import { CategoryComboSettingsScreen } from '../../Screens/CategoryComboSettingsScreen/CategoryComboSettingsScreen';
 import { NavigationBar } from './NavigationBar';
 
-const AppNavigator = () => {
+export const AppNavigator = () => {
     return (
         <StackNavigator />
     );
@@ -109,5 +109,3 @@ const StackNavigator = () => {
         </stack.Navigator>
     );
 };
-
-export default AppNavigator;

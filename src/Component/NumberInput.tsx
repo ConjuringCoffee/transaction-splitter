@@ -17,7 +17,7 @@ interface Props {
     accessoryRight?: RenderProp<Partial<ImageProps>>,
 }
 
-const NumberInput = (props: Props) => {
+export const NumberInput = (props: Props) => {
     const propsNumber = props.number;
     const propsNumberFormatSettings = props.numberFormatSettings;
 
@@ -52,5 +52,3 @@ const NumberInput = (props: Props) => {
             accessoryRight={props.accessoryRight} />
     );
 };
-
-export default NumberInput;
