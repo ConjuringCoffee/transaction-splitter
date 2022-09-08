@@ -52,8 +52,8 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         }
     }, [profilesFetchStatus, dispatch, profiles, categoriesSecondProfileFetchStatus]);
 
-    const everythingLoaded =
-        categoriesFirstProfileFetchStatus === LoadingStatus.SUCCESSFUL
+    const everythingLoaded
+        = categoriesFirstProfileFetchStatus === LoadingStatus.SUCCESSFUL
         && categoriesSecondProfileFetchStatus === LoadingStatus.SUCCESSFUL
         && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
         && profiles.length === 2
@@ -65,10 +65,10 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
                 icon={ADD_ICON}
                 disabled={!everythingLoaded}
                 onPress={() => {
-                    navigation.navigate(ScreenNames.editCategoryComboScreen, {
+                    navigation.navigate(ScreenNames.EDIT_CATEGORY_COMBO_SCREEN, {
                         saveCategoryCombo: async (categoryCombo) => {
                             dispatch(addCategoryCombo(categoryCombo));
-                        }
+                        },
                     });
                 }}
             />);
@@ -79,13 +79,13 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
                     title={SCREEN_TITLE}
                     subtitle={SCREEN_SUBTITLE}
                     navigation={navigation}
-                    additions={additions} />)
-        })
+                    additions={additions} />),
+        });
     }, [
         everythingLoaded,
         navigation,
         profiles,
-        dispatch
+        dispatch,
     ]);
 
     const renderListItem = (categoryCombo: CategoryCombo, index: number) => (
@@ -94,18 +94,18 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
             key={index}
             title={categoryCombo.name}
             onPress={() => {
-                navigation.navigate(ScreenNames.editCategoryComboScreen, {
+                navigation.navigate(ScreenNames.EDIT_CATEGORY_COMBO_SCREEN, {
                     categoryCombo: categoryCombo,
                     saveCategoryCombo: async (categoryCombo) => {
                         dispatch(updateCategoryCombo({ index, categoryCombo }));
                     },
                     deleteCategoryCombo: async () => {
                         dispatch(deleteCategoryCombo(index));
-                    }
+                    },
                 });
             }}
         />
-    )
+    );
 
     return (
         <View>

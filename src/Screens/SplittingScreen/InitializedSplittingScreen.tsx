@@ -45,7 +45,7 @@ const InitializedSplittingScreen = (props: Props) => {
 
     const navigateToAmountsScreen = () => {
         props.navigation.navigate(
-            ScreenNames.amountsScreen,
+            ScreenNames.AMOUNTS_SCREEN,
             {
                 basicData: {
                     payer: {

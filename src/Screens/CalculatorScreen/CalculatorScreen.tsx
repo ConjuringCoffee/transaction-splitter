@@ -65,7 +65,7 @@ const CalculatorScreen = ({ route, navigation }: Props) => {
                 <Button
                     onPress={() => {
                         navigation.navigate(
-                            ScreenNames.calculationHistoryScreen,
+                            ScreenNames.CALCULATION_HISTORY_SCREEN,
                             {
                                 previousCalculations: previousCalculations,
                                 onSelectCalculation: (selectedCalculation) => {

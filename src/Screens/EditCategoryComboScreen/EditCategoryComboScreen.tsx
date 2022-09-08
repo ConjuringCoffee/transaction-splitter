@@ -184,7 +184,7 @@ const CategoryLayout = (props: CategoryLayoutProps) => {
             description={`Category from ${props.profileName}`}
             left={props => <List.Icon {...props} icon={categoryName ? ICON_CATEGORY_SET : ICON_CATEGORY_NOT_SET} />}
             onPress={() => {
-                props.navigation.navigate(ScreenNames.categoryScreen, {
+                props.navigation.navigate(ScreenNames.CATEGORY_SCREEN, {
                     budgetId: props.budgetId,
                     onSelect: (categoryId?: string) => props.onCategorySelect(categoryId),
                 });

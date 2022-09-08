@@ -49,7 +49,7 @@ const SplittingScreen = (props: Props) => {
                     navigation={props.navigation}
                     additions={
                         <Appbar.Action
-                            onPress={() => props.navigation.navigate(ScreenNames.settingsOverviewScreen)}
+                            onPress={() => props.navigation.navigate(ScreenNames.SETTINGS_OVERVIEW_SCREEN)}
                             icon='cog' />
                     }
                 />

@@ -193,7 +193,7 @@ const AmountsScreen = (props: Props) => {
                                 const saveTransactions = buildSaveTransactions(amountEntries, basicData);
 
                                 props.navigation.navigate(
-                                    ScreenNames.saveScreen,
+                                    ScreenNames.SAVE_SCREEN,
                                     {
                                         basicData: basicData,
                                         payerSaveTransaction: saveTransactions.payer,

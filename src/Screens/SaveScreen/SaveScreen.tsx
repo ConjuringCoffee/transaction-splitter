@@ -50,7 +50,7 @@ const SaveScreen = ({ navigation, route }: Props) => {
         if (payerTransactionSaveStatus === SaveStatus.Success && debtorTransactionSaveStatus === SaveStatus.Success) {
             navigation.reset({
                 index: 0,
-                routes: [{ name: ScreenNames.splittingScreen }],
+                routes: [{ name: ScreenNames.SPLITTING_SCREEN }],
             });
         }
     }, [navigation, payerTransactionSaveStatus, debtorTransactionSaveStatus]);

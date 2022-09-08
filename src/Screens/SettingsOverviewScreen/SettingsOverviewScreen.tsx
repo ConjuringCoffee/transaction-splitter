@@ -31,17 +31,17 @@ const SettingsOverviewScreen = ({ navigation }: Props) => {
         {
             title: 'Access Token',
             description: 'Necessary to access the YNAB API',
-            navigate: () => { navigation.navigate(ScreenNames.accessTokenScreen) }
+            navigate: () => { navigation.navigate(ScreenNames.ACCESS_TOKEN_SCREEN) }
         },
         {
             title: 'Profiles',
             description: 'The two profiles to split the transactions to',
-            navigate: () => { navigation.navigate(ScreenNames.profileSettingsScreen) }
+            navigate: () => { navigation.navigate(ScreenNames.PROFILE_SETTINGS_SCREEN) }
         },
         {
             title: 'Category Combinations',
             description: 'Combine categories of your profiles',
-            navigate: () => { navigation.navigate(ScreenNames.categoryComboSettingsScreen) }
+            navigate: () => { navigation.navigate(ScreenNames.CATEGORY_COMBO_SETTINGS_SCREEN) }
         }
     ]
 

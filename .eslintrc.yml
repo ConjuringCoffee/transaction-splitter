@@ -33,8 +33,5 @@ rules:
   operator-linebreak:
   - 2
   - "before"
-
-  # Base rule must be deactivated because it reports incorrect errors
-  # https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/no-invalid-this.md
-  no-invalid-this: "off"
-  @typescript-eslint/no-invalid-this: ["error"]
+  react/react-in-jsx-scope: "off" # Not needed since we're using >= React 17
+  

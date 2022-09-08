@@ -44,7 +44,7 @@ const CategoryLayout = (props: CategoryLayoutProps) => (
 
         <Button
             onPress={() => {
-                props.navigation.navigate(ScreenNames.categoryScreen, {
+                props.navigation.navigate(ScreenNames.CATEGORY_SCREEN, {
                     budgetId: props.budgetId,
                     onSelect: (categoryId?: string) => props.onSelect(categoryId),
                 });
@@ -99,7 +99,7 @@ const AmountCard = (props: Props) => {
                             accessoryLeft={CalculatorIcon}
                             onPress={() => {
                                 props.navigation.navigate(
-                                    ScreenNames.calculatorScreen,
+                                    ScreenNames.CALCULATOR_SCREEN,
                                     {
                                         currentAmount: props.amount,
                                         setAmount: props.setAmount,
@@ -129,7 +129,7 @@ const AmountCard = (props: Props) => {
                     style={styles.categoryComboButton}
                     accessoryLeft={CategoryComboIcon}
                     onPress={() => {
-                        props.navigation.navigate(ScreenNames.categoryComboScreen, {
+                        props.navigation.navigate(ScreenNames.CATEGORY_COMBO_SCREEN, {
                             onSelect: (categoryCombo) => {
                                 if (categoryCombo.categories.length !== 2) {
                                     throw new Error('Cannot handle combinations not consisting of exactly two categories');

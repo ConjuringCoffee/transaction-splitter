@@ -21,37 +21,37 @@ interface BasicData {
 }
 
 type StackParameterList = {
-    [ScreenNames.splittingScreen]: undefined;
-    [ScreenNames.settingsOverviewScreen]: undefined;
-    [ScreenNames.amountsScreen]: {
+    [ScreenNames.SPLITTING_SCREEN]: undefined;
+    [ScreenNames.SETTINGS_OVERVIEW_SCREEN]: undefined;
+    [ScreenNames.AMOUNTS_SCREEN]: {
         basicData: BasicData
     };
-    [ScreenNames.saveScreen]: {
+    [ScreenNames.SAVE_SCREEN]: {
         basicData: BasicData
         payerSaveTransaction: ynab.SaveTransaction
         debtorSaveTransaction: ynab.SaveTransaction
     };
-    [ScreenNames.categoryScreen]: {
+    [ScreenNames.CATEGORY_SCREEN]: {
         budgetId: string
         onSelect: (categoryId?: string) => void
     };
-    [ScreenNames.categoryComboScreen]: {
+    [ScreenNames.CATEGORY_COMBO_SCREEN]: {
         onSelect: (categoryCombo: CategoryCombo) => void
     }
-    [ScreenNames.calculatorScreen]: {
+    [ScreenNames.CALCULATOR_SCREEN]: {
         currentAmount: number,
         setAmount: (amount: number) => void
         previousCalculations: Array<string>
         setPreviousCalculations: (previousCalculations: Array<string>) => void
     }
-    [ScreenNames.calculationHistoryScreen]: {
+    [ScreenNames.CALCULATION_HISTORY_SCREEN]: {
         previousCalculations: Array<string>,
         onSelectCalculation: (calculation: string) => void
     }
-    [ScreenNames.accessTokenScreen]: undefined;
-    [ScreenNames.profileSettingsScreen]: undefined;
-    [ScreenNames.categoryComboSettingsScreen]: undefined;
-    [ScreenNames.editCategoryComboScreen]: {
+    [ScreenNames.ACCESS_TOKEN_SCREEN]: undefined;
+    [ScreenNames.PROFILE_SETTINGS_SCREEN]: undefined;
+    [ScreenNames.CATEGORY_COMBO_SETTINGS_SCREEN]: undefined;
+    [ScreenNames.EDIT_CATEGORY_COMBO_SCREEN]: {
         categoryCombo?: CategoryCombo,
         saveCategoryCombo: (categoryCombo: CategoryCombo) => Promise<void>,
         deleteCategoryCombo?: () => Promise<void>
