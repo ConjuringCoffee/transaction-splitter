@@ -28,7 +28,7 @@ const ProfileSettingsScreen = () => {
     const profiles = useAppSelector(selectAllProfiles);
 
     useEffect(() => {
-        if (budgetsFetchStatus.status === 'idle') {
+        if (budgetsFetchStatus.status === LoadingStatus.IDLE) {
             dispatch(fetchBudgets());
         }
     }, [budgetsFetchStatus, dispatch]);

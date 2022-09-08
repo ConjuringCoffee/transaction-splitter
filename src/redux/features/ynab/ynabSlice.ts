@@ -1,16 +1,17 @@
 import { createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit";
-import { Budget, Category, getBudgetsWithAccountsFromApi, getCategories } from "../../../YnabApi/YnabApiWrapper";
+import { LoadingStatus } from "../../../Helper/LoadingStatus";
+import { Account, Budget, Category, getBudgetsWithAccountsFromApi, getCategories } from "../../../YnabApi/YnabApiWrapper";
 import { RootState } from "../../store";
 
 interface YnabState {
     fetchBudgetsStatus: {
-        status: 'idle' | 'loading' | 'successful' | 'error'
+        status: LoadingStatus
         error: SerializedError | null
     }
     budgets: Budget[],
     categories: {
         [budgetId: string]: {
-            status: 'loading' | 'successful' | 'error'
+            status: LoadingStatus
             error: SerializedError | null,
             entities: Category[]
         }
@@ -19,7 +20,7 @@ interface YnabState {
 
 const initialState: YnabState = {
     fetchBudgetsStatus: {
-        status: 'idle',
+        status: LoadingStatus.IDLE,
         error: null
     },
     budgets: [],
@@ -42,40 +43,40 @@ export const ynabSlice = createSlice({
         builder
             .addCase(fetchBudgets.pending, (state) => {
                 state.fetchBudgetsStatus = {
-                    status: 'loading',
+                    status: LoadingStatus.LOADING,
                     error: null
                 };
             })
             .addCase(fetchBudgets.fulfilled, (state, action) => {
                 state.fetchBudgetsStatus = {
-                    status: 'successful',
+                    status: LoadingStatus.SUCCESSFUL,
                     error: null
                 }
                 state.budgets = action.payload;
             })
             .addCase(fetchBudgets.rejected, (state, action) => {
                 state.fetchBudgetsStatus = {
-                    status: 'error',
+                    status: LoadingStatus.ERROR,
                     error: action.error
                 }
             })
             .addCase(fetchCategories.pending, (state, action) => {
                 state.categories[action.meta.arg] = {
-                    status: "loading",
+                    status: LoadingStatus.LOADING,
                     error: null,
                     entities: []
                 }
             })
             .addCase(fetchCategories.fulfilled, (state, action) => {
                 state.categories[action.meta.arg] = {
-                    status: "successful",
+                    status: LoadingStatus.SUCCESSFUL,
                     error: null,
                     entities: action.payload
                 }
             })
             .addCase(fetchCategories.rejected, (state, action) => {
                 state.categories[action.meta.arg] = {
-                    status: "error",
+                    status: LoadingStatus.ERROR,
                     error: action.error,
                     entities: []
                 }
@@ -87,7 +88,7 @@ export default ynabSlice.reducer;
 
 export const selectBudgets = (state: RootState) => state.ynab.budgets;
 export const selectBudgetsFetchStatus = (state: RootState) => state.ynab.fetchBudgetsStatus;
-export const selectBudgetById = (state: RootState, budgetId: string) => {
+export const selectBudgetById = (state: RootState, budgetId: string): Budget => {
     const budget = state.ynab.budgets.find((budget) => budget.id === budgetId);
 
     if (!budget) {
@@ -97,7 +98,7 @@ export const selectBudgetById = (state: RootState, budgetId: string) => {
     return budget;
 }
 
-export const selectAccountById = (state: RootState, budgetId: string, accountId: string) => {
+export const selectAccountById = (state: RootState, budgetId: string, accountId: string): Account => {
     const budget = selectBudgetById(state, budgetId);
 
     const account = budget.accounts.find((account) => account.id === accountId);
@@ -109,16 +110,16 @@ export const selectAccountById = (state: RootState, budgetId: string, accountId:
     return account;
 }
 
-export const selectActiveAccounts = (state: RootState, budgetId: string) => {
+export const selectActiveAccounts = (state: RootState, budgetId: string): Account[] => {
     const budget = selectBudgetById(state, budgetId);
     return budget.accounts.filter((account) => account.onBudget && !account.closed && !account.deleted);
 }
 
-export const selectCategoriesFetchStatus = (state: RootState, budgetId: string): 'idle' | 'loading' | 'successful' | 'error' =>
-    state.ynab.categories[budgetId]?.status ?? 'idle';
+export const selectCategoriesFetchStatus = (state: RootState, budgetId: string): LoadingStatus =>
+    state.ynab.categories[budgetId]?.status ?? LoadingStatus.IDLE;
 
 
-export const selectActiveCategories = (state: RootState, budgetId: string) => {
+export const selectActiveCategories = (state: RootState, budgetId: string): Category[] => {
     const object = state.ynab.categories[budgetId];
     return object
         ? object.entities.filter((category) => !category.deleted && !category.hidden)

@@ -37,42 +37,41 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
     }, [profilesFetchStatus, dispatch]);
 
     useEffect(() => {
-        if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL && categoriesFirstProfileFetchStatus === 'idle') {
+        if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL && categoriesFirstProfileFetchStatus === LoadingStatus.IDLE) {
             dispatch(fetchCategories(profiles[0].budgetId));
         }
     }, [profilesFetchStatus, dispatch, profiles, categoriesFirstProfileFetchStatus]);
 
     useEffect(() => {
-        if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL && categoriesSecondProfileFetchStatus === 'idle') {
+        if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL && categoriesSecondProfileFetchStatus === LoadingStatus.IDLE) {
             dispatch(fetchCategories(profiles[1].budgetId));
         }
     }, [profilesFetchStatus, dispatch, profiles, categoriesSecondProfileFetchStatus]);
 
     const everythingLoaded =
-        categoriesFirstProfileFetchStatus === 'successful'
-        && categoriesSecondProfileFetchStatus === 'successful'
+        categoriesFirstProfileFetchStatus === LoadingStatus.SUCCESSFUL
+        && categoriesSecondProfileFetchStatus === LoadingStatus.SUCCESSFUL
         && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
         && profiles.length === 2
         && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
 
     React.useLayoutEffect(() => {
-        let additions: JSX.Element | null = null;
-
-        additions = (<Appbar.Action
-            icon='plus'
-            disabled={!everythingLoaded}
-            onPress={() => {
-                if (!everythingLoaded) {
-                    throw Error('Initialization was not done yet');
-                }
-                navigation.navigate(ScreenNames.editCategoryComboScreen, {
-                    profiles: profiles,
-                    saveCategoryCombo: async (categoryCombo) => {
-                        dispatch(addCategoryCombo(categoryCombo));
+        const additions = (
+            <Appbar.Action
+                icon='plus'
+                disabled={!everythingLoaded}
+                onPress={() => {
+                    if (!everythingLoaded) {
+                        throw Error('Initialization was not done yet');
                     }
-                });
-            }}
-        />);
+                    navigation.navigate(ScreenNames.editCategoryComboScreen, {
+                        profiles: profiles,
+                        saveCategoryCombo: async (categoryCombo) => {
+                            dispatch(addCategoryCombo(categoryCombo));
+                        }
+                    });
+                }}
+            />);
 
         navigation.setOptions({
             header: () => (

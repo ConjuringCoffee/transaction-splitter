@@ -30,7 +30,7 @@ const SplittingScreen = (props: Props) => {
     const profiles = useAppSelector(selectAllProfiles);
 
     useEffect(() => {
-        if (budgetsFetchStatus.status === 'idle') {
+        if (budgetsFetchStatus.status === LoadingStatus.IDLE) {
             dispatch(fetchBudgets());
         }
     }, [budgetsFetchStatus, dispatch]);
@@ -62,7 +62,7 @@ const SplittingScreen = (props: Props) => {
     return (
         <>
             {numberFormatSettings
-                && budgetsFetchStatus.status === 'successful'
+                && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL
                 && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
                 && profiles.length === 2
                 ? <InitializedSplittingScreen
