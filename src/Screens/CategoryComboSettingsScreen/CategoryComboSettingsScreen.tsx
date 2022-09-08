@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
 import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 import { fetchCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
+import { Status } from '../../Helper/Status';
 
 type ScreenName = 'Category Combinations Settings';
 
@@ -24,7 +25,7 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
     const categoriesSecondProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profiles[1]?.budgetId));
 
     useEffect(() => {
-        if (categoryCombosFetchStatus.status === 'idle') {
+        if (categoryCombosFetchStatus.status === Status.IDLE) {
             dispatch(fetchCategoryCombos());
         }
     }, [categoryCombosFetchStatus, dispatch]);
@@ -52,7 +53,7 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         && categoriesSecondProfileFetchStatus === 'successful'
         && profilesFetchStatus.status === 'successful'
         && profiles.length === 2
-        && categoryCombosFetchStatus.status === 'successful';
+        && categoryCombosFetchStatus.status === Status.SUCCESSFUL;
 
     React.useLayoutEffect(() => {
         let additions: JSX.Element | null = null;
