@@ -88,6 +88,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     React.useLayoutEffect(() => {
         const additions = [
             <Appbar.Action
+                key='add'
                 icon={ICON_SAVE}
                 disabled={!readyToSave}
                 onPress={() => {
