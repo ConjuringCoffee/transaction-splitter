@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
-import { RouteProp } from '@react-navigation/native';
-import LoadingComponent from '../../Component/LoadingComponent';
-import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
-import useLocalization from '../../Hooks/useLocalization';
-import InitializedSplittingScreen from './InitializedSplittingScreen';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useEffect, useLayoutEffect } from 'react';
+import { LoadingComponent } from '../../Component/LoadingComponent';
+import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
+import { useLocalization } from '../../Hooks/useLocalization';
+import { InitializedSplittingScreen } from './InitializedSplittingScreen';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { Appbar } from 'react-native-paper';
@@ -13,12 +11,9 @@ import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../
 import { fetchBudgets, selectBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 
-interface Props {
-    navigation: StackNavigationProp<StackParameterList>,
-    route: RouteProp<StackParameterList, 'Split Transaction'>,
-}
+type ScreenName = 'Split Transaction';
 
-const SplittingScreen = (props: Props) => {
+export const SplittingScreen = (props: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
 
     const { numberFormatSettings } = useLocalization();
@@ -41,7 +36,7 @@ const SplittingScreen = (props: Props) => {
         }
     }, [profilesFetchStatus, dispatch]);
 
-    React.useLayoutEffect(() => {
+    useLayoutEffect(() => {
         props.navigation.setOptions({
             header: () => (
                 <NavigationBar
@@ -49,15 +44,13 @@ const SplittingScreen = (props: Props) => {
                     navigation={props.navigation}
                     additions={
                         <Appbar.Action
-                            onPress={() => props.navigation.navigate(ScreenNames.settingsOverviewScreen)}
+                            onPress={() => props.navigation.navigate(ScreenNames.SETTINGS_OVERVIEW_SCREEN)}
                             icon='cog' />
                     }
                 />
             ),
         });
-    }, [
-        props.navigation
-    ]);
+    }, [props.navigation]);
 
     return (
         <>
@@ -74,6 +67,3 @@ const SplittingScreen = (props: Props) => {
         </>
     );
 };
-
-export default SplittingScreen;
-

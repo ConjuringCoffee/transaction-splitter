@@ -34,31 +34,26 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     const [categoryIdSecondProfile, setCategoryIdSecondProfile] = useState<string | undefined>(categoryCombo?.categories[1].id);
     const [menuVisible, setMenuVisible] = React.useState<boolean>(false);
 
-    const navigateBack = () => {
+    const navigateBack = useCallback(() => {
         // This prevents multiple fast button presses to navigate back multiple times
         // Source: https://github.com/react-navigation/react-navigation/issues/6864#issuecomment-635686686
-        navigation.dispatch(state => ({ ...CommonActions.goBack(), target: state.key }));
-    }
-
-    const saveAndNavigate = async (newCategoryCombo: CategoryCombo): Promise<void> => {
-        await saveCategoryCombo(newCategoryCombo);
-        navigateBack();
-    };
-
-    const deleteAndNavigate = async () => {
-        if (!deleteCategoryCombo) {
-            throw new Error('You were not supposed to be able to call this function');
-        }
-
-        await deleteCategoryCombo();
-        navigateBack();
-    };
+        navigation.dispatch((state) => ({ ...CommonActions.goBack(), target: state.key }));
+    }, [navigation]);
 
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
 
     const moreMenu = useCallback(() => {
-        return deleteCategoryCombo ?
-            <Menu
+        const deleteAndNavigate = async () => {
+            if (!deleteCategoryCombo) {
+                throw new Error('You were not supposed to be able to call this function');
+            }
+
+            await deleteCategoryCombo();
+            navigateBack();
+        };
+
+        return deleteCategoryCombo
+            ? <Menu
                 visible={menuVisible}
                 onDismiss={() => setMenuVisible(false)}
                 anchor={
@@ -80,12 +75,16 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     }, [
         menuVisible,
         deleteCategoryCombo,
-        deleteAndNavigate,
         setMenuVisible,
-        ICON_MORE
+        navigateBack,
     ]);
 
     React.useLayoutEffect(() => {
+        const saveAndNavigate = async (newCategoryCombo: CategoryCombo): Promise<void> => {
+            await saveCategoryCombo(newCategoryCombo);
+            navigateBack();
+        };
+
         const additions = [
             <Appbar.Action
                 key='add'
@@ -101,15 +100,15 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
                         categories: [
                             {
                                 budgetId: profiles[0].budgetId,
-                                id: categoryIdFirstProfile
+                                id: categoryIdFirstProfile,
                             },
                             {
                                 budgetId: profiles[1].budgetId,
-                                id: categoryIdSecondProfile
-                            }]
-                    })
+                                id: categoryIdSecondProfile,
+                            }],
+                    });
                 }} />,
-            moreMenu()
+            moreMenu(),
         ];
 
         navigation.setOptions({
@@ -130,15 +129,16 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
         categoryIdSecondProfile,
         profiles,
         deleteCategoryCombo,
-        saveAndNavigate,
-        moreMenu
+        moreMenu,
+        navigateBack,
+        saveCategoryCombo,
     ]);
 
     return (
         <View style={styles.container}>
             <TextInput
                 value={name}
-                onChangeText={text => setName(text)}
+                onChangeText={(text) => setName(text)}
                 label='Category Combination Name' />
             <List.Section>
                 <List.Subheader>Categories</List.Subheader>
@@ -147,23 +147,23 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
                     budgetId={profiles[0].budgetId}
                     navigation={navigation}
                     selectedCategoryId={categoryIdFirstProfile}
-                    onCategorySelect={categoryId => setCategoryIdFirstProfile(categoryId)} />
+                    onCategorySelect={(categoryId) => setCategoryIdFirstProfile(categoryId)} />
                 <CategoryLayout
                     profileName={profiles[1].name}
                     budgetId={profiles[1].budgetId}
                     navigation={navigation}
                     selectedCategoryId={categoryIdSecondProfile}
-                    onCategorySelect={categoryId => setCategoryIdSecondProfile(categoryId)} />
+                    onCategorySelect={(categoryId) => setCategoryIdSecondProfile(categoryId)} />
             </List.Section>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         paddingVertical: 8,
-        paddingHorizontal: 8
-    }
+        paddingHorizontal: 8,
+    },
 });
 
 interface CategoryLayoutProps {
@@ -182,9 +182,9 @@ const CategoryLayout = (props: CategoryLayoutProps) => {
         <List.Item
             title={categoryName ?? 'None'}
             description={`Category from ${props.profileName}`}
-            left={props => <List.Icon {...props} icon={categoryName ? ICON_CATEGORY_SET : ICON_CATEGORY_NOT_SET} />}
+            left={(props) => <List.Icon {...props} icon={categoryName ? ICON_CATEGORY_SET : ICON_CATEGORY_NOT_SET} />}
             onPress={() => {
-                props.navigation.navigate(ScreenNames.categoryScreen, {
+                props.navigation.navigate(ScreenNames.CATEGORY_SCREEN, {
                     budgetId: props.budgetId,
                     onSelect: (categoryId?: string) => props.onCategorySelect(categoryId),
                 });

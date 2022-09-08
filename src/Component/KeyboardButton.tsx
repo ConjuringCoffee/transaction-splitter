@@ -8,7 +8,7 @@ interface Props {
     onPress: () => void
 }
 
-const KeyboardButton = (props: Props) => {
+export const KeyboardButton = (props: Props) => {
     const styles = StyleSheet.create({
         pressable: {
             flex: 1,
@@ -35,4 +35,3 @@ const KeyboardButton = (props: Props) => {
     );
 };
 
-export default KeyboardButton;

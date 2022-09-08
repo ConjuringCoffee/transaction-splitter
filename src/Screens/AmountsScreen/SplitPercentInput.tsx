@@ -9,7 +9,7 @@ interface Props {
     setSplitPercentToPayer: (splitPercent: number) => void,
 }
 
-const SplitPercentInput = (props: Props) => {
+export const SplitPercentInput = (props: Props) => {
     if (!props.payerCategoryChosen || !props.debtorCategoryChosen) {
         return null;
     }
@@ -32,5 +32,3 @@ const styles = StyleSheet.create({
         width: '30%',
     },
 });
-
-export default SplitPercentInput;

@@ -1,8 +1,8 @@
-import * as SecureStore from 'expo-secure-store';
+import { getItemAsync, setItemAsync, WHEN_UNLOCKED } from 'expo-secure-store';
 
 const getAccessTokenFromKeychain = (): Promise<string> => {
     return new Promise((resolve, reject) => {
-        SecureStore.getItemAsync('access-token',
+        getItemAsync('access-token',
         ).then((value) => {
             if (value) {
                 resolve(value);
@@ -17,7 +17,7 @@ const getAccessTokenFromKeychain = (): Promise<string> => {
 };
 
 const saveAccessTokenToKeychain = async (accessToken: string) => {
-    await SecureStore.setItemAsync('access-token', accessToken, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
+    await setItemAsync('access-token', accessToken, { keychainAccessible: WHEN_UNLOCKED });
 };
 
 export { getAccessTokenFromKeychain, saveAccessTokenToKeychain };

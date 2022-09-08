@@ -3,15 +3,15 @@ import { Button, Card, Icon, Input, Layout, Text } from '@ui-kitten/components';
 import { Category } from '../../YnabApi/YnabApiWrapper';
 import { ImageProps, StyleSheet } from 'react-native';
 import { Navigation } from './AmountsScreen';
-import RemoveIcon from '../../Component/RemoveIcon';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import SplitPercentInput from './SplitPercentInput';
-import NumberInput from '../../Component/NumberInput';
+import { SplitPercentInput } from './SplitPercentInput';
+import { NumberInput } from '../../Component/NumberInput';
 import { NumberFormatSettings } from '../../Hooks/useLocalization';
 
 interface Props {
     // TODO: Pass AmountEntry instead of all these separate variables
     key: number,
+    index: number,
     numberFormatSettings: NumberFormatSettings,
     amount: number,
     payerBudgetId: string,
@@ -25,7 +25,7 @@ interface Props {
     debtorCategoryId: string | undefined,
     setDebtorCategoryId: (id: string | undefined) => void,
     splitPercentToPayer: number | undefined,
-    setSplitPercentToPayer: (splitPercent: number | undefined) => void,
+    setSplitPercentToPayer: (index: number, splitPercent: number | undefined) => void,
     onRemovePress: () => void,
     navigation: Navigation
 }
@@ -44,7 +44,7 @@ const CategoryLayout = (props: CategoryLayoutProps) => (
 
         <Button
             onPress={() => {
-                props.navigation.navigate(ScreenNames.categoryScreen, {
+                props.navigation.navigate(ScreenNames.CATEGORY_SCREEN, {
                     budgetId: props.budgetId,
                     onSelect: (categoryId?: string) => props.onSelect(categoryId),
                 });
@@ -64,17 +64,21 @@ const CategoryComboIcon = (props: Partial<ImageProps> | undefined) => (
     <Icon {...props} name='more-horizontal-outline' />
 );
 
-const AmountCard = (props: Props) => {
+export const AmountCard = (props: Props) => {
     const [previousCalculations, setPreviousCalculations] = useState<Array<string>>([]);
 
+    const { index, payerCategoryId, debtorCategoryId, splitPercentToPayer, setSplitPercentToPayer } = props;
+
     useEffect(() => {
-        // TODO: Solve dependency issues
-        if (props.payerCategoryId === undefined || props.debtorCategoryId === undefined) {
-            props.setSplitPercentToPayer(undefined);
-        } else if (props.payerCategoryId !== undefined && props.debtorCategoryId !== undefined && props.splitPercentToPayer === undefined) {
-            props.setSplitPercentToPayer(defaultSplitPercentToPayer);
+        // TODO: Clean this up
+        if (payerCategoryId === undefined || debtorCategoryId === undefined) {
+            if (splitPercentToPayer !== undefined) {
+                setSplitPercentToPayer(index, undefined);
+            }
+        } else if (payerCategoryId !== undefined && debtorCategoryId !== undefined && splitPercentToPayer === undefined) {
+            setSplitPercentToPayer(index, defaultSplitPercentToPayer);
         }
-    }, [props.payerCategoryId, props.debtorCategoryId]);
+    }, [payerCategoryId, debtorCategoryId, splitPercentToPayer, index, setSplitPercentToPayer]);
 
     const payerCategory = props.payerCategories.find((c) => c.id === props.payerCategoryId);
     const debtorCategory = props.debtorCategories.find((c) => c.id === props.debtorCategoryId);
@@ -99,7 +103,7 @@ const AmountCard = (props: Props) => {
                             accessoryLeft={CalculatorIcon}
                             onPress={() => {
                                 props.navigation.navigate(
-                                    ScreenNames.calculatorScreen,
+                                    ScreenNames.CALCULATOR_SCREEN,
                                     {
                                         currentAmount: props.amount,
                                         setAmount: props.setAmount,
@@ -113,7 +117,7 @@ const AmountCard = (props: Props) => {
                     style={styles.removeButton}
                     appearance='ghost'
                     size='large'
-                    accessoryLeft={RemoveIcon}
+                    accessoryLeft={<Icon {...props} name='trash-2-outline' />}
                     onPress={() => props.onRemovePress()} />
             </Layout>
 
@@ -129,7 +133,7 @@ const AmountCard = (props: Props) => {
                     style={styles.categoryComboButton}
                     accessoryLeft={CategoryComboIcon}
                     onPress={() => {
-                        props.navigation.navigate(ScreenNames.categoryComboScreen, {
+                        props.navigation.navigate(ScreenNames.CATEGORY_COMBO_SCREEN, {
                             onSelect: (categoryCombo) => {
                                 if (categoryCombo.categories.length !== 2) {
                                     throw new Error('Cannot handle combinations not consisting of exactly two categories');
@@ -158,7 +162,7 @@ const AmountCard = (props: Props) => {
                 payerCategoryChosen={props.payerCategoryId !== undefined}
                 debtorCategoryChosen={props.debtorCategoryId !== undefined}
                 splitPercentToPayer={props.splitPercentToPayer}
-                setSplitPercentToPayer={props.setSplitPercentToPayer} />
+                setSplitPercentToPayer={(splitPercent) => props.setSplitPercentToPayer(index, splitPercent)} />
             <Layout style={styles.container}>
                 <Input
                     style={styles.memo}
@@ -209,5 +213,3 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
 });
-
-export default AmountCard;

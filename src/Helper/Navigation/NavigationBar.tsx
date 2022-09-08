@@ -1,7 +1,7 @@
-import { ParamListBase } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { Appbar } from "react-native-paper";
-import { MyStackNavigationProp, StackParameterList } from "./ScreenParameters";
+import { ParamListBase } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Appbar } from 'react-native-paper';
+import { MyStackNavigationProp, StackParameterList } from './ScreenParameters';
 
 type Props<A extends keyof StackParameterList> = {
     title: string,
@@ -21,4 +21,4 @@ export const NavigationBar = <A extends keyof StackParameterList>(props: Props<A
                 subtitle={props.subtitle} />
             {props.additions}
         </Appbar.Header>);
-}
+};

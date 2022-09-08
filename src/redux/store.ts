@@ -1,14 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import categoryCombosSlice from './features/categoryCombos/categoryCombosSlice';
-import profilesSlice from './features/profiles/profilesSlice';
-import ynabSlice from './features/ynab/ynabSlice';
+import { categoryCombosSlice } from './features/categoryCombos/categoryCombosSlice';
+import { profilesSlice } from './features/profiles/profilesSlice';
+import { ynabSlice } from './features/ynab/ynabSlice';
 
 export const store = configureStore({
     reducer: {
-        categoryCombos: categoryCombosSlice,
-        profiles: profilesSlice,
-        ynab: ynabSlice
-    }
+        categoryCombos: categoryCombosSlice.reducer,
+        profiles: profilesSlice.reducer,
+        ynab: ynabSlice.reducer,
+    },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

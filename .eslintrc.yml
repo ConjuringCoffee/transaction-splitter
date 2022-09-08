@@ -14,6 +14,7 @@ plugins:
   - react
   - "@typescript-eslint"
   - "react-hooks"
+  - import
 rules:
   max-len: off # Can't get it to work properly 
     # - 1
@@ -26,15 +27,18 @@ rules:
   object-curly-spacing: 
   - 2
   - "always"
-  react-hooks/rules-of-hooks: 
-  - "error"
-  react-hooks/exhaustive-deps: 
-  - "warn"
+  react-hooks/rules-of-hooks: error
+  react-hooks/exhaustive-deps: error
   operator-linebreak:
   - 2
   - "before"
+  react/react-in-jsx-scope: off # Not needed since we're using >= React 17
+  import/no-default-export: error
+  import/export: error
+  
+  # Base rule must be deactivated because it reports incorrect errors: https://typescript-eslint.io/rules/no-invalid-this/
+  no-invalid-this: off
+  "@typescript-eslint/no-invalid-this": error
 
-  # Base rule must be deactivated because it reports incorrect errors
-  # https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/no-invalid-this.md
-  no-invalid-this: "off"
-  @typescript-eslint/no-invalid-this: ["error"]
+  no-unused-vars: off
+  "@typescript-eslint/no-unused-vars": error

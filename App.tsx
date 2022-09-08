@@ -4,7 +4,7 @@ import 'react-native-gesture-handler';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { Appearance, LogBox } from 'react-native';
-import AppNavigator from './src/Helper/Navigation/AppNavigator';
+import { AppNavigator } from './src/Helper/Navigation/AppNavigator';
 import {
     NavigationContainer,
     DarkTheme as NavigationDarkTheme,
@@ -34,7 +34,7 @@ const themeToUse = colorScheme === 'dark' ? CombinedDarkTheme : CombinedDefaultT
 const evaTheme = colorScheme === 'dark' ? eva.dark : eva.light;
 
 // Always use the light color scheme because both light and dark mode require white font
-const statusBarColorScheme = "light";
+const statusBarColorScheme = 'light';
 
 const App = () => {
     return (
@@ -53,4 +53,6 @@ const App = () => {
     );
 };
 
+// Necessary for expo to work correctly:
+// eslint-disable-next-line import/no-default-export
 export default App;

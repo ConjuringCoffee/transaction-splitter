@@ -27,7 +27,6 @@ class Calculation {
     }
 
     public addOperator(operator: string): void {
-
         let newCalculationString = this.isLastCharacterAnOperator()
             ? this.calculationString.slice(0, -1)
             : this.calculationString;
@@ -47,7 +46,7 @@ class Calculation {
             // Make sure the eval below can't do anything except addition and subtraction
             // Assume the content of the decimal and grouping separator. If necessary, add additional ones later
             if (!this.calculationString.match(/^[\+\-\.\,0-9]+$/)) {
-                throw new Error('Calculation string contains illegal characters')
+                throw new Error('Calculation string contains illegal characters');
             }
 
             const evalResult = eval(reverseNumberFormatSettingsFromLocale(this.calculationString, this.numberFormatSettings));

@@ -1,15 +1,15 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Button, Card, Layout, Text } from '@ui-kitten/components';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Keyboard } from 'react-native';
-import CustomScrollView from '../../Component/CustomScrollView';
-import LoadingComponent from '../../Component/LoadingComponent';
-import useLocalization from '../../Hooks/useLocalization';
+import { CustomScrollView } from '../../Component/CustomScrollView';
+import { LoadingComponent } from '../../Component/LoadingComponent';
+import { useLocalization } from '../../Hooks/useLocalization';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { AmountEntry, buildSaveTransactions } from '../../YnabApi/BuildSaveTransactions';
-import AmountCard from './AmountCard';
+import { AmountCard } from './AmountCard';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchCategoryCombos, selectCategoryComboFetchStatus } from '../../redux/features/categoryCombos/categoryCombosSlice';
@@ -24,7 +24,7 @@ type Props = {
     route: MyRouteProp;
 }
 
-const AmountsScreen = (props: Props) => {
+export const AmountsScreen = (props: Props) => {
     const { numberFormatSettings } = useLocalization();
     const [amountEntries, setAmountEntries] = useState<Array<AmountEntry>>([]);
 
@@ -50,13 +50,13 @@ const AmountsScreen = (props: Props) => {
     }, [fetchCategoryComboStatus, dispatch]);
 
     useEffect(() => {
-        if (payerCategoriesFetchStatus === 'idle') {
+        if (payerCategoriesFetchStatus === LoadingStatus.IDLE) {
             dispatch(fetchCategories(payerBudgetId));
         }
     }, [payerCategoriesFetchStatus, dispatch, payerBudgetId]);
 
     useEffect(() => {
-        if (debtorCategoriesFetchStatus === 'idle') {
+        if (debtorCategoriesFetchStatus === LoadingStatus.IDLE) {
             dispatch(fetchCategories(debtorBudgetId));
         }
     }, [debtorCategoriesFetchStatus, dispatch, debtorBudgetId]);
@@ -94,11 +94,11 @@ const AmountsScreen = (props: Props) => {
         setAmountEntries(entries);
     };
 
-    const setSplitPercentToPayer = (index: number, splitPercent: number | undefined) => {
+    const setSplitPercentToPayer = useCallback((index: number, splitPercent: number | undefined) => {
         const entries = [...amountEntries];
         entries[index].splitPercentToPayer = splitPercent;
         setAmountEntries(entries);
-    };
+    }, [amountEntries]);
 
     const removeAmountEntry = (index: number) => {
         const entries = [...amountEntries];
@@ -133,7 +133,9 @@ const AmountsScreen = (props: Props) => {
     const okayToContinue = isOkayToContinue(remainingAmount);
     const addingDisabled = remainingAmount === 0;
 
-    const categoriesAreLoaded = payerCategoriesFetchStatus === 'successful' && debtorCategoriesFetchStatus === 'successful';
+    const categoriesAreLoaded
+        = payerCategoriesFetchStatus === LoadingStatus.SUCCESSFUL
+        && debtorCategoriesFetchStatus === LoadingStatus.SUCCESSFUL;
 
     return (
         <CustomScrollView>
@@ -142,6 +144,7 @@ const AmountsScreen = (props: Props) => {
                     {amountEntries.map((amountEntry, index) => {
                         return <AmountCard
                             key={index}
+                            index={index}
                             numberFormatSettings={numberFormatSettings}
                             amount={amountEntry.amount}
                             payerBudgetId={basicData.payer.budgetId}
@@ -155,7 +158,7 @@ const AmountsScreen = (props: Props) => {
                             debtorCategoryId={amountEntry.debtorCategoryId}
                             setDebtorCategoryId={(categoryId) => setDebtorCategoryId(index, categoryId)}
                             splitPercentToPayer={amountEntry.splitPercentToPayer}
-                            setSplitPercentToPayer={(splitPercent) => setSplitPercentToPayer(index, splitPercent)}
+                            setSplitPercentToPayer={setSplitPercentToPayer}
                             onRemovePress={() => removeAmountEntry(index)}
                             navigation={props.navigation} />;
                     })}
@@ -193,7 +196,7 @@ const AmountsScreen = (props: Props) => {
                                 const saveTransactions = buildSaveTransactions(amountEntries, basicData);
 
                                 props.navigation.navigate(
-                                    ScreenNames.saveScreen,
+                                    ScreenNames.SAVE_SCREEN,
                                     {
                                         basicData: basicData,
                                         payerSaveTransaction: saveTransactions.payer,
@@ -210,4 +213,3 @@ const AmountsScreen = (props: Props) => {
 };
 
 export type { MyNavigationProp as Navigation };
-export default AmountsScreen;

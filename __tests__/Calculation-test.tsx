@@ -7,8 +7,8 @@ const numberFormatSettings: NumberFormatSettings = {
 };
 
 const createCalculation = (calculationString: string): Calculation => {
-   return new Calculation(calculationString, numberFormatSettings);
-}
+    return new Calculation(calculationString, numberFormatSettings);
+};
 
 test('Add single digit after operator', () => {
     const calculation = createCalculation('1+');

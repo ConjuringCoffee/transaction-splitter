@@ -1,7 +1,6 @@
 import { Card } from '@ui-kitten/components';
-import React from 'react';
 import { Account } from '../../YnabApi/YnabApiWrapper';
-import AccountSelect from '../../Component/AccountSelect';
+import { AccountSelect } from '../../Component/AccountSelect';
 
 interface Props {
     elegibleAccounts: Account[],
@@ -9,7 +8,7 @@ interface Props {
     setAccountId: (id: string) => void
 }
 
-const PayerAccountSelectionCard = (props: Props) => {
+export const PayerAccountSelectionCard = (props: Props) => {
     return (
         <Card>
             <AccountSelect
@@ -20,4 +19,3 @@ const PayerAccountSelectionCard = (props: Props) => {
         </Card>);
 };
 
-export default PayerAccountSelectionCard;

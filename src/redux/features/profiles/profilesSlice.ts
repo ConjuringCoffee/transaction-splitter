@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import * as SecureStore from 'expo-secure-store';
-import { LoadingStatus } from "../../../Helper/LoadingStatus";
-import { RootState } from "../../store";
+import { LoadingStatus } from '../../../Helper/LoadingStatus';
+import { RootState } from '../../store';
 
 export interface Profile {
     name: string,
@@ -25,14 +25,14 @@ interface ProfilesState {
 const initialState: ProfilesState = {
     fetchStatus: {
         status: LoadingStatus.IDLE,
-        error: null
+        error: null,
     },
     saveStatus: {
         status: LoadingStatus.IDLE,
-        error: null
+        error: null,
     },
     objects: [],
-}
+};
 
 const STORAGE_KEY = 'profiles';
 
@@ -71,45 +71,43 @@ export const profilesSlice = createSlice({
             .addCase(fetchProfiles.pending, (state) => {
                 state.fetchStatus = {
                     status: LoadingStatus.LOADING,
-                    error: null
+                    error: null,
                 };
             })
             .addCase(fetchProfiles.fulfilled, (state, action) => {
                 state.fetchStatus = {
                     status: LoadingStatus.SUCCESSFUL,
-                    error: null
-                }
+                    error: null,
+                };
                 state.objects = action.payload;
             })
             .addCase(fetchProfiles.rejected, (state, action) => {
                 state.fetchStatus = {
                     status: LoadingStatus.ERROR,
-                    error: action.error
-                }
+                    error: action.error,
+                };
             })
             .addCase(overwriteProfiles.pending, (state) => {
                 state.saveStatus = {
                     status: LoadingStatus.LOADING,
-                    error: null
+                    error: null,
                 };
             })
             .addCase(overwriteProfiles.fulfilled, (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.SUCCESSFUL,
-                    error: null
-                }
+                    error: null,
+                };
                 state.objects = action.payload;
             })
             .addCase(overwriteProfiles.rejected, (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.ERROR,
-                    error: action.error
-                }
-            })
-    }
+                    error: action.error,
+                };
+            });
+    },
 });
-
-export default profilesSlice.reducer;
 
 export const selectAllProfiles = (state: RootState) => state.profiles.objects;
 export const selectProfilesFetchStatus = (state: RootState) => state.profiles.fetchStatus;

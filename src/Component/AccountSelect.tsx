@@ -21,26 +21,26 @@ const renderOption = (account: Account) => (
         key={account.id} />
 );
 
-const AccountSelect = (props: Props) => {
-    const accountIdentifiers = concatenateIdentifiers(props.accounts);
+export const AccountSelect = ({ selectedAccountId, accounts, onAccountSelect, label }: Props) => {
+    const accountIdentifiers = concatenateIdentifiers(accounts);
 
     useEffect(() => {
-        if (props.selectedAccountId === undefined || props.accounts.findIndex((e) => e.id === props.selectedAccountId) === -1) {
-            props.onAccountSelect(props.accounts[0].id);
+        if (selectedAccountId === undefined || accounts.findIndex((e) => e.id === selectedAccountId) === -1) {
+            onAccountSelect(accounts[0].id);
         }
-    }, [accountIdentifiers]);
+    }, [accountIdentifiers, selectedAccountId, accounts, onAccountSelect]);
 
     const onSelect = (newIndexPath: IndexPath | IndexPath[]) => {
         if (!(newIndexPath instanceof IndexPath)) {
             throw new Error('Unexpected type of IndexPath');
         }
-        props.onAccountSelect(props.accounts[newIndexPath.row].id);
+        onAccountSelect(accounts[newIndexPath.row].id);
     };
 
     let index = 0;
 
-    if (props.selectedAccountId !== undefined) {
-        index = props.accounts.findIndex((e) => e.id === props.selectedAccountId);
+    if (selectedAccountId !== undefined) {
+        index = accounts.findIndex((e) => e.id === selectedAccountId);
 
         if (index === -1) {
             index = 0;
@@ -48,17 +48,15 @@ const AccountSelect = (props: Props) => {
     }
 
     const indexPath = new IndexPath(index);
-    const displayValue = props.accounts[indexPath.row].name;
+    const displayValue = accounts[indexPath.row].name;
 
     return (
         <Select
-            label={props.label}
+            label={label}
             value={displayValue}
             selectedIndex={indexPath}
             onSelect={(newIndexPath) => onSelect(newIndexPath)}>
-            {props.accounts.map(renderOption)}
+            {accounts.map(renderOption)}
         </Select>
     );
 };
-
-export default AccountSelect;

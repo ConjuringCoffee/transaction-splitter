@@ -1,9 +1,9 @@
 import { Button } from '@ui-kitten/components';
-import React, { useEffect, useState } from 'react';
-import CustomScrollView from '../../Component/CustomScrollView';
-import LoadingComponent from '../../Component/LoadingComponent';
+import { useEffect, useState } from 'react';
+import { CustomScrollView } from '../../Component/CustomScrollView';
+import { LoadingComponent } from '../../Component/LoadingComponent';
 import { Account, Budget } from '../../YnabApi/YnabApiWrapper';
-import ProfileCard from './ProfileCard';
+import { ProfileCard } from './ProfileCard';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchProfiles, overwriteProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 import { fetchBudgets, selectBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
@@ -16,7 +16,7 @@ interface EditableProfile {
     elegibleAccountIds: Array<string>,
 }
 
-const ProfileSettingsScreen = () => {
+export const ProfileSettingsScreen = () => {
     const dispatch = useAppDispatch();
 
     const [editableProfiles, setEditableProfiles] = useState<EditableProfile[]>();
@@ -74,7 +74,7 @@ const ProfileSettingsScreen = () => {
     const getActiveOnBudgetAccounts = (budget: Budget): Account[] => {
         // TODO: Replace this with selector from ynabSlice
         return budget.accounts.filter((e) => e.onBudget && !e.closed && !e.deleted);
-    }
+    };
 
     const createProfileCard = (avaliableBudgets: Array<Budget>, profile: EditableProfile, setProfile: (profile: EditableProfile) => void) => {
         const budget = getBudget(profile.budgetId);
@@ -156,5 +156,3 @@ const ProfileSettingsScreen = () => {
         </CustomScrollView>
     );
 };
-
-export default ProfileSettingsScreen;
