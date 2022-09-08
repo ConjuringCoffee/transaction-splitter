@@ -66,7 +66,6 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
                 disabled={!everythingLoaded}
                 onPress={() => {
                     navigation.navigate(ScreenNames.editCategoryComboScreen, {
-                        profiles: profiles,
                         saveCategoryCombo: async (categoryCombo) => {
                             dispatch(addCategoryCombo(categoryCombo));
                         }
@@ -97,7 +96,6 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
             onPress={() => {
                 navigation.navigate(ScreenNames.editCategoryComboScreen, {
                     categoryCombo: categoryCombo,
-                    profiles: profiles,
                     saveCategoryCombo: async (categoryCombo) => {
                         dispatch(updateCategoryCombo({ index, categoryCombo }));
                     },
