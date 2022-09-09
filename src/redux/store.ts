@@ -4,7 +4,7 @@ import { categoryCombosSlice } from './features/categoryCombos/categoryCombosSli
 import { profilesSlice } from './features/profiles/profilesSlice';
 import { ynabSlice } from './features/ynab/ynabSlice';
 
-export const store = configureStore({
+export const Store = configureStore({
     reducer: {
         categoryCombos: categoryCombosSlice.reducer,
         profiles: profilesSlice.reducer,
@@ -14,6 +14,6 @@ export const store = configureStore({
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof Store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
+export type AppDispatch = typeof Store.dispatch;
