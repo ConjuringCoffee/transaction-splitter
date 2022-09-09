@@ -44,10 +44,11 @@ const colorScheme = Appearance.getColorScheme();
 const themeToUse = colorScheme === 'dark' ? combinedDarkTheme : combinedDefaultTheme;
 const evaTheme = colorScheme === 'dark' ? eva.dark : eva.light;
 
+// Set mode to use the primary colors even in the dark theme, otherwise everything is only grey-ish
 themeToUse.mode = 'exact';
 
 // Always use the light color scheme because both light and dark mode require white font
-const statusBarColorScheme = 'light';
+const STATUS_BAR_COLOR_SCHEME = 'light';
 
 const ReduxProvidedApp = () => {
     const [appIsReady, setAppIsReady] = useState(false);
@@ -79,7 +80,7 @@ const ReduxProvidedApp = () => {
             <ApplicationProvider {...eva} theme={evaTheme}>
                 <NavigationContainer theme={themeToUse}>
                     {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
-                    <StatusBar style={statusBarColorScheme} />
+                    <StatusBar style={STATUS_BAR_COLOR_SCHEME} />
                     <AppNavigator />
                 </NavigationContainer>
             </ApplicationProvider>
