@@ -135,10 +135,11 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     ]);
 
     return (
-        <View style={styles.container}>
+        <View>
             <TextInput
                 value={name}
                 onChangeText={(text) => setName(text)}
+                style={styles.input}
                 label='Category Combination Name' />
             <List.Section>
                 <List.Subheader>Categories</List.Subheader>
@@ -160,9 +161,8 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
 };
 
 const styles = StyleSheet.create({
-    container: {
-        paddingVertical: 8,
-        paddingHorizontal: 8,
+    input: {
+        margin: 8,
     },
 });
 

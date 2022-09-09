@@ -111,12 +111,9 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         <View>
             {
                 everythingLoaded
-                    ? <List.Section>
-                        {categoryCombos.map(renderListItem)}
-                    </List.Section>
+                    ? categoryCombos.map(renderListItem)
                     : <ActivityIndicator />
             }
         </View>
     );
 };
-
