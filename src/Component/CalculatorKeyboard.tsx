@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Layout } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
-import KeyboardButton from './KeyboardButton';
-import KeyboardNumberButton from './KeyboardNumberButton';
+import { KeyboardButton } from './KeyboardButton';
+import { KeyboardNumberButton } from './KeyboardNumberButton';
 import { NumberFormatSettings } from '../Hooks/useLocalization';
 
 interface Props {
