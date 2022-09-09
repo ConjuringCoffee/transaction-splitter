@@ -1,42 +1,41 @@
-import { Button, Card, Input } from '@ui-kitten/components';
+import { Button, Input } from '@ui-kitten/components';
 import React, { useState, useEffect } from 'react';
-import { LoadingComponent } from '../../Component/LoadingComponent';
-import { getAccessTokenFromKeychain, saveAccessTokenToKeychain } from '../../Helper/AccessTokenHelper';
+import { View } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
+import { LoadingStatus } from '../../Helper/LoadingStatus';
+import { fetchAccessToken, saveAccessToken, selectAccessToken, selectAccessTokenFetchStatus } from '../../redux/features/accessToken/accessTokenSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
 export const AccessTokenScreen = () => {
-    const [isLoadingAccessToken, setLoadingAccessToken] = useState<boolean>(false);
-    const [accessToken, setAccessToken] = useState<string>('');
+    const dispatch = useAppDispatch();
+    const accessToken = useAppSelector(selectAccessToken);
+    const accessTokenFetchStatus = useAppSelector(selectAccessTokenFetchStatus);
+
+    const [enteredToken, setEnteredToken] = useState<string>('');
 
     useEffect(() => {
-        setLoadingAccessToken(true);
-
-        getAccessTokenFromKeychain()
-            .then((password) => {
-                setAccessToken(password);
-                setLoadingAccessToken(false);
-            }).catch((error) => {
-                console.error(error);
-                setLoadingAccessToken(false);
-            });
-    }, []);
+        if (accessTokenFetchStatus.status === LoadingStatus.IDLE) {
+            dispatch(fetchAccessToken());
+        }
+    }, [accessTokenFetchStatus, dispatch, accessToken]);
 
     return (
-        <Card>
-            {!isLoadingAccessToken
+        <View>
+            {accessTokenFetchStatus.status === LoadingStatus.SUCCESSFUL
                 ? <>
                     <Input
                         placeholder="YNAB Personal Access Token"
-                        onChangeText={(text) => setAccessToken(text)}
+                        onChangeText={setEnteredToken}
                         defaultValue={accessToken}
                     />
                     <Button
                         onPress={() => {
-                            saveAccessTokenToKeychain(accessToken).catch((error) => console.error(error));
+                            dispatch(saveAccessToken(enteredToken));
                         }}>
                         Set keychain
                     </Button>
                 </>
-                : <LoadingComponent />}
-        </Card>
+                : <ActivityIndicator />}
+        </View>
     );
 };
