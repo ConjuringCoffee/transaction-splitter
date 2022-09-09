@@ -1,42 +1,28 @@
-import { Button, Card, Input } from '@ui-kitten/components';
-import React, { useState, useEffect } from 'react';
-import { LoadingComponent } from '../../Component/LoadingComponent';
-import { getAccessTokenFromKeychain, saveAccessTokenToKeychain } from '../../Helper/AccessTokenHelper';
+import { Button, Input } from '@ui-kitten/components';
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { saveAccessToken, selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
 export const AccessTokenScreen = () => {
-    const [isLoadingAccessToken, setLoadingAccessToken] = useState<boolean>(false);
-    const [accessToken, setAccessToken] = useState<string>('');
+    const dispatch = useAppDispatch();
+    const accessToken = useAppSelector(selectAccessToken);
 
-    useEffect(() => {
-        setLoadingAccessToken(true);
-
-        getAccessTokenFromKeychain()
-            .then((password) => {
-                setAccessToken(password);
-                setLoadingAccessToken(false);
-            }).catch((error) => {
-                console.error(error);
-                setLoadingAccessToken(false);
-            });
-    }, []);
+    const [enteredToken, setEnteredToken] = useState<string>('');
 
     return (
-        <Card>
-            {!isLoadingAccessToken
-                ? <>
-                    <Input
-                        placeholder="YNAB Personal Access Token"
-                        onChangeText={(text) => setAccessToken(text)}
-                        defaultValue={accessToken}
-                    />
-                    <Button
-                        onPress={() => {
-                            saveAccessTokenToKeychain(accessToken).catch((error) => console.error(error));
-                        }}>
-                        Set keychain
-                    </Button>
-                </>
-                : <LoadingComponent />}
-        </Card>
+        <View>
+            <Input
+                placeholder="YNAB Personal Access Token"
+                onChangeText={setEnteredToken}
+                defaultValue={accessToken}
+            />
+            <Button
+                onPress={() => {
+                    dispatch(saveAccessToken(enteredToken));
+                }}>
+                Set keychain
+            </Button>
+        </View>
     );
 };

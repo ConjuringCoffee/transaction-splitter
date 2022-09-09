@@ -12,6 +12,7 @@ import { LoadingComponent } from '../../Component/LoadingComponent';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppSelector } from '../../redux/hooks';
 import { selectAccountById, selectActiveCategories, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
+import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Save'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Save'>;
@@ -45,6 +46,7 @@ export const SaveScreen = ({ navigation, route }: Props) => {
     const payerTransferAccount = useAppSelector((state) => selectAccountById(state, basicData.payer.budgetId, basicData.payer.transferAccountId));
     const payerCategories = useAppSelector((state) => selectActiveCategories(state, basicData.payer.budgetId));
     const debtorCategories = useAppSelector((state) => selectActiveCategories(state, basicData.debtor.budgetId));
+    const accessToken = useAppSelector(selectAccessToken);
 
     useEffect(() => {
         if (payerTransactionSaveStatus === SaveStatus.Success && debtorTransactionSaveStatus === SaveStatus.Success) {
@@ -87,7 +89,7 @@ export const SaveScreen = ({ navigation, route }: Props) => {
                             setPayerTransactionStatus('info');
                             setDebtorTransactionStatus('info');
 
-                            createTransaction(basicData.payer.budgetId, payerSaveTransaction)
+                            createTransaction(basicData.payer.budgetId, payerSaveTransaction, accessToken)
                                 .then(() => {
                                     setPayerTransactionStatus('success');
                                     setPayerTransactionSaveStatus(SaveStatus.Success);
@@ -97,7 +99,7 @@ export const SaveScreen = ({ navigation, route }: Props) => {
                                     setPayerTransactionSaveStatus(SaveStatus.Failure);
                                 });
 
-                            createTransaction(basicData.debtor.budgetId, debtorSaveTransaction)
+                            createTransaction(basicData.debtor.budgetId, debtorSaveTransaction, accessToken)
                                 .then(() => {
                                     setDebtorTransactionStatus('success');
                                     setDebtorTransactionSaveStatus(SaveStatus.Success);
