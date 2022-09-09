@@ -27,12 +27,14 @@ const initialState: YnabState = {
     categories: {},
 };
 
-export const fetchBudgets = createAsyncThunk('ynab/fetchBudgets', async () => {
-    return getBudgetsWithAccountsFromApi();
+export const fetchBudgets = createAsyncThunk<Budget[], undefined, { state: RootState }>('ynab/fetchBudgets', async (_, { getState }) => {
+    const accessToken = getState().accessToken.accessToken;
+    return getBudgetsWithAccountsFromApi(accessToken);
 });
 
-export const fetchCategories = createAsyncThunk('ynab/fetchCategories', async (budgetId: string) => {
-    return getCategories(budgetId);
+export const fetchCategories = createAsyncThunk<Category[], string, { state: RootState }>('ynab/fetchCategories', async (budgetId: string, { getState }) => {
+    const accessToken = getState().accessToken.accessToken;
+    return getCategories(budgetId, accessToken);
 });
 
 export const ynabSlice = createSlice({

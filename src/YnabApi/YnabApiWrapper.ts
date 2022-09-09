@@ -1,7 +1,6 @@
-import { getAccessTokenFromKeychain } from '../Helper/AccessTokenHelper';
-import * as ynab from 'ynab';
+import { API, SaveTransaction, TransactionDetail, SaveTransactionWrapper, CategoryGroupWithCategories } from 'ynab';
 
-interface Account {
+export interface Account {
     id: string;
     name: string;
     onBudget: boolean;
@@ -10,27 +9,26 @@ interface Account {
     deleted: boolean;
 }
 
-interface Category {
+export interface Category {
     id: string;
     name: string;
     hidden: boolean;
     deleted: boolean;
 }
 
-interface Budget {
+export interface Budget {
     id: string;
     name: string;
     accounts: Array<Account>;
 }
 
-const getCategoriesGroupedByCategoryGroup = async (apiKey: string, budgetId: string): Promise<ynab.CategoryGroupWithCategories[]> => {
-    const ynabAPI = new ynab.API(apiKey);
+const getCategoriesGroupedByCategoryGroup = async (apiKey: string, budgetId: string): Promise<CategoryGroupWithCategories[]> => {
+    const ynabAPI = new API(apiKey);
     const response = await ynabAPI.categories.getCategories(budgetId);
     return response.data.category_groups;
 };
 
-const getCategories = async (budgetId: string): Promise<Category[]> => {
-    const apiKey = await getAccessTokenFromKeychain();
+export const getCategories = async (budgetId: string, apiKey: string): Promise<Category[]> => {
     const categoryGroups = await getCategoriesGroupedByCategoryGroup(apiKey, budgetId);
 
     const categories: Array<Category> = [];
@@ -49,9 +47,8 @@ const getCategories = async (budgetId: string): Promise<Category[]> => {
     return categories;
 };
 
-const getBudgetsWithAccountsFromApi = async (): Promise<Budget[]> => {
-    const apiKey = await getAccessTokenFromKeychain();
-    const ynabAPI = new ynab.API(apiKey);
+export const getBudgetsWithAccountsFromApi = async (apiKey: string): Promise<Budget[]> => {
+    const ynabAPI = new API(apiKey);
     const response = await ynabAPI.budgets.getBudgets(true);
 
     return response.data.budgets.map((budgetSummary) => {
@@ -77,8 +74,7 @@ const getBudgetsWithAccountsFromApi = async (): Promise<Budget[]> => {
     });
 };
 
-const getUncategorizedCategory = async (budgetId: string): Promise<Category> => {
-    const apiKey = await getAccessTokenFromKeychain();
+const getUncategorizedCategory = async (budgetId: string, apiKey: string): Promise<Category> => {
     const categoryGroups = await getCategoriesGroupedByCategoryGroup(apiKey, budgetId);
 
     const internalMasterCategoryGroups = categoryGroups.filter((categoryGroup) => {
@@ -106,8 +102,8 @@ const getUncategorizedCategory = async (budgetId: string): Promise<Category> => 
 };
 
 const verifySavedTransaction = async (
-    saveTransaction: ynab.SaveTransaction, transactionDetail: ynab.TransactionDetail, budgetId: string): Promise<void> => {
-    const uncategorizedCategory = await getUncategorizedCategory(budgetId);
+    saveTransaction: SaveTransaction, transactionDetail: TransactionDetail, budgetId: string, apiKey: string): Promise<void> => {
+    const uncategorizedCategory = await getUncategorizedCategory(budgetId, apiKey);
 
     const areCategoriesTheSame = (saveId: string, savedId: string) => {
         return (
@@ -161,14 +157,12 @@ const verifySavedTransaction = async (
     }
 };
 
-const createTransaction = async (budgetId: string, saveTransaction: ynab.SaveTransaction): Promise<ynab.TransactionDetail> => {
-    const request: ynab.SaveTransactionWrapper = {
+export const createTransaction = async (budgetId: string, saveTransaction: SaveTransaction, apiKey: string): Promise<TransactionDetail> => {
+    const request: SaveTransactionWrapper = {
         transaction: saveTransaction,
     };
 
-    const apiKey = await getAccessTokenFromKeychain();
-
-    const ynabAPI = new ynab.API(apiKey);
+    const ynabAPI = new API(apiKey);
     const response = await ynabAPI.transactions.createTransaction(budgetId, request);
     const transaction = response.data.transaction;
 
@@ -176,10 +170,8 @@ const createTransaction = async (budgetId: string, saveTransaction: ynab.SaveTra
         throw new Error('API behaved unexpectedly: No single transaction data returned');
     }
 
-    await verifySavedTransaction(saveTransaction, transaction, budgetId);
+    await verifySavedTransaction(saveTransaction, transaction, budgetId, apiKey);
 
     return transaction;
 };
 
-export type { Account, Category, Budget };
-export { getBudgetsWithAccountsFromApi, createTransaction, getCategories };

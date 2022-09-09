@@ -31,7 +31,6 @@ const STORAGE_KEY = 'access-token';
 
 export const fetchAccessToken = createAsyncThunk('accessToken/fetchAccessToken', async () => {
     const jsonValue = await getItemAsync(STORAGE_KEY);
-    console.log('token', jsonValue);
     return jsonValue ?? '';
 });
 
