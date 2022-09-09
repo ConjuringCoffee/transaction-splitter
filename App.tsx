@@ -26,12 +26,18 @@ LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
 ]);
 
-const CombinedDefaultTheme = merge(PaperDefaultTheme, NavigationDefaultTheme);
-const CombinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
+const combinedDefaultTheme = merge(PaperDefaultTheme, NavigationDefaultTheme);
+combinedDefaultTheme.colors.primary = '#5C9CA4';
+
+const combinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
+combinedDarkTheme.colors.primary = '#0A393F';
+
 const colorScheme = Appearance.getColorScheme();
 
-const themeToUse = colorScheme === 'dark' ? CombinedDarkTheme : CombinedDefaultTheme;
+const themeToUse = colorScheme === 'dark' ? combinedDarkTheme : combinedDefaultTheme;
 const evaTheme = colorScheme === 'dark' ? eva.dark : eva.light;
+
+themeToUse.mode = 'exact';
 
 // Always use the light color scheme because both light and dark mode require white font
 const statusBarColorScheme = 'light';

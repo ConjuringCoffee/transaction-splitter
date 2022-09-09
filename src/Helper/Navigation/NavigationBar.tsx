@@ -12,13 +12,15 @@ type Props<A extends keyof StackParameterList> = {
 
 export const NavigationBar = <A extends keyof StackParameterList>(props: Props<A>) => {
     return (
-        <Appbar.Header>
-            {props.navigation.canGoBack()
-                ? <Appbar.BackAction onPress={() => props.navigation.goBack()} />
-                : null}
-            <Appbar.Content
+        <Appbar.Header dark={true}>
+            {
+                props.navigation.canGoBack()
+                    ? <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                    : null
+            }
+            < Appbar.Content
                 title={props.title}
                 subtitle={props.subtitle} />
             {props.additions}
-        </Appbar.Header>);
+        </Appbar.Header >);
 };
