@@ -5,10 +5,10 @@ import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { saveAccessToken, selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { API } from 'ynab';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { AccessTokenInput } from './AccessTokenInput';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
+import { useConnectionTest } from '../../Hooks/useConnectionTest';
 
 type ScreenName = 'Access Token';
 
@@ -31,25 +31,8 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
     const accessToken = useAppSelector(selectAccessToken);
 
     const [enteredToken, setEnteredToken] = useState<string>(accessToken);
-    const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>({ status: LoadingStatus.IDLE });
+    const [connectionStatus, testConnection] = useConnectionTest();
     const [navigateBack] = useNavigateBack(navigation);
-
-    const testConnection = async () => {
-        setConnectionStatus({ status: LoadingStatus.LOADING });
-
-        try {
-            await new API(enteredToken).user.getUser();
-            setConnectionStatus({ status: LoadingStatus.SUCCESSFUL });
-        } catch (error: any) {
-            setConnectionStatus({
-                status: LoadingStatus.ERROR,
-                error: {
-                    id: error.error.id,
-                    detail: error.error.detail,
-                },
-            });
-        }
-    };
 
     useLayoutEffect(() => {
         const addition = (
@@ -84,7 +67,7 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
                     : connectionStatus.status === LoadingStatus.ERROR
                         ? ICON_CONNECTION_ERROR
                         : undefined}
-                onPress={testConnection} >
+                onPress={() => testConnection(enteredToken)} >
                 Test connection
             </Button>
         </View >
