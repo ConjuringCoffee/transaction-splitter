@@ -1,7 +1,7 @@
 import { Input, Layout, List, ListItem } from '@ui-kitten/components';
 import React, { useState } from 'react';
-import { useNavigateBack } from '../../Helper/Navigation/navigateBack';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
+import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { CategoryCombo, selectAllCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../redux/hooks';
 

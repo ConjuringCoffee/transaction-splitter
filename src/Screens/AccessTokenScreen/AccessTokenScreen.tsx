@@ -1,7 +1,6 @@
 import { useLayoutEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
-import { useNavigateBack } from '../../Helper/Navigation/navigateBack';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { saveAccessToken, selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
@@ -9,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { API } from 'ynab';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { AccessTokenInput } from './AccessTokenInput';
+import { useNavigateBack } from '../../Hooks/useNavigateBack';
 
 type ScreenName = 'Access Token';
 

@@ -1,6 +1,6 @@
 import { CommonActions } from '@react-navigation/native';
 import { useCallback } from 'react';
-import { MyStackNavigationProp, StackParameterList } from './ScreenParameters';
+import { StackParameterList, MyStackNavigationProp } from '../Helper/Navigation/ScreenParameters';
 
 export function useNavigateBack<T extends keyof StackParameterList>(navigation: MyStackNavigationProp<T>): [() => void] {
     const navigateBack = useCallback(() => {

@@ -8,7 +8,7 @@ import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombo
 import { useAppSelector } from '../../redux/hooks';
 import { selectActiveCategories } from '../../redux/features/ynab/ynabSlice';
 import { selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
-import { useNavigateBack } from '../../Helper/Navigation/navigateBack';
+import { useNavigateBack } from '../../Hooks/useNavigateBack';
 
 type ScreenName = 'Edit Category Combo';
 

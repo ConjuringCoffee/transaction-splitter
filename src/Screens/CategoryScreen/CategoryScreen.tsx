@@ -6,7 +6,7 @@ import { Appbar } from 'react-native-paper';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { useAppSelector } from '../../redux/hooks';
 import { selectActiveCategories } from '../../redux/features/ynab/ynabSlice';
-import { useNavigateBack } from '../../Helper/Navigation/navigateBack';
+import { useNavigateBack } from '../../Hooks/useNavigateBack';
 
 type ScreenName = 'Category Selection';
 
