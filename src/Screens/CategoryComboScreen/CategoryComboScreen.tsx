@@ -1,39 +1,30 @@
 import { Input, Layout, List, ListItem } from '@ui-kitten/components';
 import React, { useState } from 'react';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
+import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { CategoryCombo, selectAllCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../redux/hooks';
+
+interface RenderItemProps {
+    item: CategoryCombo,
+    index: number
+}
 
 type ScreenName = 'Category Combinations';
 
 export const CategoryComboScreen = ({ route, navigation }: MyStackScreenProps<ScreenName>) => {
     const [nameFilter, setNameFilter] = useState<string>('');
-    const [navigatedBack, setNavigatedBack] = useState<boolean>(false);
-
     const categoryCombos = useAppSelector(selectAllCategoryCombos);
     const categoryCombosToDisplay = categoryCombos.filter((combo) => combo.name.toLowerCase().includes(nameFilter.toLowerCase()));
 
-    interface RenderItemProps {
-        item: CategoryCombo,
-        index: number
-    }
-
-    const selectAndNavigateBack = (categoryCombo: CategoryCombo): void => {
-        if (navigatedBack) {
-            // Avoid selecting the category multiple times if pressed multiple times fast
-            return;
-        }
-
-        setNavigatedBack(true);
-        navigation.goBack();
-        route.params.onSelect(categoryCombo);
-    };
+    const [navigateBack] = useNavigateBack(navigation);
 
     const renderItem = (props: RenderItemProps) => (
         <ListItem
             title={`${props.item.name}`}
             onPress={() => {
-                selectAndNavigateBack(props.item);
+                route.params.onSelect(props.item);
+                navigateBack();
             }} />
     );
 

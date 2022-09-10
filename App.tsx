@@ -37,15 +37,12 @@ const combinedDefaultTheme = merge(PaperDefaultTheme, NavigationDefaultTheme);
 combinedDefaultTheme.colors.primary = '#5C9CA4';
 
 const combinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
-combinedDarkTheme.colors.primary = '#0A393F';
+combinedDarkTheme.colors.primary = '#5C9CA4';
 
 const colorScheme = Appearance.getColorScheme();
 
 const themeToUse = colorScheme === 'dark' ? combinedDarkTheme : combinedDefaultTheme;
 const evaTheme = colorScheme === 'dark' ? eva.dark : eva.light;
-
-// Set mode to use the primary colors even in the dark theme, otherwise everything is only grey-ish
-themeToUse.mode = 'exact';
 
 // Always use the light color scheme because both light and dark mode require white font
 const STATUS_BAR_COLOR_SCHEME = 'light';

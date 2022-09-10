@@ -5,10 +5,10 @@ import { View, StyleSheet, Platform } from 'react-native';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { MyStackNavigationProp, MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
-import { CommonActions } from '@react-navigation/native';
 import { useAppSelector } from '../../redux/hooks';
 import { selectActiveCategories } from '../../redux/features/ynab/ynabSlice';
 import { selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
+import { useNavigateBack } from '../../Hooks/useNavigateBack';
 
 type ScreenName = 'Edit Category Combo';
 
@@ -34,11 +34,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     const [categoryIdSecondProfile, setCategoryIdSecondProfile] = useState<string | undefined>(categoryCombo?.categories[1].id);
     const [menuVisible, setMenuVisible] = React.useState<boolean>(false);
 
-    const navigateBack = useCallback(() => {
-        // This prevents multiple fast button presses to navigate back multiple times
-        // Source: https://github.com/react-navigation/react-navigation/issues/6864#issuecomment-635686686
-        navigation.dispatch((state) => ({ ...CommonActions.goBack(), target: state.key }));
-    }, [navigation]);
+    const [navigateBack] = useNavigateBack(navigation);
 
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
 

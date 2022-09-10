@@ -85,12 +85,7 @@ const StackNavigator = () => {
                 }} />
             <stack.Screen
                 name={ScreenNames.ACCESS_TOKEN_SCREEN}
-                component={AccessTokenScreen}
-                options={{
-                    header: (headerProps) => (<NavigationBar
-                        title='Access token'
-                        navigation={headerProps.navigation} />),
-                }} />
+                component={AccessTokenScreen} />
             <stack.Screen
                 name={ScreenNames.PROFILE_SETTINGS_SCREEN}
                 component={ProfileSettingsScreen}
