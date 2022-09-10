@@ -1,7 +1,23 @@
 import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
-import { Account, Budget, Category, getBudgetsWithAccountsFromApi, getCategories } from '../../../YnabApi/YnabApiWrapper';
+import { Account, Budget, getBudgetsWithAccountsFromApi } from '../../../YnabApi/YnabApiWrapper';
 import { RootState } from '../../store';
+import * as ynab from 'ynab';
+
+interface CategoryGroup {
+    id: string,
+    name: string,
+    hidden: boolean,
+    deleted: boolean,
+    categories: string[],
+}
+
+export interface Category {
+    id: string;
+    name: string;
+    hidden: boolean;
+    deleted: boolean;
+}
 
 interface YnabState {
     fetchBudgetsStatus: {
@@ -9,11 +25,16 @@ interface YnabState {
         error: SerializedError | null
     }
     budgets: Budget[],
-    categories: {
+    categoryGroups: {
         [budgetId: string]: {
             status: LoadingStatus
             error: SerializedError | null,
-            entities: Category[]
+            groups: {
+                [categoryGroupId: string]: CategoryGroup
+            },
+            categories: {
+                [categoryId: string]: Category
+            }
         }
     }
 }
@@ -24,7 +45,7 @@ const initialState: YnabState = {
         error: null,
     },
     budgets: [],
-    categories: {},
+    categoryGroups: {},
 };
 
 export const fetchBudgets = createAsyncThunk<Budget[], undefined, { state: RootState }>('ynab/fetchBudgets', async (_, { getState }) => {
@@ -32,10 +53,14 @@ export const fetchBudgets = createAsyncThunk<Budget[], undefined, { state: RootS
     return getBudgetsWithAccountsFromApi(accessToken);
 });
 
-export const fetchCategories = createAsyncThunk<Category[], string, { state: RootState }>('ynab/fetchCategories', async (budgetId: string, { getState }) => {
-    const accessToken = getState().accessToken.accessToken;
-    return getCategories(budgetId, accessToken);
-});
+export const fetchCategoryGroups = createAsyncThunk<
+    ynab.CategoryGroupWithCategories[], string, { state: RootState }>('ynab/fetchCategoryGroups', async (budgetId: string, { getState }) => {
+        const accessToken = getState().accessToken.accessToken;
+
+        const ynabAPI = new ynab.API(accessToken);
+        const response = await ynabAPI.categories.getCategories(budgetId);
+        return response.data.category_groups;
+    });
 
 export const ynabSlice = createSlice({
     name: 'ynab',
@@ -62,25 +87,44 @@ export const ynabSlice = createSlice({
                     error: action.error,
                 };
             })
-            .addCase(fetchCategories.pending, (state, action) => {
-                state.categories[action.meta.arg] = {
+            .addCase(fetchCategoryGroups.pending, (state, action) => {
+                state.categoryGroups[action.meta.arg] = {
                     status: LoadingStatus.LOADING,
                     error: null,
-                    entities: [],
+                    groups: {},
+                    categories: {},
                 };
             })
-            .addCase(fetchCategories.fulfilled, (state, action) => {
-                state.categories[action.meta.arg] = {
-                    status: LoadingStatus.SUCCESSFUL,
-                    error: null,
-                    entities: action.payload,
-                };
+            .addCase(fetchCategoryGroups.fulfilled, (state, action) => {
+                const stateForBudget = state.categoryGroups[action.meta.arg];
+                stateForBudget.status = LoadingStatus.SUCCESSFUL;
+                stateForBudget.error = null;
+
+                for (const categoryGroup of action.payload) {
+                    for (const category of categoryGroup.categories) {
+                        stateForBudget.categories[category.id] = {
+                            id: category.id,
+                            name: category.name,
+                            hidden: category.hidden,
+                            deleted: category.deleted,
+                        };
+                    }
+
+                    stateForBudget.groups[categoryGroup.id] = {
+                        id: categoryGroup.id,
+                        name: categoryGroup.name,
+                        hidden: categoryGroup.hidden,
+                        deleted: categoryGroup.deleted,
+                        categories: categoryGroup.categories.map((category) => category.id),
+                    };
+                }
             })
-            .addCase(fetchCategories.rejected, (state, action) => {
-                state.categories[action.meta.arg] = {
+            .addCase(fetchCategoryGroups.rejected, (state, action) => {
+                state.categoryGroups[action.meta.arg] = {
                     status: LoadingStatus.ERROR,
                     error: action.error,
-                    entities: [],
+                    groups: {},
+                    categories: {},
                 };
             });
     },
@@ -116,12 +160,15 @@ export const selectActiveAccounts = (state: RootState, budgetId: string): Accoun
 };
 
 export const selectCategoriesFetchStatus = (state: RootState, budgetId: string): LoadingStatus =>
-    state.ynab.categories[budgetId]?.status ?? LoadingStatus.IDLE;
+    state.ynab.categoryGroups[budgetId]?.status ?? LoadingStatus.IDLE;
 
 
 export const selectActiveCategories = (state: RootState, budgetId: string): Category[] => {
-    const object = state.ynab.categories[budgetId];
-    return object
-        ? object.entities.filter((category) => !category.deleted && !category.hidden)
-        : [];
+    const stateForBudget = state.ynab.categoryGroups[budgetId];
+
+    if (stateForBudget === undefined) {
+        return [];
+    }
+    const categories = Object.values(stateForBudget.categories);
+    return categories.filter((category) => !category.deleted && !category.hidden);
 };

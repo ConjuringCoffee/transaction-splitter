@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Icon, Input, Layout, Text } from '@ui-kitten/components';
-import { Category } from '../../YnabApi/YnabApiWrapper';
 import { ImageProps, StyleSheet } from 'react-native';
 import { Navigation } from './AmountsScreen';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { SplitPercentInput } from './SplitPercentInput';
 import { NumberInput } from '../../Component/NumberInput';
 import { NumberFormatSettings } from '../../Hooks/useLocalization';
+import { Category } from '../../redux/features/ynab/ynabSlice';
 
 interface Props {
     // TODO: Pass AmountEntry instead of all these separate variables

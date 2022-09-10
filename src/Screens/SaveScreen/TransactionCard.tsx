@@ -4,9 +4,10 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { convertAmountToText, convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
 import { BasicData } from '../../Helper/Navigation/ScreenParameters';
-import { Account, Budget, Category } from '../../YnabApi/YnabApiWrapper';
+import { Account, Budget } from '../../YnabApi/YnabApiWrapper';
 import * as ynab from 'ynab';
 import { NumberFormatSettings } from '../../Hooks/useLocalization';
+import { Category } from '../../redux/features/ynab/ynabSlice';
 
 interface TransactionCardProps {
     numberFormatSettings: NumberFormatSettings,

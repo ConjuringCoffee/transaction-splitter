@@ -1,10 +1,9 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { Category } from '../../YnabApi/YnabApiWrapper';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { Appbar, List, TextInput } from 'react-native-paper';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { useAppSelector } from '../../redux/hooks';
-import { selectActiveCategories } from '../../redux/features/ynab/ynabSlice';
+import { Category, selectActiveCategories } from '../../redux/features/ynab/ynabSlice';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { FlatList, View } from 'react-native';
 

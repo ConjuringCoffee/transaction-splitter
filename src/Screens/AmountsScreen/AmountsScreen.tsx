@@ -13,7 +13,7 @@ import { AmountCard } from './AmountCard';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchCategoryCombos, selectCategoryComboFetchStatus } from '../../redux/features/categoryCombos/categoryCombosSlice';
-import { fetchCategories, selectActiveCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
+import { fetchCategoryGroups, selectActiveCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
@@ -51,13 +51,13 @@ export const AmountsScreen = (props: Props) => {
 
     useEffect(() => {
         if (payerCategoriesFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategories(payerBudgetId));
+            dispatch(fetchCategoryGroups(payerBudgetId));
         }
     }, [payerCategoriesFetchStatus, dispatch, payerBudgetId]);
 
     useEffect(() => {
         if (debtorCategoriesFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategories(debtorBudgetId));
+            dispatch(fetchCategoryGroups(debtorBudgetId));
         }
     }, [debtorCategoriesFetchStatus, dispatch, debtorBudgetId]);
 
