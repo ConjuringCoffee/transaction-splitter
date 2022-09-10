@@ -163,7 +163,7 @@ export const selectCategoriesFetchStatus = (state: RootState, budgetId: string):
     state.ynab.categoryGroups[budgetId]?.status ?? LoadingStatus.IDLE;
 
 
-export const selectActiveCategories = (state: RootState, budgetId: string): Category[] => {
+export const selectActiveCategoriesValues = (state: RootState, budgetId: string): Category[] => {
     const stateForBudget = state.ynab.categoryGroups[budgetId];
 
     if (stateForBudget === undefined) {
@@ -171,4 +171,16 @@ export const selectActiveCategories = (state: RootState, budgetId: string): Cate
     }
     const categories = Object.values(stateForBudget.categories);
     return categories.filter((category) => !category.deleted && !category.hidden);
+};
+
+export const selectCategory = (state: RootState, budgetId: string, categoryId: string): Category => {
+    return state.ynab.categoryGroups[budgetId].categories[categoryId];
+};
+
+export const selectCategories = (state: RootState, budgetId: string): { [categoryId: string]: Category } => {
+    return state.ynab.categoryGroups[budgetId].categories;
+};
+
+export const selectCategoryGroups = (state: RootState, budgetId: string): { [categoryGroupId: string]: CategoryGroup } => {
+    return state.ynab.categoryGroups[budgetId].groups;
 };

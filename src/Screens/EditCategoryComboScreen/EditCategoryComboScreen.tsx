@@ -6,7 +6,7 @@ import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { MyStackNavigationProp, MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../redux/hooks';
-import { selectActiveCategories } from '../../redux/features/ynab/ynabSlice';
+import { selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 
@@ -171,8 +171,8 @@ interface CategoryLayoutProps {
 }
 
 const CategoryLayout = (props: CategoryLayoutProps) => {
-    const categories = useAppSelector((state) => selectActiveCategories(state, props.budgetId));
-    const categoryName = categories.find((c) => c.id === props.selectedCategoryId)?.name;
+    const categories = useAppSelector((state) => selectCategories(state, props.budgetId));
+    const categoryName = props.selectedCategoryId ? categories[props.selectedCategoryId].name : 'None';
 
     return (
         <List.Item

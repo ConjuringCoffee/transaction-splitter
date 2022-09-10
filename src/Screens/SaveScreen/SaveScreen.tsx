@@ -11,7 +11,7 @@ import { useLocalization } from '../../Hooks/useLocalization';
 import { LoadingComponent } from '../../Component/LoadingComponent';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppSelector } from '../../redux/hooks';
-import { selectAccountById, selectActiveCategories, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
+import { selectAccountById, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Save'>;
@@ -44,8 +44,6 @@ export const SaveScreen = ({ navigation, route }: Props) => {
     const payerBudget = useAppSelector((state) => selectBudgetById(state, basicData.payer.budgetId));
     const debtorBudget = useAppSelector((state) => selectBudgetById(state, basicData.debtor.budgetId));
     const payerTransferAccount = useAppSelector((state) => selectAccountById(state, basicData.payer.budgetId, basicData.payer.transferAccountId));
-    const payerCategories = useAppSelector((state) => selectActiveCategories(state, basicData.payer.budgetId));
-    const debtorCategories = useAppSelector((state) => selectActiveCategories(state, basicData.debtor.budgetId));
     const accessToken = useAppSelector(selectAccessToken);
 
     useEffect(() => {
@@ -69,7 +67,6 @@ export const SaveScreen = ({ navigation, route }: Props) => {
                             basicData={basicData}
                             saveTransaction={payerSaveTransaction}
                             budget={payerBudget}
-                            categories={payerCategories}
                             transferAccount={payerTransferAccount} />
 
                         <TransactionCard
@@ -78,8 +75,7 @@ export const SaveScreen = ({ navigation, route }: Props) => {
                             title='Debtor transaction'
                             basicData={basicData}
                             saveTransaction={debtorSaveTransaction}
-                            budget={debtorBudget}
-                            categories={debtorCategories} />
+                            budget={debtorBudget} />
                     </ScrollView>
                     <Button
                         style={styles.button}

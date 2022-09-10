@@ -7,7 +7,8 @@ import { BasicData } from '../../Helper/Navigation/ScreenParameters';
 import { Account, Budget } from '../../YnabApi/YnabApiWrapper';
 import * as ynab from 'ynab';
 import { NumberFormatSettings } from '../../Hooks/useLocalization';
-import { Category } from '../../redux/features/ynab/ynabSlice';
+import { selectCategories } from '../../redux/features/ynab/ynabSlice';
+import { useAppSelector } from '../../redux/hooks';
 
 interface TransactionCardProps {
     numberFormatSettings: NumberFormatSettings,
@@ -16,7 +17,6 @@ interface TransactionCardProps {
     basicData: BasicData,
     saveTransaction: ynab.SaveTransaction,
     budget: Budget,
-    categories: Array<Category>,
     transferAccount?: Account
 }
 
@@ -57,13 +57,16 @@ const AmountCard = (props: AmountCardProps) => {
 };
 
 export const TransactionCard = (props: TransactionCardProps) => {
+    const categories = useAppSelector((state) => selectCategories(state, props.budget.id));
+
     const amountCards = () => {
         if (props.saveTransaction.subtransactions === undefined) {
-            const target = props.categories.find((category) => category.id === props.saveTransaction.category_id)?.name;
-
-            if (target === undefined) {
+            if (props.saveTransaction.category_id == undefined) {
                 throw new Error('Should not be possible to reach this screen with this kind of data');
             }
+
+            const target = categories[props.saveTransaction.category_id].name;
+
             return (
                 <AmountCard
                     numberFormatSettings={props.numberFormatSettings}
@@ -74,8 +77,8 @@ export const TransactionCard = (props: TransactionCardProps) => {
             return props.saveTransaction.subtransactions?.map((subtransaction, index) => {
                 let target: string | undefined;
 
-                if (subtransaction.category_id !== undefined) {
-                    target = props.categories.find((category) => category.id === subtransaction.category_id)?.name;
+                if (subtransaction.category_id != undefined) {
+                    target = categories[subtransaction.category_id].name;
                 } else if (subtransaction.payee_id !== undefined) {
                     target = props.transferAccount?.name;
                 }

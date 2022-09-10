@@ -13,7 +13,7 @@ import { AmountCard } from './AmountCard';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchCategoryCombos, selectCategoryComboFetchStatus } from '../../redux/features/categoryCombos/categoryCombosSlice';
-import { fetchCategoryGroups, selectActiveCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
+import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
@@ -37,11 +37,7 @@ export const AmountsScreen = (props: Props) => {
     const debtorBudgetId = basicData.debtor.budgetId;
 
     const payerCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, payerBudgetId));
-    const payerCategories = useAppSelector((state) => selectActiveCategories(state, payerBudgetId));
-
     const debtorCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, debtorBudgetId));
-    const debtorCategories = useAppSelector((state) => selectActiveCategories(state, debtorBudgetId));
-
 
     useEffect(() => {
         if (fetchCategoryComboStatus.status === LoadingStatus.IDLE) {
@@ -151,10 +147,8 @@ export const AmountsScreen = (props: Props) => {
                             debtorBudgetId={basicData.debtor.budgetId}
                             setAmount={(amount) => setAmount(index, amount)}
                             setMemo={(memo) => setMemo(index, memo)}
-                            payerCategories={payerCategories}
                             payerCategoryId={amountEntry.payerCategoryId}
                             setPayerCategoryId={(categoryId) => setPayerCategoryId(index, categoryId)}
-                            debtorCategories={debtorCategories}
                             debtorCategoryId={amountEntry.debtorCategoryId}
                             setDebtorCategoryId={(categoryId) => setDebtorCategoryId(index, categoryId)}
                             splitPercentToPayer={amountEntry.splitPercentToPayer}
@@ -189,10 +183,6 @@ export const AmountsScreen = (props: Props) => {
                         <Button
                             disabled={!okayToContinue}
                             onPress={() => {
-                                if (payerCategories === undefined || debtorCategories === undefined) {
-                                    throw new Error('This is a programming error');
-                                }
-
                                 const saveTransactions = buildSaveTransactions(amountEntries, basicData);
 
                                 props.navigation.navigate(
