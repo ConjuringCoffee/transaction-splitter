@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Appbar, Button, HelperText, TextInput } from 'react-native-paper';
+import { View } from 'react-native';
+import { Appbar, Button } from 'react-native-paper';
 import { useNavigateBack } from '../../Helper/Navigation/navigateBack';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
@@ -8,18 +8,17 @@ import { saveAccessToken, selectAccessToken } from '../../redux/features/accessT
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { API } from 'ynab';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
+import { AccessTokenInput } from './AccessTokenInput';
 
 type ScreenName = 'Access Token';
 
 const SCREEN_TITLE = 'Access Token';
 
 const ICON_SAVE = 'content-save';
-const ICON_INPUT_HIDDEN = 'eye-off';
-const ICON_INPUT_VISIBLE = 'eye';
 const ICON_CONNECTION_SUCCESS = 'check';
 const ICON_CONNECTION_ERROR = 'alert-circle';
 
-interface ConnectionStatus {
+export interface ConnectionStatus {
     status: LoadingStatus,
     error?: {
         id: string,
@@ -32,7 +31,6 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
     const accessToken = useAppSelector(selectAccessToken);
 
     const [enteredToken, setEnteredToken] = useState<string>(accessToken);
-    const [inputHidden, setInputHidden] = useState<boolean>(true);
     const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>({ status: LoadingStatus.IDLE });
     const [navigateBack] = useNavigateBack(navigation);
 
@@ -75,29 +73,10 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
 
     return (
         <View>
-            <TextInput
-                label="YNAB Personal Access Token"
-                onChangeText={(text) => {
-                    setEnteredToken(text);
-                }}
-                value={enteredToken}
-                secureTextEntry={inputHidden}
-                error={connectionStatus.status === LoadingStatus.ERROR}
-                style={styles.input}
-                right={
-                    <TextInput.Icon
-                        icon={inputHidden ? ICON_INPUT_HIDDEN : ICON_INPUT_VISIBLE}
-                        onPress={() => setInputHidden(!inputHidden)}
-                        forceTextInputFocus={false}
-                    />
-                }
-            />
-            {connectionStatus.status === LoadingStatus.ERROR
-                ? <HelperText type="error">
-                    {`${connectionStatus.error?.id}: ${connectionStatus.error?.detail}`}
-                </HelperText>
-                : null
-            }
+            <AccessTokenInput
+                token={enteredToken}
+                setToken={setEnteredToken}
+                connectionStatus={connectionStatus} />
             <Button
                 loading={connectionStatus.status === LoadingStatus.LOADING}
                 icon={connectionStatus.status === LoadingStatus.SUCCESSFUL
@@ -108,13 +87,6 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
                 onPress={testConnection} >
                 Test connection
             </Button>
-
         </View >
     );
 };
-
-const styles = StyleSheet.create({
-    input: {
-        margin: 8,
-    },
-});
