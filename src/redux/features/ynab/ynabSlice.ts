@@ -4,7 +4,7 @@ import { Account, Budget, getBudgetsWithAccountsFromApi } from '../../../YnabApi
 import { RootState } from '../../store';
 import * as ynab from 'ynab';
 
-interface CategoryGroup {
+export interface CategoryGroup {
     id: string,
     name: string,
     hidden: boolean,
@@ -163,16 +163,6 @@ export const selectCategoriesFetchStatus = (state: RootState, budgetId: string):
     state.ynab.categoryGroups[budgetId]?.status ?? LoadingStatus.IDLE;
 
 
-export const selectActiveCategoriesValues = (state: RootState, budgetId: string): Category[] => {
-    const stateForBudget = state.ynab.categoryGroups[budgetId];
-
-    if (stateForBudget === undefined) {
-        return [];
-    }
-    const categories = Object.values(stateForBudget.categories);
-    return categories.filter((category) => !category.deleted && !category.hidden);
-};
-
 export const selectCategory = (state: RootState, budgetId: string, categoryId: string): Category => {
     return state.ynab.categoryGroups[budgetId].categories[categoryId];
 };
@@ -183,4 +173,14 @@ export const selectCategories = (state: RootState, budgetId: string): { [categor
 
 export const selectCategoryGroups = (state: RootState, budgetId: string): { [categoryGroupId: string]: CategoryGroup } => {
     return state.ynab.categoryGroups[budgetId].groups;
+};
+
+export const selectInternalMasterCategoryGroupId = (state: RootState, budgetId: string): string => {
+    const masterCategoryGroup = Object.values(state.ynab.categoryGroups[budgetId].groups).find((group) => group.name === 'Internal Master Category');
+
+    if (!masterCategoryGroup) {
+        throw new Error('Did not find master category group');
+    }
+
+    return masterCategoryGroup?.id;
 };
