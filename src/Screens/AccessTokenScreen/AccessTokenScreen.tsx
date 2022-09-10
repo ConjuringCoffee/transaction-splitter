@@ -29,7 +29,6 @@ export interface ConnectionStatus {
 export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
     const accessToken = useAppSelector(selectAccessToken);
-
     const [enteredToken, setEnteredToken] = useState<string>(accessToken);
     const [connectionStatus, testConnection] = useConnectionTest();
     const [navigateBack] = useNavigateBack(navigation);
@@ -54,6 +53,17 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
         });
     }, [navigation, dispatch, enteredToken, navigateBack]);
 
+    const getIconForButton = (): string | undefined => {
+        switch (connectionStatus.status) {
+            case LoadingStatus.SUCCESSFUL:
+                return ICON_CONNECTION_SUCCESS;
+            case LoadingStatus.ERROR:
+                return ICON_CONNECTION_ERROR;
+            default:
+                return undefined;
+        }
+    };
+
     return (
         <View>
             <AccessTokenInput
@@ -62,11 +72,7 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
                 connectionStatus={connectionStatus} />
             <Button
                 loading={connectionStatus.status === LoadingStatus.LOADING}
-                icon={connectionStatus.status === LoadingStatus.SUCCESSFUL
-                    ? ICON_CONNECTION_SUCCESS
-                    : connectionStatus.status === LoadingStatus.ERROR
-                        ? ICON_CONNECTION_ERROR
-                        : undefined}
+                icon={getIconForButton()}
                 onPress={() => testConnection(enteredToken)} >
                 Test connection
             </Button>

@@ -1,5 +1,6 @@
 import { ParamListBase } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Keyboard } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { MyStackNavigationProp, StackParameterList } from './ScreenParameters';
 
@@ -15,7 +16,10 @@ export const NavigationBar = <A extends keyof StackParameterList>(props: Props<A
         <Appbar.Header dark={true}>
             {
                 props.navigation.canGoBack()
-                    ? <Appbar.BackAction onPress={() => props.navigation.goBack()} />
+                    ? <Appbar.BackAction onPress={() => {
+                        Keyboard.dismiss();
+                        props.navigation.goBack();
+                    }} />
                     : null
             }
             < Appbar.Content

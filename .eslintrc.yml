@@ -23,7 +23,7 @@ rules:
     # - ignoreUrls: true
   react/prop-types: off
   require-jsdoc: off
-  indent: ["error", 4]
+  indent: ["error", 4, { "SwitchCase": 1 }]
   object-curly-spacing: 
   - 2
   - "always"
