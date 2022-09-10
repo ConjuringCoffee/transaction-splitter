@@ -1,24 +1,18 @@
-import React, { useCallback, useState } from 'react';
-import { Input, Layout, List, ListItem } from '@ui-kitten/components';
-import { Category } from '../../YnabApi/YnabApiWrapper';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
-import { Appbar } from 'react-native-paper';
+import { Appbar, TextInput } from 'react-native-paper';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
-import { useAppSelector } from '../../redux/hooks';
-import { selectActiveCategories } from '../../redux/features/ynab/ynabSlice';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
+import { View } from 'react-native';
+import { CategoryList } from './CategoryList';
 
 type ScreenName = 'Category Selection';
 
-interface RenderItemProps {
-    item: Category,
-    index: number
-}
+const SCREEN_TITLE = 'Select category';
+const ICON_DESELECT = 'minus-circle-outline';
 
 export const CategoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenName>) => {
     const [nameFilter, setNameFilter] = useState<string>('');
-    const categories = useAppSelector((state) => selectActiveCategories(state, route.params.budgetId));
-    const categoriesToDisplay = categories.filter((category) => category.name.toLowerCase().includes(nameFilter.toLowerCase()));
 
     const [navigateBack] = useNavigateBack(navigation);
     const { onSelect } = route.params;
@@ -28,16 +22,16 @@ export const CategoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenN
         navigateBack();
     }, [onSelect, navigateBack]);
 
-    React.useLayoutEffect(() => {
+    useLayoutEffect(() => {
         navigation.setOptions({
             header: () => (
                 <NavigationBar
-                    title={'Categories'}
+                    title={SCREEN_TITLE}
                     navigation={navigation}
                     additions={
                         <Appbar.Action
                             onPress={() => selectAndNavigateBack(undefined)}
-                            icon='delete' />
+                            icon={ICON_DESELECT} />
                     }
                 />
             ),
@@ -47,27 +41,16 @@ export const CategoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenN
         selectAndNavigateBack,
     ]);
 
-    const renderItem = (props: RenderItemProps) => (
-        <ListItem
-            title={`${props.item.name}`}
-            onPress={() => {
-                selectAndNavigateBack(props.item.id);
-            }} />
-    );
-
     return (
-        <Layout>
-            <Input
-                placeholder="Search categories"
+        <View>
+            <TextInput
                 value={nameFilter}
                 autoFocus={true}
-                onChangeText={(text) => setNameFilter(text)} />
-            <List
-                data={categoriesToDisplay}
-                renderItem={renderItem}
-                // keyboardShouldPersistTaps is needed to allow pressing buttons when keyboard is open,
-                // see https://stackoverflow.com/questions/57941342/button-cant-be-clicked-while-keyboard-is-visible-react-native
-                keyboardShouldPersistTaps='handled' />
-        </Layout>
+                onChangeText={setNameFilter} />
+            <CategoryList
+                categoryNameFilter={nameFilter}
+                budgetId={route.params.budgetId}
+                onCategorySelect={selectAndNavigateBack} />
+        </View>
     );
 };

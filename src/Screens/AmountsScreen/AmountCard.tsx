@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Icon, Input, Layout, Text } from '@ui-kitten/components';
-import { Category } from '../../YnabApi/YnabApiWrapper';
 import { ImageProps, StyleSheet } from 'react-native';
 import { Navigation } from './AmountsScreen';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { SplitPercentInput } from './SplitPercentInput';
 import { NumberInput } from '../../Component/NumberInput';
 import { NumberFormatSettings } from '../../Hooks/useLocalization';
+import { useAppSelector } from '../../redux/hooks';
+import { selectCategories } from '../../redux/features/ynab/ynabSlice';
 
 interface Props {
     // TODO: Pass AmountEntry instead of all these separate variables
@@ -18,10 +19,8 @@ interface Props {
     debtorBudgetId: string,
     setAmount: (amount: number) => void,
     setMemo: (memo: string) => void,
-    payerCategories: Array<Category>,
     payerCategoryId: string | undefined,
     setPayerCategoryId: (id: string | undefined) => void,
-    debtorCategories: Array<Category>,
     debtorCategoryId: string | undefined,
     setDebtorCategoryId: (id: string | undefined) => void,
     splitPercentToPayer: number | undefined,
@@ -80,8 +79,11 @@ export const AmountCard = (props: Props) => {
         }
     }, [payerCategoryId, debtorCategoryId, splitPercentToPayer, index, setSplitPercentToPayer]);
 
-    const payerCategory = props.payerCategories.find((c) => c.id === props.payerCategoryId);
-    const debtorCategory = props.debtorCategories.find((c) => c.id === props.debtorCategoryId);
+    const payerCategories = useAppSelector((state) => selectCategories(state, props.payerBudgetId));
+    const debtorCategories = useAppSelector((state) => selectCategories(state, props.debtorBudgetId));
+
+    const payerCategory = props.payerCategoryId ? payerCategories[props.payerCategoryId] : undefined;
+    const debtorCategory = props.debtorCategoryId ? debtorCategories[props.debtorCategoryId] : undefined;
 
     return (
         <Card>

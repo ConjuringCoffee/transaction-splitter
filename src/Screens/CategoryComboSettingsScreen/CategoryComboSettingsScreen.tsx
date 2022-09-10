@@ -7,7 +7,7 @@ import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, fetchCategoryComb
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
 import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
-import { fetchCategories, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
+import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 
 type ScreenName = 'Category Combinations Settings';
@@ -42,13 +42,13 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
 
     useEffect(() => {
         if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL && categoriesFirstProfileFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategories(profiles[0].budgetId));
+            dispatch(fetchCategoryGroups(profiles[0].budgetId));
         }
     }, [profilesFetchStatus, dispatch, profiles, categoriesFirstProfileFetchStatus]);
 
     useEffect(() => {
         if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL && categoriesSecondProfileFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategories(profiles[1].budgetId));
+            dispatch(fetchCategoryGroups(profiles[1].budgetId));
         }
     }, [profilesFetchStatus, dispatch, profiles, categoriesSecondProfileFetchStatus]);
 

@@ -1,4 +1,5 @@
 import { API, SaveTransaction, TransactionDetail, SaveTransactionWrapper, CategoryGroupWithCategories } from 'ynab';
+import { Category } from '../redux/features/ynab/ynabSlice';
 
 export interface Account {
     id: string;
@@ -6,13 +7,6 @@ export interface Account {
     onBudget: boolean;
     closed: boolean;
     transferPayeeID: string;
-    deleted: boolean;
-}
-
-export interface Category {
-    id: string;
-    name: string;
-    hidden: boolean;
     deleted: boolean;
 }
 
@@ -26,25 +20,6 @@ const getCategoriesGroupedByCategoryGroup = async (apiKey: string, budgetId: str
     const ynabAPI = new API(apiKey);
     const response = await ynabAPI.categories.getCategories(budgetId);
     return response.data.category_groups;
-};
-
-export const getCategories = async (budgetId: string, apiKey: string): Promise<Category[]> => {
-    const categoryGroups = await getCategoriesGroupedByCategoryGroup(apiKey, budgetId);
-
-    const categories: Array<Category> = [];
-
-    categoryGroups.forEach((categoryGroup) => {
-        categoryGroup.categories.forEach((category) => {
-            categories.push({
-                id: category.id,
-                name: category.name,
-                hidden: category.hidden,
-                deleted: category.deleted,
-            });
-        });
-    });
-
-    return categories;
 };
 
 export const getBudgetsWithAccountsFromApi = async (apiKey: string): Promise<Budget[]> => {
