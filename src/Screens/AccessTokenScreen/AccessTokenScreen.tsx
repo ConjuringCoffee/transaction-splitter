@@ -1,6 +1,7 @@
-import React, { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Appbar, TextInput } from 'react-native-paper';
+import { useNavigateBack } from '../../Helper/Navigation/navigateBack';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { saveAccessToken, selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
@@ -18,9 +19,9 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
     const dispatch = useAppDispatch();
     const accessToken = useAppSelector(selectAccessToken);
 
-    const [enteredToken, setEnteredToken] = useState<string>('');
+    const [enteredToken, setEnteredToken] = useState<string>(accessToken);
     const [inputHidden, setInputHidden] = useState<boolean>(true);
-
+    const [navigateBack] = useNavigateBack(navigation);
 
     useLayoutEffect(() => {
         const addition = (
@@ -28,6 +29,7 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
                 icon={ICON_SAVE}
                 onPress={() => {
                     dispatch(saveAccessToken(enteredToken));
+                    navigateBack();
                 }} />);
 
         navigation.setOptions({
@@ -39,14 +41,14 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
                 />
             ),
         });
-    }, [navigation, dispatch, enteredToken]);
+    }, [navigation, dispatch, enteredToken, navigateBack]);
 
     return (
         <View>
             <TextInput
                 label="YNAB Personal Access Token"
                 onChangeText={setEnteredToken}
-                defaultValue={accessToken}
+                value={enteredToken}
                 secureTextEntry={inputHidden}
                 right={
                     <TextInput.Icon
