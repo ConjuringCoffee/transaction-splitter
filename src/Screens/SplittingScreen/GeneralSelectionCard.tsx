@@ -1,6 +1,7 @@
 import { Card, Datepicker, Icon, Input, NativeDateService } from '@ui-kitten/components';
 import React from 'react';
 import { ImageProps, Keyboard } from 'react-native';
+import { TextInput } from 'react-native-paper';
 
 interface Props {
     payeeName: string,
@@ -20,13 +21,11 @@ export const GeneralSelectionCard = (props: Props) => {
 
     return (
         <Card>
-            <Input
+            <TextInput
                 label='Payee'
-                placeholder="Enter payee name"
                 value={props.payeeName}
-                onChangeText={(text) => props.setPayeeName(text)}
+                onChangeText={props.setPayeeName}
             />
-
             <Datepicker
                 label='Date'
                 date={props.date}

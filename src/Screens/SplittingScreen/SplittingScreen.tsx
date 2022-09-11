@@ -1,5 +1,4 @@
-import { useEffect, useLayoutEffect } from 'react';
-import { LoadingComponent } from '../../Component/LoadingComponent';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { useLocalization } from '../../Hooks/useLocalization';
 import { InitializedSplittingScreen } from './InitializedSplittingScreen';
@@ -10,8 +9,12 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 import { fetchBudgets, selectBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
+import { LoadingComponent } from '../../Component/LoadingComponent';
 
 type ScreenName = 'Split Transaction';
+
+const SCREEN_TITLE = 'Transaction Splitter';
+const ICON_SETTINGS = 'cog';
 
 export const SplittingScreen = (props: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
@@ -40,12 +43,12 @@ export const SplittingScreen = (props: MyStackScreenProps<ScreenName>) => {
         props.navigation.setOptions({
             header: () => (
                 <NavigationBar
-                    title={'Transaction Splitter'}
+                    title={SCREEN_TITLE}
                     navigation={props.navigation}
                     additions={
                         <Appbar.Action
                             onPress={() => props.navigation.navigate(ScreenNames.SETTINGS_OVERVIEW_SCREEN)}
-                            icon='cog' />
+                            icon={ICON_SETTINGS} />
                     }
                 />
             ),
