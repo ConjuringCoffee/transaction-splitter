@@ -9,7 +9,7 @@ import { AccessTokenScreen } from '../../Screens/AccessTokenScreen/AccessTokenSc
 import { CalculatorScreen } from '../../Screens/CalculatorScreen/CalculatorScreen';
 import { CalculationHistoryScreen } from '../../Screens/CalculationHistoryScreen/CalculationHistoryScreen';
 import { ProfileSettingsScreen } from '../../Screens/ProfileSettingsScreen/ProfileSettingsScreen';
-import { CategoryComboScreen } from '../../Screens/CategoryComboScreen/CategoryComboScreen';
+import { SelectCategoryComboScreen } from '../../Screens/SelectCategoryComboScreen/SelectCategoryComboScreen';
 import { SettingsOverviewScreen } from '../../Screens/SettingsOverviewScreen/SettingsOverviewScreen';
 import { EditCategoryComboScreen } from '../../Screens/EditCategoryComboScreen/EditCategoryComboScreen';
 import { ScreenNames } from './ScreenNames';
@@ -52,8 +52,8 @@ const StackNavigator = () => {
                 name={ScreenNames.CATEGORY_SCREEN}
                 component={CategoryScreen} />
             <stack.Screen
-                name={ScreenNames.CATEGORY_COMBO_SCREEN}
-                component={CategoryComboScreen}
+                name={ScreenNames.SELECT_CATEGORY_COMBO_SCREEN}
+                component={SelectCategoryComboScreen}
                 options={{
                     header: (headerProps) => (
                         <NavigationBar

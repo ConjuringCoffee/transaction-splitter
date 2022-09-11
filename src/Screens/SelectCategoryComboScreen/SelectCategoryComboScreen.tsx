@@ -1,46 +1,44 @@
-import { Input, Layout, List, ListItem } from '@ui-kitten/components';
 import React, { useState } from 'react';
+import { View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import { List, TextInput } from 'react-native-paper';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { CategoryCombo, selectAllCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../redux/hooks';
 
-interface RenderItemProps {
-    item: CategoryCombo,
-    index: number
-}
-
 type ScreenName = 'Category Combinations';
 
-export const CategoryComboScreen = ({ route, navigation }: MyStackScreenProps<ScreenName>) => {
+export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenProps<ScreenName>) => {
     const [nameFilter, setNameFilter] = useState<string>('');
     const categoryCombos = useAppSelector(selectAllCategoryCombos);
     const categoryCombosToDisplay = categoryCombos.filter((combo) => combo.name.toLowerCase().includes(nameFilter.toLowerCase()));
 
     const [navigateBack] = useNavigateBack(navigation);
 
-    const renderItem = (props: RenderItemProps) => (
-        <ListItem
-            title={`${props.item.name}`}
+    const renderListItem = ({ item }: { item: CategoryCombo }) => (
+        <List.Item
+            key={item.id}
+            title={item.name}
             onPress={() => {
-                route.params.onSelect(props.item);
+                route.params.onSelect(item);
                 navigateBack();
             }} />
     );
 
     return (
-        <Layout>
-            <Input
-                placeholder="Search category combos"
+        <View>
+            <TextInput
                 value={nameFilter}
                 autoFocus={true}
-                onChangeText={(text) => setNameFilter(text)} />
-            <List
+                onChangeText={setNameFilter}
+                placeholder="Search category combos" />
+            <FlatList
                 data={categoryCombosToDisplay}
-                renderItem={renderItem}
-                // keyboardShouldPersistTaps is needed to allow pressing buttons when keyboard is open,
-                // see https://stackoverflow.com/questions/57941342/button-cant-be-clicked-while-keyboard-is-visible-react-native
+                renderItem={renderListItem}
+                // keyboardShouldPersistTaps is needed to allow pressing buttons when keyboard is open
+                //   See: https://stackoverflow.com/a/57941568
                 keyboardShouldPersistTaps='handled' />
-        </Layout>
+        </View>
     );
 };
