@@ -65,8 +65,8 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
                 icon={ADD_ICON}
                 disabled={!everythingLoaded}
                 onPress={() => {
-                    navigation.navigate(ScreenNames.EDIT_CATEGORY_COMBO_SCREEN, {
-                        saveCategoryCombo: async (categoryCombo) => {
+                    navigation.navigate(ScreenNames.CREATE_CATEGORY_COMBO_SCREEN, {
+                        createCategoryCombo: async (categoryCombo) => {
                             dispatch(addCategoryCombo(categoryCombo));
                         },
                     });
@@ -88,19 +88,18 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         dispatch,
     ]);
 
-    const renderListItem = (categoryCombo: CategoryCombo, index: number) => (
+    const renderListItem = (categoryCombo: CategoryCombo) => (
         <List.Item
-            // TODO: Generate key in categoryCombosSlice for each categoryCombo and use it here
-            key={index}
+            key={categoryCombo.id}
             title={categoryCombo.name}
             onPress={() => {
                 navigation.navigate(ScreenNames.EDIT_CATEGORY_COMBO_SCREEN, {
                     categoryCombo: categoryCombo,
                     saveCategoryCombo: async (categoryCombo) => {
-                        dispatch(updateCategoryCombo({ index, categoryCombo }));
+                        dispatch(updateCategoryCombo({ categoryCombo }));
                     },
                     deleteCategoryCombo: async () => {
-                        dispatch(deleteCategoryCombo(index));
+                        dispatch(deleteCategoryCombo(categoryCombo.id));
                     },
                 });
             }}

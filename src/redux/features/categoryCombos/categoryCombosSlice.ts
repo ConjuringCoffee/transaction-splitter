@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, nanoid, SerializedError } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import * as SecureStore from 'expo-secure-store';
 import { isOneOf } from '../../isOneOf';
@@ -9,9 +9,16 @@ interface CategoryInCategoryCombo {
     budgetId: string
 }
 export interface CategoryCombo {
+    id: string,
     name: string,
     categories: [CategoryInCategoryCombo, CategoryInCategoryCombo]
 }
+
+export interface CategoryComboToCreate {
+    name: string,
+    categories: [CategoryInCategoryCombo, CategoryInCategoryCombo]
+}
+
 interface CategoryCombosState {
     fetchStatus: {
         status: LoadingStatus
@@ -55,32 +62,42 @@ const saveCategoryCombos = async (categoryCombos: CategoryCombo[]): Promise<Cate
 };
 
 export const fetchCategoryCombos = createAsyncThunk('categoryCombos/fetchCategoryCombos', async () => {
-    return readCategoryCombos();
+    const categoryCombos = await readCategoryCombos();
+
+    // TODO: Remove this migration step in a later release
+    for (const categoryCombo of categoryCombos) {
+        if (categoryCombo.id === undefined) {
+            categoryCombo.id = nanoid();
+        }
+    }
+
+    return categoryCombos;
 });
 
 export const updateCategoryCombo = createAsyncThunk<
-    CategoryCombo[], { index: number, categoryCombo: CategoryCombo }, { state: RootState }
->('categoryCombos/updateCategoryCombo', async ({ index, categoryCombo }, { getState }) => {
+    CategoryCombo[], { categoryCombo: CategoryCombo }, { state: RootState }
+>('categoryCombos/updateCategoryCombo', async ({ categoryCombo }, { getState }) => {
     const newCategoryCombos = [...getState().categoryCombos.objects];
+    const index = newCategoryCombos.findIndex((c) => c.id = categoryCombo.id);
+
     newCategoryCombos[index] = categoryCombo;
 
     return saveCategoryCombos(newCategoryCombos);
 });
 
 export const addCategoryCombo = createAsyncThunk<
-    CategoryCombo[], CategoryCombo, { state: RootState }
+    CategoryCombo[], CategoryComboToCreate, { state: RootState }
 >('categoryCombos/addCategoryCombo', async (categoryCombo, thunkAPI) => {
-    const newCategoryCombos = [...thunkAPI.getState().categoryCombos.objects, categoryCombo];
+    const newCategoryCombo: CategoryCombo = { ...categoryCombo, id: nanoid() };
+    const newCategoryCombos = [...thunkAPI.getState().categoryCombos.objects, newCategoryCombo];
 
     return saveCategoryCombos(newCategoryCombos);
 });
 
 export const deleteCategoryCombo = createAsyncThunk<
-    CategoryCombo[], number, { state: RootState }
->('categoryCombos/deleteCategoryCombo', async (index, thunkAPI) => {
-    const newCategoryCombos = [...thunkAPI.getState().categoryCombos.objects];
-    newCategoryCombos.splice(index, 1);
-
+    CategoryCombo[], string, { state: RootState }
+>('categoryCombos/deleteCategoryCombo', async (id, thunkAPI) => {
+    const newCategoryCombos = thunkAPI.getState().categoryCombos.objects.filter((categoryCombo) => categoryCombo.id !== id);
     return saveCategoryCombos(newCategoryCombos);
 });
 

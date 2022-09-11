@@ -15,6 +15,7 @@ import { EditCategoryComboScreen } from '../../Screens/EditCategoryComboScreen/E
 import { ScreenNames } from './ScreenNames';
 import { CategoryComboSettingsScreen } from '../../Screens/CategoryComboSettingsScreen/CategoryComboSettingsScreen';
 import { NavigationBar } from './NavigationBar';
+import { CreateCategoryComboScreen } from '../../Screens/CreateCategoryComboScreen/CreateCategoryComboScreen';
 
 export const AppNavigator = () => {
     return (
@@ -101,6 +102,9 @@ const StackNavigator = () => {
             <stack.Screen
                 name={ScreenNames.EDIT_CATEGORY_COMBO_SCREEN}
                 component={EditCategoryComboScreen} />
+            <stack.Screen
+                name={ScreenNames.CREATE_CATEGORY_COMBO_SCREEN}
+                component={CreateCategoryComboScreen} />
         </stack.Navigator>
     );
 };

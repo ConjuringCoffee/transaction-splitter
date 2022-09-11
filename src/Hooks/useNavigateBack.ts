@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { Keyboard } from 'react-native';
 import { StackParameterList, MyStackNavigationProp } from '../Helper/Navigation/ScreenParameters';
 
-export function useNavigateBack<T extends keyof StackParameterList>(navigation: MyStackNavigationProp<T>): [() => void] {
+export const useNavigateBack = <T extends keyof StackParameterList>(navigation: MyStackNavigationProp<T>): [() => void] => {
     const navigateBack = useCallback(() => {
         Keyboard.dismiss();
         // This prevents multiple fast button presses to navigate back multiple times
@@ -12,4 +12,4 @@ export function useNavigateBack<T extends keyof StackParameterList>(navigation: 
     }, [navigation]);
 
     return [navigateBack];
-}
+};
