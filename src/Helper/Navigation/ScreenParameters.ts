@@ -1,7 +1,7 @@
 import { ScreenNames } from './ScreenNames';
 import * as ynab from 'ynab';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
-import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { CategoryCombo, CategoryComboToCreate } from '../../redux/features/categoryCombos/categoryCombosSlice';
 
 interface BasicData {
     payer: {
@@ -52,9 +52,12 @@ type StackParameterList = {
     [ScreenNames.PROFILE_SETTINGS_SCREEN]: undefined;
     [ScreenNames.CATEGORY_COMBO_SETTINGS_SCREEN]: undefined;
     [ScreenNames.EDIT_CATEGORY_COMBO_SCREEN]: {
-        categoryCombo?: CategoryCombo,
+        categoryCombo: CategoryCombo,
         saveCategoryCombo: (categoryCombo: CategoryCombo) => Promise<void>,
-        deleteCategoryCombo?: () => Promise<void>
+        deleteCategoryCombo: () => Promise<void>
+    }
+    [ScreenNames.CREATE_CATEGORY_COMBO_SCREEN]: {
+        createCategoryCombo: (categoryComboToCreate: CategoryComboToCreate) => Promise<void>,
     }
 }
 
