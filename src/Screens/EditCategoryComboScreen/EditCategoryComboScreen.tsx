@@ -1,6 +1,5 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { Appbar, Menu } from 'react-native-paper';
-import { Platform } from 'react-native';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
@@ -8,13 +7,13 @@ import { useAppSelector } from '../../redux/hooks';
 import { selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { CategoryComboInputView } from '../../Component/CategoryComboInputView';
+import { AppBarMoreMenu } from '../../Component/AppBarMoreMenu';
 
 type ScreenName = 'Edit Category Combo';
 
 const SCREEN_TITLE = 'Edit';
 const SCREEN_SUBTITLE = 'Category Combination';
 
-const ICON_MORE = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 const ICON_SAVE = 'content-save';
 
 export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
@@ -41,29 +40,22 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
             navigateBack();
         };
 
-        return (<Menu
-            visible={menuVisible}
-            onDismiss={() => setMenuVisible(false)}
-            anchor={
-                <Appbar.Action
-                    icon={ICON_MORE}
-                    onPress={() => setMenuVisible(true)}
-                    // TODO: The usual color from the Appbar isn't transferred to this action and I don't know how to fix it
-                    color='white' />
-            } >
-            <Menu.Item
-                key='delete'
-                title="Delete"
-                onPress={() => {
-                    deleteAndNavigate();
-                    setMenuVisible(false);
-                }} />
-        </Menu >);
+        return (
+            <AppBarMoreMenu
+                key='more'
+                visible={menuVisible}
+                setVisible={setMenuVisible}>
+                <Menu.Item
+                    title="Delete"
+                    onPress={() => {
+                        deleteAndNavigate();
+                        setMenuVisible(false);
+                    }} />
+            </AppBarMoreMenu>);
     }, [
-        menuVisible,
         deleteCategoryCombo,
-        setMenuVisible,
         navigateBack,
+        menuVisible,
     ]);
 
     useLayoutEffect(() => {

@@ -1,7 +1,11 @@
-import React from 'react';
+import { ReactNode } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 
-export const CustomScrollView = ({ children }) => {
+interface Props {
+    children: ReactNode
+}
+
+export const CustomScrollView = ({ children }: Props) => {
     return (
         // keyboardShouldPersistTaps is needed to allow pressing buttons when keyboard is open,
         // see https://stackoverflow.com/questions/57941342/button-cant-be-clicked-while-keyboard-is-visible-react-native
