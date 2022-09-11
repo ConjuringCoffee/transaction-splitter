@@ -135,7 +135,7 @@ export const AmountCard = (props: Props) => {
                     style={styles.categoryComboButton}
                     accessoryLeft={CategoryComboIcon}
                     onPress={() => {
-                        props.navigation.navigate(ScreenNames.CATEGORY_COMBO_SCREEN, {
+                        props.navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
                             onSelect: (categoryCombo) => {
                                 if (categoryCombo.categories.length !== 2) {
                                     throw new Error('Cannot handle combinations not consisting of exactly two categories');

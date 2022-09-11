@@ -46,7 +46,8 @@ export const CategoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenN
             <TextInput
                 value={nameFilter}
                 autoFocus={true}
-                onChangeText={setNameFilter} />
+                onChangeText={setNameFilter}
+                placeholder='Search categories' />
             <CategoryList
                 categoryNameFilter={nameFilter}
                 budgetId={route.params.budgetId}
