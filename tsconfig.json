@@ -5,6 +5,10 @@
     "jsx": "react-native"
   },
   "include": [
-    "src"
+    "src",
+    "@types"
+  ],
+  "files": [
+    "@types/react-native-paper/index.d.ts"
   ]
 }

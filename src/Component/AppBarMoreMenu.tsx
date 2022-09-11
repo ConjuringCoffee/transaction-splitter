@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { Appbar, Menu } from 'react-native-paper';
+import { Appbar, Menu, useTheme } from 'react-native-paper';
 
 interface Props {
     children: React.ReactNode,
@@ -11,6 +11,8 @@ interface Props {
 const ICON_MORE = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
 export const AppBarMoreMenu = (props: Props) => {
+    const theme = useTheme();
+
     return (
         <Menu
             visible={props.visible}
@@ -19,8 +21,8 @@ export const AppBarMoreMenu = (props: Props) => {
                 <Appbar.Action
                     icon={ICON_MORE}
                     onPress={() => props.setVisible(true)}
-                    // TODO: The usual color from the Appbar isn't transferred to this action and I don't know how to fix it
-                    color='white' />
+                    // The usual color from the Appbar isn't transferred to this action
+                    color={theme.colors.textOnAppBar} />
             } >
             {props.children}
         </Menu >);

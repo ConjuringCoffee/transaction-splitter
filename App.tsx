@@ -33,10 +33,10 @@ LogBox.ignoreLogs([
 // Keep the splash screen visible while app is being prepared
 SplashScreen.preventAutoHideAsync();
 
-const combinedDefaultTheme = merge(PaperDefaultTheme, NavigationDefaultTheme);
+const combinedDefaultTheme = merge(merge(PaperDefaultTheme, NavigationDefaultTheme), { darkAppBar: true, colors: { textOnAppBar: 'white' } });
 combinedDefaultTheme.colors.primary = '#5C9CA4';
 
-const combinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
+const combinedDarkTheme = merge(merge(PaperDarkTheme, NavigationDarkTheme), { darkAppBar: true, colors: { textOnAppBar: 'white' } });
 combinedDarkTheme.colors.primary = '#5C9CA4';
 
 const colorScheme = Appearance.getColorScheme();
