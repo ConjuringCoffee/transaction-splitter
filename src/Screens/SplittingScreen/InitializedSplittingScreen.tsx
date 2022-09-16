@@ -93,7 +93,7 @@ export const InitializedSplittingScreen = (props: Props) => {
                 <PayerAccountSelectionCard
                     elegibleAccounts={elegibleAccounts}
                     accountId={payerAccountID}
-                    setAccountId={(id) => setPayerAccountID(id)} />
+                    setAccountId={setPayerAccountID} />
 
                 <GeneralSelectionCard
                     payeeName={payeeName}
@@ -105,7 +105,7 @@ export const InitializedSplittingScreen = (props: Props) => {
 
                 <Button
                     disabled={!everythingSelected}
-                    onPress={() => navigateToAmountsScreen()}>
+                    onPress={navigateToAmountsScreen}>
                     Enter amounts
                 </Button>
             </Layout>

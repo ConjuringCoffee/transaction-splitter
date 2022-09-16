@@ -1,7 +1,7 @@
-import { Card, Datepicker, Icon, Input, NativeDateService } from '@ui-kitten/components';
+import { Card, Input } from '@ui-kitten/components';
 import React from 'react';
-import { ImageProps, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { DatePickerInput } from 'react-native-paper-dates';
 
 interface Props {
     payeeName: string,
@@ -12,13 +12,7 @@ interface Props {
     setMemo: (memo: string) => void
 }
 
-const DateIcon = (props: Partial<ImageProps> | undefined) => (
-    <Icon {...props} name='calendar' />
-);
-
 export const GeneralSelectionCard = (props: Props) => {
-    const formatDateService = new NativeDateService('en', { format: 'DD.MM.YYYY' });
-
     return (
         <Card>
             <TextInput
@@ -26,14 +20,17 @@ export const GeneralSelectionCard = (props: Props) => {
                 value={props.payeeName}
                 onChangeText={props.setPayeeName}
             />
-            <Datepicker
-                label='Date'
-                date={props.date}
-                onSelect={(nextDate) => props.setDate(nextDate)}
-                accessoryRight={DateIcon}
-                dateService={formatDateService}
-                onFocus={() => Keyboard.dismiss()}
-            />
+            <DatePickerInput
+                // All locales used must be registered beforehand (see App.tsx)
+                locale="de"
+                label="Date"
+                value={props.date}
+                onChange={(date) => {
+                    if (date) {
+                        props.setDate(date);
+                    }
+                }}
+                inputMode="start" />
 
             <Input
                 label='Memo'
