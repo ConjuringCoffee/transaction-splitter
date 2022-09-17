@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import { CustomScrollView } from '../../Component/CustomScrollView';
-import { NumberInput } from '../../Component/NumberInput';
 import { NumberFormatSettings } from '../../Hooks/useLocalization';
-import { StyleSheet } from 'react-native';
 import { Budget } from '../../YnabApi/YnabApiWrapper';
 import { Card, Layout, Radio, RadioGroup } from '@ui-kitten/components';
-import { PayerAccountSelectionCard } from './PayerAccountSelectionCard';
-import { GeneralSelectionCard } from './GeneralSelectionCard';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Profile } from '../../redux/features/profiles/profilesSlice';
 import { useAppSelector } from '../../redux/hooks';
 import { selectAccountById, selectActiveAccounts, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
-import { Button } from 'react-native-paper';
+import { Button, TextInput } from 'react-native-paper';
+import { AccountSelect } from '../../Component/AccountSelect';
+import { DatePickerInput } from 'react-native-paper-dates';
+import { TotalAmountInput } from '../../Component/TotalAmountInput';
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,
@@ -42,7 +41,7 @@ export const InitializedSplittingScreen = (props: Props) => {
 
     const everythingSelected = (
         payerAccountID !== undefined
-        && totalAmount !== 0);
+        && totalAmount > 0);
 
     const navigateToAmountsScreen = () => {
         props.navigation.navigate(
@@ -70,13 +69,10 @@ export const InitializedSplittingScreen = (props: Props) => {
 
     return (
         <CustomScrollView>
-            <NumberInput
-                numberFormatSettings={props.numberFormatSettings}
-                number={totalAmount}
-                setNumber={setTotalAmount}
-                placeholder="Total amount"
-                size="large"
-                textStyle={styles.amountText} />
+            <TotalAmountInput
+                totalAmount={totalAmount}
+                setTotalAmount={setTotalAmount}
+                numberFormatSettings={props.numberFormatSettings} />
             <Layout>
                 <Card>
                     <RadioGroup
@@ -90,18 +86,34 @@ export const InitializedSplittingScreen = (props: Props) => {
                     </RadioGroup>
                 </Card>
 
-                <PayerAccountSelectionCard
-                    elegibleAccounts={elegibleAccounts}
-                    accountId={payerAccountID}
-                    setAccountId={setPayerAccountID} />
+                <Card>
+                    <AccountSelect
+                        label='Payer account'
+                        accounts={elegibleAccounts}
+                        selectedAccountId={payerAccountID}
+                        onAccountSelect={setPayerAccountID} />
+                </Card>
+                <TextInput
+                    label='Payee'
+                    value={payeeName}
+                    onChangeText={setPayeeName}
+                />
+                <DatePickerInput
+                    // All locales used must be registered beforehand (see App.tsx)
+                    locale="de"
+                    label="Date"
+                    value={date}
+                    onChange={(date) => {
+                        if (date) {
+                            setDate(date);
+                        }
+                    }}
+                    inputMode="start" />
 
-                <GeneralSelectionCard
-                    payeeName={payeeName}
-                    setPayeeName={setPayeeName}
-                    date={date}
-                    setDate={setDate}
-                    memo={memo}
-                    setMemo={setMemo} />
+                <TextInput
+                    label='Memo'
+                    value={memo}
+                    onChangeText={setMemo} />
 
                 <Button
                     disabled={!everythingSelected}
@@ -112,13 +124,6 @@ export const InitializedSplittingScreen = (props: Props) => {
         </CustomScrollView>
     );
 };
-
-const styles = StyleSheet.create({
-    amountText: {
-        fontSize: 30,
-        textAlign: 'right',
-    },
-});
 
 const toIsoDateString = (date: Date): string => {
     // Stolen from here: https://stackoverflow.com/questions/17415579/how-to-iso-8601-format-a-date-with-timezone-offset-in-javascript

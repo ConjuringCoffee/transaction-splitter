@@ -17,6 +17,7 @@ interface Props {
     accessoryRight?: RenderProp<Partial<ImageProps>>,
 }
 
+// TODO: Harmonize with TotalAmountInput
 export const NumberInput = (props: Props) => {
     const propsNumber = props.number;
     const propsNumberFormatSettings = props.numberFormatSettings;
