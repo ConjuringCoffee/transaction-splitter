@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { NumberFormatSettings } from '../../Hooks/useLocalization';
 import { Budget } from '../../YnabApi/YnabApiWrapper';
-import { Card, Layout, Radio, RadioGroup } from '@ui-kitten/components';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -13,6 +12,7 @@ import { Button, TextInput } from 'react-native-paper';
 import { AccountSelect } from '../../Component/AccountSelect';
 import { DatePickerInput } from 'react-native-paper-dates';
 import { TotalAmountInput } from '../../Component/TotalAmountInput';
+import { PayerProfileRadioButtonGroup } from './PayerProfileRadioButtonGroup';
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,
@@ -73,54 +73,48 @@ export const InitializedSplittingScreen = (props: Props) => {
                 totalAmount={totalAmount}
                 setTotalAmount={setTotalAmount}
                 numberFormatSettings={props.numberFormatSettings} />
-            <Layout>
-                <Card>
-                    <RadioGroup
-                        selectedIndex={payerProfileIndex}
-                        onChange={(index) => {
-                            setPayerProfileIndex(index);
-                            setPayerAccountID(debtorBudget.accounts[0].id);
-                        }}>
-                        <Radio>{props.profiles[0].name}</Radio>
-                        <Radio>{props.profiles[1].name}</Radio>
-                    </RadioGroup>
-                </Card>
 
-                <Card>
-                    <AccountSelect
-                        label='Payer account'
-                        accounts={elegibleAccounts}
-                        selectedAccountId={payerAccountID}
-                        onAccountSelect={setPayerAccountID} />
-                </Card>
-                <TextInput
-                    label='Payee'
-                    value={payeeName}
-                    onChangeText={setPayeeName}
-                />
-                <DatePickerInput
-                    // All locales used must be registered beforehand (see App.tsx)
-                    locale="de"
-                    label="Date"
-                    value={date}
-                    onChange={(date) => {
-                        if (date) {
-                            setDate(date);
-                        }
-                    }}
-                    inputMode="start" />
+            <PayerProfileRadioButtonGroup
+                profiles={props.profiles}
+                payerProfileIndex={payerProfileIndex}
+                setPayerProfileIndex={(index) => {
+                    setPayerProfileIndex(index);
+                    setPayerAccountID(debtorBudget.accounts[0].id);
+                }} />
 
-                <TextInput
-                    label='Memo'
-                    value={memo}
-                    onChangeText={setMemo} />
+            <AccountSelect
+                label='Payer account'
+                accounts={elegibleAccounts}
+                selectedAccountId={payerAccountID}
+                onAccountSelect={setPayerAccountID} />
 
-                <Button
-                    disabled={!everythingSelected}
-                    onPress={navigateToAmountsScreen}>
-                    Enter amounts
-                </Button>
-            </Layout>
+            <TextInput
+                label='Payee'
+                value={payeeName}
+                onChangeText={setPayeeName}
+            />
+            <DatePickerInput
+                // All locales used must be registered beforehand (see App.tsx)
+                locale="de"
+                label="Date"
+                value={date}
+                onChange={(date) => {
+                    if (date) {
+                        setDate(date);
+                    }
+                }}
+                inputMode="start" />
+
+            <TextInput
+                label='Memo'
+                value={memo}
+                onChangeText={setMemo} />
+
+            <Button
+                disabled={!everythingSelected}
+                onPress={navigateToAmountsScreen}>
+                Continue
+            </Button>
         </CustomScrollView>
     );
 };
