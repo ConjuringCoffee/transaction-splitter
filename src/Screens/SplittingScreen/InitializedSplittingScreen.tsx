@@ -12,7 +12,7 @@ import { Button, TextInput } from 'react-native-paper';
 import { AccountSelect } from '../../Component/AccountSelect';
 import { DatePickerInput } from 'react-native-paper-dates';
 import { TotalAmountInput } from '../../Component/TotalAmountInput';
-import { PayerProfileRadioButtonGroup } from './PayerProfileRadioButtonGroup';
+import { PayerProfileSelection } from './PayerProfileSelection';
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,
@@ -74,7 +74,7 @@ export const InitializedSplittingScreen = (props: Props) => {
                 setTotalAmount={setTotalAmount}
                 numberFormatSettings={props.numberFormatSettings} />
 
-            <PayerProfileRadioButtonGroup
+            <PayerProfileSelection
                 profiles={props.profiles}
                 payerProfileIndex={payerProfileIndex}
                 setPayerProfileIndex={(index) => {
