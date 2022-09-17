@@ -21,6 +21,7 @@ const renderOption = (account: Account) => (
         key={account.id} />
 );
 
+// TODO: Harmonize with AccountRadioSelection
 export const AccountSelect = ({ selectedAccountId, accounts, onAccountSelect, label }: Props) => {
     const accountIdentifiers = concatenateIdentifiers(accounts);
 

@@ -1,14 +1,15 @@
-import { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
-import { ActivityIndicator, Appbar, List } from 'react-native-paper';
+import { Appbar, List } from 'react-native-paper';
 import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, fetchCategoryCombos, selectAllCategoryCombos, selectCategoryComboFetchStatus, updateCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
 import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
+import { LoadingComponent } from '../../Component/LoadingComponent';
 
 type ScreenName = 'Category Combinations Settings';
 
@@ -111,7 +112,7 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
             {
                 everythingLoaded
                     ? categoryCombos.map(renderListItem)
-                    : <ActivityIndicator />
+                    : <LoadingComponent />
             }
         </View>
     );

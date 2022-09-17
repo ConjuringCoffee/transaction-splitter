@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { CustomScrollView } from '../../Component/CustomScrollView';
-import { NumberInput } from '../../Component/NumberInput';
 import { NumberFormatSettings } from '../../Hooks/useLocalization';
-import { StyleSheet } from 'react-native';
 import { Budget } from '../../YnabApi/YnabApiWrapper';
-import { Button, Card, Layout, Radio, RadioGroup } from '@ui-kitten/components';
-import { PayerAccountSelectionCard } from './PayerAccountSelectionCard';
-import { GeneralSelectionCard } from './GeneralSelectionCard';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Profile } from '../../redux/features/profiles/profilesSlice';
 import { useAppSelector } from '../../redux/hooks';
 import { selectAccountById, selectActiveAccounts, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
+import { Button, TextInput } from 'react-native-paper';
+import { DatePickerInput } from 'react-native-paper-dates';
+import { TotalAmountInput } from '../../Component/TotalAmountInput';
+import { PayerProfileRadioSelection } from './PayerProfileRadioSelection';
+import { AccountRadioSelection } from './AccountRadioSelection';
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,
@@ -34,14 +34,11 @@ export const InitializedSplittingScreen = (props: Props) => {
     const payerBudget = useAppSelector((state) => selectBudgetById(state, payerProfile.budgetId));
     const [payerAccountID, setPayerAccountID] = useState<string>(payerBudget.accounts[0].id);
     const payerTransferAccount = useAppSelector((state) => selectAccountById(state, payerProfile.budgetId, payerProfile.debtorAccountId));
-    const debtorBudget = useAppSelector((state) => selectBudgetById(state, debtorProfile.budgetId));
 
     const activeOnBudgetAccounts = useAppSelector((state) => selectActiveAccounts(state, payerProfile.budgetId));
     const elegibleAccounts = activeOnBudgetAccounts.filter((account) => payerProfile.elegibleAccountIds.find((id) => id === account.id));
 
-    const everythingSelected = (
-        payerAccountID !== undefined
-        && totalAmount !== 0);
+    const everythingSelected = totalAmount > 0;
 
     const navigateToAmountsScreen = () => {
         props.navigation.navigate(
@@ -69,55 +66,51 @@ export const InitializedSplittingScreen = (props: Props) => {
 
     return (
         <CustomScrollView>
-            <NumberInput
-                numberFormatSettings={props.numberFormatSettings}
-                number={totalAmount}
-                setNumber={setTotalAmount}
-                placeholder="Total amount"
-                size="large"
-                textStyle={styles.amountText} />
-            <Layout>
-                <Card>
-                    <RadioGroup
-                        selectedIndex={payerProfileIndex}
-                        onChange={(index) => {
-                            setPayerProfileIndex(index);
-                            setPayerAccountID(debtorBudget.accounts[0].id);
-                        }}>
-                        <Radio>{props.profiles[0].name}</Radio>
-                        <Radio>{props.profiles[1].name}</Radio>
-                    </RadioGroup>
-                </Card>
+            <TotalAmountInput
+                totalAmount={totalAmount}
+                setTotalAmount={setTotalAmount}
+                numberFormatSettings={props.numberFormatSettings} />
 
-                <PayerAccountSelectionCard
-                    elegibleAccounts={elegibleAccounts}
-                    accountId={payerAccountID}
-                    setAccountId={(id) => setPayerAccountID(id)} />
+            <PayerProfileRadioSelection
+                profiles={props.profiles}
+                payerProfileIndex={payerProfileIndex}
+                setPayerProfileIndex={setPayerProfileIndex} />
 
-                <GeneralSelectionCard
-                    payeeName={payeeName}
-                    setPayeeName={setPayeeName}
-                    date={date}
-                    setDate={setDate}
-                    memo={memo}
-                    setMemo={setMemo} />
+            <AccountRadioSelection
+                accounts={elegibleAccounts}
+                selectedAccountId={payerAccountID}
+                setSelectedAccountId={setPayerAccountID} />
 
-                <Button
-                    disabled={!everythingSelected}
-                    onPress={() => navigateToAmountsScreen()}>
-                    Enter amounts
-                </Button>
-            </Layout>
+            <TextInput
+                label='Payee'
+                value={payeeName}
+                onChangeText={setPayeeName}
+            />
+            <DatePickerInput
+                // All locales used must be registered beforehand (see App.tsx)
+                locale="de"
+                label="Date"
+                value={date}
+                onChange={(date) => {
+                    if (date) {
+                        setDate(date);
+                    }
+                }}
+                inputMode="start" />
+
+            <TextInput
+                label='Memo'
+                value={memo}
+                onChangeText={setMemo} />
+
+            <Button
+                disabled={!everythingSelected}
+                onPress={navigateToAmountsScreen}>
+                Continue
+            </Button>
         </CustomScrollView>
     );
 };
-
-const styles = StyleSheet.create({
-    amountText: {
-        fontSize: 30,
-        textAlign: 'right',
-    },
-});
 
 const toIsoDateString = (date: Date): string => {
     // Stolen from here: https://stackoverflow.com/questions/17415579/how-to-iso-8601-format-a-date-with-timezone-offset-in-javascript

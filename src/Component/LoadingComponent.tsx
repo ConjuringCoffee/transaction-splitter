@@ -1,11 +1,11 @@
-import { Spinner } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 
 export const LoadingComponent = () => {
     return (
         <View style={styles.loading}>
-            <Spinner />
+            <ActivityIndicator />
         </View>);
 };
 

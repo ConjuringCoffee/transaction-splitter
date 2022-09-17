@@ -23,12 +23,16 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useAppDispatch, useAppSelector } from './src/redux/hooks';
 import { fetchAccessToken, selectAccessTokenFetchStatus } from './src/redux/features/accessToken/accessTokenSlice';
 import { LoadingStatus } from './src/Helper/LoadingStatus';
+import { de, registerTranslation } from 'react-native-paper-dates';
 
 LogBox.ignoreLogs([
     // Ignore this because we don't use state persistence or deep screen linking,
     // see https://stackoverflow.com/questions/60954742/how-to-pass-parent-function-to-child-screen-in-react-navigation-5
     'Non-serializable values were found in the navigation state',
 ]);
+
+// Any translations used by the date picker must be registered beforehand
+registerTranslation('de', de);
 
 // Keep the splash screen visible while app is being prepared
 SplashScreen.preventAutoHideAsync();
