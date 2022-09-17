@@ -9,10 +9,10 @@ import { Profile } from '../../redux/features/profiles/profilesSlice';
 import { useAppSelector } from '../../redux/hooks';
 import { selectAccountById, selectActiveAccounts, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
 import { Button, TextInput } from 'react-native-paper';
-import { AccountSelect } from '../../Component/AccountSelect';
 import { DatePickerInput } from 'react-native-paper-dates';
 import { TotalAmountInput } from '../../Component/TotalAmountInput';
-import { PayerProfileSelection } from './PayerProfileSelection';
+import { PayerProfileRadioSelection } from './PayerProfileRadioSelection';
+import { AccountRadioSelection } from './AccountRadioSelection';
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,
@@ -34,14 +34,11 @@ export const InitializedSplittingScreen = (props: Props) => {
     const payerBudget = useAppSelector((state) => selectBudgetById(state, payerProfile.budgetId));
     const [payerAccountID, setPayerAccountID] = useState<string>(payerBudget.accounts[0].id);
     const payerTransferAccount = useAppSelector((state) => selectAccountById(state, payerProfile.budgetId, payerProfile.debtorAccountId));
-    const debtorBudget = useAppSelector((state) => selectBudgetById(state, debtorProfile.budgetId));
 
     const activeOnBudgetAccounts = useAppSelector((state) => selectActiveAccounts(state, payerProfile.budgetId));
     const elegibleAccounts = activeOnBudgetAccounts.filter((account) => payerProfile.elegibleAccountIds.find((id) => id === account.id));
 
-    const everythingSelected = (
-        payerAccountID !== undefined
-        && totalAmount > 0);
+    const everythingSelected = totalAmount > 0;
 
     const navigateToAmountsScreen = () => {
         props.navigation.navigate(
@@ -74,19 +71,15 @@ export const InitializedSplittingScreen = (props: Props) => {
                 setTotalAmount={setTotalAmount}
                 numberFormatSettings={props.numberFormatSettings} />
 
-            <PayerProfileSelection
+            <PayerProfileRadioSelection
                 profiles={props.profiles}
                 payerProfileIndex={payerProfileIndex}
-                setPayerProfileIndex={(index) => {
-                    setPayerProfileIndex(index);
-                    setPayerAccountID(debtorBudget.accounts[0].id);
-                }} />
+                setPayerProfileIndex={setPayerProfileIndex} />
 
-            <AccountSelect
-                label='Payer account'
+            <AccountRadioSelection
                 accounts={elegibleAccounts}
                 selectedAccountId={payerAccountID}
-                onAccountSelect={setPayerAccountID} />
+                setSelectedAccountId={setPayerAccountID} />
 
             <TextInput
                 label='Payee'
