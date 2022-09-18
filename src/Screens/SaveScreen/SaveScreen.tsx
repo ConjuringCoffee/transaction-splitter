@@ -14,8 +14,9 @@ import { useAppSelector } from '../../redux/hooks';
 import { selectBudgetById } from '../../redux/features/ynab/ynabSlice';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
-import { List } from 'react-native-paper';
+import { DataTable, List, Text } from 'react-native-paper';
 import { SubTransactionsDataTable } from './SubTransactionsDataTable';
+import { DataTableCellView } from './DataTableCellView';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Save'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Save'>;
@@ -56,26 +57,35 @@ export const SaveScreen = ({ navigation, route }: Props) => {
                     <ScrollView>
                         <List.Section title='Payer transaction'>
                             <List.Accordion title='Transaction details'>
-                                <List.Item
-                                    title={payerBudget.name}
-                                    description='Budget' />
-                                <List.Item
-                                    // TOOD: Encapsulate account name determination
-                                    title={payerBudget.accounts.find((account) => account.id === payerSaveTransaction.account_id)?.name}
-                                    description='Account' />
-                                <List.Item
-                                    title={basicData.payeeName}
-                                    description='Payee' />
-                                <List.Item
-                                    title={basicData.memo}
-                                    description='Memo' />
+                                <DataTable>
+                                    <DataTable.Row>
+                                        <DataTable.Cell>Budget</DataTable.Cell>
+                                        <DataTable.Cell>{payerBudget.name}</DataTable.Cell>
+                                    </DataTable.Row>
+                                    <DataTable.Row>
+                                        <DataTable.Cell>Account</DataTable.Cell>
+                                        {/* TOOD: Encapsulate account name determination */}
+                                        <DataTable.Cell>{payerBudget.accounts.find((account) => account.id === payerSaveTransaction.account_id)?.name}</DataTable.Cell>
+                                    </DataTable.Row>
+                                    <DataTable.Row>
+                                        <DataTable.Cell>Payee</DataTable.Cell>
+                                        <DataTable.Cell>{basicData.payeeName}</DataTable.Cell>
+                                    </DataTable.Row>
+                                    <DataTable.Row>
+                                        <DataTable.Cell>Memo</DataTable.Cell>
+                                        <DataTableCellView>
+                                            <Text numberOfLines={3}>{basicData.memo}</Text>
+                                        </DataTableCellView>
+                                    </DataTable.Row>
+                                </DataTable>
                             </List.Accordion>
                             {payerSaveTransaction.subtransactions
                                 ? <List.Accordion title='Sub-Transactions'>
                                     <SubTransactionsDataTable
                                         budgetId={payerBudget.id}
                                         subTransactions={payerSaveTransaction.subtransactions}
-                                        numberFormatSettings={numberFormatSettings} />
+                                        numberFormatSettings={numberFormatSettings}
+                                    />
                                 </List.Accordion>
                                 : null}
                         </List.Section>
