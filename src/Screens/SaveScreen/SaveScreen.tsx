@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { Button } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
@@ -11,8 +11,11 @@ import { useLocalization } from '../../Hooks/useLocalization';
 import { LoadingComponent } from '../../Component/LoadingComponent';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppSelector } from '../../redux/hooks';
-import { selectAccountById, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
+import { selectBudgetById } from '../../redux/features/ynab/ynabSlice';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
+import { LoadingStatus } from '../../Helper/LoadingStatus';
+import { List } from 'react-native-paper';
+import { SubTransactionsDataTable } from './SubTransactionsDataTable';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Save'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Save'>;
@@ -22,20 +25,12 @@ type Props = {
     route: MyRouteProp;
 }
 
-enum SaveStatus {
-    NotStarted,
-    InProgress,
-    Success,
-    Failure
-}
-
 export const SaveScreen = ({ navigation, route }: Props) => {
     const { numberFormatSettings } = useLocalization();
-    const [payerTransactionStatus, setPayerTransactionStatus] = useState<string>('primary');
     const [debtorTransactionStatus, setDebtorTransactionStatus] = useState<string>('primary');
 
-    const [payerTransactionSaveStatus, setPayerTransactionSaveStatus] = useState<SaveStatus>(SaveStatus.NotStarted);
-    const [debtorTransactionSaveStatus, setDebtorTransactionSaveStatus] = useState<SaveStatus>(SaveStatus.NotStarted);
+    const [payerTransactionSaveStatus, setPayerTransactionSaveStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
+    const [debtorTransactionSaveStatus, setDebtorTransactionSaveStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
 
     const { basicData } = route.params;
     const { payerSaveTransaction } = route.params;
@@ -43,11 +38,10 @@ export const SaveScreen = ({ navigation, route }: Props) => {
 
     const payerBudget = useAppSelector((state) => selectBudgetById(state, basicData.payer.budgetId));
     const debtorBudget = useAppSelector((state) => selectBudgetById(state, basicData.debtor.budgetId));
-    const payerTransferAccount = useAppSelector((state) => selectAccountById(state, basicData.payer.budgetId, basicData.payer.transferAccountId));
     const accessToken = useAppSelector(selectAccessToken);
 
     useEffect(() => {
-        if (payerTransactionSaveStatus === SaveStatus.Success && debtorTransactionSaveStatus === SaveStatus.Success) {
+        if (payerTransactionSaveStatus === LoadingStatus.SUCCESSFUL && debtorTransactionSaveStatus === LoadingStatus.SUCCESSFUL) {
             navigation.reset({
                 index: 0,
                 routes: [{ name: ScreenNames.SPLITTING_SCREEN }],
@@ -60,14 +54,31 @@ export const SaveScreen = ({ navigation, route }: Props) => {
             {numberFormatSettings
                 ? <>
                     <ScrollView>
-                        <TransactionCard
-                            numberFormatSettings={numberFormatSettings}
-                            status={payerTransactionStatus}
-                            title='Payer transaction'
-                            basicData={basicData}
-                            saveTransaction={payerSaveTransaction}
-                            budget={payerBudget}
-                            transferAccount={payerTransferAccount} />
+                        <List.Section title='Payer transaction'>
+                            <List.Accordion title='Transaction details'>
+                                <List.Item
+                                    title={payerBudget.name}
+                                    description='Budget' />
+                                <List.Item
+                                    // TOOD: Encapsulate account name determination
+                                    title={payerBudget.accounts.find((account) => account.id === payerSaveTransaction.account_id)?.name}
+                                    description='Account' />
+                                <List.Item
+                                    title={basicData.payeeName}
+                                    description='Payee' />
+                                <List.Item
+                                    title={basicData.memo}
+                                    description='Memo' />
+                            </List.Accordion>
+                            {payerSaveTransaction.subtransactions
+                                ? <List.Accordion title='Sub-Transactions'>
+                                    <SubTransactionsDataTable
+                                        budgetId={payerBudget.id}
+                                        subTransactions={payerSaveTransaction.subtransactions}
+                                        numberFormatSettings={numberFormatSettings} />
+                                </List.Accordion>
+                                : null}
+                        </List.Section>
 
                         <TransactionCard
                             numberFormatSettings={numberFormatSettings}
@@ -80,29 +91,26 @@ export const SaveScreen = ({ navigation, route }: Props) => {
                     <Button
                         style={styles.button}
                         onPress={() => {
-                            setPayerTransactionSaveStatus(SaveStatus.InProgress);
-                            setDebtorTransactionSaveStatus(SaveStatus.InProgress);
-                            setPayerTransactionStatus('info');
+                            setPayerTransactionSaveStatus(LoadingStatus.LOADING);
+                            setDebtorTransactionSaveStatus(LoadingStatus.LOADING);
                             setDebtorTransactionStatus('info');
 
                             createTransaction(basicData.payer.budgetId, payerSaveTransaction, accessToken)
                                 .then(() => {
-                                    setPayerTransactionStatus('success');
-                                    setPayerTransactionSaveStatus(SaveStatus.Success);
+                                    setPayerTransactionSaveStatus(LoadingStatus.SUCCESSFUL);
                                 }).catch((error) => {
                                     console.error(error);
-                                    setPayerTransactionStatus('danger');
-                                    setPayerTransactionSaveStatus(SaveStatus.Failure);
+                                    setPayerTransactionSaveStatus(LoadingStatus.ERROR);
                                 });
 
                             createTransaction(basicData.debtor.budgetId, debtorSaveTransaction, accessToken)
                                 .then(() => {
                                     setDebtorTransactionStatus('success');
-                                    setDebtorTransactionSaveStatus(SaveStatus.Success);
+                                    setDebtorTransactionSaveStatus(LoadingStatus.SUCCESSFUL);
                                 }).catch((error) => {
                                     console.error(error);
                                     setDebtorTransactionStatus('danger');
-                                    setDebtorTransactionSaveStatus(SaveStatus.Failure);
+                                    setDebtorTransactionSaveStatus(LoadingStatus.ERROR);
                                 });
                         }}>
                         Save transactions
