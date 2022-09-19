@@ -16,8 +16,9 @@ export const SubTransactionsDataTable = (props: Props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [memoToDisplay, setMemoToDisplay] = React.useState('');
 
-    const renderRow = (subTransaction: SaveSubTransaction) => (
+    const renderRow = (subTransaction: SaveSubTransaction, index: number) => (
         <SubTransactionDataTableRow
+            key={index}
             budgetId={props.budgetId}
             subTransaction={subTransaction}
             numberFormatSettings={props.numberFormatSettings}
