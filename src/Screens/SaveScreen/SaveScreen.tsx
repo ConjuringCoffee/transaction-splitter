@@ -1,120 +1,108 @@
-import { useEffect, useState } from 'react';
-import { RouteProp } from '@react-navigation/native';
-import { Button } from '@ui-kitten/components';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { createTransaction } from '../../YnabApi/YnabApiWrapper';
 import { ScrollView } from 'react-native-gesture-handler';
-import { TransactionCard } from './TransactionCard';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { useLocalization } from '../../Hooks/useLocalization';
 import { LoadingComponent } from '../../Component/LoadingComponent';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppSelector } from '../../redux/hooks';
-import { selectAccountById, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
+import { LoadingStatus } from '../../Helper/LoadingStatus';
+import { SaveTransactionListSection } from './SaveTransactionListSection';
+import { SaveFAB } from './SaveFAB';
 
-type MyNavigationProp = StackNavigationProp<StackParameterList, 'Save'>;
-type MyRouteProp = RouteProp<StackParameterList, 'Save'>;
+type ScreenName = 'Save';
 
-type Props = {
-    navigation: MyNavigationProp;
-    route: MyRouteProp;
-}
-
-enum SaveStatus {
-    NotStarted,
-    InProgress,
-    Success,
-    Failure
-}
-
-export const SaveScreen = ({ navigation, route }: Props) => {
+export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
     const { numberFormatSettings } = useLocalization();
-    const [payerTransactionStatus, setPayerTransactionStatus] = useState<string>('primary');
-    const [debtorTransactionStatus, setDebtorTransactionStatus] = useState<string>('primary');
 
-    const [payerTransactionSaveStatus, setPayerTransactionSaveStatus] = useState<SaveStatus>(SaveStatus.NotStarted);
-    const [debtorTransactionSaveStatus, setDebtorTransactionSaveStatus] = useState<SaveStatus>(SaveStatus.NotStarted);
-
-    const { basicData } = route.params;
-    const { payerSaveTransaction } = route.params;
-    const { debtorSaveTransaction } = route.params;
-
-    const payerBudget = useAppSelector((state) => selectBudgetById(state, basicData.payer.budgetId));
-    const debtorBudget = useAppSelector((state) => selectBudgetById(state, basicData.debtor.budgetId));
-    const payerTransferAccount = useAppSelector((state) => selectAccountById(state, basicData.payer.budgetId, basicData.payer.transferAccountId));
+    const [payerTransactionSaveStatus, setPayerTransactionSaveStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
+    const [debtorTransactionSaveStatus, setDebtorTransactionSaveStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
     const accessToken = useAppSelector(selectAccessToken);
 
+    const {
+        basicData,
+        payerSaveTransaction,
+        debtorSaveTransaction,
+    } = route.params;
+
     useEffect(() => {
-        if (payerTransactionSaveStatus === SaveStatus.Success && debtorTransactionSaveStatus === SaveStatus.Success) {
+        const navigate = async () => {
             navigation.reset({
                 index: 0,
                 routes: [{ name: ScreenNames.SPLITTING_SCREEN }],
             });
+        };
+
+        if (payerTransactionSaveStatus === LoadingStatus.SUCCESSFUL && debtorTransactionSaveStatus === LoadingStatus.SUCCESSFUL) {
+            setTimeout(navigate, 500);
         }
     }, [navigation, payerTransactionSaveStatus, debtorTransactionSaveStatus]);
+
+    const save = () => {
+        setPayerTransactionSaveStatus(LoadingStatus.LOADING);
+        setDebtorTransactionSaveStatus(LoadingStatus.LOADING);
+
+        createTransaction(basicData.payer.budgetId, payerSaveTransaction, accessToken)
+            .then(() => {
+                setPayerTransactionSaveStatus(LoadingStatus.SUCCESSFUL);
+            }).catch((error) => {
+                console.error(error);
+                setPayerTransactionSaveStatus(LoadingStatus.ERROR);
+            });
+
+        createTransaction(basicData.debtor.budgetId, debtorSaveTransaction, accessToken)
+            .then(() => {
+                setDebtorTransactionSaveStatus(LoadingStatus.SUCCESSFUL);
+            }).catch((error) => {
+                console.error(error);
+                setDebtorTransactionSaveStatus(LoadingStatus.ERROR);
+            });
+    };
+
+    const getOverallSaveStatus = (): LoadingStatus => {
+        if (payerTransactionSaveStatus === LoadingStatus.ERROR || debtorTransactionSaveStatus === LoadingStatus.ERROR) {
+            return LoadingStatus.ERROR;
+        } else if (payerTransactionSaveStatus === LoadingStatus.SUCCESSFUL && debtorTransactionSaveStatus === LoadingStatus.SUCCESSFUL) {
+            return LoadingStatus.SUCCESSFUL;
+        } else if (payerTransactionSaveStatus === LoadingStatus.IDLE && debtorTransactionSaveStatus === LoadingStatus.IDLE) {
+            return LoadingStatus.IDLE;
+        } else {
+            return LoadingStatus.LOADING;
+        }
+    };
+
+    const overallSaveStatus = getOverallSaveStatus();
 
     return (
         <>
             {numberFormatSettings
                 ? <>
                     <ScrollView>
-                        <TransactionCard
-                            numberFormatSettings={numberFormatSettings}
-                            status={payerTransactionStatus}
-                            title='Payer transaction'
-                            basicData={basicData}
+                        <SaveTransactionListSection
                             saveTransaction={payerSaveTransaction}
-                            budget={payerBudget}
-                            transferAccount={payerTransferAccount} />
-
-                        <TransactionCard
+                            sectionTitle='Payer transaction'
+                            budgetId={basicData.payer.budgetId}
+                            payeeName={basicData.payeeName}
+                            memo={basicData.memo}
                             numberFormatSettings={numberFormatSettings}
-                            status={debtorTransactionStatus}
-                            title='Debtor transaction'
-                            basicData={basicData}
+                        />
+
+                        <SaveTransactionListSection
                             saveTransaction={debtorSaveTransaction}
-                            budget={debtorBudget} />
+                            sectionTitle='Debtor transaction'
+                            budgetId={basicData.debtor.budgetId}
+                            payeeName={basicData.payeeName}
+                            memo={basicData.memo}
+                            numberFormatSettings={numberFormatSettings}
+                        />
                     </ScrollView>
-                    <Button
-                        style={styles.button}
-                        onPress={() => {
-                            setPayerTransactionSaveStatus(SaveStatus.InProgress);
-                            setDebtorTransactionSaveStatus(SaveStatus.InProgress);
-                            setPayerTransactionStatus('info');
-                            setDebtorTransactionStatus('info');
-
-                            createTransaction(basicData.payer.budgetId, payerSaveTransaction, accessToken)
-                                .then(() => {
-                                    setPayerTransactionStatus('success');
-                                    setPayerTransactionSaveStatus(SaveStatus.Success);
-                                }).catch((error) => {
-                                    console.error(error);
-                                    setPayerTransactionStatus('danger');
-                                    setPayerTransactionSaveStatus(SaveStatus.Failure);
-                                });
-
-                            createTransaction(basicData.debtor.budgetId, debtorSaveTransaction, accessToken)
-                                .then(() => {
-                                    setDebtorTransactionStatus('success');
-                                    setDebtorTransactionSaveStatus(SaveStatus.Success);
-                                }).catch((error) => {
-                                    console.error(error);
-                                    setDebtorTransactionStatus('danger');
-                                    setDebtorTransactionSaveStatus(SaveStatus.Failure);
-                                });
-                        }}>
-                        Save transactions
-                    </Button>
+                    <SaveFAB
+                        saveStatus={overallSaveStatus}
+                        save={save}
+                    />
                 </>
                 : <LoadingComponent />}
         </>
     );
 };
-
-const styles = StyleSheet.create({
-    button: {
-        margin: 6,
-    },
-});
