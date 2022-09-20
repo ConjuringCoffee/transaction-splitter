@@ -27,7 +27,7 @@ interface DisplaySettingsState {
         error: null,
     },
     displaySettings: DisplaySettings,
-};
+}
 
 const initialState: DisplaySettingsState = {
     fetchStatus: {

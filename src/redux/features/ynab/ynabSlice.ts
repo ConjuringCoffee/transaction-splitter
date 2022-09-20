@@ -48,15 +48,12 @@ const initialState: YnabState = {
     categoryGroups: {},
 };
 
-export const fetchBudgets = createAsyncThunk<Budget[], undefined, { state: RootState }>('ynab/fetchBudgets', async (_, { getState }) => {
-    const accessToken = getState().accessToken.accessToken;
+export const fetchBudgets = createAsyncThunk<Budget[], string>('ynab/fetchBudgets', async (accessToken) => {
     return getBudgetsWithAccountsFromApi(accessToken);
 });
 
 export const fetchCategoryGroups = createAsyncThunk<
-    ynab.CategoryGroupWithCategories[], string, { state: RootState }>('ynab/fetchCategoryGroups', async (budgetId: string, { getState }) => {
-        const accessToken = getState().accessToken.accessToken;
-
+    ynab.CategoryGroupWithCategories[], { accessToken: string, budgetId: string }>('ynab/fetchCategoryGroups', async ({ accessToken, budgetId }) => {
         const ynabAPI = new ynab.API(accessToken);
         const response = await ynabAPI.categories.getCategories(budgetId);
         return response.data.category_groups;
@@ -88,7 +85,7 @@ export const ynabSlice = createSlice({
                 };
             })
             .addCase(fetchCategoryGroups.pending, (state, action) => {
-                state.categoryGroups[action.meta.arg] = {
+                state.categoryGroups[action.meta.arg.budgetId] = {
                     status: LoadingStatus.LOADING,
                     error: null,
                     groups: {},
@@ -96,7 +93,7 @@ export const ynabSlice = createSlice({
                 };
             })
             .addCase(fetchCategoryGroups.fulfilled, (state, action) => {
-                const stateForBudget = state.categoryGroups[action.meta.arg];
+                const stateForBudget = state.categoryGroups[action.meta.arg.budgetId];
                 stateForBudget.status = LoadingStatus.SUCCESSFUL;
                 stateForBudget.error = null;
 
@@ -120,7 +117,7 @@ export const ynabSlice = createSlice({
                 }
             })
             .addCase(fetchCategoryGroups.rejected, (state, action) => {
-                state.categoryGroups[action.meta.arg] = {
+                state.categoryGroups[action.meta.arg.budgetId] = {
                     status: LoadingStatus.ERROR,
                     error: action.error,
                     groups: {},

@@ -1,13 +1,11 @@
 import { Button } from '@ui-kitten/components';
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { CustomScrollView } from '../../Component/CustomScrollView';
-import { LoadingComponent } from '../../Component/LoadingComponent';
 import { Account, Budget } from '../../YnabApi/YnabApiWrapper';
 import { ProfileCard } from './ProfileCard';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { fetchProfiles, overwriteProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
-import { fetchBudgets, selectBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
-import { LoadingStatus } from '../../Helper/LoadingStatus';
+import { overwriteProfiles, selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
+import { selectBudgets } from '../../redux/features/ynab/ynabSlice';
 
 interface EditableProfile {
     name: string,
@@ -19,37 +17,22 @@ interface EditableProfile {
 export const ProfileSettingsScreen = () => {
     const dispatch = useAppDispatch();
 
-    const [editableProfiles, setEditableProfiles] = useState<EditableProfile[]>();
+    const [editableProfiles, setEditableProfiles] = useState<EditableProfile[]>([]);
 
     const budgets = useAppSelector(selectBudgets);
-    const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
-
-    const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
     const profiles = useAppSelector(selectAllProfiles);
 
-    useEffect(() => {
-        if (budgetsFetchStatus.status === LoadingStatus.IDLE) {
-            dispatch(fetchBudgets());
+    useLayoutEffect(() => {
+        if (profiles.length === 2) {
+            setEditableProfiles(profiles);
+        } else {
+            const defaultEditableProfiles = [
+                createDefaultProfile(budgets[0]),
+                createDefaultProfile(budgets[1]),
+            ];
+            setEditableProfiles(defaultEditableProfiles);
         }
-    }, [budgetsFetchStatus, dispatch]);
-
-    useEffect(() => {
-        if (profilesFetchStatus.status === LoadingStatus.IDLE) {
-            dispatch(fetchProfiles());
-        } else if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL) {
-            if (!budgets) {
-                return;
-            }
-            if (profiles.length === 2) {
-                setEditableProfiles(profiles);
-            } else {
-                const defaultEditableProfiles = [
-                    createDefaultProfile(budgets[0]),
-                    createDefaultProfile(budgets[1])];
-                setEditableProfiles(defaultEditableProfiles);
-            }
-        }
-    }, [profilesFetchStatus, dispatch, budgets, profiles]);
+    }, [dispatch, budgets, profiles]);
 
     const createDefaultProfile = (budget: Budget): EditableProfile => {
         return ({
@@ -127,28 +110,21 @@ export const ProfileSettingsScreen = () => {
                 }} />);
     };
 
-
     const isSavingAllowed = editableProfiles ? editableProfiles?.every((editableProfile) => editableProfile.name) : false;
 
     return (
         <CustomScrollView>
-            {budgets && editableProfiles
-                ? editableProfiles.map((editableProfile, index) => {
-                    // TODO: Only enable the selection of a budget in one profile
-                    return createProfileCard(budgets, editableProfile, (newEditableProfile) => {
-                        const newEditableProfiles = [...editableProfiles];
-                        newEditableProfiles[index] = { ...newEditableProfile };
-                        setEditableProfiles(newEditableProfiles);
-                    });
-                })
-                : <LoadingComponent />}
+            {editableProfiles.map((editableProfile, index) => {
+                // TODO: Only enable the selection of a budget in one profile
+                return createProfileCard(budgets, editableProfile, (newEditableProfile) => {
+                    const newEditableProfiles = [...editableProfiles];
+                    newEditableProfiles[index] = { ...newEditableProfile };
+                    setEditableProfiles(newEditableProfiles);
+                });
+            })}
             <Button
                 disabled={!isSavingAllowed}
-
                 onPress={() => {
-                    if (editableProfiles === undefined) {
-                        throw new Error('Impossible to get here');
-                    }
                     dispatch(overwriteProfiles(editableProfiles));
                 }}>
                 Save

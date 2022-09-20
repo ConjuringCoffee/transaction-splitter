@@ -21,10 +21,13 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { Store } from './src/redux/store';
 import * as SplashScreen from 'expo-splash-screen';
 import { useAppDispatch, useAppSelector } from './src/redux/hooks';
-import { fetchAccessToken, selectAccessTokenFetchStatus } from './src/redux/features/accessToken/accessTokenSlice';
+import { fetchAccessToken, selectAccessToken, selectAccessTokenFetchStatus } from './src/redux/features/accessToken/accessTokenSlice';
 import { LoadingStatus } from './src/Helper/LoadingStatus';
 import { de, registerTranslation } from 'react-native-paper-dates';
 import { fetchDisplaySettings, selectDisplaySettingsFetchStatus } from './src/redux/features/displaySettings/displaySettingsSlice';
+import { fetchProfiles, selectProfilesFetchStatus } from './src/redux/features/profiles/profilesSlice';
+import { fetchBudgets, selectBudgetsFetchStatus } from './src/redux/features/ynab/ynabSlice';
+import { fetchCategoryCombos, selectCategoryComboFetchStatus } from './src/redux/features/categoryCombos/categoryCombosSlice';
 
 LogBox.ignoreLogs([
     // Ignore this because we don't use state persistence or deep screen linking,
@@ -56,14 +59,18 @@ const ReduxProvidedApp = () => {
     const [appIsReady, setAppIsReady] = useState(false);
 
     const dispatch = useAppDispatch();
+
     const accessTokenFetchStatus = useAppSelector(selectAccessTokenFetchStatus);
     const displaySettingsFetchStatus = useAppSelector(selectDisplaySettingsFetchStatus);
+    const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
+    const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
+    const categoryCombosFetchStatus = useAppSelector(selectCategoryComboFetchStatus);
+
+    const accessToken = useAppSelector(selectAccessToken);
 
     useEffect(() => {
         if (accessTokenFetchStatus.status === LoadingStatus.IDLE) {
             dispatch(fetchAccessToken());
-        } else if (accessTokenFetchStatus.status === LoadingStatus.SUCCESSFUL) {
-            setAppIsReady(true);
         }
     }, [accessTokenFetchStatus, dispatch]);
 
@@ -73,10 +80,31 @@ const ReduxProvidedApp = () => {
         }
     }, [displaySettingsFetchStatus, dispatch]);
 
+    useEffect(() => {
+        if (profilesFetchStatus.status === LoadingStatus.IDLE) {
+            dispatch(fetchProfiles());
+        }
+    }, [profilesFetchStatus, dispatch]);
+
+    useEffect(() => {
+        if (budgetsFetchStatus.status === LoadingStatus.IDLE && accessTokenFetchStatus.status === LoadingStatus.SUCCESSFUL) {
+            dispatch(fetchBudgets(accessToken));
+        }
+    }, [budgetsFetchStatus, dispatch, accessTokenFetchStatus, accessToken]);
+
+    useEffect(() => {
+        if (categoryCombosFetchStatus.status === LoadingStatus.IDLE) {
+            dispatch(fetchCategoryCombos());
+        }
+    }, [categoryCombosFetchStatus, dispatch]);
+
     const everythingLoaded = useMemo(() => {
         return accessTokenFetchStatus.status === LoadingStatus.SUCCESSFUL
-            && displaySettingsFetchStatus.status === LoadingStatus.SUCCESSFUL;
-    }, [accessTokenFetchStatus, displaySettingsFetchStatus]);
+            && displaySettingsFetchStatus.status === LoadingStatus.SUCCESSFUL
+            && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
+            && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL
+            && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
+    }, [accessTokenFetchStatus, displaySettingsFetchStatus, profilesFetchStatus, budgetsFetchStatus, categoryCombosFetchStatus]);
 
     useEffect(() => {
         if (everythingLoaded) {

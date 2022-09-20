@@ -11,10 +11,10 @@ import { AmountEntry, buildSaveTransactions } from '../../YnabApi/BuildSaveTrans
 import { AmountCard } from './AmountCard';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { fetchCategoryCombos, selectCategoryComboFetchStatus } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
+import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Amounts'>;
@@ -27,10 +27,9 @@ type Props = {
 export const AmountsScreen = (props: Props) => {
     const [amountEntries, setAmountEntries] = useState<Array<AmountEntry>>([]);
     const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
+    const accessToken = useAppSelector(selectAccessToken);
 
     const dispatch = useAppDispatch();
-
-    const fetchCategoryComboStatus = useAppSelector(selectCategoryComboFetchStatus);
 
     const basicData = props.route.params.basicData;
     const payerBudgetId = basicData.payer.budgetId;
@@ -40,22 +39,16 @@ export const AmountsScreen = (props: Props) => {
     const debtorCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, debtorBudgetId));
 
     useEffect(() => {
-        if (fetchCategoryComboStatus.status === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryCombos());
-        }
-    }, [fetchCategoryComboStatus, dispatch]);
-
-    useEffect(() => {
         if (payerCategoriesFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups(payerBudgetId));
+            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: payerBudgetId }));
         }
-    }, [payerCategoriesFetchStatus, dispatch, payerBudgetId]);
+    }, [payerCategoriesFetchStatus, dispatch, payerBudgetId, accessToken]);
 
     useEffect(() => {
         if (debtorCategoriesFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups(debtorBudgetId));
+            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: debtorBudgetId }));
         }
-    }, [debtorCategoriesFetchStatus, dispatch, debtorBudgetId]);
+    }, [debtorCategoriesFetchStatus, dispatch, debtorBudgetId, accessToken]);
 
     const addAmountEntry = (amount?: number) => {
         const entries = [...amountEntries, {
@@ -135,7 +128,7 @@ export const AmountsScreen = (props: Props) => {
 
     return (
         <CustomScrollView>
-            {categoriesAreLoaded && numberFormatSettings && fetchCategoryComboStatus.status === LoadingStatus.SUCCESSFUL
+            {categoriesAreLoaded
                 ? <Layout>
                     {amountEntries.map((amountEntry, index) => {
                         return <AmountCard
