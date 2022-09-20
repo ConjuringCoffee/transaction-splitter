@@ -26,8 +26,8 @@ interface DisplaySettingsState {
         error: SerializedError | null
     },
     saveStatus: {
-        status: LoadingStatus.IDLE,
-        error: null,
+        status: LoadingStatus
+        error: SerializedError | null
     },
     displaySettings: DisplaySettings,
 }
@@ -62,6 +62,11 @@ const readDisplaySettings = async (): Promise<SavedDisplaySettings> => {
     return JSON.parse(jsonValue);
 };
 
+const saveDisplaySettings = async (displaySettings: DisplaySettings): Promise<void> => {
+    const jsonValue = JSON.stringify(displaySettings);
+    await SecureStore.setItemAsync(STORAGE_KEY, jsonValue, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
+};
+
 const readSystemNumberFormatSettings = async (): Promise<NumberFormatSettings> => {
     const localization = await getLocalizationAsync();
     return {
@@ -80,6 +85,18 @@ export const fetchDisplaySettings = createAsyncThunk<DisplaySettings, void, {}>(
         numberFormat: numberFormatSettings,
         themeType: themeType,
     };
+});
+
+export const saveThemeTypeSetting = createAsyncThunk<
+    DisplaySettings, ThemeType, { state: RootState }
+>('displaySettings/saveThemeTypeSetting', async (themeType, { getState }) => {
+    const displaySettings = {
+        ...getState().displaySettings.displaySettings,
+        themeType: themeType,
+    };
+
+    await saveDisplaySettings(displaySettings);
+    return displaySettings;
 });
 
 export const displaySettingsSlice = createSlice({
@@ -103,6 +120,25 @@ export const displaySettingsSlice = createSlice({
             })
             .addCase(fetchDisplaySettings.rejected, (state, action) => {
                 state.fetchStatus = {
+                    status: LoadingStatus.ERROR,
+                    error: action.error,
+                };
+            })
+            .addCase(saveThemeTypeSetting.pending, (state) => {
+                state.saveStatus = {
+                    status: LoadingStatus.LOADING,
+                    error: null,
+                };
+            })
+            .addCase(saveThemeTypeSetting.fulfilled, (state, action) => {
+                state.saveStatus = {
+                    status: LoadingStatus.SUCCESSFUL,
+                    error: null,
+                };
+                state.displaySettings = action.payload;
+            })
+            .addCase(saveThemeTypeSetting.rejected, (state, action) => {
+                state.saveStatus = {
                     status: LoadingStatus.ERROR,
                     error: action.error,
                 };

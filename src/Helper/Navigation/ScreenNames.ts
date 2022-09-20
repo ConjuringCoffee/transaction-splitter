@@ -12,4 +12,5 @@ export class ScreenNames {
     public static readonly EDIT_CATEGORY_COMBO_SCREEN = 'Edit Category Combo';
     public static readonly SELECT_CATEGORY_COMBO_SCREEN = 'Category Combinations';
     public static readonly SETTINGS_OVERVIEW_SCREEN = 'Settings Overview';
+    public static readonly DISPLAY_SETTINGS_SCREEN = 'DisplaySettings';
 }

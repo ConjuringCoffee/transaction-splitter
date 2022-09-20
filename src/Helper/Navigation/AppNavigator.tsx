@@ -16,6 +16,7 @@ import { ScreenNames } from './ScreenNames';
 import { CategoryComboSettingsScreen } from '../../Screens/CategoryComboSettingsScreen/CategoryComboSettingsScreen';
 import { NavigationBar } from './NavigationBar';
 import { CreateCategoryComboScreen } from '../../Screens/CreateCategoryComboScreen/CreateCategoryComboScreen';
+import { DisplaySettingsScreen } from '../../Screens/DisplaySettingsScreen/DisplaySettingsScreen';
 
 export const AppNavigator = () => {
     return (
@@ -105,6 +106,9 @@ const StackNavigator = () => {
             <stack.Screen
                 name={ScreenNames.CREATE_CATEGORY_COMBO_SCREEN}
                 component={CreateCategoryComboScreen} />
+            <stack.Screen
+                name={ScreenNames.DISPLAY_SETTINGS_SCREEN}
+                component={DisplaySettingsScreen} />
         </stack.Navigator>
     );
 };

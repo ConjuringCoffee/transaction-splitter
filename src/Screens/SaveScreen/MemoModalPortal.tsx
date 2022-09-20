@@ -4,14 +4,12 @@ import { Portal, Modal, useTheme, Text } from 'react-native-paper';
 
 interface Props {
     visible: boolean,
-    setVisible: (visible: boolean) => void,
+    toggleVisible: () => void,
     memo: string,
 }
 
 export const MemoModalPortal = (props: Props) => {
     const theme = useTheme();
-
-    const hide = () => props.setVisible(false);
 
     const styles = StyleSheet.create({
         modalContainer: {
@@ -26,7 +24,7 @@ export const MemoModalPortal = (props: Props) => {
         <Portal>
             <Modal
                 visible={props.visible}
-                onDismiss={hide}
+                onDismiss={props.toggleVisible}
                 contentContainerStyle={styles.modalContainer}
             >
                 <Text>{props.memo}</Text>

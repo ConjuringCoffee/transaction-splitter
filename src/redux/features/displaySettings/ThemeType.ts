@@ -1,5 +1,5 @@
 export enum ThemeType {
-    SYSTEM_DEFAULT,
-    LIGHT,
-    DARK,
+    SYSTEM_DEFAULT = 'System Default',
+    LIGHT = 'Light',
+    DARK = 'Dark',
 }

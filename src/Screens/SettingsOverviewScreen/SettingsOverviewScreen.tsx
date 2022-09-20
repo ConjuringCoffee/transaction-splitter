@@ -9,6 +9,11 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
     return (
         <View>
             <List.Item
+                title='Display Settings'
+                onPress={() => {
+                    navigation.navigate(ScreenNames.DISPLAY_SETTINGS_SCREEN);
+                }} />
+            <List.Item
                 title='Access Token'
                 description='Necessary to access the YNAB API'
                 onPress={() => {
