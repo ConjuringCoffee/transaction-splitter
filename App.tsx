@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as eva from '@eva-design/eva';
 import 'react-native-gesture-handler';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import { Appearance, LogBox, View, StyleSheet } from 'react-native';
+import { LogBox, View, StyleSheet } from 'react-native';
 import { AppNavigator } from './src/Helper/Navigation/AppNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -13,7 +13,7 @@ import { Store } from './src/redux/store';
 import * as SplashScreen from 'expo-splash-screen';
 import { de, registerTranslation } from 'react-native-paper-dates';
 import { useOverallFetch } from './src/Hooks/useOverallFetch';
-import { useThemes } from './src/Hooks/useThemes';
+import { useTheme } from './src/Hooks/useTheme';
 
 LogBox.ignoreLogs([
     // Ignore this because we don't use state persistence or deep screen linking,
@@ -32,7 +32,7 @@ const STATUS_BAR_COLOR_SCHEME = 'light';
 
 const ReduxProvidedApp = () => {
     const [everythingLoaded] = useOverallFetch();
-    const themes = useThemes();
+    const themes = useTheme();
     const [appIsReady, setAppIsReady] = useState(false);
 
     useEffect(() => {
@@ -40,17 +40,6 @@ const ReduxProvidedApp = () => {
             setAppIsReady(true);
         }
     }, [everythingLoaded]);
-
-    const colorScheme = useMemo(() => Appearance.getColorScheme(), []);
-    const themeToUse = useMemo(
-        () => colorScheme === 'dark' ? themes.darkTheme : themes.lightTheme,
-        [colorScheme, themes],
-    );
-
-    const evaThemeToUse = useMemo(
-        () => colorScheme === 'dark' ? eva.dark : eva.light,
-        [colorScheme],
-    );
 
     if (!appIsReady) {
         return null;
@@ -67,10 +56,10 @@ const ReduxProvidedApp = () => {
             //   Based on: https://docs.expo.dev/versions/v46.0.0/sdk/splash-screen/
             onLayout={SplashScreen.hideAsync}
         >
-            <PaperProvider theme={themeToUse}>
+            <PaperProvider theme={themes.theme}>
                 <IconRegistry icons={EvaIconsPack} />
-                <ApplicationProvider {...eva} theme={evaThemeToUse}>
-                    <NavigationContainer theme={themeToUse}>
+                <ApplicationProvider {...eva} theme={themes.evaThema}>
+                    <NavigationContainer theme={themes.theme}>
                         {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
                         <StatusBar style={STATUS_BAR_COLOR_SCHEME} />
                         <AppNavigator />

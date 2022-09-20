@@ -3,6 +3,7 @@ import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import * as SecureStore from 'expo-secure-store';
 import { getLocalizationAsync } from 'expo-localization';
 import { RootState } from '../../store';
+import { ThemeType } from '../../../Helper/ThemeType';
 
 export interface NumberFormatSettings {
     decimalSeparator: string,
@@ -11,10 +12,12 @@ export interface NumberFormatSettings {
 
 interface DisplaySettings {
     numberFormat: NumberFormatSettings,
+    themeType: ThemeType,
 }
 
 interface SavedDisplaySettings {
     numberFormat?: NumberFormatSettings,
+    themeType?: ThemeType,
 }
 
 interface DisplaySettingsState {
@@ -43,6 +46,7 @@ const initialState: DisplaySettingsState = {
             decimalSeparator: '',
             digitGroupingSeparator: '',
         },
+        themeType: ThemeType.SYSTEM_DEFAULT,
     },
 };
 
@@ -58,24 +62,24 @@ const readDisplaySettings = async (): Promise<SavedDisplaySettings> => {
     return JSON.parse(jsonValue);
 };
 
+const readSystemNumberFormatSettings = async (): Promise<NumberFormatSettings> => {
+    const localization = await getLocalizationAsync();
+    return {
+        decimalSeparator: localization.decimalSeparator,
+        digitGroupingSeparator: localization.digitGroupingSeparator,
+    };
+};
+
 export const fetchDisplaySettings = createAsyncThunk<DisplaySettings, void, {}>('displaySettings/fetchDisplaySettings', async () => {
-    let displaySettings: DisplaySettings;
     const displaySettingsRead = await readDisplaySettings();
 
-    if (displaySettingsRead.numberFormat !== undefined) {
-        displaySettings = { numberFormat: displaySettingsRead.numberFormat };
-    } else {
-        const localization = await getLocalizationAsync();
+    const numberFormatSettings = displaySettingsRead.numberFormat ?? await readSystemNumberFormatSettings();
+    const themeType = displaySettingsRead.themeType ?? initialState.displaySettings.themeType;
 
-        displaySettings = {
-            numberFormat: {
-                decimalSeparator: localization.decimalSeparator,
-                digitGroupingSeparator: localization.digitGroupingSeparator,
-            },
-        };
-    }
-
-    return displaySettings;
+    return {
+        numberFormat: numberFormatSettings,
+        themeType: themeType,
+    };
 });
 
 export const displaySettingsSlice = createSlice({
@@ -107,5 +111,6 @@ export const displaySettingsSlice = createSlice({
 });
 
 export const selectNumberFormatSettings = (state: RootState) => state.displaySettings.displaySettings.numberFormat;
+export const selectThemeTypeSetting = (state: RootState) => state.displaySettings.displaySettings.themeType;
 export const selectDisplaySettingsFetchStatus = (state: RootState) => state.displaySettings.fetchStatus;
 export const selectDisplaySettingsSaveStatus = (state: RootState) => state.displaySettings.saveStatus;
