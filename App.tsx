@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as eva from '@eva-design/eva';
 import 'react-native-gesture-handler';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
@@ -20,14 +20,8 @@ import { StatusBar } from 'expo-status-bar';
 import { Provider as ReduxProvider } from 'react-redux';
 import { Store } from './src/redux/store';
 import * as SplashScreen from 'expo-splash-screen';
-import { useAppDispatch, useAppSelector } from './src/redux/hooks';
-import { fetchAccessToken, selectAccessToken, selectAccessTokenFetchStatus } from './src/redux/features/accessToken/accessTokenSlice';
-import { LoadingStatus } from './src/Helper/LoadingStatus';
 import { de, registerTranslation } from 'react-native-paper-dates';
-import { fetchDisplaySettings, selectDisplaySettingsFetchStatus } from './src/redux/features/displaySettings/displaySettingsSlice';
-import { fetchProfiles, selectProfilesFetchStatus } from './src/redux/features/profiles/profilesSlice';
-import { fetchBudgets, selectBudgetsFetchStatus } from './src/redux/features/ynab/ynabSlice';
-import { fetchCategoryCombos, selectCategoryComboFetchStatus } from './src/redux/features/categoryCombos/categoryCombosSlice';
+import { useOverallFetch } from './src/Hooks/useOverallFetch';
 
 LogBox.ignoreLogs([
     // Ignore this because we don't use state persistence or deep screen linking,
@@ -56,55 +50,8 @@ const evaTheme = colorScheme === 'dark' ? eva.dark : eva.light;
 const STATUS_BAR_COLOR_SCHEME = 'light';
 
 const ReduxProvidedApp = () => {
+    const [everythingLoaded] = useOverallFetch();
     const [appIsReady, setAppIsReady] = useState(false);
-
-    const dispatch = useAppDispatch();
-
-    const accessTokenFetchStatus = useAppSelector(selectAccessTokenFetchStatus);
-    const displaySettingsFetchStatus = useAppSelector(selectDisplaySettingsFetchStatus);
-    const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
-    const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
-    const categoryCombosFetchStatus = useAppSelector(selectCategoryComboFetchStatus);
-
-    const accessToken = useAppSelector(selectAccessToken);
-
-    useEffect(() => {
-        if (accessTokenFetchStatus.status === LoadingStatus.IDLE) {
-            dispatch(fetchAccessToken());
-        }
-    }, [accessTokenFetchStatus, dispatch]);
-
-    useEffect(() => {
-        if (displaySettingsFetchStatus.status === LoadingStatus.IDLE) {
-            dispatch(fetchDisplaySettings());
-        }
-    }, [displaySettingsFetchStatus, dispatch]);
-
-    useEffect(() => {
-        if (profilesFetchStatus.status === LoadingStatus.IDLE) {
-            dispatch(fetchProfiles());
-        }
-    }, [profilesFetchStatus, dispatch]);
-
-    useEffect(() => {
-        if (budgetsFetchStatus.status === LoadingStatus.IDLE && accessTokenFetchStatus.status === LoadingStatus.SUCCESSFUL) {
-            dispatch(fetchBudgets(accessToken));
-        }
-    }, [budgetsFetchStatus, dispatch, accessTokenFetchStatus, accessToken]);
-
-    useEffect(() => {
-        if (categoryCombosFetchStatus.status === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryCombos());
-        }
-    }, [categoryCombosFetchStatus, dispatch]);
-
-    const everythingLoaded = useMemo(() => {
-        return accessTokenFetchStatus.status === LoadingStatus.SUCCESSFUL
-            && displaySettingsFetchStatus.status === LoadingStatus.SUCCESSFUL
-            && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
-            && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL
-            && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
-    }, [accessTokenFetchStatus, displaySettingsFetchStatus, profilesFetchStatus, budgetsFetchStatus, categoryCombosFetchStatus]);
 
     useEffect(() => {
         if (everythingLoaded) {
@@ -125,7 +72,8 @@ const ReduxProvidedApp = () => {
             //   we hide the splash screen once we know the root view has already
             //   performed layout. The NavigationContainer's onReady doesn't work as an alternative.
             //   Based on: https://docs.expo.dev/versions/v46.0.0/sdk/splash-screen/
-            onLayout={SplashScreen.hideAsync}>
+            onLayout={SplashScreen.hideAsync}
+        >
             <PaperProvider theme={themeToUse}>
                 <IconRegistry icons={EvaIconsPack} />
                 <ApplicationProvider {...eva} theme={evaTheme}>
