@@ -3,7 +3,7 @@ import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import * as SecureStore from 'expo-secure-store';
 import { getLocalizationAsync } from 'expo-localization';
 import { RootState } from '../../store';
-import { ThemeType } from '../../../Helper/ThemeType';
+import { ThemeType } from './ThemeType';
 
 export interface NumberFormatSettings {
     decimalSeparator: string,

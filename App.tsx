@@ -27,9 +27,6 @@ registerTranslation('de', de);
 // Keep the splash screen visible while app is being prepared
 SplashScreen.preventAutoHideAsync();
 
-// Always use the light color scheme because both light and dark mode require white font
-const STATUS_BAR_COLOR_SCHEME = 'light';
-
 const ReduxProvidedApp = () => {
     const [everythingLoaded] = useOverallFetch();
     const themes = useTheme();
@@ -61,7 +58,7 @@ const ReduxProvidedApp = () => {
                 <ApplicationProvider {...eva} theme={themes.evaThema}>
                     <NavigationContainer theme={themes.theme}>
                         {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
-                        <StatusBar style={STATUS_BAR_COLOR_SCHEME} />
+                        <StatusBar style={themes.theme.statusBarColorScheme} />
                         <AppNavigator />
                     </NavigationContainer>
                 </ApplicationProvider>

@@ -5,8 +5,9 @@ import { useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { selectThemeTypeSetting } from '../redux/features/displaySettings/displaySettingsSlice';
 import { useAppSelector } from '../redux/hooks';
-import { ThemeType } from '../Helper/ThemeType';
+import { ThemeType } from '../redux/features/displaySettings/ThemeType';
 import * as eva from '@eva-design/eva';
+import { StatusBarStyle } from 'expo-status-bar';
 
 const DARK_COLOR_SCHEME = 'dark';
 
@@ -15,13 +16,25 @@ export const useTheme = () => {
     const themeTypeSetting = useAppSelector(selectThemeTypeSetting);
 
     const lightTheme = useMemo(() => {
-        const theme = merge(merge(PaperDefaultTheme, NavigationDefaultTheme), { darkAppBar: true, colors: { textOnAppBar: 'white' } });
+        const theme = merge(
+            merge(PaperDefaultTheme, NavigationDefaultTheme),
+            {
+                darkAppBar: true,
+                statusBarColorScheme: 'light' as StatusBarStyle,
+                colors: { textOnAppBar: 'white' },
+            });
         theme.colors.primary = '#5C9CA4';
         return theme;
     }, []);
 
     const darkTheme = useMemo(() => {
-        const theme = merge(merge(PaperDarkTheme, NavigationDarkTheme), { darkAppBar: true, colors: { textOnAppBar: 'white' } });
+        const theme = merge(
+            merge(PaperDarkTheme, NavigationDarkTheme),
+            {
+                darkAppBar: true,
+                statusBarColorScheme: 'light' as StatusBarStyle,
+                colors: { textOnAppBar: 'white' },
+            });
         theme.colors.primary = '#5C9CA4';
         return theme;
     }, []);
