@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { createTransaction } from '../../YnabApi/YnabApiWrapper';
 import { ScrollView } from 'react-native-gesture-handler';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
-import { useLocalization } from '../../Hooks/useLocalization';
-import { LoadingComponent } from '../../Component/LoadingComponent';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppSelector } from '../../redux/hooks';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
@@ -14,8 +12,6 @@ import { SaveFAB } from './SaveFAB';
 type ScreenName = 'Save';
 
 export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
-    const { numberFormatSettings } = useLocalization();
-
     const [payerTransactionSaveStatus, setPayerTransactionSaveStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
     const [debtorTransactionSaveStatus, setDebtorTransactionSaveStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
     const accessToken = useAppSelector(selectAccessToken);
@@ -76,33 +72,27 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
 
     return (
         <>
-            {numberFormatSettings
-                ? <>
-                    <ScrollView>
-                        <SaveTransactionListSection
-                            saveTransaction={payerSaveTransaction}
-                            sectionTitle='Payer transaction'
-                            budgetId={basicData.payer.budgetId}
-                            payeeName={basicData.payeeName}
-                            memo={basicData.memo}
-                            numberFormatSettings={numberFormatSettings}
-                        />
+            <ScrollView>
+                <SaveTransactionListSection
+                    saveTransaction={payerSaveTransaction}
+                    sectionTitle='Payer transaction'
+                    budgetId={basicData.payer.budgetId}
+                    payeeName={basicData.payeeName}
+                    memo={basicData.memo}
+                />
 
-                        <SaveTransactionListSection
-                            saveTransaction={debtorSaveTransaction}
-                            sectionTitle='Debtor transaction'
-                            budgetId={basicData.debtor.budgetId}
-                            payeeName={basicData.payeeName}
-                            memo={basicData.memo}
-                            numberFormatSettings={numberFormatSettings}
-                        />
-                    </ScrollView>
-                    <SaveFAB
-                        saveStatus={overallSaveStatus}
-                        save={save}
-                    />
-                </>
-                : <LoadingComponent />}
+                <SaveTransactionListSection
+                    saveTransaction={debtorSaveTransaction}
+                    sectionTitle='Debtor transaction'
+                    budgetId={basicData.debtor.budgetId}
+                    payeeName={basicData.payeeName}
+                    memo={basicData.memo}
+                />
+            </ScrollView>
+            <SaveFAB
+                saveStatus={overallSaveStatus}
+                save={save}
+            />
         </>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import * as eva from '@eva-design/eva';
 import 'react-native-gesture-handler';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
@@ -24,6 +24,7 @@ import { useAppDispatch, useAppSelector } from './src/redux/hooks';
 import { fetchAccessToken, selectAccessTokenFetchStatus } from './src/redux/features/accessToken/accessTokenSlice';
 import { LoadingStatus } from './src/Helper/LoadingStatus';
 import { de, registerTranslation } from 'react-native-paper-dates';
+import { fetchDisplaySettings, selectDisplaySettingsFetchStatus } from './src/redux/features/displaySettings/displaySettingsSlice';
 
 LogBox.ignoreLogs([
     // Ignore this because we don't use state persistence or deep screen linking,
@@ -56,6 +57,7 @@ const ReduxProvidedApp = () => {
 
     const dispatch = useAppDispatch();
     const accessTokenFetchStatus = useAppSelector(selectAccessTokenFetchStatus);
+    const displaySettingsFetchStatus = useAppSelector(selectDisplaySettingsFetchStatus);
 
     useEffect(() => {
         if (accessTokenFetchStatus.status === LoadingStatus.IDLE) {
@@ -64,6 +66,23 @@ const ReduxProvidedApp = () => {
             setAppIsReady(true);
         }
     }, [accessTokenFetchStatus, dispatch]);
+
+    useEffect(() => {
+        if (displaySettingsFetchStatus.status === LoadingStatus.IDLE) {
+            dispatch(fetchDisplaySettings());
+        }
+    }, [displaySettingsFetchStatus, dispatch]);
+
+    const everythingLoaded = useMemo(() => {
+        return accessTokenFetchStatus.status === LoadingStatus.SUCCESSFUL
+            && displaySettingsFetchStatus.status === LoadingStatus.SUCCESSFUL;
+    }, [accessTokenFetchStatus, displaySettingsFetchStatus]);
+
+    useEffect(() => {
+        if (everythingLoaded) {
+            setAppIsReady(true);
+        }
+    }, [everythingLoaded]);
 
     if (!appIsReady) {
         return null;

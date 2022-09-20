@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Keyboard } from 'react-native';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { LoadingComponent } from '../../Component/LoadingComponent';
-import { useLocalization } from '../../Hooks/useLocalization';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { AmountEntry, buildSaveTransactions } from '../../YnabApi/BuildSaveTransactions';
@@ -15,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchCategoryCombos, selectCategoryComboFetchStatus } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
+import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Amounts'>;
@@ -25,8 +25,8 @@ type Props = {
 }
 
 export const AmountsScreen = (props: Props) => {
-    const { numberFormatSettings } = useLocalization();
     const [amountEntries, setAmountEntries] = useState<Array<AmountEntry>>([]);
+    const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
 
     const dispatch = useAppDispatch();
 
@@ -141,7 +141,6 @@ export const AmountsScreen = (props: Props) => {
                         return <AmountCard
                             key={index}
                             index={index}
-                            numberFormatSettings={numberFormatSettings}
                             amount={amountEntry.amount}
                             payerBudgetId={basicData.payer.budgetId}
                             debtorBudgetId={basicData.debtor.budgetId}

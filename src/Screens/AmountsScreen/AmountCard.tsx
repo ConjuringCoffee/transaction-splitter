@@ -5,7 +5,6 @@ import { Navigation } from './AmountsScreen';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { SplitPercentInput } from './SplitPercentInput';
 import { NumberInput } from '../../Component/NumberInput';
-import { NumberFormatSettings } from '../../Hooks/useLocalization';
 import { useAppSelector } from '../../redux/hooks';
 import { selectCategories } from '../../redux/features/ynab/ynabSlice';
 
@@ -13,7 +12,6 @@ interface Props {
     // TODO: Pass AmountEntry instead of all these separate variables
     key: number,
     index: number,
-    numberFormatSettings: NumberFormatSettings,
     amount: number,
     payerBudgetId: string,
     debtorBudgetId: string,
@@ -89,7 +87,6 @@ export const AmountCard = (props: Props) => {
         <Card>
             <Layout style={styles.container}>
                 <NumberInput
-                    numberFormatSettings={props.numberFormatSettings}
                     number={props.amount}
                     setNumber={props.setAmount}
                     style={styles.amount}

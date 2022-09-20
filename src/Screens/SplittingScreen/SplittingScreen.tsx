@@ -1,6 +1,5 @@
 import React, { useEffect, useLayoutEffect } from 'react';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
-import { useLocalization } from '../../Hooks/useLocalization';
 import { InitializedSplittingScreen } from './InitializedSplittingScreen';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
@@ -18,8 +17,6 @@ const ICON_SETTINGS = 'cog';
 
 export const SplittingScreen = (props: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
-
-    const { numberFormatSettings } = useLocalization();
 
     const budgets = useAppSelector(selectBudgets);
     const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
@@ -57,13 +54,11 @@ export const SplittingScreen = (props: MyStackScreenProps<ScreenName>) => {
 
     return (
         <>
-            {numberFormatSettings
-                && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL
+            {budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL
                 && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
                 && profiles.length === 2
                 ? <InitializedSplittingScreen
                     navigation={props.navigation}
-                    numberFormatSettings={numberFormatSettings}
                     budgets={budgets}
                     profiles={profiles} />
                 : <LoadingComponent />}

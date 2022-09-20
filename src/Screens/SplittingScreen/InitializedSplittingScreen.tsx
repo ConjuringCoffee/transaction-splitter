@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { CustomScrollView } from '../../Component/CustomScrollView';
-import { NumberFormatSettings } from '../../Hooks/useLocalization';
 import { Budget } from '../../YnabApi/YnabApiWrapper';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
@@ -16,7 +15,6 @@ import { AccountRadioSelection } from './AccountRadioSelection';
 
 interface Props {
     navigation: StackNavigationProp<StackParameterList>,
-    numberFormatSettings: NumberFormatSettings,
     profiles: Profile[],
     budgets: Budget[],
 }
@@ -69,7 +67,7 @@ export const InitializedSplittingScreen = (props: Props) => {
             <TotalAmountInput
                 totalAmount={totalAmount}
                 setTotalAmount={setTotalAmount}
-                numberFormatSettings={props.numberFormatSettings} />
+            />
 
             <PayerProfileRadioSelection
                 profiles={props.profiles}

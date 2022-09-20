@@ -1,4 +1,4 @@
-import { NumberFormatSettings } from '../Hooks/useLocalization';
+import { NumberFormatSettings } from '../redux/features/displaySettings/displaySettingsSlice';
 import { reverseNumberFormatSettingsFromLocale } from './AmountHelper';
 
 class Calculation {
