@@ -31,7 +31,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
         };
 
         if (payerTransactionSaveStatus === LoadingStatus.SUCCESSFUL && debtorTransactionSaveStatus === LoadingStatus.SUCCESSFUL) {
-            setTimeout(navigate, 500);
+            setTimeout(navigate, 200);
         }
     }, [navigation, payerTransactionSaveStatus, debtorTransactionSaveStatus]);
 
