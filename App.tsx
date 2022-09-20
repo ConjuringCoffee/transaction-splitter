@@ -1,27 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import * as eva from '@eva-design/eva';
 import 'react-native-gesture-handler';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { Appearance, LogBox, View, StyleSheet } from 'react-native';
 import { AppNavigator } from './src/Helper/Navigation/AppNavigator';
-import {
-    NavigationContainer,
-    DarkTheme as NavigationDarkTheme,
-    DefaultTheme as NavigationDefaultTheme,
-} from '@react-navigation/native';
-import {
-    DarkTheme as PaperDarkTheme,
-    DefaultTheme as PaperDefaultTheme,
-    Provider as PaperProvider,
-} from 'react-native-paper';
-import merge from 'deepmerge';
+import { NavigationContainer } from '@react-navigation/native';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { Provider as ReduxProvider } from 'react-redux';
 import { Store } from './src/redux/store';
 import * as SplashScreen from 'expo-splash-screen';
 import { de, registerTranslation } from 'react-native-paper-dates';
 import { useOverallFetch } from './src/Hooks/useOverallFetch';
+import { useThemes } from './src/Hooks/useThemes';
 
 LogBox.ignoreLogs([
     // Ignore this because we don't use state persistence or deep screen linking,
@@ -35,22 +27,12 @@ registerTranslation('de', de);
 // Keep the splash screen visible while app is being prepared
 SplashScreen.preventAutoHideAsync();
 
-const combinedDefaultTheme = merge(merge(PaperDefaultTheme, NavigationDefaultTheme), { darkAppBar: true, colors: { textOnAppBar: 'white' } });
-combinedDefaultTheme.colors.primary = '#5C9CA4';
-
-const combinedDarkTheme = merge(merge(PaperDarkTheme, NavigationDarkTheme), { darkAppBar: true, colors: { textOnAppBar: 'white' } });
-combinedDarkTheme.colors.primary = '#5C9CA4';
-
-const colorScheme = Appearance.getColorScheme();
-
-const themeToUse = colorScheme === 'dark' ? combinedDarkTheme : combinedDefaultTheme;
-const evaTheme = colorScheme === 'dark' ? eva.dark : eva.light;
-
 // Always use the light color scheme because both light and dark mode require white font
 const STATUS_BAR_COLOR_SCHEME = 'light';
 
 const ReduxProvidedApp = () => {
     const [everythingLoaded] = useOverallFetch();
+    const themes = useThemes();
     const [appIsReady, setAppIsReady] = useState(false);
 
     useEffect(() => {
@@ -58,6 +40,17 @@ const ReduxProvidedApp = () => {
             setAppIsReady(true);
         }
     }, [everythingLoaded]);
+
+    const colorScheme = useMemo(() => Appearance.getColorScheme(), []);
+    const themeToUse = useMemo(
+        () => colorScheme === 'dark' ? themes.darkTheme : themes.lightTheme,
+        [colorScheme, themes],
+    );
+
+    const evaThemeToUse = useMemo(
+        () => colorScheme === 'dark' ? eva.dark : eva.light,
+        [colorScheme],
+    );
 
     if (!appIsReady) {
         return null;
@@ -76,7 +69,7 @@ const ReduxProvidedApp = () => {
         >
             <PaperProvider theme={themeToUse}>
                 <IconRegistry icons={EvaIconsPack} />
-                <ApplicationProvider {...eva} theme={evaTheme}>
+                <ApplicationProvider {...eva} theme={evaThemeToUse}>
                     <NavigationContainer theme={themeToUse}>
                         {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
                         <StatusBar style={STATUS_BAR_COLOR_SCHEME} />
