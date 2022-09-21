@@ -3,10 +3,10 @@ import { Layout } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
 import { KeyboardButton } from './KeyboardButton';
 import { KeyboardNumberButton } from './KeyboardNumberButton';
-import { NumberFormatSettings } from '../Hooks/useLocalization';
+import { useAppSelector } from '../redux/hooks';
+import { selectNumberFormatSettings } from '../redux/features/displaySettings/displaySettingsSlice';
 
 interface Props {
-    numberFormatSettings: NumberFormatSettings,
     onDigitPress: (digit: number) => void
     onDecimalSeparatorPress: () => void
     onOperatorAddPress: () => void
@@ -21,6 +21,8 @@ interface Props {
 const DARK_COLOR = '#e6e5ea';
 
 export const CalculatorKeyboard = (props: Props) => {
+    const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
+
     return (
         <Layout style={styles.mainLayout}>
             <Layout style={styles.numberLayout}>
@@ -76,7 +78,7 @@ export const CalculatorKeyboard = (props: Props) => {
                         number={0}
                         onPress={props.onDigitPress} />
                     <KeyboardButton
-                        value={props.numberFormatSettings.decimalSeparator}
+                        value={numberFormatSettings.decimalSeparator}
                         color={'white'}
                         onPress={props.onDecimalSeparatorPress} />
 

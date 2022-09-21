@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { DataTable, List, Text, useTheme } from 'react-native-paper';
 import { SaveTransaction } from 'ynab';
 import { StyleSheet } from 'react-native';
-import { convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
-import { NumberFormatSettings } from '../../Hooks/useLocalization';
+import { convertAmountToText, convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
 import { selectBudgetById, selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../redux/hooks';
 import { DataTableCellView } from './DataTableCellView';
 import { SubTransactionsDataTable } from './SubTransactionsDataTable';
+import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 
 interface Props {
     saveTransaction: SaveTransaction,
@@ -15,7 +15,6 @@ interface Props {
     budgetId: string,
     payeeName: string,
     memo: string,
-    numberFormatSettings: NumberFormatSettings,
 }
 
 export const SaveTransactionListSection = (props: Props) => {
@@ -25,9 +24,11 @@ export const SaveTransactionListSection = (props: Props) => {
 
     const budget = useAppSelector((state) => selectBudgetById(state, props.budgetId));
     const categories = useAppSelector((state) => selectCategories(state, props.budgetId));
+    const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
 
     const accountName = budget.accounts.find((account) => account.id === props.saveTransaction.account_id)?.name;
-    const amountText = convertApiAmountToHumanAmount(props.saveTransaction.amount);
+    const amountHuman = convertApiAmountToHumanAmount(props.saveTransaction.amount);
+    const amountText = convertAmountToText(amountHuman, numberFormatSettings);
 
     const toggleDetailsExpanded = () => setDetailsExpanded(!detailsExpanded);
     const toggleSubTransactionsExpanded = () => setSubTransactionsExpanded(!subTransactionsExpanded);
@@ -90,7 +91,6 @@ export const SaveTransactionListSection = (props: Props) => {
                     <SubTransactionsDataTable
                         budgetId={props.budgetId}
                         subTransactions={props.saveTransaction.subtransactions}
-                        numberFormatSettings={props.numberFormatSettings}
                     />
                 </List.Accordion>
                 : null}

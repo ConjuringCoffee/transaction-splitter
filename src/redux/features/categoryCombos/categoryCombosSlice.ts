@@ -104,8 +104,7 @@ export const deleteCategoryCombo = createAsyncThunk<
 export const categoryCombosSlice = createSlice({
     name: 'categoryCombos',
     initialState,
-    reducers: {
-    },
+    reducers: {},
     extraReducers(builder) {
         builder
             .addCase(fetchCategoryCombos.pending, (state) => {

@@ -3,10 +3,10 @@ import { Input } from '@ui-kitten/components';
 import { EvaSize, RenderProp } from '@ui-kitten/components/devsupport';
 import { ImageProps, StyleProp, TextStyle } from 'react-native';
 import { convertAmountFromText, convertAmountToText } from '../Helper/AmountHelper';
-import { NumberFormatSettings } from '../Hooks/useLocalization';
+import { useAppSelector } from '../redux/hooks';
+import { selectNumberFormatSettings } from '../redux/features/displaySettings/displaySettingsSlice';
 
 interface Props {
-    numberFormatSettings: NumberFormatSettings,
     number: number,
     setNumber: (number: number) => void,
     placeholder?: string,
@@ -20,19 +20,19 @@ interface Props {
 // TODO: Harmonize with TotalAmountInput
 export const NumberInput = (props: Props) => {
     const propsNumber = props.number;
-    const propsNumberFormatSettings = props.numberFormatSettings;
+    const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
 
-    const defaultValue: string = propsNumber ? convertAmountToText(propsNumber, props.numberFormatSettings) : '';
+    const defaultValue: string = propsNumber ? convertAmountToText(propsNumber, numberFormatSettings) : '';
     const [numberText, setNumberText] = useState<string>(defaultValue);
 
     useEffect(() => {
         if (numberText === '-' && propsNumber === 0) {
             // Edge case: Do not replace with text with a zero
             return;
-        } else if (propsNumber !== convertAmountFromText(numberText, propsNumberFormatSettings)) {
-            setNumberText(convertAmountToText(propsNumber, propsNumberFormatSettings));
+        } else if (propsNumber !== convertAmountFromText(numberText, numberFormatSettings)) {
+            setNumberText(convertAmountToText(propsNumber, numberFormatSettings));
         }
-    }, [propsNumber, numberText, propsNumberFormatSettings]);
+    }, [propsNumber, numberText, numberFormatSettings]);
 
     return (
         <Input
@@ -40,7 +40,7 @@ export const NumberInput = (props: Props) => {
             value={numberText}
             onChangeText={(text) => {
                 setNumberText(text);
-                const number = convertAmountFromText(text, props.numberFormatSettings);
+                const number = convertAmountFromText(text, numberFormatSettings);
                 if (number && number !== props.number) {
                     props.setNumber(number);
                 }

@@ -1,4 +1,4 @@
-import { NumberFormatSettings } from '../Hooks/useLocalization';
+import { NumberFormatSettings } from '../redux/features/displaySettings/displaySettingsSlice';
 
 export interface DividedAmount {
     dividedAmount: number
@@ -7,7 +7,7 @@ export interface DividedAmount {
 
 export const reverseNumberFormatSettingsFromLocale = (text: string, numberFormatSettings: NumberFormatSettings): string => {
     return text
-        .replace(new RegExp(`\\${numberFormatSettings.groupingSeparator}`, 'g'), '')
+        .replace(new RegExp(`\\${numberFormatSettings.digitGroupingSeparator}`, 'g'), '')
         .replace(new RegExp(`\\${numberFormatSettings.decimalSeparator}`, 'g'), '.');
 };
 

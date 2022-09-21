@@ -46,10 +46,9 @@ const readProfiles = async (): Promise<Profile[]> => {
     return JSON.parse(jsonValue);
 };
 
-const saveProfiles = async (profiles: Profile[]): Promise<Profile[]> => {
+const saveProfiles = async (profiles: Profile[]): Promise<void> => {
     const jsonValue = JSON.stringify(profiles);
     await SecureStore.setItemAsync(STORAGE_KEY, jsonValue, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
-    return profiles;
 };
 
 export const fetchProfiles = createAsyncThunk('profiles/fetchProfiles', async () => {
@@ -59,7 +58,8 @@ export const fetchProfiles = createAsyncThunk('profiles/fetchProfiles', async ()
 export const overwriteProfiles = createAsyncThunk<
     Profile[], Profile[]
 >('profiles/overwriteProfiles', async (profiles) => {
-    return saveProfiles(profiles);
+    await saveProfiles(profiles);
+    return profiles;
 });
 
 export const profilesSlice = createSlice({

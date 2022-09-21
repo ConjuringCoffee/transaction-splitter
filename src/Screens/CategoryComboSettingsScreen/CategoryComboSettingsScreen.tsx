@@ -3,13 +3,14 @@ import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { Appbar, List } from 'react-native-paper';
-import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, fetchCategoryCombos, selectAllCategoryCombos, selectCategoryComboFetchStatus, updateCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, selectAllCategoryCombos, updateCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { View } from 'react-native';
-import { fetchProfiles, selectAllProfiles, selectProfilesFetchStatus } from '../../redux/features/profiles/profilesSlice';
+import { selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { LoadingComponent } from '../../Component/LoadingComponent';
+import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
 
 type ScreenName = 'Category Combinations Settings';
 
@@ -20,45 +21,29 @@ const ADD_ICON = 'plus';
 export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
 
-    const categoryCombosFetchStatus = useAppSelector(selectCategoryComboFetchStatus);
+    const accessToken = useAppSelector(selectAccessToken);
     const categoryCombos = useAppSelector(selectAllCategoryCombos);
 
-    const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
     const profiles = useAppSelector(selectAllProfiles);
 
     const categoriesFirstProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profiles[0]?.budgetId));
     const categoriesSecondProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profiles[1]?.budgetId));
 
     useEffect(() => {
-        if (categoryCombosFetchStatus.status === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryCombos());
+        if (categoriesFirstProfileFetchStatus === LoadingStatus.IDLE) {
+            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: profiles[0].budgetId }));
         }
-    }, [categoryCombosFetchStatus, dispatch]);
+    }, [dispatch, profiles, categoriesFirstProfileFetchStatus, accessToken]);
 
     useEffect(() => {
-        if (profilesFetchStatus.status === LoadingStatus.IDLE) {
-            dispatch(fetchProfiles());
+        if (categoriesSecondProfileFetchStatus === LoadingStatus.IDLE) {
+            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: profiles[1].budgetId }));
         }
-    }, [profilesFetchStatus, dispatch]);
-
-    useEffect(() => {
-        if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL && categoriesFirstProfileFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups(profiles[0].budgetId));
-        }
-    }, [profilesFetchStatus, dispatch, profiles, categoriesFirstProfileFetchStatus]);
-
-    useEffect(() => {
-        if (profilesFetchStatus.status === LoadingStatus.SUCCESSFUL && categoriesSecondProfileFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups(profiles[1].budgetId));
-        }
-    }, [profilesFetchStatus, dispatch, profiles, categoriesSecondProfileFetchStatus]);
+    }, [dispatch, profiles, categoriesSecondProfileFetchStatus, accessToken]);
 
     const everythingLoaded
         = categoriesFirstProfileFetchStatus === LoadingStatus.SUCCESSFUL
-        && categoriesSecondProfileFetchStatus === LoadingStatus.SUCCESSFUL
-        && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
-        && profiles.length === 2
-        && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
+        && categoriesSecondProfileFetchStatus === LoadingStatus.SUCCESSFUL;
 
     useLayoutEffect(() => {
         const additions = (

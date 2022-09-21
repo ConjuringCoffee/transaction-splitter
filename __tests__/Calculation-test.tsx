@@ -1,9 +1,9 @@
-import { NumberFormatSettings } from '../src/Hooks/useLocalization';
 import { Calculation } from '../src/Helper/Calculation';
+import { NumberFormatSettings } from '../src/redux/features/displaySettings/displaySettingsSlice';
 
 const numberFormatSettings: NumberFormatSettings = {
     decimalSeparator: ',',
-    groupingSeparator: '.',
+    digitGroupingSeparator: '.',
 };
 
 const createCalculation = (calculationString: string): Calculation => {

@@ -1,9 +1,9 @@
-import { NumberFormatSettings } from '../src/Hooks/useLocalization';
 import { convertHumanAmountToApiAmount, reverseNumberFormatSettingsFromLocale } from '../src/Helper/AmountHelper';
+import { NumberFormatSettings } from '../src/redux/features/displaySettings/displaySettingsSlice';
 
 const numberFormatSettings: NumberFormatSettings = {
     decimalSeparator: ',',
-    groupingSeparator: '.',
+    digitGroupingSeparator: '.',
 };
 
 test('Format settings correctly reversed', () => {

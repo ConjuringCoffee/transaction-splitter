@@ -1,30 +1,32 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { DataTable } from 'react-native-paper';
 import { SaveSubTransaction } from 'ynab';
-import { NumberFormatSettings } from '../../Hooks/useLocalization';
 import { MemoModalPortal } from './MemoModalPortal';
 import { SubTransactionDataTableRow } from './SubTransactionDataTableRow';
 
 interface Props {
     budgetId: string,
     subTransactions: SaveSubTransaction[],
-    numberFormatSettings: NumberFormatSettings,
 }
 
 export const SubTransactionsDataTable = (props: Props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [memoToDisplay, setMemoToDisplay] = React.useState('');
 
+    const toggleModalVisible = useCallback(
+        () => setModalVisible(!modalVisible),
+        [modalVisible],
+    );
+
     const renderRow = (subTransaction: SaveSubTransaction, index: number) => (
         <SubTransactionDataTableRow
             key={index}
             budgetId={props.budgetId}
             subTransaction={subTransaction}
-            numberFormatSettings={props.numberFormatSettings}
             triggerMemoDisplay={(memo) => {
                 setMemoToDisplay(memo);
-                setModalVisible(true);
+                toggleModalVisible();
             }}
         />
     );
@@ -33,7 +35,7 @@ export const SubTransactionsDataTable = (props: Props) => {
         <View>
             <MemoModalPortal
                 visible={modalVisible}
-                setVisible={setModalVisible}
+                toggleVisible={toggleModalVisible}
                 memo={memoToDisplay}
             />
             <DataTable>

@@ -8,8 +8,9 @@ import { ImageProps, StyleSheet } from 'react-native';
 import { Calculation } from '../../Helper/Calculation';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import { useLocalization } from '../../Hooks/useLocalization';
 import { LoadingComponent } from '../../Component/LoadingComponent';
+import { useAppSelector } from '../../redux/hooks';
+import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 
 type ScreenName = 'Calculator';
 
@@ -23,7 +24,7 @@ const HistoryIcon = (props: Partial<ImageProps> | undefined) => (
 );
 
 export const CalculatorScreen = ({ route, navigation }: Props) => {
-    const { numberFormatSettings } = useLocalization();
+    const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
     const [currentCalculation, setCurrentCalculation] = useState<string>('');
 
     // TODO: Do not duplicate the state from the previous screen
@@ -181,7 +182,6 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
                         </Text>
                     </Layout>
                     <CalculatorKeyboard
-                        numberFormatSettings={numberFormatSettings}
                         onDigitPress={onDigitPress}
                         onDecimalSeparatorPress={onDecimalSeparatorPress}
                         onOperatorAddPress={onOperatorAddPress}
