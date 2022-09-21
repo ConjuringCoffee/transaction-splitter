@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { Portal, Modal, useTheme, Text } from 'react-native-paper';
 
@@ -11,14 +11,14 @@ interface Props {
 export const MemoModalPortal = (props: Props) => {
     const theme = useTheme();
 
-    const styles = StyleSheet.create({
+    const styles = useMemo(() => StyleSheet.create({
         modalContainer: {
             padding: 20,
             alignSelf: 'center',
             borderRadius: theme.roundness,
-            backgroundColor: theme.colors.backdrop,
+            backgroundColor: theme.colors.background,
         },
-    });
+    }), [theme]);
 
     return (
         <Portal>

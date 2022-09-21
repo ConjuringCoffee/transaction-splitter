@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { List } from 'react-native-paper';
 import { selectThemeTypeSetting } from '../../redux/features/displaySettings/displaySettingsSlice';
 import { useAppSelector } from '../../redux/hooks';
 import { ThemeModalPortal } from './ThemeModalPortal';
-
 
 export const DisplaySettingsScreen = () => {
     const [themeModalVisible, setThemeModalVisible] = useState<boolean>(false);
@@ -15,13 +14,20 @@ export const DisplaySettingsScreen = () => {
         [themeModalVisible],
     );
 
+    const themeTypeDescription = useMemo(
+        () => themeTypeSetting.toString(),
+        [themeTypeSetting],
+    );
+
+    const showThemeModal = useCallback(() => setThemeModalVisible(true), []);
+
     return (
         <View>
             <List.Item
                 title='Theme'
                 // TODO: Do not use ThemeType's toString on UI
-                description={themeTypeSetting.toString()}
-                onPress={() => setThemeModalVisible(true)}
+                description={themeTypeDescription}
+                onPress={showThemeModal}
             />
             <ThemeModalPortal
                 visible={themeModalVisible}

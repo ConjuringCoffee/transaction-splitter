@@ -36,18 +36,24 @@ const StackNavigator = () => {
                 name={ScreenNames.SETTINGS_OVERVIEW_SCREEN}
                 component={SettingsOverviewScreen}
                 options={{
-                    header: (headerProps) => (<NavigationBar
-                        title='Settings'
-                        navigation={headerProps.navigation} />),
+                    header: (headerProps) => (
+                        <NavigationBar
+                            title='Settings'
+                            navigation={headerProps.navigation}
+                        />
+                    ),
                 }} />
 
             <stack.Screen
                 name={ScreenNames.AMOUNTS_SCREEN}
                 component={AmountsScreen}
                 options={{
-                    header: (headerProps) => (<NavigationBar
-                        title='Enter amounts'
-                        navigation={headerProps.navigation} />),
+                    header: (headerProps) => (
+                        <NavigationBar
+                            title='Enter amounts'
+                            navigation={headerProps.navigation}
+                        />
+                    ),
                 }} />
             <stack.Screen
                 name={ScreenNames.CATEGORY_SCREEN}
@@ -59,31 +65,41 @@ const StackNavigator = () => {
                     header: (headerProps) => (
                         <NavigationBar
                             title='Category Combinations'
-                            navigation={headerProps.navigation} />),
+                            navigation={headerProps.navigation}
+                        />
+                    ),
                 }} />
             <stack.Screen
                 name={ScreenNames.CALCULATOR_SCREEN}
                 component={CalculatorScreen}
                 options={{
-                    header: (headerProps) => (<NavigationBar
-                        title='Calculate the amount'
-                        navigation={headerProps.navigation} />),
+                    header: (headerProps) => (
+                        <NavigationBar
+                            title='Calculate the amount'
+                            navigation={headerProps.navigation}
+                        />
+                    ),
                 }} />
             <stack.Screen
                 name={ScreenNames.CALCULATION_HISTORY_SCREEN}
                 component={CalculationHistoryScreen}
                 options={{
-                    header: (headerProps) => (<NavigationBar
-                        title='Calculation history'
-                        navigation={headerProps.navigation} />),
+                    header: (headerProps) => (
+                        <NavigationBar
+                            title='Calculation history'
+                            navigation={headerProps.navigation}
+                        />
+                    ),
                 }} />
             <stack.Screen
                 name={ScreenNames.SAVE_SCREEN}
                 component={SaveScreen}
                 options={{
-                    header: (headerProps) => (<NavigationBar
-                        title='Save'
-                        navigation={headerProps.navigation} />),
+                    header: (headerProps) => (
+                        <NavigationBar
+                            title='Save'
+                            navigation={headerProps.navigation} />
+                    ),
                 }} />
             <stack.Screen
                 name={ScreenNames.ACCESS_TOKEN_SCREEN}
@@ -92,10 +108,13 @@ const StackNavigator = () => {
                 name={ScreenNames.PROFILE_SETTINGS_SCREEN}
                 component={ProfileSettingsScreen}
                 options={{
-                    header: (headerProps) => (<NavigationBar
-                        title='Profiles'
-                        subtitle='Settings'
-                        navigation={headerProps.navigation} />),
+                    header: (headerProps) => (
+                        <NavigationBar
+                            title='Profiles'
+                            subtitle='Settings'
+                            navigation={headerProps.navigation}
+                        />
+                    ),
                 }} />
             <stack.Screen
                 name={ScreenNames.CATEGORY_COMBO_SETTINGS_SCREEN}
@@ -108,7 +127,16 @@ const StackNavigator = () => {
                 component={CreateCategoryComboScreen} />
             <stack.Screen
                 name={ScreenNames.DISPLAY_SETTINGS_SCREEN}
-                component={DisplaySettingsScreen} />
+                component={DisplaySettingsScreen}
+                options={{
+                    header: (headerProps) => (
+                        <NavigationBar
+                            title='Display Settings'
+                            navigation={headerProps.navigation}
+                        />
+                    ),
+                }}
+            />
         </stack.Navigator>
     );
 };
