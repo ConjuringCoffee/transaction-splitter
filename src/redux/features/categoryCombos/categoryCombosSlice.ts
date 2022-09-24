@@ -55,10 +55,9 @@ const readCategoryCombos = async (): Promise<CategoryCombo[]> => {
     return JSON.parse(jsonValue);
 };
 
-const saveCategoryCombos = async (categoryCombos: CategoryCombo[]): Promise<CategoryCombo[]> => {
+const saveCategoryCombos = async (categoryCombos: CategoryCombo[]): Promise<void> => {
     const jsonValue = JSON.stringify(categoryCombos);
     await SecureStore.setItemAsync(STORAGE_KEY, jsonValue, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
-    return categoryCombos;
 };
 
 export const fetchCategoryCombos = createAsyncThunk('categoryCombos/fetchCategoryCombos', async () => {
@@ -82,7 +81,9 @@ export const updateCategoryCombo = createAsyncThunk<
 
     newCategoryCombos[index] = categoryCombo;
 
-    return saveCategoryCombos(newCategoryCombos);
+    await saveCategoryCombos(newCategoryCombos);
+
+    return newCategoryCombos;
 });
 
 export const addCategoryCombo = createAsyncThunk<
@@ -91,14 +92,18 @@ export const addCategoryCombo = createAsyncThunk<
     const newCategoryCombo: CategoryCombo = { ...categoryCombo, id: nanoid() };
     const newCategoryCombos = [...thunkAPI.getState().categoryCombos.objects, newCategoryCombo];
 
-    return saveCategoryCombos(newCategoryCombos);
+    await saveCategoryCombos(newCategoryCombos);
+
+    return newCategoryCombos;
 });
 
 export const deleteCategoryCombo = createAsyncThunk<
     CategoryCombo[], string, { state: RootState }
->('categoryCombos/deleteCategoryCombo', async (id, thunkAPI) => {
-    const newCategoryCombos = thunkAPI.getState().categoryCombos.objects.filter((categoryCombo) => categoryCombo.id !== id);
-    return saveCategoryCombos(newCategoryCombos);
+>('categoryCombos/deleteCategoryCombo', async (categoryComboId, thunkAPI) => {
+    const newCategoryCombos = thunkAPI.getState().categoryCombos.objects.filter((categoryCombo) => categoryCombo.id !== categoryComboId);
+    await saveCategoryCombos(newCategoryCombos);
+
+    return newCategoryCombos;
 });
 
 export const categoryCombosSlice = createSlice({
