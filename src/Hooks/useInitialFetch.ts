@@ -1,20 +1,22 @@
 import { useEffect, useMemo } from 'react';
 import { LoadingStatus } from '../Helper/LoadingStatus';
 import { selectAccessTokenFetchStatus, selectAccessToken, fetchAccessToken } from '../redux/features/accessToken/accessTokenSlice';
-import { selectCategoryComboFetchStatus, fetchCategoryCombos } from '../redux/features/categoryCombos/categoryCombosSlice';
+import { fetchBudgetCombos, selectBudgetCombosFetchStatus } from '../redux/features/budgetCombos/budgetCombos';
+import { selectCategoryCombosFetchStatus, fetchCategoryCombos } from '../redux/features/categoryCombos/categoryCombosSlice';
 import { selectDisplaySettingsFetchStatus, fetchDisplaySettings } from '../redux/features/displaySettings/displaySettingsSlice';
 import { selectProfilesFetchStatus, fetchProfiles } from '../redux/features/profiles/profilesSlice';
 import { selectBudgetsFetchStatus, fetchBudgets } from '../redux/features/ynab/ynabSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
-export const useOverallFetch = (): [boolean] => {
+export const useInitialFetch = (): [boolean] => {
     const dispatch = useAppDispatch();
 
     const accessTokenFetchStatus = useAppSelector(selectAccessTokenFetchStatus);
     const displaySettingsFetchStatus = useAppSelector(selectDisplaySettingsFetchStatus);
     const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
     const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
-    const categoryCombosFetchStatus = useAppSelector(selectCategoryComboFetchStatus);
+    const categoryCombosFetchStatus = useAppSelector(selectCategoryCombosFetchStatus);
+    const budgetCombosFetchStatus = useAppSelector(selectBudgetCombosFetchStatus);
 
     const accessToken = useAppSelector(selectAccessToken);
 
@@ -37,6 +39,12 @@ export const useOverallFetch = (): [boolean] => {
     }, [profilesFetchStatus, dispatch]);
 
     useEffect(() => {
+        if (budgetCombosFetchStatus.status === LoadingStatus.IDLE) {
+            dispatch(fetchBudgetCombos());
+        }
+    }, [budgetCombosFetchStatus, dispatch]);
+
+    useEffect(() => {
         if (budgetsFetchStatus.status === LoadingStatus.IDLE && accessTokenFetchStatus.status === LoadingStatus.SUCCESSFUL) {
             dispatch(fetchBudgets(accessToken));
         }
@@ -53,8 +61,9 @@ export const useOverallFetch = (): [boolean] => {
             && displaySettingsFetchStatus.status === LoadingStatus.SUCCESSFUL
             && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
             && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL
-            && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
-    }, [accessTokenFetchStatus, displaySettingsFetchStatus, profilesFetchStatus, budgetsFetchStatus, categoryCombosFetchStatus]);
+            && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL
+            && budgetCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
+    }, [accessTokenFetchStatus, displaySettingsFetchStatus, profilesFetchStatus, budgetsFetchStatus, categoryCombosFetchStatus, budgetCombosFetchStatus]);
 
     return [everythingLoaded];
 };

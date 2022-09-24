@@ -1,11 +1,11 @@
 import { Button } from '@ui-kitten/components';
 import { useLayoutEffect, useState } from 'react';
-import { CustomScrollView } from '../../Component/CustomScrollView';
-import { Account, Budget } from '../../YnabApi/YnabApiWrapper';
+import { CustomScrollView } from '../../../Component/CustomScrollView';
+import { Account, Budget } from '../../../YnabApi/YnabApiWrapper';
 import { ProfileCard } from './ProfileCard';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { overwriteProfiles, selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
-import { selectBudgets } from '../../redux/features/ynab/ynabSlice';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { overwriteProfiles, selectAllProfiles } from '../../../redux/features/profiles/profilesSlice';
+import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
 
 interface EditableProfile {
     name: string,

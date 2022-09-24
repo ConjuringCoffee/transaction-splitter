@@ -1,16 +1,16 @@
 import React, { useEffect, useLayoutEffect } from 'react';
-import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
-import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
+import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
+import { ScreenNames } from '../../../../Helper/Navigation/ScreenNames';
+import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
 import { Appbar, List } from 'react-native-paper';
-import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, selectAllCategoryCombos, updateCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, selectCategoryCombos, updateCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { View } from 'react-native';
-import { selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
-import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
-import { LoadingStatus } from '../../Helper/LoadingStatus';
-import { LoadingComponent } from '../../Component/LoadingComponent';
-import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
+import { selectAllProfiles } from '../../../../redux/features/profiles/profilesSlice';
+import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../../../redux/features/ynab/ynabSlice';
+import { LoadingStatus } from '../../../../Helper/LoadingStatus';
+import { LoadingComponent } from '../../../../Component/LoadingComponent';
+import { selectAccessToken } from '../../../../redux/features/accessToken/accessTokenSlice';
 
 type ScreenName = 'Category Combinations Settings';
 
@@ -22,7 +22,7 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
     const dispatch = useAppDispatch();
 
     const accessToken = useAppSelector(selectAccessToken);
-    const categoryCombos = useAppSelector(selectAllCategoryCombos);
+    const categoryCombos = useAppSelector(selectCategoryCombos);
 
     const profiles = useAppSelector(selectAllProfiles);
 

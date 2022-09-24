@@ -1,12 +1,12 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { Appbar } from 'react-native-paper';
-import { CategoryComboInputView } from '../../Component/CategoryComboInputView';
-import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
-import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
-import { useNavigateBack } from '../../Hooks/useNavigateBack';
-import { CategoryComboToCreate } from '../../redux/features/categoryCombos/categoryCombosSlice';
-import { selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
-import { useAppSelector } from '../../redux/hooks';
+import { CategoryComboInputView } from '../../../../Component/CategoryComboInputView';
+import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
+import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
+import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
+import { CategoryComboToCreate } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
+import { selectAllProfiles } from '../../../../redux/features/profiles/profilesSlice';
+import { useAppSelector } from '../../../../redux/hooks';
 
 type ScreenName = 'Create Category Combo';
 

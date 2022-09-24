@@ -144,3 +144,7 @@ export const budgetCombosSlice = createSlice({
             });
     },
 });
+
+export const selectBudgetCombos = (state: RootState) => state.budgetCombos.objects;
+export const selectBudgetCombosFetchStatus = (state: RootState) => state.budgetCombos.fetchStatus;
+export const selectBudgetCombosSaveStatus = (state: RootState) => state.budgetCombos.saveStatus;

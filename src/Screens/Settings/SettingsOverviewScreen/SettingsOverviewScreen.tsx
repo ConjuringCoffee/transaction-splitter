@@ -1,5 +1,5 @@
-import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
-import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
+import { MyStackScreenProps } from '../../../Helper/Navigation/ScreenParameters';
+import { ScreenNames } from '../../../Helper/Navigation/ScreenNames';
 import { List } from 'react-native-paper';
 import { View } from 'react-native';
 

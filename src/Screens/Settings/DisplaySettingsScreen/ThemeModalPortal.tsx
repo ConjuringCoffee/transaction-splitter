@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { Modal, Portal, RadioButton, useTheme } from 'react-native-paper';
-import { saveThemeTypeSetting, selectThemeTypeSetting } from '../../redux/features/displaySettings/displaySettingsSlice';
-import { ThemeType } from '../../redux/features/displaySettings/ThemeType';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { saveThemeTypeSetting, selectThemeTypeSetting } from '../../../redux/features/displaySettings/displaySettingsSlice';
+import { ThemeType } from '../../../redux/features/displaySettings/ThemeType';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { StyleSheet } from 'react-native';
 
 interface Props {

@@ -153,6 +153,6 @@ export const categoryCombosSlice = createSlice({
     },
 });
 
-export const selectAllCategoryCombos = (state: RootState) => state.categoryCombos.objects;
-export const selectCategoryComboFetchStatus = (state: RootState) => state.categoryCombos.fetchStatus;
-export const selectCategoryComboSaveStatus = (state: RootState) => state.categoryCombos.saveStatus;
+export const selectCategoryCombos = (state: RootState) => state.categoryCombos.objects;
+export const selectCategoryCombosFetchStatus = (state: RootState) => state.categoryCombos.fetchStatus;
+export const selectCategoryCombosSaveStatus = (state: RootState) => state.categoryCombos.saveStatus;
