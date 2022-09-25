@@ -60,6 +60,8 @@ type StackParameterList = {
         createCategoryCombo: (categoryComboToCreate: CategoryComboToCreate) => Promise<void>,
     }
     [ScreenNames.DISPLAY_SETTINGS_SCREEN]: undefined;
+    [ScreenNames.CREATE_BUDGET_COMBO_SCREEN]: undefined;
+    [ScreenNames.EDIT_BUDGET_COMBO_SCREEN]: undefined;
 }
 
 export type MyStackScreenProps<K extends keyof StackParameterList> = StackScreenProps<StackParameterList, K>;

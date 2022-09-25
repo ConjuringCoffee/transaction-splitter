@@ -17,6 +17,8 @@ import { CategoryComboSettingsScreen } from '../../Screens/Settings/CategoryComb
 import { NavigationBar } from './NavigationBar';
 import { CreateCategoryComboScreen } from '../../Screens/Settings/CategoryCombos/CreateCategoryComboScreen/CreateCategoryComboScreen';
 import { DisplaySettingsScreen } from '../../Screens/Settings/DisplaySettingsScreen/DisplaySettingsScreen';
+import { EditBudgetComboScreen } from '../../Screens/Settings/BudgetCombos/EditBudgetComboScreen/EditBudgetComboScreen';
+import { CreateBudgetComboScreen } from '../../Screens/Settings/BudgetCombos/CreateBudgetComboScreen/CreateBudgetComboScreen';
 
 export const AppNavigator = () => {
     return (
@@ -137,6 +139,12 @@ const StackNavigator = () => {
                     ),
                 }}
             />
+            <stack.Screen
+                name={ScreenNames.EDIT_BUDGET_COMBO_SCREEN}
+                component={EditBudgetComboScreen} />
+            <stack.Screen
+                name={ScreenNames.CREATE_BUDGET_COMBO_SCREEN}
+                component={CreateBudgetComboScreen} />
         </stack.Navigator>
     );
 };
