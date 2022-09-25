@@ -13,9 +13,9 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
 
     const navigateToBudgetComboSettings = useCallback(() => {
         if (budgetCombos.length) {
-            navigation.navigate(ScreenNames.EDIT_BUDGET_COMBO_SCREEN);
+            navigation.navigate(ScreenNames.EDIT_PROFILE_SCREEN);
         } else {
-            navigation.navigate(ScreenNames.CREATE_BUDGET_COMBO_SCREEN);
+            navigation.navigate(ScreenNames.CREATE_PROFILE_SCREEN);
         }
     }, [navigation, budgetCombos]);
 

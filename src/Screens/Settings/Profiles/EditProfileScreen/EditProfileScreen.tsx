@@ -1,4 +1,4 @@
-export const EditBudgetComboScreen = () => {
+export const EditProfileScreen = () => {
     return (
         <>
         </>

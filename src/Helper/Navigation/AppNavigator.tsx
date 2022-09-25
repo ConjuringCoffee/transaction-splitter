@@ -8,7 +8,7 @@ import { StackParameterList } from './ScreenParameters';
 import { AccessTokenScreen } from '../../Screens/Settings/AccessTokenScreen/AccessTokenScreen';
 import { CalculatorScreen } from '../../Screens/CalculatorScreen/CalculatorScreen';
 import { CalculationHistoryScreen } from '../../Screens/CalculationHistoryScreen/CalculationHistoryScreen';
-import { ProfileSettingsScreen } from '../../Screens/Settings/ProfileSettingsScreen/ProfileSettingsScreen';
+import { ProfileSettingsScreen } from '../../Screens/Settings/Profiles/ProfileSettingsScreen';
 import { SelectCategoryComboScreen } from '../../Screens/SelectCategoryComboScreen/SelectCategoryComboScreen';
 import { SettingsOverviewScreen } from '../../Screens/Settings/SettingsOverviewScreen/SettingsOverviewScreen';
 import { EditCategoryComboScreen } from '../../Screens/Settings/CategoryCombos/EditCategoryComboScreen/EditCategoryComboScreen';
@@ -17,8 +17,8 @@ import { CategoryComboSettingsScreen } from '../../Screens/Settings/CategoryComb
 import { NavigationBar } from './NavigationBar';
 import { CreateCategoryComboScreen } from '../../Screens/Settings/CategoryCombos/CreateCategoryComboScreen/CreateCategoryComboScreen';
 import { DisplaySettingsScreen } from '../../Screens/Settings/DisplaySettingsScreen/DisplaySettingsScreen';
-import { EditBudgetComboScreen } from '../../Screens/Settings/BudgetCombos/EditBudgetComboScreen/EditBudgetComboScreen';
-import { CreateBudgetComboScreen } from '../../Screens/Settings/BudgetCombos/CreateBudgetComboScreen/CreateBudgetComboScreen';
+import { EditProfileScreen } from '../../Screens/Settings/Profiles/EditProfileScreen/EditProfileScreen';
+import { CreateProfileScreen } from '../../Screens/Settings/Profiles/CreateProfilesScreen/CreateProfileScreen';
 
 export const AppNavigator = () => {
     return (
@@ -140,11 +140,13 @@ const StackNavigator = () => {
                 }}
             />
             <stack.Screen
-                name={ScreenNames.EDIT_BUDGET_COMBO_SCREEN}
-                component={EditBudgetComboScreen} />
+                name={ScreenNames.EDIT_PROFILE_SCREEN}
+                component={EditProfileScreen}
+            />
             <stack.Screen
-                name={ScreenNames.CREATE_BUDGET_COMBO_SCREEN}
-                component={CreateBudgetComboScreen} />
+                name={ScreenNames.CREATE_PROFILE_SCREEN}
+                component={CreateProfileScreen}
+            />
         </stack.Navigator>
     );
 };

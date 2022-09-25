@@ -13,6 +13,6 @@ export class ScreenNames {
     public static readonly SELECT_CATEGORY_COMBO_SCREEN = 'Category Combinations';
     public static readonly SETTINGS_OVERVIEW_SCREEN = 'Settings Overview';
     public static readonly DISPLAY_SETTINGS_SCREEN = 'DisplaySettings';
-    public static readonly CREATE_BUDGET_COMBO_SCREEN = 'Create Budget Combo';
-    public static readonly EDIT_BUDGET_COMBO_SCREEN = 'Edit Budget Combo';
+    public static readonly CREATE_PROFILE_SCREEN = 'CreateProfile';
+    public static readonly EDIT_PROFILE_SCREEN = 'EditProfile';
 }
