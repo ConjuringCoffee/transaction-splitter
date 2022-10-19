@@ -4,13 +4,13 @@ import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { Appbar, Button, TextInput } from 'react-native-paper';
 import { useAppSelector } from '../../redux/hooks';
-import { selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
+import { selectProfiles } from '../../redux/features/profiles/profilesSlice';
 import { selectAccountById, selectActiveAccounts, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { TotalAmountInput } from '../../Component/TotalAmountInput';
 import { DatePickerInput } from 'react-native-paper-dates';
 import { AccountRadioSelection } from './AccountRadioSelection';
-import { PayerProfileRadioSelection } from './PayerProfileRadioSelection';
+import { PayerBudgetRadioSelection } from './PayerBudgetRadioSelection';
 
 type ScreenName = 'Split Transaction';
 
@@ -18,23 +18,26 @@ const SCREEN_TITLE = 'Transaction Splitter';
 const ICON_SETTINGS = 'cog';
 
 export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
-    const profiles = useAppSelector(selectAllProfiles);
+    const profiles = useAppSelector(selectProfiles);
 
-    const [payerProfileIndex, setPayerProfileIndex] = useState<number>(0);
+    // TODO: Support switching profiles
+    const profileUsed = profiles[0];
+
+    const [payerBudgetIndex, setPayerBudgetIndex] = useState<number>(0);
     const [payeeName, setPayeeName] = useState<string>('');
     const [totalAmount, setTotalAmount] = useState<number>(0);
     const [date, setDate] = useState<Date>(new Date());
     const [memo, setMemo] = useState<string>('[Generated]');
 
-    const payerProfile = profiles[payerProfileIndex];
-    const debtorProfile = profiles[1 - payerProfileIndex];
+    const payerBudgetInProfile = profileUsed.budgets[payerBudgetIndex];
+    const debtorBudgetInProfile = profileUsed.budgets[1 - payerBudgetIndex];
 
-    const payerBudget = useAppSelector((state) => selectBudgetById(state, payerProfile.budgetId));
+    const payerBudget = useAppSelector((state) => selectBudgetById(state, payerBudgetInProfile.budgetId));
     const [payerAccountID, setPayerAccountID] = useState<string>(payerBudget.accounts[0].id);
-    const payerTransferAccount = useAppSelector((state) => selectAccountById(state, payerProfile.budgetId, payerProfile.debtorAccountId));
+    const payerTransferAccount = useAppSelector((state) => selectAccountById(state, payerBudgetInProfile.budgetId, payerBudgetInProfile.debtorAccountId));
 
-    const activeOnBudgetAccounts = useAppSelector((state) => selectActiveAccounts(state, payerProfile.budgetId));
-    const elegibleAccounts = activeOnBudgetAccounts.filter((account) => payerProfile.elegibleAccountIds.find((id) => id === account.id));
+    const activeOnBudgetAccounts = useAppSelector((state) => selectActiveAccounts(state, payerBudgetInProfile.budgetId));
+    const elegibleAccounts = activeOnBudgetAccounts.filter((account) => payerBudgetInProfile.elegibleAccountIds.find((id) => id === account.id));
 
     const everythingSelected = totalAmount > 0;
 
@@ -66,14 +69,14 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
             {
                 basicData: {
                     payer: {
-                        budgetId: payerProfile.budgetId,
+                        budgetId: payerBudgetInProfile.budgetId,
                         accountId: payerAccountID,
-                        transferAccountId: payerProfile.debtorAccountId,
+                        transferAccountId: payerBudgetInProfile.debtorAccountId,
                         transferAccountPayeeId: payerTransferAccount.transferPayeeID,
                     },
                     debtor: {
-                        budgetId: debtorProfile.budgetId,
-                        accountId: debtorProfile.debtorAccountId,
+                        budgetId: debtorBudgetInProfile.budgetId,
+                        accountId: debtorBudgetInProfile.debtorAccountId,
                     },
                     payeeName,
                     date: toIsoDateString(date),
@@ -90,20 +93,25 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
                 totalAmount={totalAmount}
                 setTotalAmount={setTotalAmount}
             />
-            <PayerProfileRadioSelection
-                profiles={profiles}
-                payerProfileIndex={payerProfileIndex}
-                setPayerProfileIndex={setPayerProfileIndex}
+            <TextInput
+                label='Payee'
+                value={payeeName}
+                onChangeText={setPayeeName}
+            />
+            <TextInput
+                label='Memo'
+                value={memo}
+                onChangeText={setMemo}
+            />
+            <PayerBudgetRadioSelection
+                profile={profileUsed}
+                payerBudgetIndex={payerBudgetIndex}
+                setPayerBudgetIndex={setPayerBudgetIndex}
             />
             <AccountRadioSelection
                 accounts={elegibleAccounts}
                 selectedAccountId={payerAccountID}
                 setSelectedAccountId={setPayerAccountID}
-            />
-            <TextInput
-                label='Payee'
-                value={payeeName}
-                onChangeText={setPayeeName}
             />
             <DatePickerInput
                 // All locales used must be registered beforehand (see App.tsx)
@@ -116,11 +124,6 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
                     }
                 }}
                 inputMode="start"
-            />
-            <TextInput
-                label='Memo'
-                value={memo}
-                onChangeText={setMemo}
             />
             <Button
                 disabled={!everythingSelected}

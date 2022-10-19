@@ -17,12 +17,12 @@ const ICON_CATEGORY_NOT_SET = 'checkbox-blank-circle-outline';
 
 export const ChooseCategoryListItem = <T extends keyof StackParameterList>(props: Props<T>) => {
     const categories = useAppSelector((state) => selectCategories(state, props.budgetId));
-    const categoryName = props.selectedCategoryId ? categories[props.selectedCategoryId].name : 'None';
+    const categoryName = props.selectedCategoryId ? categories[props.selectedCategoryId].name : undefined;
 
     return (
         <List.Item
             title={categoryName ?? 'None'}
-            description={`Category from ${props.profileName}`}
+            description={`Category from ${props.profileName ?? 'No category selected'}`}
             left={(props) => <List.Icon {...props} icon={categoryName ? ICON_CATEGORY_SET : ICON_CATEGORY_NOT_SET} />}
             onPress={() => {
                 props.navigation.navigate(ScreenNames.CATEGORY_SCREEN, {

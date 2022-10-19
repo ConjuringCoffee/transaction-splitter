@@ -1,13 +1,24 @@
-import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, nanoid, SerializedError } from '@reduxjs/toolkit';
 import * as SecureStore from 'expo-secure-store';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
+import { isOneOf } from '../../isOneOf';
 import { RootState } from '../../store';
 
-export interface Profile {
-    name: string,
+export interface BudgetInProfile {
     budgetId: string,
+    name?: string,
     debtorAccountId: string,
     elegibleAccountIds: Array<string>
+}
+
+
+export interface Profile {
+    id: string,
+    budgets: [BudgetInProfile, BudgetInProfile]
+}
+
+export interface ProfileToCreate {
+    budgets: [BudgetInProfile, BudgetInProfile]
 }
 
 interface ProfilesState {
@@ -34,7 +45,7 @@ const initialState: ProfilesState = {
     objects: [],
 };
 
-const STORAGE_KEY = 'profiles';
+const STORAGE_KEY = 'profiles-v2';
 
 const readProfiles = async (): Promise<Profile[]> => {
     const jsonValue = await SecureStore.getItemAsync(STORAGE_KEY);
@@ -55,11 +66,37 @@ export const fetchProfiles = createAsyncThunk('profiles/fetchProfiles', async ()
     return readProfiles();
 });
 
-export const overwriteProfiles = createAsyncThunk<
-    Profile[], Profile[]
->('profiles/overwriteProfiles', async (profiles) => {
-    await saveProfiles(profiles);
-    return profiles;
+export const addProfile = createAsyncThunk<
+    Profile[], ProfileToCreate, { state: RootState }
+>('profiles/addProfile', async (profile, thunkAPI) => {
+    const newProfile: Profile = { ...profile, id: nanoid() };
+    const newProfiles = [...thunkAPI.getState().profiles.objects, newProfile];
+
+    await saveProfiles(newProfiles);
+
+    return newProfiles;
+});
+
+export const updateProfile = createAsyncThunk<
+    Profile[], { profile: Profile }, { state: RootState }
+>('profiles/updateProfile', async ({ profile }, { getState }) => {
+    const newProfiles = [...getState().profiles.objects];
+    const index = newProfiles.findIndex((c) => c.id = profile.id);
+
+    newProfiles[index] = profile;
+
+    await saveProfiles(newProfiles);
+
+    return newProfiles;
+});
+
+export const deleteProfile = createAsyncThunk<
+    Profile[], string, { state: RootState }
+>('profiles/deleteProfile', async (profileId, thunkAPI) => {
+    const newProfiles = thunkAPI.getState().profiles.objects.filter((profile) => profile.id !== profileId);
+    await saveProfiles(newProfiles);
+
+    return newProfiles;
 });
 
 export const profilesSlice = createSlice({
@@ -87,20 +124,20 @@ export const profilesSlice = createSlice({
                     error: action.error,
                 };
             })
-            .addCase(overwriteProfiles.pending, (state) => {
+            .addMatcher(isOneOf([updateProfile.pending, addProfile.pending, deleteProfile.pending]), (state) => {
                 state.saveStatus = {
                     status: LoadingStatus.LOADING,
                     error: null,
                 };
             })
-            .addCase(overwriteProfiles.fulfilled, (state, action) => {
+            .addMatcher(isOneOf([updateProfile.fulfilled, addProfile.fulfilled, deleteProfile.fulfilled]), (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.SUCCESSFUL,
                     error: null,
                 };
                 state.objects = action.payload;
             })
-            .addCase(overwriteProfiles.rejected, (state, action) => {
+            .addMatcher(isOneOf([updateProfile.rejected, addProfile.rejected, deleteProfile.rejected]), (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.ERROR,
                     error: action.error,
@@ -109,6 +146,6 @@ export const profilesSlice = createSlice({
     },
 });
 
-export const selectAllProfiles = (state: RootState) => state.profiles.objects;
+export const selectProfiles = (state: RootState) => state.profiles.objects;
 export const selectProfilesFetchStatus = (state: RootState) => state.profiles.fetchStatus;
 export const selectProfilesSaveStatus = (state: RootState) => state.profiles.saveStatus;

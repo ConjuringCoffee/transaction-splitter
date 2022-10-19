@@ -6,7 +6,7 @@ import { Appbar, List } from 'react-native-paper';
 import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, selectCategoryCombos, updateCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { View } from 'react-native';
-import { selectAllProfiles } from '../../../../redux/features/profiles/profilesSlice';
+import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../../../Helper/LoadingStatus';
 import { LoadingComponent } from '../../../../Component/LoadingComponent';
@@ -24,22 +24,25 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
     const accessToken = useAppSelector(selectAccessToken);
     const categoryCombos = useAppSelector(selectCategoryCombos);
 
-    const profiles = useAppSelector(selectAllProfiles);
+    const profiles = useAppSelector(selectProfiles);
 
-    const categoriesFirstProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profiles[0]?.budgetId));
-    const categoriesSecondProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profiles[1]?.budgetId));
+    // TODO: Allow selection of profile
+    const profileUsed = profiles[0];
+
+    const categoriesFirstProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profileUsed.budgets[0].budgetId));
+    const categoriesSecondProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profileUsed.budgets[1].budgetId));
 
     useEffect(() => {
         if (categoriesFirstProfileFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: profiles[0].budgetId }));
+            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: profileUsed.budgets[0].budgetId }));
         }
-    }, [dispatch, profiles, categoriesFirstProfileFetchStatus, accessToken]);
+    }, [dispatch, profileUsed, categoriesFirstProfileFetchStatus, accessToken]);
 
     useEffect(() => {
         if (categoriesSecondProfileFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: profiles[1].budgetId }));
+            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: profileUsed.budgets[1].budgetId }));
         }
-    }, [dispatch, profiles, categoriesSecondProfileFetchStatus, accessToken]);
+    }, [dispatch, profileUsed, categoriesSecondProfileFetchStatus, accessToken]);
 
     const everythingLoaded
         = categoriesFirstProfileFetchStatus === LoadingStatus.SUCCESSFUL

@@ -11,7 +11,7 @@ type ScreenName = 'Settings Overview';
 export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const budgetCombos = useAppSelector(selectBudgetCombos);
 
-    const navigateToBudgetComboSettings = useCallback(() => {
+    const navigateToProfileSettings = useCallback(() => {
         if (budgetCombos.length) {
             navigation.navigate(ScreenNames.EDIT_PROFILE_SCREEN);
         } else {
@@ -28,15 +28,9 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
                     navigation.navigate(ScreenNames.ACCESS_TOKEN_SCREEN);
                 }} />
             <List.Item
-                title='Profiles'
-                description='The two profiles to split the transactions to'
-                onPress={() => {
-                    navigation.navigate(ScreenNames.PROFILE_SETTINGS_SCREEN);
-                }} />
-            <List.Item
-                title='Budget Combinations'
-                description='Connect budgets of your account'
-                onPress={navigateToBudgetComboSettings} />
+                title='Profile'
+                description='Connect two budgets of your account'
+                onPress={navigateToProfileSettings} />
             <List.Item
                 title='Category Combinations'
                 description='Combine categories under a single name'

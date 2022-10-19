@@ -4,7 +4,7 @@ import { CustomScrollView } from '../../../Component/CustomScrollView';
 import { Account, Budget } from '../../../YnabApi/YnabApiWrapper';
 import { ProfileCard } from './ProfileCard';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { overwriteProfiles, selectAllProfiles } from '../../../redux/features/profiles/profilesSlice';
+import { overwriteProfiles, selectProfiles } from '../../../redux/features/profiles/profilesSlice';
 import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
 
 interface EditableProfile {
@@ -20,7 +20,7 @@ export const ProfileSettingsScreen = () => {
     const [editableProfiles, setEditableProfiles] = useState<EditableProfile[]>([]);
 
     const budgets = useAppSelector(selectBudgets);
-    const profiles = useAppSelector(selectAllProfiles);
+    const profiles = useAppSelector(selectProfiles);
 
     useLayoutEffect(() => {
         if (profiles.length === 2) {
