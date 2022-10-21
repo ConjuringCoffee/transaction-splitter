@@ -7,6 +7,7 @@ import { Appbar } from 'react-native-paper';
 import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { useAppDispatch } from '../../../../redux/hooks';
+import { addProfile, BudgetInProfile, ProfileToCreate } from '../../../../redux/features/profiles/profilesSlice';
 
 type ScreenName = 'CreateProfile';
 
@@ -21,7 +22,7 @@ export interface EditableBudgetInProfile {
 }
 
 export const CreateProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
-    // TODO: Convert these into a single tuple state
+    // TODO: Convert the two separate states into a single tuple state
     const [budgetInProfile1, setBudgetInProfile1] = useImmer<EditableBudgetInProfile>({ elegibleAccountIds: [] });
     const [budgetInProfile2, setBudgetInProfile2] = useImmer<EditableBudgetInProfile>({ elegibleAccountIds: [] });
 
@@ -32,23 +33,41 @@ export const CreateProfileScreen = ({ navigation }: MyStackScreenProps<ScreenNam
         return [budgetInProfile.budgetId, budgetInProfile.debtorAccountId, budgetInProfile.elegibleAccountIds.length >= 1].every(Boolean);
     }, []);
 
-    const isValid = useMemo(() => {
-        return isBudgetInProfileValid(budgetInProfile1) && isBudgetInProfileValid(budgetInProfile2);
-    }, [isBudgetInProfileValid, budgetInProfile1, budgetInProfile2]);
+    const isValid = useMemo(
+        () => isBudgetInProfileValid(budgetInProfile1) && isBudgetInProfileValid(budgetInProfile2),
+        [isBudgetInProfileValid, budgetInProfile1, budgetInProfile2],
+    );
+
+    const finalizeEditableBudgetInProfile = useCallback((editableBudgetInProfile: EditableBudgetInProfile): BudgetInProfile => {
+        if (editableBudgetInProfile.budgetId === undefined || editableBudgetInProfile.debtorAccountId === undefined) {
+            throw new Error('Editable budget does not contain all data to be finalized');
+        }
+
+        return {
+            budgetId: editableBudgetInProfile.budgetId,
+            name: editableBudgetInProfile.name === '' ? undefined : editableBudgetInProfile.name,
+            debtorAccountId: editableBudgetInProfile.debtorAccountId,
+            elegibleAccountIds: editableBudgetInProfile.elegibleAccountIds,
+        };
+    }, []);
+
+    const saveAndNavigate = useCallback(async (): Promise<void> => {
+        const newProfile: ProfileToCreate = {
+            budgets: [
+                finalizeEditableBudgetInProfile(budgetInProfile1),
+                finalizeEditableBudgetInProfile(budgetInProfile2),
+            ],
+        };
+        dispatch(addProfile(newProfile));
+        navigateBack();
+    }, [budgetInProfile1, budgetInProfile2, finalizeEditableBudgetInProfile, dispatch, navigateBack]);
 
     useLayoutEffect(() => {
-        // const saveAndNavigate = async (newProfile: ProfileToCreate): Promise<void> => {
-        //     dispatch(addProfile(newProfile));
-        //     navigateBack();
-        // };
-
         const addition = <Appbar.Action
             key='add'
             icon={ICON_SAVE}
             disabled={!isValid}
-            onPress={() => {
-                // FIXME
-            }} />;
+            onPress={saveAndNavigate} />;
 
         navigation.setOptions({
             header: () => (
@@ -59,7 +78,7 @@ export const CreateProfileScreen = ({ navigation }: MyStackScreenProps<ScreenNam
                 />
             ),
         });
-    }, [navigation, navigateBack, dispatch, isValid]);
+    }, [navigation, isValid, saveAndNavigate]);
 
     return (
         <CustomScrollView>
