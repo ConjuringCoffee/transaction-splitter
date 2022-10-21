@@ -69,7 +69,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
 
         const additions = [
             <Appbar.Action
-                key='add'
+                key='save'
                 icon={ICON_SAVE}
                 disabled={!readyToSave}
                 onPress={() => {
