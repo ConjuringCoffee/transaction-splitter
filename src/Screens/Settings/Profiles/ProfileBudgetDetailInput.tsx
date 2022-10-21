@@ -49,7 +49,7 @@ export const ProfileBudgetDetailInput = (props: Props) => {
             </HelperText>
             <List.Subheader>Debtor account</List.Subheader>
             <RadioButton.Group
-                value={props.debtorAccountId!} // Always assigned when the budget is selected
+                value={props.debtorAccountId}
                 onValueChange={props.setDebtorAccountId}
             >
                 {activeAccounts.map(renderRadioButton)}
