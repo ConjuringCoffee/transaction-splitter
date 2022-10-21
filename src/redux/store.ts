@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { accessTokenSlice } from './features/accessToken/accessTokenSlice';
-import { budgetCombosSlice } from './features/budgetCombos/budgetCombos';
 import { categoryCombosSlice } from './features/categoryCombos/categoryCombosSlice';
 import { displaySettingsSlice } from './features/displaySettings/displaySettingsSlice';
 import { profilesSlice } from './features/profiles/profilesSlice';
@@ -13,7 +12,6 @@ export const Store = configureStore({
         ynab: ynabSlice.reducer,
         accessToken: accessTokenSlice.reducer,
         displaySettings: displaySettingsSlice.reducer,
-        budgetCombos: budgetCombosSlice.reducer,
     },
 });
 

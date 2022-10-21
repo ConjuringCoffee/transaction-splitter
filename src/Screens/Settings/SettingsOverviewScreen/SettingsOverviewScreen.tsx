@@ -3,21 +3,22 @@ import { ScreenNames } from '../../../Helper/Navigation/ScreenNames';
 import { List } from 'react-native-paper';
 import { View } from 'react-native';
 import { useAppSelector } from '../../../redux/hooks';
-import { selectBudgetCombos } from '../../../redux/features/budgetCombos/budgetCombos';
 import { useCallback } from 'react';
+import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
 
 type ScreenName = 'Settings Overview';
 
 export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
-    const budgetCombos = useAppSelector(selectBudgetCombos);
+    const profiles = useAppSelector(selectProfiles);
 
     const navigateToProfileSettings = useCallback(() => {
-        if (budgetCombos.length) {
-            navigation.navigate(ScreenNames.EDIT_PROFILE_SCREEN);
+        if (profiles.length) {
+            // TODO: Support more than one profile
+            navigation.navigate(ScreenNames.EDIT_PROFILE_SCREEN, { profileId: profiles[0].id });
         } else {
             navigation.navigate(ScreenNames.CREATE_PROFILE_SCREEN);
         }
-    }, [navigation, budgetCombos]);
+    }, [navigation, profiles]);
 
     return (
         <View>

@@ -147,5 +147,14 @@ export const profilesSlice = createSlice({
 });
 
 export const selectProfiles = (state: RootState) => state.profiles.objects;
+export const selectProfileSafely = (state: RootState, id: string) => {
+    const profile = state.profiles.objects.find((profile) => profile.id === id);
+
+    if (profile === undefined) {
+        throw new Error(`Profile for ID ${id} was not found`);
+    }
+
+    return profile;
+};
 export const selectProfilesFetchStatus = (state: RootState) => state.profiles.fetchStatus;
 export const selectProfilesSaveStatus = (state: RootState) => state.profiles.saveStatus;

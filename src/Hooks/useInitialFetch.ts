@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { LoadingStatus } from '../Helper/LoadingStatus';
 import { selectAccessTokenFetchStatus, selectAccessToken, fetchAccessToken } from '../redux/features/accessToken/accessTokenSlice';
-import { fetchBudgetCombos, selectBudgetCombosFetchStatus } from '../redux/features/budgetCombos/budgetCombos';
 import { selectCategoryCombosFetchStatus, fetchCategoryCombos } from '../redux/features/categoryCombos/categoryCombosSlice';
 import { selectDisplaySettingsFetchStatus, fetchDisplaySettings } from '../redux/features/displaySettings/displaySettingsSlice';
 import { selectProfilesFetchStatus, fetchProfiles } from '../redux/features/profiles/profilesSlice';
@@ -16,7 +15,6 @@ export const useInitialFetch = (): [boolean] => {
     const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
     const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
     const categoryCombosFetchStatus = useAppSelector(selectCategoryCombosFetchStatus);
-    const budgetCombosFetchStatus = useAppSelector(selectBudgetCombosFetchStatus);
 
     const accessToken = useAppSelector(selectAccessToken);
 
@@ -39,12 +37,6 @@ export const useInitialFetch = (): [boolean] => {
     }, [profilesFetchStatus, dispatch]);
 
     useEffect(() => {
-        if (budgetCombosFetchStatus.status === LoadingStatus.IDLE) {
-            dispatch(fetchBudgetCombos());
-        }
-    }, [budgetCombosFetchStatus, dispatch]);
-
-    useEffect(() => {
         if (budgetsFetchStatus.status === LoadingStatus.IDLE && accessTokenFetchStatus.status === LoadingStatus.SUCCESSFUL) {
             dispatch(fetchBudgets(accessToken));
         }
@@ -61,9 +53,8 @@ export const useInitialFetch = (): [boolean] => {
             && displaySettingsFetchStatus.status === LoadingStatus.SUCCESSFUL
             && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
             && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL
-            && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL
-            && budgetCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
-    }, [accessTokenFetchStatus, displaySettingsFetchStatus, profilesFetchStatus, budgetsFetchStatus, categoryCombosFetchStatus, budgetCombosFetchStatus]);
+            && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
+    }, [accessTokenFetchStatus, displaySettingsFetchStatus, profilesFetchStatus, budgetsFetchStatus, categoryCombosFetchStatus]);
 
     return [everythingLoaded];
 };

@@ -1,7 +1,7 @@
 import React, { useCallback, useLayoutEffect, useMemo } from 'react';
 import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
 import { useImmer } from 'use-immer';
-import { ProfileBudgetInputSection } from '../ProfileBudgetInputSection';
+import { BudgetInProfileInputSection } from '../BudgetInProfileInputSection';
 import { CustomScrollView } from '../../../../Component/CustomScrollView';
 import { Appbar } from 'react-native-paper';
 import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
@@ -30,7 +30,11 @@ export const CreateProfileScreen = ({ navigation }: MyStackScreenProps<ScreenNam
     const [navigateBack] = useNavigateBack(navigation);
 
     const isBudgetInProfileValid = useCallback((budgetInProfile: EditableBudgetInProfile): boolean => {
-        return [budgetInProfile.budgetId, budgetInProfile.debtorAccountId, budgetInProfile.elegibleAccountIds.length >= 1].every(Boolean);
+        return [
+            budgetInProfile.budgetId,
+            budgetInProfile.debtorAccountId,
+            budgetInProfile.elegibleAccountIds.length >= 1,
+        ].every(Boolean);
     }, []);
 
     const isValid = useMemo(
@@ -64,7 +68,7 @@ export const CreateProfileScreen = ({ navigation }: MyStackScreenProps<ScreenNam
 
     useLayoutEffect(() => {
         const addition = <Appbar.Action
-            key='add'
+            key='save'
             icon={ICON_SAVE}
             disabled={!isValid}
             onPress={saveAndNavigate} />;
@@ -82,11 +86,11 @@ export const CreateProfileScreen = ({ navigation }: MyStackScreenProps<ScreenNam
 
     return (
         <CustomScrollView>
-            <ProfileBudgetInputSection
+            <BudgetInProfileInputSection
                 editableBudgetInProfile={budgetInProfile1}
                 setEditableBudgetInProfile={setBudgetInProfile1}
             />
-            <ProfileBudgetInputSection
+            <BudgetInProfileInputSection
                 editableBudgetInProfile={budgetInProfile2}
                 setEditableBudgetInProfile={setBudgetInProfile2}
             />

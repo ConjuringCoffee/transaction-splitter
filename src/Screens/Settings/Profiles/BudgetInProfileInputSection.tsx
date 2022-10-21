@@ -13,7 +13,7 @@ interface Props {
     setEditableBudgetInProfile: Updater<EditableBudgetInProfile>,
 }
 
-export const ProfileBudgetInputSection = ({ editableBudgetInProfile, setEditableBudgetInProfile }: Props) => {
+export const BudgetInProfileInputSection = ({ editableBudgetInProfile, setEditableBudgetInProfile }: Props) => {
     const budgets = useAppSelector(selectBudgets);
 
     const findBudget = useCallback(
@@ -70,6 +70,7 @@ export const ProfileBudgetInputSection = ({ editableBudgetInProfile, setEditable
             {budget
                 ? <ProfileBudgetDetailInput
                     budgetId={budget.id}
+                    displayName={editableBudgetInProfile.name}
                     setDisplayName={setDisplayName}
                     // Non-null assertion OK because it is immediately initialized when a budget is selected
                     debtorAccountId={editableBudgetInProfile.debtorAccountId!}
