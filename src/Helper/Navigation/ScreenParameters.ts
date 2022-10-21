@@ -49,7 +49,6 @@ type StackParameterList = {
         onSelectCalculation: (calculation: string) => void
     }
     [ScreenNames.ACCESS_TOKEN_SCREEN]: undefined;
-    [ScreenNames.PROFILE_SETTINGS_SCREEN]: undefined;
     [ScreenNames.CATEGORY_COMBO_SETTINGS_SCREEN]: undefined;
     [ScreenNames.EDIT_CATEGORY_COMBO_SCREEN]: {
         categoryCombo: CategoryCombo,
@@ -60,6 +59,10 @@ type StackParameterList = {
         createCategoryCombo: (categoryComboToCreate: CategoryComboToCreate) => Promise<void>,
     }
     [ScreenNames.DISPLAY_SETTINGS_SCREEN]: undefined;
+    [ScreenNames.CREATE_PROFILE_SCREEN]: undefined;
+    [ScreenNames.EDIT_PROFILE_SCREEN]: {
+        profileId: string,
+    };
 }
 
 export type MyStackScreenProps<K extends keyof StackParameterList> = StackScreenProps<StackParameterList, K>;

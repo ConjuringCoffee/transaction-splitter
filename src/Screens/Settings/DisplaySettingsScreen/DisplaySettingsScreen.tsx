@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { List } from 'react-native-paper';
-import { selectThemeTypeSetting } from '../../redux/features/displaySettings/displaySettingsSlice';
-import { useAppSelector } from '../../redux/hooks';
+import { selectThemeTypeSetting } from '../../../redux/features/displaySettings/displaySettingsSlice';
+import { useAppSelector } from '../../../redux/hooks';
 import { ThemeModalPortal } from './ThemeModalPortal';
 
 export const DisplaySettingsScreen = () => {

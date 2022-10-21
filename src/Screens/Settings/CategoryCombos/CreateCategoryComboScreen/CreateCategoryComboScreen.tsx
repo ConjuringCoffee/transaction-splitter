@@ -1,12 +1,12 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { Appbar } from 'react-native-paper';
-import { CategoryComboInputView } from '../../Component/CategoryComboInputView';
-import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
-import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
-import { useNavigateBack } from '../../Hooks/useNavigateBack';
-import { CategoryComboToCreate } from '../../redux/features/categoryCombos/categoryCombosSlice';
-import { selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
-import { useAppSelector } from '../../redux/hooks';
+import { CategoryComboInputView } from '../../../../Component/CategoryComboInputView';
+import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
+import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
+import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
+import { CategoryComboToCreate } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
+import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
+import { useAppSelector } from '../../../../redux/hooks';
 
 type ScreenName = 'Create Category Combo';
 
@@ -21,7 +21,10 @@ export const CreateCategoryComboScreen = ({ navigation, route }: MyStackScreenPr
     } = route.params;
 
     const [navigateBack] = useNavigateBack(navigation);
-    const profiles = useAppSelector(selectAllProfiles);
+    const profiles = useAppSelector(selectProfiles);
+
+    // TODO: Allow selection of profile
+    const profileUsed = profiles[0];
 
     const [name, setName] = useState<string>('');
     const [categoryIdFirstProfile, setCategoryIdFirstProfile] = useState<string | undefined>(undefined);
@@ -47,11 +50,11 @@ export const CreateCategoryComboScreen = ({ navigation, route }: MyStackScreenPr
                     name: name,
                     categories: [
                         {
-                            budgetId: profiles[0].budgetId,
+                            budgetId: profileUsed.budgets[0].budgetId,
                             id: categoryIdFirstProfile,
                         },
                         {
-                            budgetId: profiles[1].budgetId,
+                            budgetId: profileUsed.budgets[1].budgetId,
                             id: categoryIdSecondProfile,
                         }],
                 });
@@ -74,7 +77,7 @@ export const CreateCategoryComboScreen = ({ navigation, route }: MyStackScreenPr
         name,
         categoryIdFirstProfile,
         categoryIdSecondProfile,
-        profiles,
+        profileUsed,
         createCategoryCombo,
         navigateBack,
     ]);

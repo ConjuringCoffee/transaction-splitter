@@ -1,13 +1,13 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { Appbar, Menu } from 'react-native-paper';
-import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
-import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
-import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
-import { useAppSelector } from '../../redux/hooks';
-import { selectAllProfiles } from '../../redux/features/profiles/profilesSlice';
-import { useNavigateBack } from '../../Hooks/useNavigateBack';
-import { CategoryComboInputView } from '../../Component/CategoryComboInputView';
-import { AppBarMoreMenu } from '../../Component/AppBarMoreMenu';
+import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
+import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
+import { CategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
+import { useAppSelector } from '../../../../redux/hooks';
+import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
+import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
+import { CategoryComboInputView } from '../../../../Component/CategoryComboInputView';
+import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
 
 type ScreenName = 'Edit Category Combo';
 
@@ -23,7 +23,10 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
         deleteCategoryCombo,
     } = route.params;
 
-    const profiles = useAppSelector(selectAllProfiles);
+    const profiles = useAppSelector(selectProfiles);
+
+    // TODO: Allow selection of profile
+    const profileUsed = profiles[0];
 
     const [name, setName] = useState<string>(categoryCombo?.name ?? '');
     const [categoryIdFirstProfile, setCategoryIdFirstProfile] = useState<string | undefined>(categoryCombo?.categories[0].id);
@@ -66,7 +69,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
 
         const additions = [
             <Appbar.Action
-                key='add'
+                key='save'
                 icon={ICON_SAVE}
                 disabled={!readyToSave}
                 onPress={() => {
@@ -79,11 +82,11 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
                         name: name,
                         categories: [
                             {
-                                budgetId: profiles[0].budgetId,
+                                budgetId: profileUsed.budgets[0].budgetId,
                                 id: categoryIdFirstProfile,
                             },
                             {
-                                budgetId: profiles[1].budgetId,
+                                budgetId: profileUsed.budgets[1].budgetId,
                                 id: categoryIdSecondProfile,
                             }],
                     });
@@ -107,7 +110,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
         name,
         categoryIdFirstProfile,
         categoryIdSecondProfile,
-        profiles,
+        profileUsed,
         deleteCategoryCombo,
         moreMenu,
         navigateBack,

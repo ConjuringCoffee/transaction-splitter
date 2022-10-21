@@ -1,8 +1,8 @@
 import { Card, CheckBox, Input } from '@ui-kitten/components';
 import React from 'react';
-import { Account, Budget } from '../../YnabApi/YnabApiWrapper';
-import { AccountSelect } from '../../Component/AccountSelect';
-import { BudgetSelect } from '../../Component/BudgetSelect';
+import { Account, Budget } from '../../../YnabApi/YnabApiWrapper';
+import { AccountSelect } from '../../../Component/AccountSelect';
+import { BudgetSelect } from '../../../Component/BudgetSelect';
 
 interface Props {
     budgets: Array<Budget>,

@@ -12,7 +12,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { Store } from './src/redux/store';
 import * as SplashScreen from 'expo-splash-screen';
 import { de, registerTranslation } from 'react-native-paper-dates';
-import { useOverallFetch } from './src/Hooks/useOverallFetch';
+import { useInitialFetch } from './src/Hooks/useInitialFetch';
 import { useTheme } from './src/Hooks/useTheme';
 
 LogBox.ignoreLogs([
@@ -28,7 +28,7 @@ registerTranslation('de', de);
 SplashScreen.preventAutoHideAsync();
 
 const ReduxProvidedApp = () => {
-    const [everythingLoaded] = useOverallFetch();
+    const [everythingLoaded] = useInitialFetch();
     const themes = useTheme();
     const [appIsReady, setAppIsReady] = useState(false);
 

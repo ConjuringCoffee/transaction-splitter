@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { HelperText, TextInput } from 'react-native-paper';
-import { LoadingStatus } from '../../Helper/LoadingStatus';
+import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { ConnectionStatus } from './AccessTokenScreen';
 
 interface Props {

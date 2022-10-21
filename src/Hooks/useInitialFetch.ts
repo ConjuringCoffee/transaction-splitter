@@ -1,20 +1,20 @@
 import { useEffect, useMemo } from 'react';
 import { LoadingStatus } from '../Helper/LoadingStatus';
 import { selectAccessTokenFetchStatus, selectAccessToken, fetchAccessToken } from '../redux/features/accessToken/accessTokenSlice';
-import { selectCategoryComboFetchStatus, fetchCategoryCombos } from '../redux/features/categoryCombos/categoryCombosSlice';
+import { selectCategoryCombosFetchStatus, fetchCategoryCombos } from '../redux/features/categoryCombos/categoryCombosSlice';
 import { selectDisplaySettingsFetchStatus, fetchDisplaySettings } from '../redux/features/displaySettings/displaySettingsSlice';
 import { selectProfilesFetchStatus, fetchProfiles } from '../redux/features/profiles/profilesSlice';
 import { selectBudgetsFetchStatus, fetchBudgets } from '../redux/features/ynab/ynabSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
-export const useOverallFetch = (): [boolean] => {
+export const useInitialFetch = (): [boolean] => {
     const dispatch = useAppDispatch();
 
     const accessTokenFetchStatus = useAppSelector(selectAccessTokenFetchStatus);
     const displaySettingsFetchStatus = useAppSelector(selectDisplaySettingsFetchStatus);
     const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
     const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
-    const categoryCombosFetchStatus = useAppSelector(selectCategoryComboFetchStatus);
+    const categoryCombosFetchStatus = useAppSelector(selectCategoryCombosFetchStatus);
 
     const accessToken = useAppSelector(selectAccessToken);
 
