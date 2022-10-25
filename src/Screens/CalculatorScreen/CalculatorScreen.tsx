@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Layout, Text } from '@ui-kitten/components';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -25,38 +25,44 @@ const ICON_HISTORY = 'history';
 
 export const CalculatorScreen = ({ route, navigation }: Props) => {
     const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
-    const [currentCalculation, setCurrentCalculation] = useState<string>('');
+
+    const routePreviousCalculations = route.params.previousCalculations;
+    const routeSetPreviousCalculations = route.params.setPreviousCalculations;
+
+    const { currentAmount } = route.params;
+
+    const defaultCalculation: string = useMemo(
+        () => {
+            if (routePreviousCalculations.length === 0) {
+                return convertAmountToText(currentAmount, numberFormatSettings);
+            }
+
+            const lastCalculation = routePreviousCalculations[routePreviousCalculations.length - 1];
+            const lastResult = new Calculation(lastCalculation, numberFormatSettings).getResult();
+
+            if (lastResult === currentAmount) {
+                return lastCalculation;
+            }
+
+            return '';
+        },
+        [currentAmount, numberFormatSettings, routePreviousCalculations],
+    );
+
+    const [currentCalculation, setCurrentCalculation] = useState<string>(defaultCalculation);
 
     // TODO: Do not duplicate the state from the previous screen
     const [previousCalculations, setPreviousCalculations] = useState<Array<string>>([]);
 
-    const { currentAmount } = route.params;
     const { setAmount } = route.params;
-    const routePreviousCalculations = route.params.previousCalculations;
-
-    useEffect(() => {
-        if (previousCalculations.length === 0) {
-            setCurrentCalculation(convertAmountToText(currentAmount, numberFormatSettings));
-            return;
-        }
-
-        const lastCalculation = previousCalculations[previousCalculations.length - 1];
-        const lastResult = new Calculation(lastCalculation, numberFormatSettings).getResult();
-
-        if (lastResult === currentAmount) {
-            setCurrentCalculation(lastCalculation);
-        } else {
-            setCurrentCalculation(convertAmountToText(currentAmount, numberFormatSettings));
-        }
-    }, [numberFormatSettings, previousCalculations, currentAmount, setCurrentCalculation]);
 
     useEffect(() => {
         setPreviousCalculations(routePreviousCalculations);
     }, [routePreviousCalculations]);
 
     useEffect(() => {
-        route.params.setPreviousCalculations(previousCalculations);
-    }, [previousCalculations, route.params]);
+        routeSetPreviousCalculations(previousCalculations);
+    }, [previousCalculations, routeSetPreviousCalculations]);
 
     const addPreviousCalculation = useCallback((calculation: string) => {
         const calculations = [...previousCalculations, calculation];
@@ -105,11 +111,13 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         newCalculation.addDigit(digit);
         setCurrentCalculation(newCalculation.getCalculationString());
     };
+
     const onDecimalSeparatorPress = (): void => {
         const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
         newCalculation.addDecimalSeparator();
         setCurrentCalculation(newCalculation.getCalculationString());
     };
+
     const onOperatorAddPress = (): void => {
         addOperatorToCurrentCalculation('+');
     };
@@ -134,7 +142,6 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
 
     const onCalculatePress = (): void => {
         const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
-
         setCurrentCalculation(convertAmountToText(currentResult, numberFormatSettings));
         addPreviousCalculation(currentCalculation);
     };
@@ -151,8 +158,13 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         navigation.goBack();
     };
 
-    const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
-    const resultText = convertAmountToText(currentResult, numberFormatSettings);
+    const resultText: string = useMemo(
+        () => {
+            const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
+            return convertAmountToText(currentResult, numberFormatSettings);
+        },
+        [currentCalculation, numberFormatSettings],
+    );
 
     return (
         <>
