@@ -12,7 +12,7 @@ type ScreenName = 'Create Category Combo';
 
 const ICON_SAVE = 'content-save';
 
-const SCREEN_TITLE = 'Add Category Combination';
+const SCREEN_TITLE = 'Add Category Combo';
 
 export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();

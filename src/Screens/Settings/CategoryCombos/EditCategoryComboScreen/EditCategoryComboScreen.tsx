@@ -11,7 +11,7 @@ import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
 
 type ScreenName = 'Edit Category Combo';
 
-const SCREEN_TITLE = 'Edit Category Combination';
+const SCREEN_TITLE = 'Edit Category Combo';
 
 const ICON_SAVE = 'content-save';
 
