@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { convertAmountFromText } from '../Helper/AmountHelper';
@@ -10,19 +10,22 @@ interface Props {
     setTotalAmount: (amount: number) => void,
 }
 
-export const TotalAmountInput = (props: Props) => {
+export const TotalAmountInput = ({ totalAmount, setTotalAmount }: Props) => {
     const [text, setText] = useState<string>('');
     const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
 
-    const onChangeText = (text: string): void => {
-        setText(text);
+    const onChangeText = useCallback(
+        (text: string): void => {
+            setText(text);
 
-        const number = convertAmountFromText(text, numberFormatSettings);
+            const number = convertAmountFromText(text, numberFormatSettings);
 
-        if (props.totalAmount !== number) {
-            props.setTotalAmount(number);
-        }
-    };
+            if (totalAmount !== number) {
+                setTotalAmount(number);
+            }
+        },
+        [numberFormatSettings, totalAmount, setTotalAmount],
+    );
 
     return (
         <TextInput

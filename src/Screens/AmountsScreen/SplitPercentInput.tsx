@@ -1,6 +1,5 @@
-import { Input } from '@ui-kitten/components';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { TextInput } from 'react-native-paper';
 
 interface Props {
     payerCategoryChosen: boolean,
@@ -17,18 +16,9 @@ export const SplitPercentInput = (props: Props) => {
     const value = String(props.splitPercentToPayer || '');
 
     return (
-        <Input
-            style={styles.split}
+        <TextInput
             label='Split % to payer'
             keyboardType={'numeric'}
             value={value}
             onChangeText={(text) => props.setSplitPercentToPayer(Number(text))} />);
 };
-
-const styles = StyleSheet.create({
-    split: {
-        flex: 1,
-        margin: 5,
-        width: '30%',
-    },
-});

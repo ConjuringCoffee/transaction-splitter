@@ -1,20 +1,20 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, Card, Layout, Text } from '@ui-kitten/components';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Keyboard } from 'react-native';
+import { Keyboard, StyleSheet, View } from 'react-native';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { LoadingComponent } from '../../Component/LoadingComponent';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { AmountEntry, buildSaveTransactions } from '../../YnabApi/BuildSaveTransactions';
-import { AmountCard } from './AmountCard';
+import { AmountView } from './AmountView';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
+import { Button, Divider, Text } from 'react-native-paper';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Amounts'>;
@@ -35,6 +35,7 @@ export const AmountsScreen = (props: Props) => {
     const payerBudgetId = basicData.payer.budgetId;
     const debtorBudgetId = basicData.debtor.budgetId;
 
+    // TODO: Load these earlier
     const payerCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, payerBudgetId));
     const debtorCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, debtorBudgetId));
 
@@ -129,69 +130,90 @@ export const AmountsScreen = (props: Props) => {
     return (
         <CustomScrollView>
             {categoriesAreLoaded
-                ? <Layout>
+                ? <View style={styles.view}>
                     {amountEntries.map((amountEntry, index) => {
-                        return <AmountCard
-                            key={index}
-                            index={index}
-                            amount={amountEntry.amount}
-                            payerBudgetId={basicData.payer.budgetId}
-                            debtorBudgetId={basicData.debtor.budgetId}
-                            setAmount={(amount) => setAmount(index, amount)}
-                            setMemo={(memo) => setMemo(index, memo)}
-                            payerCategoryId={amountEntry.payerCategoryId}
-                            setPayerCategoryId={(categoryId) => setPayerCategoryId(index, categoryId)}
-                            debtorCategoryId={amountEntry.debtorCategoryId}
-                            setDebtorCategoryId={(categoryId) => setDebtorCategoryId(index, categoryId)}
-                            splitPercentToPayer={amountEntry.splitPercentToPayer}
-                            setSplitPercentToPayer={setSplitPercentToPayer}
-                            onRemovePress={() => removeAmountEntry(index)}
-                            navigation={props.navigation} />;
+                        return (
+                            <>
+                                <AmountView
+                                    key={index}
+                                    index={index}
+                                    amount={amountEntry.amount}
+                                    payerBudgetId={basicData.payer.budgetId}
+                                    debtorBudgetId={basicData.debtor.budgetId}
+                                    setAmount={(amount) => setAmount(index, amount)}
+                                    setMemo={(memo) => setMemo(index, memo)}
+                                    payerCategoryId={amountEntry.payerCategoryId}
+                                    setPayerCategoryId={(categoryId) => setPayerCategoryId(index, categoryId)}
+                                    debtorCategoryId={amountEntry.debtorCategoryId}
+                                    setDebtorCategoryId={(categoryId) => setDebtorCategoryId(index, categoryId)}
+                                    splitPercentToPayer={amountEntry.splitPercentToPayer}
+                                    setSplitPercentToPayer={setSplitPercentToPayer}
+                                    onRemovePress={() => removeAmountEntry(index)}
+                                    navigation={props.navigation} />
+                                <Divider />
+                            </>
+                        );
                     })}
-                    <Card>
-                        <Button
-                            disabled={addingDisabled}
-                            onPress={() => {
-                                addAmountEntry();
-                                Keyboard.dismiss();
-                            }}>
-                            Add
-                        </Button>
-                        <Button
-                            disabled={addingDisabled}
-                            onPress={() => {
-                                addAmountEntry(remainingAmount);
-                                Keyboard.dismiss();
-                            }}>
-                            Add remaining
-                        </Button>
-                    </Card>
 
-                    <Card>
-                        <Text>
-                            {`Remaining amount: ${convertAmountToText(remainingAmount, numberFormatSettings)}€`}
-                        </Text>
+                    <Button
+                        disabled={addingDisabled}
+                        mode='contained'
+                        style={styles.button}
+                        onPress={() => {
+                            addAmountEntry();
+                            Keyboard.dismiss();
+                        }}>
+                        Add
+                    </Button>
+                    <Button
+                        disabled={addingDisabled}
+                        mode='contained'
+                        style={styles.button}
+                        onPress={() => {
+                            addAmountEntry(remainingAmount);
+                            Keyboard.dismiss();
+                        }}>
+                        Add remaining
+                    </Button>
 
-                        <Button
-                            disabled={!okayToContinue}
-                            onPress={() => {
-                                const saveTransactions = buildSaveTransactions(amountEntries, basicData);
+                    <Divider />
 
-                                props.navigation.navigate(
-                                    ScreenNames.SAVE_SCREEN,
-                                    {
-                                        basicData: basicData,
-                                        payerSaveTransaction: saveTransactions.payer,
-                                        debtorSaveTransaction: saveTransactions.debtor,
-                                    },
-                                );
-                            }}>
-                            Continue
-                        </Button>
-                    </Card>
-                </Layout>
+                    <Text>
+                        {`Remaining amount: ${convertAmountToText(remainingAmount, numberFormatSettings)}€`}
+                    </Text>
+
+                    <Button
+                        disabled={!okayToContinue}
+                        mode='contained'
+                        style={styles.button}
+                        onPress={() => {
+                            const saveTransactions = buildSaveTransactions(amountEntries, basicData);
+
+                            props.navigation.navigate(
+                                ScreenNames.SAVE_SCREEN,
+                                {
+                                    basicData: basicData,
+                                    payerSaveTransaction: saveTransactions.payer,
+                                    debtorSaveTransaction: saveTransactions.debtor,
+                                },
+                            );
+                        }}
+                    >
+                        Continue
+                    </Button>
+                </View>
                 : <LoadingComponent />}
         </CustomScrollView>);
 };
+
+const styles = StyleSheet.create({
+    view: {
+        marginHorizontal: 10,
+    },
+    button: {
+        marginVertical: 5,
+    },
+});
+
 
 export type { MyNavigationProp as Navigation };
