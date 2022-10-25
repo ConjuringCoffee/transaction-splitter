@@ -8,7 +8,6 @@ import { StyleSheet } from 'react-native';
 import { Calculation } from '../../Helper/Calculation';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import { LoadingComponent } from '../../Component/LoadingComponent';
 import { useAppSelector } from '../../redux/hooks';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
@@ -36,9 +35,7 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     const routePreviousCalculations = route.params.previousCalculations;
 
     useEffect(() => {
-        if (!numberFormatSettings) {
-            return;
-        } else if (previousCalculations.length === 0) {
+        if (previousCalculations.length === 0) {
             setCurrentCalculation(convertAmountToText(currentAmount, numberFormatSettings));
             return;
         }
@@ -104,19 +101,11 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     }, [navigation, navigationBar]);
 
     const onDigitPress = (digit: number): void => {
-        if (!numberFormatSettings) {
-            throw new Error('Should be impossible to get here');
-        }
-
         const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
         newCalculation.addDigit(digit);
         setCurrentCalculation(newCalculation.getCalculationString());
     };
     const onDecimalSeparatorPress = (): void => {
-        if (!numberFormatSettings) {
-            throw new Error('Should be impossible to get here');
-        }
-
         const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
         newCalculation.addDecimalSeparator();
         setCurrentCalculation(newCalculation.getCalculationString());
@@ -126,10 +115,6 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     };
 
     const addOperatorToCurrentCalculation = (operator: string): void => {
-        if (!numberFormatSettings) {
-            throw new Error('Should be impossible to get here');
-        }
-
         const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
         newCalculation.addOperator(operator);
         setCurrentCalculation(newCalculation.getCalculationString());
@@ -148,10 +133,6 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     };
 
     const onCalculatePress = (): void => {
-        if (!numberFormatSettings) {
-            throw new Error('Should be impossible to get here');
-        }
-
         const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
 
         setCurrentCalculation(convertAmountToText(currentResult, numberFormatSettings));
@@ -159,10 +140,6 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     };
 
     const onConfirmPress = (): void => {
-        if (!numberFormatSettings) {
-            throw new Error('Should be impossible to get here');
-        }
-
         const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
 
         setAmount(currentResult);
@@ -174,37 +151,29 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         navigation.goBack();
     };
 
-    let resultText = '';
-
-    if (numberFormatSettings) {
-        const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
-        resultText = convertAmountToText(currentResult, numberFormatSettings);
-    }
+    const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
+    const resultText = convertAmountToText(currentResult, numberFormatSettings);
 
     return (
         <>
-            {numberFormatSettings
-                ? <>
-                    <Layout>
-                        <Text category='h1' style={styles.text}>
-                            {currentCalculation}
-                        </Text>
-                        <Text category='h4' style={styles.text}>
-                            {resultText}
-                        </Text>
-                    </Layout>
-                    <CalculatorKeyboard
-                        onDigitPress={onDigitPress}
-                        onDecimalSeparatorPress={onDecimalSeparatorPress}
-                        onOperatorAddPress={onOperatorAddPress}
-                        onOperatorSubtractPress={onOperatorSubtractPress}
-                        onBackPress={onBackPress}
-                        onClearPress={onClearPress}
-                        onCalculatePress={onCalculatePress}
-                        onConfirmPress={onConfirmPress}
-                        onCancelPress={onCancelPress} />
-                </>
-                : <LoadingComponent />}
+            <Layout>
+                <Text category='h1' style={styles.text}>
+                    {currentCalculation}
+                </Text>
+                <Text category='h4' style={styles.text}>
+                    {resultText}
+                </Text>
+            </Layout>
+            <CalculatorKeyboard
+                onDigitPress={onDigitPress}
+                onDecimalSeparatorPress={onDecimalSeparatorPress}
+                onOperatorAddPress={onOperatorAddPress}
+                onOperatorSubtractPress={onOperatorSubtractPress}
+                onBackPress={onBackPress}
+                onClearPress={onClearPress}
+                onCalculatePress={onCalculatePress}
+                onConfirmPress={onConfirmPress}
+                onCancelPress={onCancelPress} />
         </>
     );
 };
