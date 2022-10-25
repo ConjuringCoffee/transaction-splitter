@@ -26,21 +26,26 @@ export const CategoryComboInputView = <T extends keyof StackParameterList>(props
                 value={props.name}
                 onChangeText={props.setName}
                 style={styles.input}
-                label='Category Combination Name' />
+                label='Category Combination Name'
+            />
             <List.Section>
-                <List.Subheader>Categories</List.Subheader>
+                <List.Subheader>
+                    Categories
+                </List.Subheader>
                 <ChooseCategoryListItem
-                    profileName={profileToUse.budgets[0].name ?? ''} // TODO: Get name from budget instead
                     budgetId={profileToUse.budgets[0].budgetId}
+                    budgetDisplayName={profileToUse.budgets[0].name}
                     navigation={props.navigation}
                     selectedCategoryId={props.categoryIdFirstProfile}
-                    onCategorySelect={props.setCategoryIdFirstProfile} />
+                    onCategorySelect={props.setCategoryIdFirstProfile}
+                />
                 <ChooseCategoryListItem
-                    profileName={profileToUse.budgets[1].name ?? ''} // TODO: Get name from budget instead
                     budgetId={profileToUse.budgets[1].budgetId}
+                    budgetDisplayName={profileToUse.budgets[1].name}
                     navigation={props.navigation}
                     selectedCategoryId={props.categoryIdSecondProfile}
-                    onCategorySelect={props.setCategoryIdSecondProfile} />
+                    onCategorySelect={props.setCategoryIdSecondProfile}
+                />
             </List.Section>
         </View>
     );
