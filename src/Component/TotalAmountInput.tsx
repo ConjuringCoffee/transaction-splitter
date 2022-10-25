@@ -1,45 +1,39 @@
-import React, { useCallback, useState } from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { convertAmountFromText } from '../Helper/AmountHelper';
-import { selectNumberFormatSettings } from '../redux/features/displaySettings/displaySettingsSlice';
-import { useAppSelector } from '../redux/hooks';
+import { useAmountConversion } from '../Hooks/useAmountConversion';
 
 interface Props {
-    totalAmount: number,
-    setTotalAmount: (amount: number) => void,
+    value: string,
+    setValue: (newValue: string) => void,
 }
 
-export const TotalAmountInput = ({ totalAmount, setTotalAmount }: Props) => {
-    const [text, setText] = useState<string>('');
-    const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
+export const TotalAmountInput = ({ value, setValue }: Props) => {
+    const [convertTextToNumber] = useAmountConversion();
 
-    const onChangeText = useCallback(
-        (text: string): void => {
-            setText(text);
-
-            const number = convertAmountFromText(text, numberFormatSettings);
-
-            if (totalAmount !== number) {
-                setTotalAmount(number);
-            }
+    const isValid = useMemo(
+        () => {
+            const number = convertTextToNumber(value);
+            return !isNaN(number);
         },
-        [numberFormatSettings, totalAmount, setTotalAmount],
+        [value, convertTextToNumber],
     );
 
     return (
         <TextInput
             keyboardType='numeric'
-            value={text}
-            onChangeText={onChangeText}
-            placeholder='Total amount'
-            style={styles.textInput} />
+            value={value}
+            error={!isValid}
+            onChangeText={setValue}
+            label='Total amount'
+            style={styles.textInput}
+            right={<TextInput.Affix text="€" />}
+        />
     );
 };
 
 const styles = StyleSheet.create({
     textInput: {
         fontSize: 30,
-        textAlign: 'right',
     },
 });

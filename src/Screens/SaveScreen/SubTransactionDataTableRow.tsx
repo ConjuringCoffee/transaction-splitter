@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { DataTable } from 'react-native-paper';
 import { SaveSubTransaction } from 'ynab';
-import { convertApiAmountToHumanAmount, convertAmountToText } from '../../Helper/AmountHelper';
-import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
+import { convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
+import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { selectActiveAccounts, selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../redux/hooks';
 import { MemoDataTableCell } from './MemoDataTableCell';
@@ -18,7 +18,7 @@ interface Props {
 export const SubTransactionDataTableRow = ({ budgetId, subTransaction, displayMemoCell, triggerMemoDisplay }: Props) => {
     const categories = useAppSelector((state) => selectCategories(state, budgetId));
     const accounts = useAppSelector((state) => selectActiveAccounts(state, budgetId));
-    const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
+    const [, convertNumberToText] = useAmountConversion();
 
     const targetName = useMemo(() => {
         let result: string | undefined = undefined;
@@ -37,7 +37,7 @@ export const SubTransactionDataTableRow = ({ budgetId, subTransaction, displayMe
     }, [subTransaction, categories, accounts]);
 
     const humanAmount = convertApiAmountToHumanAmount(subTransaction.amount);
-    const humanAmountText = convertAmountToText(humanAmount, numberFormatSettings);
+    const humanAmountText = convertNumberToText(humanAmount);
 
     return (
         <DataTable.Row>

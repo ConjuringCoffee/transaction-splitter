@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Navigation } from './AmountsScreen';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { SplitPercentInput } from './SplitPercentInput';
 import { useAppSelector } from '../../redux/hooks';
 import { selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { SubAmountInput } from '../../Component/SubAmountInput';
-import { Button, Divider, IconButton, Text, TextInput } from 'react-native-paper';
+import { Divider, IconButton, TextInput } from 'react-native-paper';
+import { CategoryInput } from './CategoryInput';
+import { MyStackNavigationProp, StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 
-interface Props {
+interface Props<T extends keyof StackParameterList> {
     key: number,
     index: number,
-    amount: number,
+    amountText: string,
     payerBudgetId: string,
     debtorBudgetId: string,
-    setAmount: (amount: number) => void,
+    setAmountText: (newAmount: string) => void,
     setMemo: (memo: string) => void,
     payerCategoryId: string | undefined,
     setPayerCategoryId: (id: string | undefined) => void,
@@ -23,44 +24,15 @@ interface Props {
     splitPercentToPayer: number | undefined,
     setSplitPercentToPayer: (index: number, splitPercent: number | undefined) => void,
     onRemovePress: () => void,
-    navigation: Navigation
+    navigation: MyStackNavigationProp<T>,
 }
-
-interface CategoryLayoutProps {
-    label: string,
-    text: string,
-    budgetId: string,
-    onSelect: (id?: string) => void,
-    navigation: Navigation
-}
-
-const CategoryInput = (props: CategoryLayoutProps) => (
-    <View style={styles.categoryInput}>
-        <Text>
-            {props.label}
-        </Text>
-
-        <Button
-            mode='contained'
-            onPress={() => {
-                props.navigation.navigate(ScreenNames.CATEGORY_SCREEN, {
-                    budgetId: props.budgetId,
-                    onSelect: (categoryId?: string) => props.onSelect(categoryId),
-                });
-            }}>
-            {props.text}
-        </Button>
-    </View>
-);
 
 const DEFAULT_SPLIT_PERCENT_TO_PAYER = 50;
 
 const ICON_CATEGORY_COMBO = 'vector-combine';
 const ICON_DELETE = 'delete';
 
-export const AmountView = (props: Props) => {
-    const [previousCalculations, setPreviousCalculations] = useState<Array<string>>([]);
-
+export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) => {
     const { index, payerCategoryId, debtorCategoryId, splitPercentToPayer, setSplitPercentToPayer } = props;
 
     useEffect(() => {
@@ -82,23 +54,12 @@ export const AmountView = (props: Props) => {
 
     return (
         <View>
-
             <View style={styles.mainView}>
                 <View style={styles.flexContainer}>
                     <SubAmountInput
-                        amount={props.amount}
-                        setAmount={props.setAmount}
-                        navigateToCalculatorScreen={() => {
-                            props.navigation.navigate(
-                                ScreenNames.CALCULATOR_SCREEN,
-                                {
-                                    currentAmount: props.amount,
-                                    setAmount: props.setAmount,
-                                    previousCalculations: previousCalculations,
-                                    setPreviousCalculations: setPreviousCalculations,
-                                },
-                            );
-                        }}
+                        value={props.amountText}
+                        setValue={props.setAmountText}
+                        navigation={props.navigation}
                     />
                     <IconButton
                         icon={ICON_DELETE}
@@ -165,10 +126,6 @@ const styles = StyleSheet.create({
     flexContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-    },
-    categoryInput: {
-        flex: 1,
-        margin: 5,
     },
     categoryComboButton: {
         // TODO: Fix this mess. Research table layout, see also:

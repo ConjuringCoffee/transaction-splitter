@@ -11,14 +11,6 @@ export const reverseNumberFormatSettingsFromLocale = (text: string, numberFormat
         .replace(new RegExp(`\\${numberFormatSettings.decimalSeparator}`, 'g'), '.');
 };
 
-export const convertAmountFromText = (text: string, numberFormatSettings: NumberFormatSettings): number => {
-    return Number(reverseNumberFormatSettingsFromLocale(text, numberFormatSettings));
-};
-
-export const convertAmountToText = (amount: number, numberFormatSettings: NumberFormatSettings): string => {
-    return amount.toString().replace('.', numberFormatSettings.decimalSeparator);
-};
-
 export const convertApiAmountToHumanAmount = (amount: number): number => {
     return amount / -1000;
 };
@@ -34,7 +26,7 @@ const roundToTwoHumanDecimalPlaces = (toRound: number): number => {
     return convertHumanAmountToApiAmount(humanRounded);
 };
 
-const roundToTwoDecimalPlaces = (toRound: number): number => {
+export const roundToTwoDecimalPlaces = (toRound: number): number => {
     return Math.round((toRound + Number.EPSILON) * 100) / 100;
 };
 
