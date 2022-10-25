@@ -1,16 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Icon, Layout, Text } from '@ui-kitten/components';
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { Layout, Text } from '@ui-kitten/components';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { CalculatorKeyboard } from '../../Component/CalculatorKeyboard';
-import { ImageProps, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Calculation } from '../../Helper/Calculation';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { LoadingComponent } from '../../Component/LoadingComponent';
 import { useAppSelector } from '../../redux/hooks';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
+import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
+import { Appbar } from 'react-native-paper';
 
 type ScreenName = 'Calculator';
 
@@ -19,9 +21,8 @@ type Props = {
     route: RouteProp<StackParameterList, ScreenName>;
 }
 
-const HistoryIcon = (props: Partial<ImageProps> | undefined) => (
-    <Icon {...props} name='clock-outline' />
-);
+const SCREEN_TITLE = 'Calculate the amount';
+const ICON_HISTORY = 'history';
 
 export const CalculatorScreen = ({ route, navigation }: Props) => {
     const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
@@ -65,31 +66,42 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         setPreviousCalculations(calculations);
     }, [previousCalculations]);
 
-    React.useLayoutEffect(() => {
+    const navigateToHistoryScreen = useCallback(
+        () => {
+            navigation.navigate(
+                ScreenNames.CALCULATION_HISTORY_SCREEN,
+                {
+                    previousCalculations: previousCalculations,
+                    onSelectCalculation: (selectedCalculation) => {
+                        if (previousCalculations.length > 0
+                            && previousCalculations[previousCalculations.length - 1] !== currentCalculation) {
+                            addPreviousCalculation(currentCalculation);
+                        }
+                        setCurrentCalculation(selectedCalculation);
+                    },
+                },
+            );
+        },
+        [navigation, previousCalculations, addPreviousCalculation, setCurrentCalculation, currentCalculation],
+    );
+
+    const navigationBar = useCallback(() => (
+        <NavigationBar
+            title={SCREEN_TITLE}
+            navigation={navigation}
+            additions={
+                <Appbar.Action
+                    onPress={navigateToHistoryScreen}
+                    icon={ICON_HISTORY} />
+            }
+        />
+    ), [navigation, navigateToHistoryScreen]);
+
+    useLayoutEffect(() => {
         navigation.setOptions({
-            headerRight: () => (
-                <Button
-                    onPress={() => {
-                        navigation.navigate(
-                            ScreenNames.CALCULATION_HISTORY_SCREEN,
-                            {
-                                previousCalculations: previousCalculations,
-                                onSelectCalculation: (selectedCalculation) => {
-                                    if (previousCalculations.length > 0
-                                        && previousCalculations[previousCalculations.length - 1] !== currentCalculation) {
-                                        addPreviousCalculation(currentCalculation);
-                                    }
-                                    setCurrentCalculation(selectedCalculation);
-                                },
-                            },
-                        );
-                    }}
-                    accessoryLeft={HistoryIcon}
-                    style={styles.historyButton}
-                    appearance='outline' />
-            ),
+            header: navigationBar,
         });
-    }, [navigation, previousCalculations, currentCalculation, addPreviousCalculation]);
+    }, [navigation, navigationBar]);
 
     const onDigitPress = (digit: number): void => {
         if (!numberFormatSettings) {
