@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { DataTable } from 'react-native-paper';
 import { SaveSubTransaction } from 'ynab';
 import { convertApiAmountToHumanAmount, convertAmountToText } from '../../Helper/AmountHelper';
@@ -14,33 +14,39 @@ interface Props {
     triggerMemoDisplay: (memo: string) => void,
 }
 
-export const SubTransactionDataTableRow = (props: Props) => {
-    const categories = useAppSelector((state) => selectCategories(state, props.budgetId));
-    const accounts = useAppSelector((state) => selectActiveAccounts(state, props.budgetId));
+export const SubTransactionDataTableRow = ({ budgetId, subTransaction, triggerMemoDisplay }: Props) => {
+    const categories = useAppSelector((state) => selectCategories(state, budgetId));
+    const accounts = useAppSelector((state) => selectActiveAccounts(state, budgetId));
     const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
 
-    let targetName: string | undefined = undefined;
+    const targetName = useMemo(() => {
+        let result: string | undefined = undefined;
 
-    if (props.subTransaction.category_id != undefined) {
-        targetName = categories[props.subTransaction.category_id].name;
-    } else if (props.subTransaction.payee_id != undefined) {
-        targetName = accounts.find((account) => account.transferPayeeID === props.subTransaction.payee_id)?.name;
-    }
+        if (subTransaction.category_id != undefined) {
+            result = categories[subTransaction.category_id].name;
+        } else if (subTransaction.payee_id != undefined) {
+            result = accounts.find((account) => account.transferPayeeID === subTransaction.payee_id)?.name;
+        }
 
-    if (!targetName) {
-        throw new Error('Unable to determine target of SubTransaction');
-    }
+        if (!result) {
+            throw new Error('Unable to determine target of SubTransaction');
+        }
 
-    const humanAmount = convertApiAmountToHumanAmount(props.subTransaction.amount);
+        return result;
+    }, [subTransaction, categories, accounts]);
+
+    const humanAmount = convertApiAmountToHumanAmount(subTransaction.amount);
     const humanAmountText = convertAmountToText(humanAmount, numberFormatSettings);
 
     return (
         <DataTable.Row>
             <MultiLineTextDataTableCellView text={targetName} />
-            <DataTable.Cell numeric>{humanAmountText}</DataTable.Cell>
+            <DataTable.Cell numeric>
+                {humanAmountText}
+            </DataTable.Cell>
             <MemoDataTableCell
-                memo={props.subTransaction.memo}
-                triggerMemoDisplay={props.triggerMemoDisplay}
+                memo={subTransaction.memo}
+                triggerMemoDisplay={triggerMemoDisplay}
             />
         </DataTable.Row>);
 };
