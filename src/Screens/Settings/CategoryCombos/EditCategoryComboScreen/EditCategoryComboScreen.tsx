@@ -2,8 +2,8 @@ import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { Appbar, Menu } from 'react-native-paper';
 import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
 import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
-import { CategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
-import { useAppSelector } from '../../../../redux/hooks';
+import { CategoryCombo, deleteCategoryCombo, updateCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { CategoryComboInputView } from '../../../../Component/CategoryComboInputView';
@@ -11,17 +11,13 @@ import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
 
 type ScreenName = 'Edit Category Combo';
 
-const SCREEN_TITLE = 'Edit';
-const SCREEN_SUBTITLE = 'Category Combination';
+const SCREEN_TITLE = 'Edit Category Combination';
 
 const ICON_SAVE = 'content-save';
 
 export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
-    const {
-        categoryCombo,
-        saveCategoryCombo,
-        deleteCategoryCombo,
-    } = route.params;
+    const dispatch = useAppDispatch();
+    const { categoryCombo } = route.params;
 
     const profiles = useAppSelector(selectProfiles);
 
@@ -39,7 +35,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
 
     const moreMenu = useCallback(() => {
         const deleteAndNavigate = async () => {
-            await deleteCategoryCombo();
+            dispatch(deleteCategoryCombo(categoryCombo.id));
             navigateBack();
         };
 
@@ -56,14 +52,15 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
                     }} />
             </AppBarMoreMenu>);
     }, [
-        deleteCategoryCombo,
+        dispatch,
         navigateBack,
         menuVisible,
+        categoryCombo,
     ]);
 
     useLayoutEffect(() => {
         const saveAndNavigate = async (newCategoryCombo: CategoryCombo): Promise<void> => {
-            await saveCategoryCombo(newCategoryCombo);
+            dispatch(updateCategoryCombo({ categoryCombo: newCategoryCombo }));
             navigateBack();
         };
 
@@ -98,7 +95,6 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
             header: () => (
                 <NavigationBar
                     title={SCREEN_TITLE}
-                    subtitle={SCREEN_SUBTITLE}
                     navigation={navigation}
                     additions={additions}
                 />
@@ -111,10 +107,9 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
         categoryIdFirstProfile,
         categoryIdSecondProfile,
         profileUsed,
-        deleteCategoryCombo,
         moreMenu,
         navigateBack,
-        saveCategoryCombo,
+        dispatch,
         categoryCombo.id,
     ]);
 

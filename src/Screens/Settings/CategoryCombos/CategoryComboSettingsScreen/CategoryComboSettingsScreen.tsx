@@ -3,7 +3,7 @@ import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParamete
 import { ScreenNames } from '../../../../Helper/Navigation/ScreenNames';
 import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
 import { Appbar, List } from 'react-native-paper';
-import { addCategoryCombo, CategoryCombo, deleteCategoryCombo, selectCategoryCombos, updateCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
+import { CategoryCombo, selectCategoryCombos } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { View } from 'react-native';
 import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
@@ -59,11 +59,7 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
                 icon={ADD_ICON}
                 disabled={!everythingLoaded}
                 onPress={() => {
-                    navigation.navigate(ScreenNames.CREATE_CATEGORY_COMBO_SCREEN, {
-                        createCategoryCombo: async (categoryCombo) => {
-                            dispatch(addCategoryCombo(categoryCombo));
-                        },
-                    });
+                    navigation.navigate(ScreenNames.CREATE_CATEGORY_COMBO_SCREEN);
                 }}
             />);
 
@@ -89,12 +85,6 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
             onPress={() => {
                 navigation.navigate(ScreenNames.EDIT_CATEGORY_COMBO_SCREEN, {
                     categoryCombo: categoryCombo,
-                    saveCategoryCombo: async (categoryCombo) => {
-                        dispatch(updateCategoryCombo({ categoryCombo }));
-                    },
-                    deleteCategoryCombo: async () => {
-                        dispatch(deleteCategoryCombo(categoryCombo.id));
-                    },
                 });
             }}
         />
