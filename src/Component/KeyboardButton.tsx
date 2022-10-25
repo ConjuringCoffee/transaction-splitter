@@ -1,4 +1,4 @@
-import { Text } from '@ui-kitten/components';
+import { Text } from 'react-native-paper';
 import React from 'react';
 import { ColorValue, Pressable, StyleSheet } from 'react-native';
 
@@ -16,6 +16,9 @@ export const KeyboardButton = (props: Props) => {
             justifyContent: 'center',
             height: 60,
         },
+        text: {
+            fontSize: 25,
+        },
     });
 
     return (
@@ -28,10 +31,9 @@ export const KeyboardButton = (props: Props) => {
             onPress={() => {
                 props.onPress();
             }}>
-            <Text category={'h4'}>
+            <Text style={styles.text}>
                 {props.value}
             </Text>
         </Pressable>
     );
 };
-

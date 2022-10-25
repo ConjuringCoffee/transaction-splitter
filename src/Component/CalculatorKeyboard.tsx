@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Layout } from '@ui-kitten/components';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { KeyboardButton } from './KeyboardButton';
 import { KeyboardNumberButton } from './KeyboardNumberButton';
 import { useAppSelector } from '../redux/hooks';
@@ -24,9 +23,9 @@ export const CalculatorKeyboard = (props: Props) => {
     const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
 
     return (
-        <Layout style={styles.mainLayout}>
-            <Layout style={styles.numberLayout}>
-                <Layout style={styles.numberRow}>
+        <View style={styles.mainLayout}>
+            <View style={styles.numberLayout}>
+                <View style={styles.numberRow}>
                     <KeyboardButton
                         value='AC'
                         color={DARK_COLOR}
@@ -35,8 +34,8 @@ export const CalculatorKeyboard = (props: Props) => {
                         value='Del'
                         color={DARK_COLOR}
                         onPress={props.onBackPress} />
-                </Layout>
-                <Layout style={styles.numberRow}>
+                </View>
+                <View style={styles.numberRow}>
                     <KeyboardNumberButton
                         number={7}
                         onPress={props.onDigitPress} />
@@ -46,8 +45,8 @@ export const CalculatorKeyboard = (props: Props) => {
                     <KeyboardNumberButton
                         number={9}
                         onPress={props.onDigitPress} />
-                </Layout>
-                <Layout style={styles.numberRow}>
+                </View>
+                <View style={styles.numberRow}>
                     <KeyboardNumberButton
                         number={4}
                         onPress={props.onDigitPress} />
@@ -57,8 +56,8 @@ export const CalculatorKeyboard = (props: Props) => {
                     <KeyboardNumberButton
                         number={6}
                         onPress={props.onDigitPress} />
-                </Layout>
-                <Layout style={styles.numberRow}>
+                </View>
+                <View style={styles.numberRow}>
                     <KeyboardNumberButton
                         number={3}
                         onPress={props.onDigitPress} />
@@ -68,8 +67,8 @@ export const CalculatorKeyboard = (props: Props) => {
                     <KeyboardNumberButton
                         number={1}
                         onPress={props.onDigitPress} />
-                </Layout>
-                <Layout style={styles.numberRow}>
+                </View>
+                <View style={styles.numberRow}>
                     <KeyboardButton
                         value='Cancel'
                         color={DARK_COLOR}
@@ -82,9 +81,9 @@ export const CalculatorKeyboard = (props: Props) => {
                         color={'white'}
                         onPress={props.onDecimalSeparatorPress} />
 
-                </Layout>
-            </Layout>
-            <Layout style={styles.operatorLayout}>
+                </View>
+            </View>
+            <View style={styles.operatorLayout}>
                 <KeyboardButton
                     value='-'
                     color={DARK_COLOR}
@@ -101,8 +100,8 @@ export const CalculatorKeyboard = (props: Props) => {
                     value='OK'
                     color={DARK_COLOR}
                     onPress={props.onConfirmPress} />
-            </Layout>
-        </Layout>
+            </View>
+        </View>
     );
 };
 
