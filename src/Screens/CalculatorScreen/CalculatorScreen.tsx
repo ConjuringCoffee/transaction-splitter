@@ -1,17 +1,16 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { Layout, Text } from '@ui-kitten/components';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { CalculatorKeyboard } from '../../Component/CalculatorKeyboard';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Calculation } from '../../Helper/Calculation';
 import { convertAmountToText } from '../../Helper/AmountHelper';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppSelector } from '../../redux/hooks';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
-import { Appbar } from 'react-native-paper';
+import { Appbar, Text } from 'react-native-paper';
 
 type ScreenName = 'Calculator';
 
@@ -168,14 +167,14 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
 
     return (
         <>
-            <Layout>
-                <Text category='h1' style={styles.text}>
+            <View>
+                <Text style={[styles.text, styles.calculation]}>
                     {currentCalculation}
                 </Text>
-                <Text category='h4' style={styles.text}>
+                <Text style={[styles.text, styles.result]}>
                     {resultText}
                 </Text>
-            </Layout>
+            </View>
             <CalculatorKeyboard
                 onDigitPress={onDigitPress}
                 onDecimalSeparatorPress={onDecimalSeparatorPress}
@@ -191,6 +190,12 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
+    calculation: {
+        fontSize: 40,
+    },
+    result: {
+        fontSize: 30,
+    },
     text: {
         textAlign: 'right',
         margin: 10,
