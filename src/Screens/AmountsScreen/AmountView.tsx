@@ -6,7 +6,7 @@ import { SplitPercentInput } from './SplitPercentInput';
 import { useAppSelector } from '../../redux/hooks';
 import { selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { SubAmountInput } from '../../Component/SubAmountInput';
-import { Button, IconButton, Text, TextInput } from 'react-native-paper';
+import { Button, Divider, IconButton, Text, TextInput } from 'react-native-paper';
 
 interface Props {
     key: number,
@@ -81,76 +81,81 @@ export const AmountView = (props: Props) => {
     const debtorCategory = props.debtorCategoryId ? debtorCategories[props.debtorCategoryId] : undefined;
 
     return (
-        <View style={styles.mainView}>
-            <View style={styles.flexContainer}>
-                <SubAmountInput
-                    amount={props.amount}
-                    setAmount={props.setAmount}
-                    navigateToCalculatorScreen={() => {
-                        props.navigation.navigate(
-                            ScreenNames.CALCULATOR_SCREEN,
-                            {
-                                currentAmount: props.amount,
-                                setAmount: props.setAmount,
-                                previousCalculations: previousCalculations,
-                                setPreviousCalculations: setPreviousCalculations,
-                            },
-                        );
-                    }}
-                />
-                <IconButton
-                    icon={ICON_DELETE}
-                    onPress={() => props.onRemovePress()}
-                />
-            </View>
+        <View>
 
-            <View style={styles.flexContainer}>
-                <CategoryInput
-                    label='Payer Category'
-                    text={payerCategory?.name ? payerCategory?.name : ''}
-                    budgetId={props.payerBudgetId}
-                    onSelect={props.setPayerCategoryId}
-                    navigation={props.navigation}
+            <View style={styles.mainView}>
+                <View style={styles.flexContainer}>
+                    <SubAmountInput
+                        amount={props.amount}
+                        setAmount={props.setAmount}
+                        navigateToCalculatorScreen={() => {
+                            props.navigation.navigate(
+                                ScreenNames.CALCULATOR_SCREEN,
+                                {
+                                    currentAmount: props.amount,
+                                    setAmount: props.setAmount,
+                                    previousCalculations: previousCalculations,
+                                    setPreviousCalculations: setPreviousCalculations,
+                                },
+                            );
+                        }}
+                    />
+                    <IconButton
+                        icon={ICON_DELETE}
+                        onPress={() => props.onRemovePress()}
+                    />
+                </View>
+
+                <View style={styles.flexContainer}>
+                    <CategoryInput
+                        label='Payer Category'
+                        text={payerCategory?.name ? payerCategory?.name : ''}
+                        budgetId={props.payerBudgetId}
+                        onSelect={props.setPayerCategoryId}
+                        navigation={props.navigation}
+                    />
+                    <IconButton
+                        style={styles.categoryComboButton}
+                        icon={ICON_CATEGORY_COMBO}
+                        onPress={() => {
+                            props.navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
+                                onSelect: (categoryCombo) => {
+                                    categoryCombo.categories.forEach((category) => {
+                                        if (props.payerBudgetId === category.budgetId) {
+                                            props.setPayerCategoryId(category.id);
+                                        } else if (props.debtorBudgetId === category.budgetId) {
+                                            props.setDebtorCategoryId(category.id);
+                                        } else {
+                                            throw new Error('Combination belongs to another budget');
+                                        }
+                                    });
+                                },
+                            });
+                        }}
+                    />
+                    <CategoryInput
+                        label='Debtor Category'
+                        text={debtorCategory?.name ? debtorCategory?.name : ''}
+                        budgetId={props.debtorBudgetId}
+                        onSelect={props.setDebtorCategoryId}
+                        navigation={props.navigation}
+                    />
+                </View>
+                <SplitPercentInput
+                    payerCategoryChosen={props.payerCategoryId !== undefined}
+                    debtorCategoryChosen={props.debtorCategoryId !== undefined}
+                    splitPercentToPayer={props.splitPercentToPayer}
+                    setSplitPercentToPayer={(splitPercent) => props.setSplitPercentToPayer(index, splitPercent)}
                 />
-                <IconButton
-                    style={styles.categoryComboButton}
-                    icon={ICON_CATEGORY_COMBO}
-                    onPress={() => {
-                        props.navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
-                            onSelect: (categoryCombo) => {
-                                categoryCombo.categories.forEach((category) => {
-                                    if (props.payerBudgetId === category.budgetId) {
-                                        props.setPayerCategoryId(category.id);
-                                    } else if (props.debtorBudgetId === category.budgetId) {
-                                        props.setDebtorCategoryId(category.id);
-                                    } else {
-                                        throw new Error('Combination belongs to another budget');
-                                    }
-                                });
-                            },
-                        });
-                    }}
-                />
-                <CategoryInput
-                    label='Debtor Category'
-                    text={debtorCategory?.name ? debtorCategory?.name : ''}
-                    budgetId={props.debtorBudgetId}
-                    onSelect={props.setDebtorCategoryId}
-                    navigation={props.navigation}
+                <TextInput
+                    label='Memo'
+                    placeholder='Enter memo'
+                    onChangeText={(text) => props.setMemo(text)}
                 />
             </View>
-            <SplitPercentInput
-                payerCategoryChosen={props.payerCategoryId !== undefined}
-                debtorCategoryChosen={props.debtorCategoryId !== undefined}
-                splitPercentToPayer={props.splitPercentToPayer}
-                setSplitPercentToPayer={(splitPercent) => props.setSplitPercentToPayer(index, splitPercent)}
-            />
-            <TextInput
-                label='Memo'
-                placeholder='Enter memo'
-                onChangeText={(text) => props.setMemo(text)}
-            />
-        </View>);
+            <Divider />
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
