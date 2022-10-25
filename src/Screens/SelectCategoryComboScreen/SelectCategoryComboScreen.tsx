@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { List, TextInput } from 'react-native-paper';
@@ -12,7 +12,11 @@ type ScreenName = 'Category Combinations';
 export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenProps<ScreenName>) => {
     const [nameFilter, setNameFilter] = useState<string>('');
     const categoryCombos = useAppSelector(selectCategoryCombos);
-    const categoryCombosToDisplay = categoryCombos.filter((combo) => combo.name.toLowerCase().includes(nameFilter.toLowerCase()));
+
+    const categoryCombosToDisplay = useMemo(
+        () => categoryCombos.filter((combo) => combo.name.toLowerCase().includes(nameFilter.toLowerCase())).sort((a, b) => a.name.localeCompare(b.name)),
+        [categoryCombos, nameFilter],
+    );
 
     const [navigateBack] = useNavigateBack(navigation);
 
@@ -23,7 +27,8 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
             onPress={() => {
                 route.params.onSelect(item);
                 navigateBack();
-            }} />
+            }}
+        />
     );
 
     return (
@@ -32,13 +37,15 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
                 value={nameFilter}
                 autoFocus={true}
                 onChangeText={setNameFilter}
-                placeholder="Search category combos" />
+                placeholder="Search category combos"
+            />
             <FlatList
                 data={categoryCombosToDisplay}
                 renderItem={renderListItem}
                 // keyboardShouldPersistTaps is needed to allow pressing buttons when keyboard is open
                 //   See: https://stackoverflow.com/a/57941568
-                keyboardShouldPersistTaps='handled' />
+                keyboardShouldPersistTaps='handled'
+            />
         </View>
     );
 };
