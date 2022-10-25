@@ -1,40 +1,30 @@
 import React from 'react';
-import { Layout, List, ListItem } from '@ui-kitten/components';
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
+import { FlatList, View } from 'react-native';
+import { List } from 'react-native-paper';
+import { useNavigateBack } from '../../Hooks/useNavigateBack';
 
 type ScreenName = 'Calculation History';
-type MyNavigationProp = StackNavigationProp<StackParameterList, ScreenName>;
-type MyRouteProp = RouteProp<StackParameterList, ScreenName>;
 
-type Props = {
-    navigation: MyNavigationProp;
-    route: MyRouteProp;
-}
-
-export const CalculationHistoryScreen = ({ route, navigation }: Props) => {
+export const CalculationHistoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenName>) => {
     const { previousCalculations } = route.params;
+    const [navigateBack] = useNavigateBack(navigation);
 
-    interface RenderItemProps {
-        item: string,
-        index: number
-    }
-
-    const renderItem = (props: RenderItemProps) => (
-        <ListItem
-            title={`${props.item}`}
+    const renderItem = ({ item }: { item: string }) => (
+        <List.Item
+            title={`${item}`}
             onPress={() => {
-                navigation.goBack();
-                route.params.onSelectCalculation(props.item);
+                route.params.onSelectCalculation(item);
+                navigateBack();
             }} />
     );
 
     return (
-        <Layout>
-            <List
+        <View>
+            <FlatList
                 data={previousCalculations}
-                renderItem={renderItem} />
-        </Layout>
+                renderItem={renderItem}
+            />
+        </View>
     );
 };
