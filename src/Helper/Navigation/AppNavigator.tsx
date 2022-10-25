@@ -87,14 +87,6 @@ const StackNavigator = () => {
             <Stack.Screen
                 name={ScreenNames.CALCULATOR_SCREEN}
                 component={CalculatorScreen}
-                options={{
-                    header: (headerProps) => (
-                        <NavigationBar
-                            title='Calculate the amount'
-                            navigation={headerProps.navigation}
-                        />
-                    ),
-                }}
             />
             <Stack.Screen
                 name={ScreenNames.CALCULATION_HISTORY_SCREEN}
