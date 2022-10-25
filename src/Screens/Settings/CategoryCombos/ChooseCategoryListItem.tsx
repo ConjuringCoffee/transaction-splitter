@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { List } from 'react-native-paper';
-import { ScreenNames } from '../Helper/Navigation/ScreenNames';
-import { MyStackNavigationProp, StackParameterList } from '../Helper/Navigation/ScreenParameters';
-import { selectBudgetById, selectCategories } from '../redux/features/ynab/ynabSlice';
-import { useAppSelector } from '../redux/hooks';
+import { ScreenNames } from '../../../Navigation/ScreenNames';
+import { MyStackNavigationProp, StackParameterList } from '../../../Navigation/ScreenParameters';
+import { selectBudgetById, selectCategories } from '../../../redux/features/ynab/ynabSlice';
+import { useAppSelector } from '../../../Hooks/useAppSelector';
 
 interface Props<T extends keyof StackParameterList> {
     budgetId: string,

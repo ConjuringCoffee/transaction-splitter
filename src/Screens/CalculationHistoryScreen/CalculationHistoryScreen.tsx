@@ -1,5 +1,5 @@
 import React from 'react';
-import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
+import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { FlatList, View } from 'react-native';
 import { List } from 'react-native-paper';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';

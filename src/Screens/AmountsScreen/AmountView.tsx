@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
+import { ScreenNames } from '../../Navigation/ScreenNames';
 import { SplitPercentInput } from './SplitPercentInput';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectCategories } from '../../redux/features/ynab/ynabSlice';
-import { SubAmountInput } from '../../Component/SubAmountInput';
+import { SubAmountInput } from './SubAmountInput';
 import { Divider, IconButton, TextInput } from 'react-native-paper';
 import { CategoryInput } from './CategoryInput';
-import { MyStackNavigationProp, StackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
 
 interface Props<T extends keyof StackParameterList> {
     key: number,

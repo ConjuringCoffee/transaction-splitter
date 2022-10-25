@@ -1,5 +1,5 @@
 import { convertHumanAmountToApiAmount, divideApiAmount } from '../Helper/AmountHelper';
-import { BasicData } from '../Helper/Navigation/ScreenParameters';
+import { BasicData } from '../Navigation/ScreenParameters';
 import * as ynab from 'ynab';
 
 interface SaveTransactions {

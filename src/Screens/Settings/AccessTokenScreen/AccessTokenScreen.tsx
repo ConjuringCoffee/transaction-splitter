@@ -1,14 +1,15 @@
 import { useLayoutEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
-import { NavigationBar } from '../../../Helper/Navigation/NavigationBar';
-import { MyStackScreenProps } from '../../../Helper/Navigation/ScreenParameters';
+import { NavigationBar } from '../../../Navigation/NavigationBar';
+import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { saveAccessToken, selectAccessToken } from '../../../redux/features/accessToken/accessTokenSlice';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { AccessTokenInput } from './AccessTokenInput';
 import { useNavigateBack } from '../../../Hooks/useNavigateBack';
 import { useConnectionTest } from '../../../Hooks/useConnectionTest';
+import { useAppDispatch } from '../../../Hooks/useAppDispatch';
 
 type ScreenName = 'Access Token';
 

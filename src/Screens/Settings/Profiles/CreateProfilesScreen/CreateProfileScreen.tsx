@@ -1,9 +1,9 @@
 import React, { useCallback, useLayoutEffect } from 'react';
-import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
+import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { BudgetInProfileInputSection } from '../BudgetInProfileInputSection';
 import { CustomScrollView } from '../../../../Component/CustomScrollView';
 import { Appbar } from 'react-native-paper';
-import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
+import { NavigationBar } from '../../../../Navigation/NavigationBar';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { useEditableBudgetsInProfiles } from '../../../../Hooks/useEditableBudgetsInProfiles';
 

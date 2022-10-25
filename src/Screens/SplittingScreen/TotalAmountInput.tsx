@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { useAmountConversion } from '../Hooks/useAmountConversion';
+import { useAmountConversion } from '../../Hooks/useAmountConversion';
 
 interface Props {
     value: string,

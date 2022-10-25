@@ -1,7 +1,7 @@
 import { ScreenNames } from './ScreenNames';
 import * as ynab from 'ynab';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
-import { CategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { CategoryCombo } from '../redux/features/categoryCombos/categoryCombosSlice';
 
 interface BasicData {
     payer: {

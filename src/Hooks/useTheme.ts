@@ -4,7 +4,7 @@ import { DarkTheme as PaperDarkTheme, DefaultTheme as PaperDefaultTheme } from '
 import { useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { selectThemeTypeSetting } from '../redux/features/displaySettings/displaySettingsSlice';
-import { useAppSelector } from '../redux/hooks';
+import { useAppSelector } from './useAppSelector';
 import { ThemeType } from '../redux/features/displaySettings/ThemeType';
 import { StatusBarStyle } from 'expo-status-bar';
 

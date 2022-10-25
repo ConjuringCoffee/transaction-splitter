@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList } from 'react-native';
 import { List } from 'react-native-paper';
 import { selectCategoryGroups, selectCategories, selectInternalMasterCategoryGroupId, CategoryGroup } from '../../redux/features/ynab/ynabSlice';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppSelector } from '../../Hooks/useAppSelector';
 
 interface Props {
     categoryNameFilter: string,

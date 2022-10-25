@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'react-native-gesture-handler';
 import { LogBox, View, StyleSheet } from 'react-native';
-import { AppNavigator } from './src/Helper/Navigation/AppNavigator';
+import { AppNavigator } from './src/Navigation/AppNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';

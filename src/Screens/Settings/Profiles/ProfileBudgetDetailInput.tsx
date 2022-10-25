@@ -1,7 +1,7 @@
 import React from 'react';
 import { Checkbox, HelperText, List, RadioButton, TextInput } from 'react-native-paper';
 import { selectActiveAccounts, selectBudgetById } from '../../../redux/features/ynab/ynabSlice';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Account } from '../../../YnabApi/YnabApiWrapper';
 
 interface Props {

@@ -1,7 +1,7 @@
 import { CommonActions } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { Keyboard } from 'react-native';
-import { StackParameterList, MyStackNavigationProp } from '../Helper/Navigation/ScreenParameters';
+import { StackParameterList, MyStackNavigationProp } from '../Navigation/ScreenParameters';
 
 export const useNavigateBack = <T extends keyof StackParameterList>(navigation: MyStackNavigationProp<T>): [() => void] => {
     const navigateBack = useCallback(() => {

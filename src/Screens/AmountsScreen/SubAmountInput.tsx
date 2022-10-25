@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { MyStackNavigationProp, StackParameterList } from '../Helper/Navigation/ScreenParameters';
-import { ScreenNames } from '../Helper/Navigation/ScreenNames';
-import { useAmountConversion } from '../Hooks/useAmountConversion';
+import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
+import { ScreenNames } from '../../Navigation/ScreenNames';
+import { useAmountConversion } from '../../Hooks/useAmountConversion';
 
 interface Props<T extends keyof StackParameterList> {
     value: string,

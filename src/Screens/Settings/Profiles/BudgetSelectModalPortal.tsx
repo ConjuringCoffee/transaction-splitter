@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { Portal, Modal, useTheme, List } from 'react-native-paper';
 import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Budget } from '../../../YnabApi/YnabApiWrapper';
 
 interface Props {

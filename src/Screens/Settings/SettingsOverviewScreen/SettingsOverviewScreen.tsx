@@ -1,8 +1,8 @@
-import { MyStackScreenProps } from '../../../Helper/Navigation/ScreenParameters';
-import { ScreenNames } from '../../../Helper/Navigation/ScreenNames';
+import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
+import { ScreenNames } from '../../../Navigation/ScreenNames';
 import { List } from 'react-native-paper';
 import { View } from 'react-native';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { useCallback } from 'react';
 import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
 

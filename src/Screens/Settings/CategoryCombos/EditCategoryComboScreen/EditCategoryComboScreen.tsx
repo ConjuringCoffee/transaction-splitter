@@ -1,13 +1,14 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { Appbar, Menu } from 'react-native-paper';
-import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
-import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
+import { NavigationBar } from '../../../../Navigation/NavigationBar';
+import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { CategoryCombo, deleteCategoryCombo, updateCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
-import { CategoryComboInputView } from '../../../../Component/CategoryComboInputView';
+import { CategoryComboInputView } from '../CategoryComboInputView';
 import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
+import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
 
 type ScreenName = 'Edit Category Combo';
 

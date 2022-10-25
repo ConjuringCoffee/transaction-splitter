@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { List, TextInput } from 'react-native-paper';
-import { MyStackNavigationProp, StackParameterList } from '../Helper/Navigation/ScreenParameters';
-import { selectProfiles } from '../redux/features/profiles/profilesSlice';
-import { useAppSelector } from '../redux/hooks';
+import { MyStackNavigationProp, StackParameterList } from '../../../Navigation/ScreenParameters';
+import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
+import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { ChooseCategoryListItem } from './ChooseCategoryListItem';
 
 interface Props<T extends keyof StackParameterList> {

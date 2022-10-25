@@ -24,9 +24,10 @@ export const NavigationBar = <A extends keyof StackParameterList>(props: Props<A
                     }} />
                     : null
             }
-            < Appbar.Content
+            <Appbar.Content
                 title={props.title}
-                subtitle={props.subtitle} />
+                subtitle={props.subtitle}
+            />
             {props.additions}
-        </Appbar.Header >);
+        </Appbar.Header>);
 };
