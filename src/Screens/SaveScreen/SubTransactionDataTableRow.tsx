@@ -6,6 +6,7 @@ import { selectNumberFormatSettings } from '../../redux/features/displaySettings
 import { selectActiveAccounts, selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../redux/hooks';
 import { MemoDataTableCell } from './MemoDataTableCell';
+import { MultiLineTextDataTableCellView } from './MultiLineTextDataTableCellView';
 
 interface Props {
     budgetId: string,
@@ -35,7 +36,7 @@ export const SubTransactionDataTableRow = (props: Props) => {
 
     return (
         <DataTable.Row>
-            <DataTable.Cell>{targetName}</DataTable.Cell>
+            <MultiLineTextDataTableCellView text={targetName} />
             <DataTable.Cell numeric>{humanAmountText}</DataTable.Cell>
             <MemoDataTableCell
                 memo={props.subTransaction.memo}

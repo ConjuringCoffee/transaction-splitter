@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { DataTable, List, Text, useTheme } from 'react-native-paper';
+import { DataTable, List, useTheme } from 'react-native-paper';
 import { SaveTransaction } from 'ynab';
 import { StyleSheet } from 'react-native';
 import { convertAmountToText, convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
 import { selectBudgetById, selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../redux/hooks';
-import { DataTableCellView } from './DataTableCellView';
 import { SubTransactionsDataTable } from './SubTransactionsDataTable';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
+import { MultiLineTextDataTableCellView } from './MultiLineTextDataTableCellView';
 
 interface Props {
     saveTransaction: SaveTransaction,
@@ -54,16 +54,16 @@ export const SaveTransactionListSection = (props: Props) => {
                 <DataTable>
                     <DataTable.Row>
                         <DataTable.Cell>Budget</DataTable.Cell>
-                        <DataTable.Cell>{budget.name}</DataTable.Cell>
+                        <MultiLineTextDataTableCellView text={budget.name} />
                     </DataTable.Row>
                     <DataTable.Row>
                         <DataTable.Cell>Account</DataTable.Cell>
-                        <DataTable.Cell>{accountName}</DataTable.Cell>
+                        <MultiLineTextDataTableCellView text={accountName} />
                     </DataTable.Row>
                     {props.saveTransaction.category_id
                         ? <DataTable.Row>
                             <DataTable.Cell>Category</DataTable.Cell>
-                            <DataTable.Cell>{categories[props.saveTransaction.category_id].name}</DataTable.Cell>
+                            <MultiLineTextDataTableCellView text={categories[props.saveTransaction.category_id].name} />
                         </DataTable.Row>
                         : null}
                     <DataTable.Row>
@@ -72,13 +72,11 @@ export const SaveTransactionListSection = (props: Props) => {
                     </DataTable.Row>
                     <DataTable.Row>
                         <DataTable.Cell>Payee</DataTable.Cell>
-                        <DataTable.Cell>{props.payeeName}</DataTable.Cell>
+                        <MultiLineTextDataTableCellView text={props.payeeName} />
                     </DataTable.Row>
                     <DataTable.Row>
                         <DataTable.Cell>Memo</DataTable.Cell>
-                        <DataTableCellView>
-                            <Text numberOfLines={3}>{props.memo}</Text>
-                        </DataTableCellView>
+                        <MultiLineTextDataTableCellView text={props.memo} />
                     </DataTable.Row>
                 </DataTable>
             </List.Accordion>
