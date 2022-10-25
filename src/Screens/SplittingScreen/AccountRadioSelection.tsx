@@ -1,6 +1,7 @@
 import { List, RadioButton } from 'react-native-paper';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Account } from '../../YnabApi/YnabApiWrapper';
+import { Keyboard } from 'react-native';
 
 interface Props {
     accounts: Account[],
@@ -13,8 +14,14 @@ export const AccountRadioSelection = ({ accounts, setSelectedAccountId, selected
         <RadioButton.Item
             key={account.id}
             label={account.name}
-            value={account.id} />
+            value={account.id}
+        />
     );
+
+    const onValueChange = useCallback((newValue: string) => {
+        Keyboard.dismiss();
+        setSelectedAccountId(newValue);
+    }, [setSelectedAccountId]);
 
     useEffect(() => {
         if (!accounts.some((account) => account.id === selectedAccountId)) {
@@ -25,7 +32,7 @@ export const AccountRadioSelection = ({ accounts, setSelectedAccountId, selected
     return (
         <List.Section title='Payer account'>
             <RadioButton.Group
-                onValueChange={setSelectedAccountId}
+                onValueChange={onValueChange}
                 value={selectedAccountId}
             >
                 {accounts.map(renderItem)}
