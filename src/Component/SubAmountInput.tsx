@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { MyStackNavigationProp, StackParameterList } from '../Helper/Navigation/ScreenParameters';
@@ -17,6 +17,14 @@ export const SubAmountInput = <T extends keyof StackParameterList>({ value, setV
     const [convertTextToNumber, convertNumberToText] = useAmountConversion();
 
     const [previousCalculations, setPreviousCalculations] = useState<Array<string>>([]);
+
+    const isValid = useMemo(
+        () => {
+            const number = convertTextToNumber(value);
+            return !isNaN(number);
+        },
+        [value, convertTextToNumber],
+    );
 
     const navigateToCalculatorScreen = useCallback(
         () => {
@@ -40,6 +48,7 @@ export const SubAmountInput = <T extends keyof StackParameterList>({ value, setV
         <TextInput
             placeholder={'€'}
             value={value}
+            error={!isValid}
             onChangeText={setValue}
             keyboardType={'numeric'}
             style={styles.textInput}
