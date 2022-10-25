@@ -4,9 +4,9 @@ import { ImageProps, StyleSheet } from 'react-native';
 import { Navigation } from './AmountsScreen';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { SplitPercentInput } from './SplitPercentInput';
-import { NumberInput } from '../../Component/NumberInput';
 import { useAppSelector } from '../../redux/hooks';
 import { selectCategories } from '../../redux/features/ynab/ynabSlice';
+import { SubAmountInput } from '../../Component/SubAmountInput';
 
 interface Props {
     // TODO: Pass AmountEntry instead of all these separate variables
@@ -53,10 +53,6 @@ const CategoryLayout = (props: CategoryLayoutProps) => (
 
 const defaultSplitPercentToPayer = 50;
 
-const CalculatorIcon = (props: Partial<ImageProps> | undefined) => (
-    <Icon {...props} name='chevron-right-outline' />
-);
-
 const CategoryComboIcon = (props: Partial<ImageProps> | undefined) => (
     <Icon {...props} name='more-horizontal-outline' />
 );
@@ -86,32 +82,21 @@ export const AmountCard = (props: Props) => {
     return (
         <Card>
             <Layout style={styles.container}>
-                <NumberInput
-                    number={props.amount}
-                    setNumber={props.setAmount}
-                    style={styles.amount}
-                    label='Amount'
-                    placeholder='€'
-                    textStyle={styles.amountText}
-                    accessoryRight={() => (
-                        // This could also be a touchable opacity, but I'm too stupid for the CSS
-                        <Button
-                            style={styles.calculatorButton}
-                            size='small'
-                            appearance='outline'
-                            accessoryLeft={CalculatorIcon}
-                            onPress={() => {
-                                props.navigation.navigate(
-                                    ScreenNames.CALCULATOR_SCREEN,
-                                    {
-                                        currentAmount: props.amount,
-                                        setAmount: props.setAmount,
-                                        previousCalculations: previousCalculations,
-                                        setPreviousCalculations: setPreviousCalculations,
-                                    },
-                                );
-                            }} />
-                    )} />
+                <SubAmountInput
+                    amount={props.amount}
+                    setAmount={props.setAmount}
+                    navigateToCalculatorScreen={() => {
+                        props.navigation.navigate(
+                            ScreenNames.CALCULATOR_SCREEN,
+                            {
+                                currentAmount: props.amount,
+                                setAmount: props.setAmount,
+                                previousCalculations: previousCalculations,
+                                setPreviousCalculations: setPreviousCalculations,
+                            },
+                        );
+                    }}
+                />
                 <Button
                     style={styles.removeButton}
                     appearance='ghost'
