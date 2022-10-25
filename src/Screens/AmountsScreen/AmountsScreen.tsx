@@ -1,10 +1,10 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Keyboard, StyleSheet, View } from 'react-native';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { LoadingComponent } from '../../Component/LoadingComponent';
-import { convertAmountToText } from '../../Helper/AmountHelper';
+import { roundToTwoDecimalPlaces } from '../../Helper/AmountHelper';
 import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { AmountEntry, buildSaveTransactions } from '../../YnabApi/BuildSaveTransactions';
 import { AmountView } from './AmountView';
@@ -12,9 +12,9 @@ import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
-import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
 import { Button, Divider, Text } from 'react-native-paper';
+import { useAmountConversion } from '../../Hooks/useAmountConversion';
 
 type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
 type MyRouteProp = RouteProp<StackParameterList, 'Amounts'>;
@@ -24,9 +24,17 @@ type Props = {
     route: MyRouteProp;
 }
 
+interface UserInterfaceAmountEntry {
+    amountText: string,
+    memo: string,
+    payerCategoryId?: string,
+    debtorCategoryId?: string,
+    splitPercentToPayer?: number
+}
+
 export const AmountsScreen = (props: Props) => {
-    const [amountEntries, setAmountEntries] = useState<Array<AmountEntry>>([]);
-    const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
+    const [amountEntries, setAmountEntries] = useState<Array<UserInterfaceAmountEntry>>([]);
+    const [convertTextToNumber, convertNumberToText] = useAmountConversion();
     const accessToken = useAppSelector(selectAccessToken);
 
     const dispatch = useAppDispatch();
@@ -51,18 +59,18 @@ export const AmountsScreen = (props: Props) => {
         }
     }, [debtorCategoriesFetchStatus, dispatch, debtorBudgetId, accessToken]);
 
-    const addAmountEntry = (amount?: number) => {
+    const addAmountEntry = (amountText: string) => {
         const entries = [...amountEntries, {
-            amount: amount || 0,
+            amountText: amountText ?? '',
             memo: '',
 
         }];
         setAmountEntries(entries);
     };
 
-    const setAmount = (index: number, amount: number) => {
+    const setAmountText = (index: number, amountText: string) => {
         const entries = [...amountEntries];
-        entries[index].amount = amount;
+        entries[index].amountText = amountText;
         setAmountEntries(entries);
     };
 
@@ -96,31 +104,47 @@ export const AmountsScreen = (props: Props) => {
         setAmountEntries(entries);
     };
 
-    const calculateRemainingAmount = (totalAmount: number) => {
-        let amount = totalAmount;
+    const remainingAmount = useMemo(
+        () => {
+            let remainingAmount = basicData.totalAmount;
 
-        amountEntries.forEach((amountEntry) => {
-            amount = Math.round(((amount - amountEntry.amount) + Number.EPSILON) * 100) / 100;
-        });
+            amountEntries.forEach((amountEntry) => {
+                const amount = convertTextToNumber(amountEntry.amountText);
 
-        return amount;
-    };
+                if (isNaN(amount)) {
+                    // Skip invalid amounts
+                    return;
+                }
 
-    const isOkayToContinue = (amountRemaining: number) => {
-        let notOkay = amountRemaining !== 0;
+                remainingAmount = roundToTwoDecimalPlaces(remainingAmount - amount);
+            });
 
-        amountEntries.forEach((amountEntry) => {
-            if (amountEntry.amount === 0
-                || (amountEntry.payerCategoryId === undefined && amountEntry.debtorCategoryId === undefined)) {
-                notOkay = true;
+            return remainingAmount;
+        },
+        [basicData, amountEntries, convertTextToNumber],
+    );
+
+    const okayToContinue = useMemo(
+        () => {
+            if (remainingAmount !== 0) {
+                return false;
             }
-        });
 
-        return !notOkay;
-    };
+            for (const amountEntry of amountEntries) {
+                const amount = convertTextToNumber(amountEntry.amountText);
 
-    const remainingAmount = calculateRemainingAmount(basicData.totalAmount);
-    const okayToContinue = isOkayToContinue(remainingAmount);
+                if (isNaN(amount)
+                    || amount === 0
+                    || (amountEntry.payerCategoryId === undefined && amountEntry.debtorCategoryId === undefined)) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+        [remainingAmount, amountEntries, convertTextToNumber],
+    );
+
     const addingDisabled = remainingAmount === 0;
 
     const categoriesAreLoaded
@@ -136,10 +160,10 @@ export const AmountsScreen = (props: Props) => {
                             <AmountView
                                 key={index}
                                 index={index}
-                                amount={amountEntry.amount}
+                                amountText={amountEntry.amountText}
                                 payerBudgetId={basicData.payer.budgetId}
                                 debtorBudgetId={basicData.debtor.budgetId}
-                                setAmount={(amount) => setAmount(index, amount)}
+                                setAmountText={(amount) => setAmountText(index, amount)}
                                 setMemo={(memo) => setMemo(index, memo)}
                                 payerCategoryId={amountEntry.payerCategoryId}
                                 setPayerCategoryId={(categoryId) => setPayerCategoryId(index, categoryId)}
@@ -157,7 +181,7 @@ export const AmountsScreen = (props: Props) => {
                         mode='contained'
                         style={styles.button}
                         onPress={() => {
-                            addAmountEntry();
+                            addAmountEntry('');
                             Keyboard.dismiss();
                         }}>
                         Add
@@ -167,7 +191,7 @@ export const AmountsScreen = (props: Props) => {
                         mode='contained'
                         style={styles.button}
                         onPress={() => {
-                            addAmountEntry(remainingAmount);
+                            addAmountEntry(convertNumberToText(remainingAmount));
                             Keyboard.dismiss();
                         }}>
                         Add remaining
@@ -176,7 +200,7 @@ export const AmountsScreen = (props: Props) => {
                     <Divider />
 
                     <Text>
-                        {`Remaining amount: ${convertAmountToText(remainingAmount, numberFormatSettings)}€`}
+                        {`Remaining amount: ${convertNumberToText(remainingAmount)}€`}
                     </Text>
 
                     <Button
@@ -184,7 +208,19 @@ export const AmountsScreen = (props: Props) => {
                         mode='contained'
                         style={styles.button}
                         onPress={() => {
-                            const saveTransactions = buildSaveTransactions(amountEntries, basicData);
+                            const convertedAmountEntries: AmountEntry[] = [];
+
+                            amountEntries.forEach((amountEntry) => {
+                                convertedAmountEntries.push({
+                                    amount: convertTextToNumber(amountEntry.amountText),
+                                    debtorCategoryId: amountEntry.debtorCategoryId,
+                                    payerCategoryId: amountEntry.payerCategoryId,
+                                    splitPercentToPayer: amountEntry.splitPercentToPayer,
+                                    memo: amountEntry.memo,
+                                });
+                            });
+
+                            const saveTransactions = buildSaveTransactions(convertedAmountEntries, basicData);
 
                             props.navigation.navigate(
                                 ScreenNames.SAVE_SCREEN,
@@ -211,6 +247,3 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
 });
-
-
-export type { MyNavigationProp as Navigation };

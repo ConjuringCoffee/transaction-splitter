@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
@@ -11,6 +11,7 @@ import { TotalAmountInput } from '../../Component/TotalAmountInput';
 import { DatePickerInput } from 'react-native-paper-dates';
 import { AccountRadioSelection } from './AccountRadioSelection';
 import { PayerBudgetRadioSelection } from './PayerBudgetRadioSelection';
+import { useAmountConversion } from '../../Hooks/useAmountConversion';
 
 type ScreenName = 'Split Transaction';
 
@@ -19,13 +20,14 @@ const ICON_SETTINGS = 'cog';
 
 export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const profiles = useAppSelector(selectProfiles);
+    const [convertTextToNumber] = useAmountConversion();
 
     // TODO: Support switching profiles
     const profileUsed = profiles[0];
 
     const [payerBudgetIndex, setPayerBudgetIndex] = useState<number>(0);
     const [payeeName, setPayeeName] = useState<string>('');
-    const [totalAmount, setTotalAmount] = useState<number>(0);
+    const [totalAmountText, setTotalAmountText] = useState<string>('');
     const [date, setDate] = useState<Date>(new Date());
     const [memo, setMemo] = useState<string>('[Generated]');
 
@@ -38,6 +40,11 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
 
     const activeOnBudgetAccounts = useAppSelector((state) => selectActiveAccounts(state, payerBudgetInProfile.budgetId));
     const elegibleAccounts = activeOnBudgetAccounts.filter((account) => payerBudgetInProfile.elegibleAccountIds.find((id) => id === account.id));
+
+    const totalAmount = useMemo(
+        () => convertTextToNumber(totalAmountText),
+        [totalAmountText, convertTextToNumber],
+    );
 
     const everythingSelected = totalAmount > 0;
 
@@ -90,8 +97,8 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
     return (
         <CustomScrollView>
             <TotalAmountInput
-                totalAmount={totalAmount}
-                setTotalAmount={setTotalAmount}
+                value={totalAmountText}
+                setValue={setTotalAmountText}
             />
             <TextInput
                 label='Payee'

@@ -1,54 +1,55 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { convertAmountToText, convertAmountFromText } from '../Helper/AmountHelper';
-import { selectNumberFormatSettings } from '../redux/features/displaySettings/displaySettingsSlice';
-import { useAppSelector } from '../redux/hooks';
 import { TextInput } from 'react-native-paper';
+import { MyStackNavigationProp, StackParameterList } from '../Helper/Navigation/ScreenParameters';
+import { ScreenNames } from '../Helper/Navigation/ScreenNames';
+import { useAmountConversion } from '../Hooks/useAmountConversion';
 
-interface Props {
-    amount: number,
-    setAmount: (amount: number) => void,
-    navigateToCalculatorScreen: () => void,
+interface Props<T extends keyof StackParameterList> {
+    value: string,
+    setValue: (newValue: string) => void,
+    navigation: MyStackNavigationProp<T>,
 }
 
 const ICON_CALCULATOR = 'calculator-variant';
 
-export const SubAmountInput = ({ amount, setAmount, navigateToCalculatorScreen }: Props) => {
-    const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
+export const SubAmountInput = <T extends keyof StackParameterList>({ value, setValue, navigation }: Props<T>) => {
+    const [convertTextToNumber, convertNumberToText] = useAmountConversion();
 
-    const defaultValue: string = useMemo(
-        () => amount ? convertAmountToText(amount, numberFormatSettings) : '',
-        [amount, numberFormatSettings],
+    const [previousCalculations, setPreviousCalculations] = useState<Array<string>>([]);
+
+    const isValid = useMemo(
+        () => {
+            const number = convertTextToNumber(value);
+            return !isNaN(number);
+        },
+        [value, convertTextToNumber],
     );
 
-    const [text, setText] = useState<string>(defaultValue);
+    const navigateToCalculatorScreen = useCallback(
+        () => {
+            const number = convertTextToNumber(value);
+            const currentAmount = !isNaN(number) ? number : 0;
 
-    useEffect(() => {
-        // Sync text back with changes to the amount from elsewhere
-        if (amount !== convertAmountFromText(text, numberFormatSettings)) {
-            setText(convertAmountToText(amount, numberFormatSettings));
-        }
-    }, [amount, text, numberFormatSettings]);
-
-    const onChangeText = useCallback(
-        (text: string): void => {
-            text = text.trim();
-            setText(text);
-
-            const number = convertAmountFromText(text, numberFormatSettings);
-
-            if (!isNaN(number) && amount !== number) {
-                setAmount(number);
-            }
+            navigation.navigate(
+                ScreenNames.CALCULATOR_SCREEN,
+                {
+                    currentAmount: currentAmount,
+                    setAmount: (newAmount) => setValue(convertNumberToText(newAmount)),
+                    previousCalculations: previousCalculations,
+                    setPreviousCalculations: setPreviousCalculations,
+                },
+            );
         },
-        [numberFormatSettings, amount, setAmount],
+        [convertTextToNumber, convertNumberToText, value, setValue, previousCalculations, setPreviousCalculations, navigation],
     );
 
     return (
         <TextInput
             placeholder={'€'}
-            value={text}
-            onChangeText={onChangeText}
+            value={value}
+            error={!isValid}
+            onChangeText={setValue}
             keyboardType={'numeric'}
             style={styles.textInput}
             label={'Amount'}

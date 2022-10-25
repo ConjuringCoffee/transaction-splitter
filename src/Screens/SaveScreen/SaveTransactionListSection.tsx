@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { DataTable, List, useTheme } from 'react-native-paper';
 import { SaveTransaction } from 'ynab';
 import { StyleSheet } from 'react-native';
-import { convertAmountToText, convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
+import { convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
 import { selectBudgetById, selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../redux/hooks';
 import { SubTransactionsDataTable } from './SubTransactionsDataTable';
-import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 import { MultiLineTextDataTableCellView } from './MultiLineTextDataTableCellView';
+import { useAmountConversion } from '../../Hooks/useAmountConversion';
 
 interface Props {
     saveTransaction: SaveTransaction,
@@ -18,17 +18,17 @@ interface Props {
 }
 
 export const SaveTransactionListSection = (props: Props) => {
+    const [, convertNumberToText] = useAmountConversion();
     const [detailsExpanded, setDetailsExpanded] = useState<boolean>(true);
     const [subTransactionsExpanded, setSubTransactionsExpanded] = useState<boolean>(true);
     const theme = useTheme();
 
     const budget = useAppSelector((state) => selectBudgetById(state, props.budgetId));
     const categories = useAppSelector((state) => selectCategories(state, props.budgetId));
-    const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
 
     const accountName = budget.accounts.find((account) => account.id === props.saveTransaction.account_id)?.name;
     const amountHuman = convertApiAmountToHumanAmount(props.saveTransaction.amount);
-    const amountText = convertAmountToText(amountHuman, numberFormatSettings);
+    const amountText = convertNumberToText(amountHuman);
 
     const toggleDetailsExpanded = () => setDetailsExpanded(!detailsExpanded);
     const toggleSubTransactionsExpanded = () => setSubTransactionsExpanded(!subTransactionsExpanded);

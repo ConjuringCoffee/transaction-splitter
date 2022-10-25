@@ -5,12 +5,12 @@ import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
 import { CalculatorKeyboard } from '../../Component/CalculatorKeyboard';
 import { StyleSheet, View } from 'react-native';
 import { Calculation } from '../../Helper/Calculation';
-import { convertAmountToText } from '../../Helper/AmountHelper';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { useAppSelector } from '../../redux/hooks';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
 import { Appbar, Text } from 'react-native-paper';
+import { useAmountConversion } from '../../Hooks/useAmountConversion';
 
 type ScreenName = 'Calculator';
 
@@ -23,6 +23,7 @@ const SCREEN_TITLE = 'Calculate the amount';
 const ICON_HISTORY = 'history';
 
 export const CalculatorScreen = ({ route, navigation }: Props) => {
+    const [, convertNumberToText] = useAmountConversion();
     const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
 
     const routePreviousCalculations = route.params.previousCalculations;
@@ -33,7 +34,7 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     const defaultCalculation: string = useMemo(
         () => {
             if (routePreviousCalculations.length === 0) {
-                return convertAmountToText(currentAmount, numberFormatSettings);
+                return convertNumberToText(currentAmount);
             }
 
             const lastCalculation = routePreviousCalculations[routePreviousCalculations.length - 1];
@@ -45,7 +46,7 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
 
             return '';
         },
-        [currentAmount, numberFormatSettings, routePreviousCalculations],
+        [currentAmount, numberFormatSettings, routePreviousCalculations, convertNumberToText],
     );
 
     const [currentCalculation, setCurrentCalculation] = useState<string>(defaultCalculation);
@@ -141,7 +142,7 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
 
     const onCalculatePress = (): void => {
         const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
-        setCurrentCalculation(convertAmountToText(currentResult, numberFormatSettings));
+        setCurrentCalculation(convertNumberToText(currentResult));
         addPreviousCalculation(currentCalculation);
     };
 
@@ -160,9 +161,9 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     const resultText: string = useMemo(
         () => {
             const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
-            return convertAmountToText(currentResult, numberFormatSettings);
+            return convertNumberToText(currentResult);
         },
-        [currentCalculation, numberFormatSettings],
+        [currentCalculation, numberFormatSettings, convertNumberToText],
     );
 
     return (
