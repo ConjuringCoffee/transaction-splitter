@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { StackParameterList } from '../../Helper/Navigation/ScreenParameters';
-import { CalculatorKeyboard } from '../../Component/CalculatorKeyboard';
+import { StackParameterList } from '../../Navigation/ScreenParameters';
+import { CalculatorKeyboard } from './CalculatorKeyboard';
 import { StyleSheet, View } from 'react-native';
 import { Calculation } from '../../Helper/Calculation';
-import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import { useAppSelector } from '../../redux/hooks';
+import { ScreenNames } from '../../Navigation/ScreenNames';
+import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
-import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
+import { NavigationBar } from '../../Navigation/NavigationBar';
 import { Appbar, Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 

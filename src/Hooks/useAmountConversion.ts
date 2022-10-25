@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { reverseNumberFormatSettingsFromLocale } from '../Helper/AmountHelper';
 import { selectNumberFormatSettings } from '../redux/features/displaySettings/displaySettingsSlice';
-import { useAppSelector } from '../redux/hooks';
+import { useAppSelector } from './useAppSelector';
 
 type Return = [
     (text: string) => number,

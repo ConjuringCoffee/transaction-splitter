@@ -1,14 +1,14 @@
 import React, { useCallback, useLayoutEffect } from 'react';
 import { CustomScrollView } from '../../../../Component/CustomScrollView';
-import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
+import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { BudgetInProfileInputSection } from '../BudgetInProfileInputSection';
 import { Appbar, Menu } from 'react-native-paper';
-import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
+import { NavigationBar } from '../../../../Navigation/NavigationBar';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { useEditableBudgetsInProfiles } from '../../../../Hooks/useEditableBudgetsInProfiles';
-import { useAppDispatch } from '../../../../redux/hooks';
 import { deleteProfile } from '../../../../redux/features/profiles/profilesSlice';
 import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
+import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
 
 type ScreenName = 'EditProfile';
 

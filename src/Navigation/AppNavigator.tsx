@@ -1,25 +1,25 @@
 import React from 'react';
-import { SplittingScreen } from '../../Screens/SplittingScreen/SplittingScreen';
-import { SaveScreen } from '../../Screens/SaveScreen/SaveScreen';
-import { AmountsScreen } from '../../Screens/AmountsScreen/AmountsScreen';
-import { CategoryScreen } from '../../Screens/CategoryScreen/CategoryScreen';
+import { SplittingScreen } from '../Screens/SplittingScreen/SplittingScreen';
+import { SaveScreen } from '../Screens/SaveScreen/SaveScreen';
+import { AmountsScreen } from '../Screens/AmountsScreen/AmountsScreen';
+import { CategoryScreen } from '../Screens/CategoryScreen/CategoryScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StackParameterList } from './ScreenParameters';
-import { AccessTokenScreen } from '../../Screens/Settings/AccessTokenScreen/AccessTokenScreen';
-import { CalculatorScreen } from '../../Screens/CalculatorScreen/CalculatorScreen';
-import { CalculationHistoryScreen } from '../../Screens/CalculationHistoryScreen/CalculationHistoryScreen';
-import { SelectCategoryComboScreen } from '../../Screens/SelectCategoryComboScreen/SelectCategoryComboScreen';
-import { SettingsOverviewScreen } from '../../Screens/Settings/SettingsOverviewScreen/SettingsOverviewScreen';
-import { EditCategoryComboScreen } from '../../Screens/Settings/CategoryCombos/EditCategoryComboScreen/EditCategoryComboScreen';
+import { AccessTokenScreen } from '../Screens/Settings/AccessTokenScreen/AccessTokenScreen';
+import { CalculatorScreen } from '../Screens/CalculatorScreen/CalculatorScreen';
+import { CalculationHistoryScreen } from '../Screens/CalculationHistoryScreen/CalculationHistoryScreen';
+import { SelectCategoryComboScreen } from '../Screens/SelectCategoryComboScreen/SelectCategoryComboScreen';
+import { SettingsOverviewScreen } from '../Screens/Settings/SettingsOverviewScreen/SettingsOverviewScreen';
+import { EditCategoryComboScreen } from '../Screens/Settings/CategoryCombos/EditCategoryComboScreen/EditCategoryComboScreen';
 import { ScreenNames } from './ScreenNames';
-import { CategoryComboSettingsScreen } from '../../Screens/Settings/CategoryCombos/CategoryComboSettingsScreen/CategoryComboSettingsScreen';
+import { CategoryComboSettingsScreen } from '../Screens/Settings/CategoryCombos/CategoryComboSettingsScreen/CategoryComboSettingsScreen';
 import { NavigationBar } from './NavigationBar';
-import { CreateCategoryComboScreen } from '../../Screens/Settings/CategoryCombos/CreateCategoryComboScreen/CreateCategoryComboScreen';
-import { DisplaySettingsScreen } from '../../Screens/Settings/DisplaySettingsScreen/DisplaySettingsScreen';
-import { EditProfileScreen } from '../../Screens/Settings/Profiles/EditProfileScreen/EditProfileScreen';
-import { CreateProfileScreen } from '../../Screens/Settings/Profiles/CreateProfilesScreen/CreateProfileScreen';
-import { useAppSelector } from '../../redux/hooks';
-import { selectProfiles } from '../../redux/features/profiles/profilesSlice';
+import { CreateCategoryComboScreen } from '../Screens/Settings/CategoryCombos/CreateCategoryComboScreen/CreateCategoryComboScreen';
+import { DisplaySettingsScreen } from '../Screens/Settings/DisplaySettingsScreen/DisplaySettingsScreen';
+import { EditProfileScreen } from '../Screens/Settings/Profiles/EditProfileScreen/EditProfileScreen';
+import { CreateProfileScreen } from '../Screens/Settings/Profiles/CreateProfilesScreen/CreateProfileScreen';
+import { useAppSelector } from '../Hooks/useAppSelector';
+import { selectProfiles } from '../redux/features/profiles/profilesSlice';
 
 export const AppNavigator = () => {
     return (

@@ -1,7 +1,7 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
+import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { Appbar, TextInput } from 'react-native-paper';
-import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
+import { NavigationBar } from '../../Navigation/NavigationBar';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { View } from 'react-native';
 import { CategoryList } from './CategoryList';

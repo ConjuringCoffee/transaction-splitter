@@ -4,7 +4,7 @@ import { SaveSubTransaction } from 'ynab';
 import { convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { selectActiveAccounts, selectCategories } from '../../redux/features/ynab/ynabSlice';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppSelector } from '../../Hooks/useAppSelector';
 import { MemoDataTableCell } from './MemoDataTableCell';
 import { MultiLineTextDataTableCellView } from './MultiLineTextDataTableCellView';
 

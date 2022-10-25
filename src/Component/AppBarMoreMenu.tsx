@@ -22,7 +22,8 @@ export const AppBarMoreMenu = (props: Props) => {
                     icon={ICON_MORE}
                     onPress={() => props.setVisible(true)}
                     // The usual color from the Appbar isn't transferred to this action
-                    color={theme.colors.textOnAppBar} />
+                    color={theme.colors.textOnAppBar}
+                />
             } >
             {props.children}
         </Menu >);

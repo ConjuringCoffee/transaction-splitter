@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { Updater, useImmer } from 'use-immer';
 import { addProfile, BudgetInProfile, Profile, ProfileToCreate, selectProfile, updateProfile } from '../redux/features/profiles/profilesSlice';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useAppDispatch } from './useAppDispatch';
+import { useAppSelector } from './useAppSelector';
 
 export interface EditableBudgetInProfile {
     budgetId?: string,

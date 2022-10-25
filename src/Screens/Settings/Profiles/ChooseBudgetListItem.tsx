@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { List } from 'react-native-paper';
 import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { BudgetSelectModalPortal } from './BudgetSelectModalPortal';
 
 interface Props {

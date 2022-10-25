@@ -2,8 +2,8 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { KeyboardButton } from './KeyboardButton';
 import { KeyboardNumberButton } from './KeyboardNumberButton';
-import { useAppSelector } from '../redux/hooks';
-import { selectNumberFormatSettings } from '../redux/features/displaySettings/displaySettingsSlice';
+import { useAppSelector } from '../../Hooks/useAppSelector';
+import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 
 interface Props {
     onDigitPress: (digit: number) => void

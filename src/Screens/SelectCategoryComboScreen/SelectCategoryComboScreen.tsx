@@ -2,12 +2,12 @@ import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { Appbar, List, TextInput } from 'react-native-paper';
-import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
-import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
+import { NavigationBar } from '../../Navigation/NavigationBar';
+import { ScreenNames } from '../../Navigation/ScreenNames';
+import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { CategoryCombo, selectCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppSelector } from '../../Hooks/useAppSelector';
 
 type ScreenName = 'Category Combinations';
 

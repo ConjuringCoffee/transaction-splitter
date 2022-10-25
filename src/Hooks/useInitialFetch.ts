@@ -5,7 +5,8 @@ import { selectCategoryCombosFetchStatus, fetchCategoryCombos } from '../redux/f
 import { selectDisplaySettingsFetchStatus, fetchDisplaySettings } from '../redux/features/displaySettings/displaySettingsSlice';
 import { selectProfilesFetchStatus, fetchProfiles } from '../redux/features/profiles/profilesSlice';
 import { selectBudgetsFetchStatus, fetchBudgets } from '../redux/features/ynab/ynabSlice';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useAppDispatch } from './useAppDispatch';
+import { useAppSelector } from './useAppSelector';
 
 export const useInitialFetch = (): [boolean] => {
     const dispatch = useAppDispatch();

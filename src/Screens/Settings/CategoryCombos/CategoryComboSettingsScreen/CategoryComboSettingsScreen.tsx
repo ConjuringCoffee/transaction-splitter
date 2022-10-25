@@ -1,16 +1,17 @@
 import React, { useEffect, useLayoutEffect, useMemo } from 'react';
-import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
-import { ScreenNames } from '../../../../Helper/Navigation/ScreenNames';
-import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
+import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
+import { ScreenNames } from '../../../../Navigation/ScreenNames';
+import { NavigationBar } from '../../../../Navigation/NavigationBar';
 import { Appbar, List } from 'react-native-paper';
 import { CategoryCombo, selectCategoryCombos } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { View } from 'react-native';
 import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../../../Helper/LoadingStatus';
 import { LoadingComponent } from '../../../../Component/LoadingComponent';
 import { selectAccessToken } from '../../../../redux/features/accessToken/accessTokenSlice';
+import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
 
 type ScreenName = 'Category Combinations Settings';
 

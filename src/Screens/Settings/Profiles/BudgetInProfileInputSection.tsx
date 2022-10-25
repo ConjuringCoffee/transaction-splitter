@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { List } from 'react-native-paper';
 import { Updater } from 'use-immer';
 import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Budget } from '../../../YnabApi/YnabApiWrapper';
 import { ChooseBudgetListItem } from './ChooseBudgetListItem';
 import { EditableBudgetInProfile } from './CreateProfilesScreen/CreateProfileScreen';

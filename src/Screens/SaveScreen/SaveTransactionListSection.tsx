@@ -4,7 +4,7 @@ import { SaveTransaction } from 'ynab';
 import { StyleSheet } from 'react-native';
 import { convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
 import { selectBudgetById, selectCategories } from '../../redux/features/ynab/ynabSlice';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppSelector } from '../../Hooks/useAppSelector';
 import { SubTransactionsDataTable } from './SubTransactionsDataTable';
 import { MultiLineTextDataTableCellView } from './MultiLineTextDataTableCellView';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, Text } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
-import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
-import { MyStackNavigationProp, StackParameterList } from '../../Helper/Navigation/ScreenParameters';
+import { ScreenNames } from '../../Navigation/ScreenNames';
+import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
 
 interface Props<T extends keyof StackParameterList> {
     label: string,

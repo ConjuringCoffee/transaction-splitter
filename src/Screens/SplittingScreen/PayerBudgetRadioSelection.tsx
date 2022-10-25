@@ -2,7 +2,7 @@ import { List, RadioButton } from 'react-native-paper';
 import { BudgetInProfile, Profile } from '../../redux/features/profiles/profilesSlice';
 import React, { useCallback } from 'react';
 import { Keyboard } from 'react-native';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectBudgets } from '../../redux/features/ynab/ynabSlice';
 
 interface Props {

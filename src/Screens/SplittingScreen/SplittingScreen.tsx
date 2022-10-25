@@ -1,13 +1,13 @@
 import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
-import { MyStackScreenProps } from '../../Helper/Navigation/ScreenParameters';
-import { NavigationBar } from '../../Helper/Navigation/NavigationBar';
-import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
+import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
+import { NavigationBar } from '../../Navigation/NavigationBar';
+import { ScreenNames } from '../../Navigation/ScreenNames';
 import { Appbar, Button, TextInput } from 'react-native-paper';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectProfiles } from '../../redux/features/profiles/profilesSlice';
 import { selectAccountById, selectActiveAccounts, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
 import { CustomScrollView } from '../../Component/CustomScrollView';
-import { TotalAmountInput } from '../../Component/TotalAmountInput';
+import { TotalAmountInput } from './TotalAmountInput';
 import { DatePickerInput } from 'react-native-paper-dates';
 import { AccountRadioSelection } from './AccountRadioSelection';
 import { PayerBudgetRadioSelection } from './PayerBudgetRadioSelection';
