@@ -63,7 +63,6 @@ export const SubAmountInput = ({ amount, setAmount, navigateToCalculatorScreen }
 const styles = StyleSheet.create({
     textInput: {
         flex: 1,
-        marginHorizontal: 10,
         flexGrow: 0,
         flexShrink: 1,
         flexBasis: '60%',

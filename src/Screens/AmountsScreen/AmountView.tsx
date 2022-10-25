@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Icon, Input, Layout, Text } from '@ui-kitten/components';
-import { ImageProps, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Navigation } from './AmountsScreen';
 import { ScreenNames } from '../../Helper/Navigation/ScreenNames';
 import { SplitPercentInput } from './SplitPercentInput';
 import { useAppSelector } from '../../redux/hooks';
 import { selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { SubAmountInput } from '../../Component/SubAmountInput';
+import { Button, IconButton, Text, TextInput } from 'react-native-paper';
 
 interface Props {
-    // TODO: Pass AmountEntry instead of all these separate variables
     key: number,
     index: number,
     amount: number,
@@ -35,11 +34,14 @@ interface CategoryLayoutProps {
     navigation: Navigation
 }
 
-const CategoryLayout = (props: CategoryLayoutProps) => (
-    <Layout style={styles.categoryLayout}>
-        <Text>{props.label}</Text>
+const CategoryInput = (props: CategoryLayoutProps) => (
+    <View style={styles.categoryInput}>
+        <Text>
+            {props.label}
+        </Text>
 
         <Button
+            mode='contained'
             onPress={() => {
                 props.navigation.navigate(ScreenNames.CATEGORY_SCREEN, {
                     budgetId: props.budgetId,
@@ -48,16 +50,15 @@ const CategoryLayout = (props: CategoryLayoutProps) => (
             }}>
             {props.text}
         </Button>
-    </Layout>
+    </View>
 );
 
-const defaultSplitPercentToPayer = 50;
+const DEFAULT_SPLIT_PERCENT_TO_PAYER = 50;
 
-const CategoryComboIcon = (props: Partial<ImageProps> | undefined) => (
-    <Icon {...props} name='more-horizontal-outline' />
-);
+const ICON_CATEGORY_COMBO = 'vector-combine';
+const ICON_DELETE = 'delete';
 
-export const AmountCard = (props: Props) => {
+export const AmountView = (props: Props) => {
     const [previousCalculations, setPreviousCalculations] = useState<Array<string>>([]);
 
     const { index, payerCategoryId, debtorCategoryId, splitPercentToPayer, setSplitPercentToPayer } = props;
@@ -69,7 +70,7 @@ export const AmountCard = (props: Props) => {
                 setSplitPercentToPayer(index, undefined);
             }
         } else if (payerCategoryId !== undefined && debtorCategoryId !== undefined && splitPercentToPayer === undefined) {
-            setSplitPercentToPayer(index, defaultSplitPercentToPayer);
+            setSplitPercentToPayer(index, DEFAULT_SPLIT_PERCENT_TO_PAYER);
         }
     }, [payerCategoryId, debtorCategoryId, splitPercentToPayer, index, setSplitPercentToPayer]);
 
@@ -80,8 +81,8 @@ export const AmountCard = (props: Props) => {
     const debtorCategory = props.debtorCategoryId ? debtorCategories[props.debtorCategoryId] : undefined;
 
     return (
-        <Card>
-            <Layout style={styles.container}>
+        <View style={styles.mainView}>
+            <View style={styles.flexContainer}>
                 <SubAmountInput
                     amount={props.amount}
                     setAmount={props.setAmount}
@@ -97,32 +98,26 @@ export const AmountCard = (props: Props) => {
                         );
                     }}
                 />
-                <Button
-                    style={styles.removeButton}
-                    appearance='ghost'
-                    size='large'
-                    accessoryLeft={<Icon {...props} name='trash-2-outline' />}
-                    onPress={() => props.onRemovePress()} />
-            </Layout>
+                <IconButton
+                    icon={ICON_DELETE}
+                    onPress={() => props.onRemovePress()}
+                />
+            </View>
 
-            <Layout style={styles.container}>
-                <CategoryLayout
+            <View style={styles.flexContainer}>
+                <CategoryInput
                     label='Payer Category'
                     text={payerCategory?.name ? payerCategory?.name : ''}
                     budgetId={props.payerBudgetId}
                     onSelect={props.setPayerCategoryId}
-                    navigation={props.navigation} />
-                <Button
-                    size='small'
+                    navigation={props.navigation}
+                />
+                <IconButton
                     style={styles.categoryComboButton}
-                    accessoryLeft={CategoryComboIcon}
+                    icon={ICON_CATEGORY_COMBO}
                     onPress={() => {
                         props.navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
                             onSelect: (categoryCombo) => {
-                                if (categoryCombo.categories.length !== 2) {
-                                    throw new Error('Cannot handle combinations not consisting of exactly two categories');
-                                }
-
                                 categoryCombo.categories.forEach((category) => {
                                     if (props.payerBudgetId === category.budgetId) {
                                         props.setPayerCategoryId(category.id);
@@ -134,61 +129,41 @@ export const AmountCard = (props: Props) => {
                                 });
                             },
                         });
-                    }} />
-                <CategoryLayout
+                    }}
+                />
+                <CategoryInput
                     label='Debtor Category'
                     text={debtorCategory?.name ? debtorCategory?.name : ''}
                     budgetId={props.debtorBudgetId}
                     onSelect={props.setDebtorCategoryId}
-                    navigation={props.navigation} />
-            </Layout>
+                    navigation={props.navigation}
+                />
+            </View>
             <SplitPercentInput
                 payerCategoryChosen={props.payerCategoryId !== undefined}
                 debtorCategoryChosen={props.debtorCategoryId !== undefined}
                 splitPercentToPayer={props.splitPercentToPayer}
-                setSplitPercentToPayer={(splitPercent) => props.setSplitPercentToPayer(index, splitPercent)} />
-            <Layout style={styles.container}>
-                <Input
-                    style={styles.memo}
-                    label='Memo'
-                    placeholder='Enter memo'
-                    onChangeText={(text) => props.setMemo(text)} />
-
-            </Layout>
-        </Card>);
+                setSplitPercentToPayer={(splitPercent) => props.setSplitPercentToPayer(index, splitPercent)}
+            />
+            <TextInput
+                label='Memo'
+                placeholder='Enter memo'
+                onChangeText={(text) => props.setMemo(text)}
+            />
+        </View>);
 };
 
 const styles = StyleSheet.create({
-    container: {
+    mainView: {
+        marginVertical: 10,
+    },
+    flexContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    categoryLayout: {
+    categoryInput: {
         flex: 1,
         margin: 5,
-    },
-    amount: {
-        flex: 1,
-        marginHorizontal: 10,
-        flexGrow: 0,
-        flexShrink: 1,
-        flexBasis: '60%',
-    },
-    memo: {
-        flex: 1,
-        margin: 5,
-    },
-    removeButton: {
-        flex: 1,
-        margin: 2,
-        flexGrow: 0,
-        flexShrink: 1,
-    },
-    amountText: {
-        textAlign: 'right',
-    },
-    calculatorButton: {
-        height: 1,
     },
     categoryComboButton: {
         // TODO: Fix this mess. Research table layout, see also:
