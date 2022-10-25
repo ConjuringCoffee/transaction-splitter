@@ -4,22 +4,18 @@ import { CategoryComboInputView } from '../../../../Component/CategoryComboInput
 import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
 import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
-import { CategoryComboToCreate } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
+import { addCategoryCombo, CategoryComboToCreate } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
-import { useAppSelector } from '../../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 
 type ScreenName = 'Create Category Combo';
 
 const ICON_SAVE = 'content-save';
 
-const SCREEN_TITLE = 'Add';
-const SCREEN_SUBTITLE = 'Category Combination';
+const SCREEN_TITLE = 'Add Category Combination';
 
-export const CreateCategoryComboScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
-    const {
-        createCategoryCombo,
-    } = route.params;
-
+export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
+    const dispatch = useAppDispatch();
     const [navigateBack] = useNavigateBack(navigation);
     const profiles = useAppSelector(selectProfiles);
 
@@ -33,7 +29,7 @@ export const CreateCategoryComboScreen = ({ navigation, route }: MyStackScreenPr
 
     useLayoutEffect(() => {
         const saveAndNavigate = async (newCategoryCombo: CategoryComboToCreate): Promise<void> => {
-            await createCategoryCombo(newCategoryCombo);
+            dispatch(addCategoryCombo(newCategoryCombo));
             navigateBack();
         };
 
@@ -65,7 +61,6 @@ export const CreateCategoryComboScreen = ({ navigation, route }: MyStackScreenPr
             header: () => (
                 <NavigationBar
                     title={SCREEN_TITLE}
-                    subtitle={SCREEN_SUBTITLE}
                     navigation={navigation}
                     additions={addition}
                 />
@@ -78,7 +73,7 @@ export const CreateCategoryComboScreen = ({ navigation, route }: MyStackScreenPr
         categoryIdFirstProfile,
         categoryIdSecondProfile,
         profileUsed,
-        createCategoryCombo,
+        dispatch,
         navigateBack,
     ]);
 
