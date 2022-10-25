@@ -11,10 +11,11 @@ import { MultiLineTextDataTableCellView } from './MultiLineTextDataTableCellView
 interface Props {
     budgetId: string,
     subTransaction: SaveSubTransaction,
+    displayMemoCell: boolean,
     triggerMemoDisplay: (memo: string) => void,
 }
 
-export const SubTransactionDataTableRow = ({ budgetId, subTransaction, triggerMemoDisplay }: Props) => {
+export const SubTransactionDataTableRow = ({ budgetId, subTransaction, displayMemoCell, triggerMemoDisplay }: Props) => {
     const categories = useAppSelector((state) => selectCategories(state, budgetId));
     const accounts = useAppSelector((state) => selectActiveAccounts(state, budgetId));
     const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
@@ -44,9 +45,12 @@ export const SubTransactionDataTableRow = ({ budgetId, subTransaction, triggerMe
             <DataTable.Cell numeric>
                 {humanAmountText}
             </DataTable.Cell>
-            <MemoDataTableCell
-                memo={subTransaction.memo}
-                triggerMemoDisplay={triggerMemoDisplay}
-            />
+            {displayMemoCell
+                ? <MemoDataTableCell
+                    memo={subTransaction.memo}
+                    triggerMemoDisplay={triggerMemoDisplay}
+                />
+                : null
+            }
         </DataTable.Row>);
 };
