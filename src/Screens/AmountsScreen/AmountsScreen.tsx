@@ -133,25 +133,22 @@ export const AmountsScreen = (props: Props) => {
                 ? <View style={styles.view}>
                     {amountEntries.map((amountEntry, index) => {
                         return (
-                            <>
-                                <AmountView
-                                    key={index}
-                                    index={index}
-                                    amount={amountEntry.amount}
-                                    payerBudgetId={basicData.payer.budgetId}
-                                    debtorBudgetId={basicData.debtor.budgetId}
-                                    setAmount={(amount) => setAmount(index, amount)}
-                                    setMemo={(memo) => setMemo(index, memo)}
-                                    payerCategoryId={amountEntry.payerCategoryId}
-                                    setPayerCategoryId={(categoryId) => setPayerCategoryId(index, categoryId)}
-                                    debtorCategoryId={amountEntry.debtorCategoryId}
-                                    setDebtorCategoryId={(categoryId) => setDebtorCategoryId(index, categoryId)}
-                                    splitPercentToPayer={amountEntry.splitPercentToPayer}
-                                    setSplitPercentToPayer={setSplitPercentToPayer}
-                                    onRemovePress={() => removeAmountEntry(index)}
-                                    navigation={props.navigation} />
-                                <Divider />
-                            </>
+                            <AmountView
+                                key={index}
+                                index={index}
+                                amount={amountEntry.amount}
+                                payerBudgetId={basicData.payer.budgetId}
+                                debtorBudgetId={basicData.debtor.budgetId}
+                                setAmount={(amount) => setAmount(index, amount)}
+                                setMemo={(memo) => setMemo(index, memo)}
+                                payerCategoryId={amountEntry.payerCategoryId}
+                                setPayerCategoryId={(categoryId) => setPayerCategoryId(index, categoryId)}
+                                debtorCategoryId={amountEntry.debtorCategoryId}
+                                setDebtorCategoryId={(categoryId) => setDebtorCategoryId(index, categoryId)}
+                                splitPercentToPayer={amountEntry.splitPercentToPayer}
+                                setSplitPercentToPayer={setSplitPercentToPayer}
+                                onRemovePress={() => removeAmountEntry(index)}
+                                navigation={props.navigation} />
                         );
                     })}
 

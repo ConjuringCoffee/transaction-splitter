@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import * as eva from '@eva-design/eva';
 import 'react-native-gesture-handler';
-import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
-import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { LogBox, View, StyleSheet } from 'react-native';
 import { AppNavigator } from './src/Helper/Navigation/AppNavigator';
 import { NavigationContainer } from '@react-navigation/native';
@@ -29,7 +26,7 @@ SplashScreen.preventAutoHideAsync();
 
 const ReduxProvidedApp = () => {
     const [everythingLoaded] = useInitialFetch();
-    const themes = useTheme();
+    const [theme] = useTheme();
     const [appIsReady, setAppIsReady] = useState(false);
 
     useEffect(() => {
@@ -53,15 +50,12 @@ const ReduxProvidedApp = () => {
             //   Based on: https://docs.expo.dev/versions/v46.0.0/sdk/splash-screen/
             onLayout={SplashScreen.hideAsync}
         >
-            <PaperProvider theme={themes.theme}>
-                <IconRegistry icons={EvaIconsPack} />
-                <ApplicationProvider {...eva} theme={themes.evaThema}>
-                    <NavigationContainer theme={themes.theme}>
-                        {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
-                        <StatusBar style={themes.theme.statusBarColorScheme} />
-                        <AppNavigator />
-                    </NavigationContainer>
-                </ApplicationProvider>
+            <PaperProvider theme={theme}>
+                <NavigationContainer theme={theme}>
+                    {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
+                    <StatusBar style={theme.statusBarColorScheme} />
+                    <AppNavigator />
+                </NavigationContainer>
             </PaperProvider>
         </View>
     );

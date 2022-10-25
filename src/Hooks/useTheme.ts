@@ -6,7 +6,6 @@ import { useColorScheme } from 'react-native';
 import { selectThemeTypeSetting } from '../redux/features/displaySettings/displaySettingsSlice';
 import { useAppSelector } from '../redux/hooks';
 import { ThemeType } from '../redux/features/displaySettings/ThemeType';
-import * as eva from '@eva-design/eva';
 import { StatusBarStyle } from 'expo-status-bar';
 
 const DARK_COLOR_SCHEME = 'dark';
@@ -50,19 +49,7 @@ export const useTheme = () => {
         }
     }, [themeTypeSetting, colorScheme, lightTheme, darkTheme]);
 
-    const evaThemeToUse = useMemo(() => {
-        switch (themeTypeSetting) {
-            case ThemeType.DARK:
-                return eva.dark;
-            case ThemeType.LIGHT:
-                return eva.light;
-            default:
-                return colorScheme === DARK_COLOR_SCHEME ? eva.dark : eva.light;
-        }
-    }, [themeTypeSetting, colorScheme]);
-
-    return {
-        theme: themeToUse,
-        evaThema: evaThemeToUse,
-    };
+    return [
+        themeToUse,
+    ];
 };
