@@ -75,14 +75,6 @@ const StackNavigator = () => {
             <Stack.Screen
                 name={ScreenNames.SELECT_CATEGORY_COMBO_SCREEN}
                 component={SelectCategoryComboScreen}
-                options={{
-                    header: (headerProps) => (
-                        <NavigationBar
-                            title='Category Combinations'
-                            navigation={headerProps.navigation}
-                        />
-                    ),
-                }}
             />
             <Stack.Screen
                 name={ScreenNames.CALCULATOR_SCREEN}

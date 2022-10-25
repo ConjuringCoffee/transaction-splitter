@@ -14,9 +14,8 @@ import { selectAccessToken } from '../../../../redux/features/accessToken/access
 
 type ScreenName = 'Category Combinations Settings';
 
-const SCREEN_TITLE = 'Category Combinations';
-const SCREEN_SUBTITLE = 'Settings';
-const ADD_ICON = 'plus';
+const SCREEN_TITLE = 'Category Combination Settings';
+const ICON_ADD = 'plus';
 
 export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
@@ -56,7 +55,7 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
     useLayoutEffect(() => {
         const additions = (
             <Appbar.Action
-                icon={ADD_ICON}
+                icon={ICON_ADD}
                 disabled={!everythingLoaded}
                 onPress={() => {
                     navigation.navigate(ScreenNames.CREATE_CATEGORY_COMBO_SCREEN);
@@ -67,7 +66,6 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
             header: () => (
                 <NavigationBar
                     title={SCREEN_TITLE}
-                    subtitle={SCREEN_SUBTITLE}
                     navigation={navigation}
                     additions={additions} />),
         });
