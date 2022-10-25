@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { List } from 'react-native-paper';
 import { ScreenNames } from '../Helper/Navigation/ScreenNames';
 import { MyStackNavigationProp, StackParameterList } from '../Helper/Navigation/ScreenParameters';
@@ -14,19 +15,46 @@ interface Props<T extends keyof StackParameterList> {
 
 const ICON_CATEGORY_SET = 'check-circle-outline';
 const ICON_CATEGORY_NOT_SET = 'checkbox-blank-circle-outline';
+const ICON_CATEGORY_INVALID = 'alert-circle-outline';
 
-export const ChooseCategoryListItem = <T extends keyof StackParameterList>(props: Props<T>) => {
+export const ChooseCategoryListItem = <T extends keyof StackParameterList>({ selectedCategoryId, ...props }: Props<T>) => {
     const budget = useAppSelector((state) => selectBudgetById(state, props.budgetId));
     const categories = useAppSelector((state) => selectCategories(state, props.budgetId));
-    const categoryName = props.selectedCategoryId ? categories[props.selectedCategoryId].name : undefined;
 
+    const categoryName = selectedCategoryId ? categories[selectedCategoryId]?.name : undefined;
     const displayBudgetName = props.budgetDisplayName ?? budget.name;
+
+    const title = useMemo(
+        () => {
+            if (categoryName !== undefined) {
+                return categoryName;
+            } else if (selectedCategoryId === undefined) {
+                return 'None';
+            } else {
+                return 'Invalid category';
+            }
+        },
+        [categoryName, selectedCategoryId],
+    );
+
+    const icon = useMemo(
+        () => {
+            if (categoryName !== undefined) {
+                return ICON_CATEGORY_SET;
+            } else if (selectedCategoryId === undefined) {
+                return ICON_CATEGORY_NOT_SET;
+            } else {
+                return ICON_CATEGORY_INVALID;
+            }
+        },
+        [categoryName, selectedCategoryId],
+    );
 
     return (
         <List.Item
-            title={categoryName ?? 'None'}
+            title={title}
             description={`Category from ${displayBudgetName}`}
-            left={(props) => <List.Icon {...props} icon={categoryName ? ICON_CATEGORY_SET : ICON_CATEGORY_NOT_SET} />}
+            left={(props) => <List.Icon {...props} icon={icon} />}
             onPress={() => {
                 props.navigation.navigate(ScreenNames.CATEGORY_SCREEN, {
                     budgetId: props.budgetId,
