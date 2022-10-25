@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo } from 'react';
 import { MyStackScreenProps } from '../../../../Helper/Navigation/ScreenParameters';
 import { ScreenNames } from '../../../../Helper/Navigation/ScreenNames';
 import { NavigationBar } from '../../../../Helper/Navigation/NavigationBar';
@@ -23,6 +23,11 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
 
     const accessToken = useAppSelector(selectAccessToken);
     const categoryCombos = useAppSelector(selectCategoryCombos);
+
+    const sortedCategoryCombos = useMemo(
+        () => categoryCombos.slice().sort((a, b) => a.name.localeCompare(b.name)),
+        [categoryCombos],
+    );
 
     const profiles = useAppSelector(selectProfiles);
 
@@ -99,7 +104,7 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         <View>
             {
                 everythingLoaded
-                    ? categoryCombos.map(renderListItem)
+                    ? sortedCategoryCombos.map(renderListItem)
                     : <LoadingComponent />
             }
         </View>
