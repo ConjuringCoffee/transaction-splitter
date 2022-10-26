@@ -1,7 +1,6 @@
-import { useLayoutEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
-import { NavigationBar } from '../../../Navigation/NavigationBar';
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { saveAccessToken, selectAccessToken } from '../../../redux/features/accessToken/accessTokenSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
@@ -10,6 +9,7 @@ import { AccessTokenInput } from './AccessTokenInput';
 import { useNavigateBack } from '../../../Hooks/useNavigateBack';
 import { useConnectionTest } from '../../../Hooks/useConnectionTest';
 import { useAppDispatch } from '../../../Hooks/useAppDispatch';
+import { useNavigationBar } from '../../../Hooks/useNavigationBar';
 
 type ScreenName = 'Access Token';
 
@@ -34,47 +34,51 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
     const [connectionStatus, testConnection] = useConnectionTest();
     const [navigateBack] = useNavigateBack(navigation);
 
-    useLayoutEffect(() => {
-        const addition = (
+    const navigationBarAddition = useMemo(
+        () => (
             <Appbar.Action
                 icon={ICON_SAVE}
                 onPress={() => {
                     dispatch(saveAccessToken(enteredToken));
                     navigateBack();
-                }} />);
+                }}
+            />
+        ),
+        [dispatch, enteredToken, navigateBack],
+    );
 
-        navigation.setOptions({
-            header: () => (
-                <NavigationBar
-                    title={SCREEN_TITLE}
-                    navigation={navigation}
-                    additions={addition}
-                />
-            ),
-        });
-    }, [navigation, dispatch, enteredToken, navigateBack]);
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+        additions: navigationBarAddition,
+    });
 
-    const getIconForButton = (): string | undefined => {
-        switch (connectionStatus.status) {
-            case LoadingStatus.SUCCESSFUL:
-                return ICON_CONNECTION_SUCCESS;
-            case LoadingStatus.ERROR:
-                return ICON_CONNECTION_ERROR;
-            default:
-                return undefined;
-        }
-    };
+    const iconForButton = useMemo(
+        (): string | undefined => {
+            switch (connectionStatus.status) {
+                case LoadingStatus.SUCCESSFUL:
+                    return ICON_CONNECTION_SUCCESS;
+                case LoadingStatus.ERROR:
+                    return ICON_CONNECTION_ERROR;
+                default:
+                    return undefined;
+            }
+        },
+        [connectionStatus.status],
+    );
 
     return (
         <View>
             <AccessTokenInput
                 token={enteredToken}
                 setToken={setEnteredToken}
-                connectionStatus={connectionStatus} />
+                connectionStatus={connectionStatus}
+            />
             <Button
                 loading={connectionStatus.status === LoadingStatus.LOADING}
-                icon={getIconForButton()}
-                onPress={() => testConnection(enteredToken)} >
+                icon={iconForButton}
+                onPress={() => testConnection(enteredToken)}
+            >
                 Test connection
             </Button>
         </View >

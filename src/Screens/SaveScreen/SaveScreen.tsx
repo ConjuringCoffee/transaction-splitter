@@ -8,8 +8,11 @@ import { selectAccessToken } from '../../redux/features/accessToken/accessTokenS
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { SaveTransactionListSection } from './SaveTransactionListSection';
 import { SaveFAB } from './SaveFAB';
+import { useNavigationBar } from '../../Hooks/useNavigationBar';
 
 type ScreenName = 'Save';
+
+const SCREEN_TITLE = 'Save';
 
 export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
     const [payerTransactionSaveStatus, setPayerTransactionSaveStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
@@ -21,6 +24,11 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
         payerSaveTransaction,
         debtorSaveTransaction,
     } = route.params;
+
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+    });
 
     useEffect(() => {
         const navigate = async () => {

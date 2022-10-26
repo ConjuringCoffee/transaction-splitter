@@ -25,7 +25,8 @@ export const CategoryInput = <T extends keyof StackParameterList>(props: Props<T
                     budgetId: props.budgetId,
                     onSelect: (categoryId?: string) => props.onSelect(categoryId),
                 });
-            }}>
+            }}
+        >
             {props.text}
         </Button>
     </View>

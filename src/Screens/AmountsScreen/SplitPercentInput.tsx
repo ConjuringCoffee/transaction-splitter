@@ -18,7 +18,9 @@ export const SplitPercentInput = (props: Props) => {
     return (
         <TextInput
             label='Split % to payer'
-            keyboardType={'numeric'}
+            keyboardType="numeric"
             value={value}
-            onChangeText={(text) => props.setSplitPercentToPayer(Number(text))} />);
+            onChangeText={(text) => props.setSplitPercentToPayer(Number(text))}
+        />
+    );
 };

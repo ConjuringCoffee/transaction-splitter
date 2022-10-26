@@ -54,6 +54,7 @@ export const ChooseCategoryListItem = <T extends keyof StackParameterList>({ sel
         <List.Item
             title={title}
             description={`Category from ${displayBudgetName}`}
+            // eslint-disable-next-line react/no-unstable-nested-components
             left={(props) => <List.Icon {...props} icon={icon} />}
             onPress={() => {
                 props.navigation.navigate(ScreenNames.CATEGORY_SCREEN, {

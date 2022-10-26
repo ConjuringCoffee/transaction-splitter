@@ -39,7 +39,7 @@ export const ProfileBudgetDetailInput = (props: Props) => {
     return (
         <>
             <TextInput
-                label={'Displayed name'}
+                label='Displayed name'
                 value={props.displayName}
                 placeholder={budget.name}
                 onChangeText={props.setDisplayName}

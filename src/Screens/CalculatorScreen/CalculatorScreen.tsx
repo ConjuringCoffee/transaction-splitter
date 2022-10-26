@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParameterList } from '../../Navigation/ScreenParameters';
@@ -8,9 +8,9 @@ import { Calculation } from '../../Helper/Calculation';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
-import { NavigationBar } from '../../Navigation/NavigationBar';
 import { Appbar, Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
+import { useNavigationBar } from '../../Hooks/useNavigationBar';
 
 type ScreenName = 'Calculator';
 
@@ -88,23 +88,21 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         [navigation, previousCalculations, addPreviousCalculation, setCurrentCalculation, currentCalculation],
     );
 
-    const navigationBar = useCallback(() => (
-        <NavigationBar
-            title={SCREEN_TITLE}
-            navigation={navigation}
-            additions={
-                <Appbar.Action
-                    onPress={navigateToHistoryScreen}
-                    icon={ICON_HISTORY} />
-            }
-        />
-    ), [navigation, navigateToHistoryScreen]);
+    const navigationBarAddition = useMemo(
+        () => (
+            <Appbar.Action
+                onPress={navigateToHistoryScreen}
+                icon={ICON_HISTORY}
+            />
+        ),
+        [navigateToHistoryScreen],
+    );
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            header: navigationBar,
-        });
-    }, [navigation, navigationBar]);
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+        additions: navigationBarAddition,
+    });
 
     const onDigitPress = (digit: number): void => {
         const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
@@ -185,7 +183,8 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
                 onClearPress={onClearPress}
                 onCalculatePress={onCalculatePress}
                 onConfirmPress={onConfirmPress}
-                onCancelPress={onCancelPress} />
+                onCancelPress={onCancelPress}
+            />
         </>
     );
 };

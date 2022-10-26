@@ -68,16 +68,18 @@ export const BudgetInProfileInputSection = ({ editableBudgetInProfile, setEditab
                 selectBudgetId={setBudget}
             />
             {budget
-                ? <ProfileBudgetDetailInput
-                    budgetId={budget.id}
-                    displayName={editableBudgetInProfile.name}
-                    setDisplayName={setDisplayName}
-                    // Non-null assertion OK because it is immediately initialized when a budget is selected
-                    debtorAccountId={editableBudgetInProfile.debtorAccountId!}
-                    setDebtorAccountId={setDebtorAccountId}
-                    elegibleAccountIds={editableBudgetInProfile.elegibleAccountIds}
-                    toggleAccountElegible={toggleAccountElegible}
-                />
+                ? (
+                    <ProfileBudgetDetailInput
+                        budgetId={budget.id}
+                        displayName={editableBudgetInProfile.name}
+                        setDisplayName={setDisplayName}
+                        // Non-null assertion OK because it is immediately initialized when a budget is selected
+                        debtorAccountId={editableBudgetInProfile.debtorAccountId!}
+                        setDebtorAccountId={setDebtorAccountId}
+                        elegibleAccountIds={editableBudgetInProfile.elegibleAccountIds}
+                        toggleAccountElegible={toggleAccountElegible}
+                    />
+                )
                 : null
             }
         </List.Section>

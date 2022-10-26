@@ -1,18 +1,18 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Appbar, Menu } from 'react-native-paper';
-import { NavigationBar } from '../../../../Navigation/NavigationBar';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
-import { CategoryCombo, deleteCategoryCombo, updateCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
+import { deleteCategoryCombo, updateCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { CategoryComboInputView } from '../CategoryComboInputView';
 import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
+import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
 
 type ScreenName = 'Edit Category Combo';
 
-const SCREEN_TITLE = 'Edit Category Combo';
+const SCREEN_TITLE = 'Edit';
 
 const ICON_SAVE = 'content-save';
 
@@ -34,48 +34,40 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
 
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
 
-    const moreMenu = useCallback(() => {
-        const deleteAndNavigate = async () => {
-            dispatch(deleteCategoryCombo(categoryCombo.id));
-            navigateBack();
-        };
+    const moreMenu = useMemo(
+        () => {
+            const deleteAndNavigate = async () => {
+                dispatch(deleteCategoryCombo(categoryCombo.id));
+                navigateBack();
+            };
 
-        return (
-            <AppBarMoreMenu
-                key='more'
-                visible={menuVisible}
-                setVisible={setMenuVisible}>
-                <Menu.Item
-                    title="Delete"
-                    onPress={() => {
-                        deleteAndNavigate();
-                        setMenuVisible(false);
-                    }} />
-            </AppBarMoreMenu>);
-    }, [
-        dispatch,
-        navigateBack,
-        menuVisible,
-        categoryCombo,
-    ]);
+            return (
+                <AppBarMoreMenu
+                    key='more'
+                    visible={menuVisible}
+                    setVisible={setMenuVisible}
+                >
+                    <Menu.Item
+                        title="Delete"
+                        onPress={() => {
+                            deleteAndNavigate();
+                            setMenuVisible(false);
+                        }}
+                    />
+                </AppBarMoreMenu>);
+        },
+        [categoryCombo.id, dispatch, menuVisible, navigateBack],
+    );
 
-    useLayoutEffect(() => {
-        const saveAndNavigate = async (newCategoryCombo: CategoryCombo): Promise<void> => {
-            dispatch(updateCategoryCombo({ categoryCombo: newCategoryCombo }));
-            navigateBack();
-        };
+    const saveAndNavigate = useCallback(
+        () => {
+            if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
+                throw new Error('Not ready to save yet');
+            }
 
-        const additions = [
-            <Appbar.Action
-                key='save'
-                icon={ICON_SAVE}
-                disabled={!readyToSave}
-                onPress={() => {
-                    if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
-                        throw new Error('Not ready to save yet');
-                    }
-
-                    saveAndNavigate({
+            dispatch(updateCategoryCombo(
+                {
+                    categoryCombo: {
                         id: categoryCombo.id,
                         name: name,
                         categories: [
@@ -87,32 +79,34 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
                                 budgetId: profileUsed.budgets[1].budgetId,
                                 id: categoryIdSecondProfile,
                             }],
-                    });
-                }} />,
-            moreMenu(),
-        ];
+                    },
+                },
+            ));
+            navigateBack();
+        },
+        [categoryCombo.id, categoryIdFirstProfile, categoryIdSecondProfile, dispatch, name, navigateBack, profileUsed.budgets],
+    );
 
-        navigation.setOptions({
-            header: () => (
-                <NavigationBar
-                    title={SCREEN_TITLE}
-                    navigation={navigation}
-                    additions={additions}
-                />
-            ),
-        });
-    }, [
-        navigation,
-        readyToSave,
-        name,
-        categoryIdFirstProfile,
-        categoryIdSecondProfile,
-        profileUsed,
-        moreMenu,
-        navigateBack,
-        dispatch,
-        categoryCombo.id,
-    ]);
+    const navigationBarAdditions = useMemo(
+        () => (
+            [
+                <Appbar.Action
+                    key='save'
+                    icon={ICON_SAVE}
+                    disabled={!readyToSave}
+                    onPress={saveAndNavigate}
+                />,
+                moreMenu,
+            ]
+        ),
+        [moreMenu, readyToSave, saveAndNavigate],
+    );
+
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+        additions: navigationBarAdditions,
+    });
 
     return (
         <CategoryComboInputView
@@ -122,6 +116,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
             categoryIdFirstProfile={categoryIdFirstProfile}
             setCategoryIdFirstProfile={setCategoryIdFirstProfile}
             categoryIdSecondProfile={categoryIdSecondProfile}
-            setCategoryIdSecondProfile={setCategoryIdSecondProfile} />
+            setCategoryIdSecondProfile={setCategoryIdSecondProfile}
+        />
     );
 };

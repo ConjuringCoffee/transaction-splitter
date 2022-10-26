@@ -59,5 +59,7 @@ export const CategoryList = (props: Props) => {
             renderItem={renderListItem}
             // keyboardShouldPersistTaps is needed to allow pressing buttons when keyboard is open
             //   See: https://stackoverflow.com/a/57941568
-            keyboardShouldPersistTaps='handled' />);
+            keyboardShouldPersistTaps='handled'
+        />
+    );
 };

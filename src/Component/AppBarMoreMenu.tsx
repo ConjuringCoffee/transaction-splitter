@@ -24,7 +24,8 @@ export const AppBarMoreMenu = (props: Props) => {
                     // The usual color from the Appbar isn't transferred to this action
                     color={theme.colors.textOnAppBar}
                 />
-            } >
+            }
+        >
             {props.children}
         </Menu >);
 };
