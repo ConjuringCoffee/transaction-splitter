@@ -25,6 +25,7 @@ interface Props<T extends keyof StackParameterList> {
     setSplitPercentToPayer: (index: number, splitPercent: number | undefined) => void,
     onRemovePress: () => void,
     navigation: MyStackNavigationProp<T>,
+    quickModeEnabled: boolean,
 }
 
 const DEFAULT_SPLIT_PERCENT_TO_PAYER = 50;
@@ -102,17 +103,22 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                         navigation={props.navigation}
                     />
                 </View>
-                <SplitPercentInput
-                    payerCategoryChosen={props.payerCategoryId !== undefined}
-                    debtorCategoryChosen={props.debtorCategoryId !== undefined}
-                    splitPercentToPayer={props.splitPercentToPayer}
-                    setSplitPercentToPayer={(splitPercent) => props.setSplitPercentToPayer(index, splitPercent)}
-                />
-                <TextInput
-                    label='Memo'
-                    placeholder='Enter memo'
-                    onChangeText={(text) => props.setMemo(text)}
-                />
+                {!props.quickModeEnabled
+                    ? <>
+                        <SplitPercentInput
+                            payerCategoryChosen={props.payerCategoryId !== undefined}
+                            debtorCategoryChosen={props.debtorCategoryId !== undefined}
+                            splitPercentToPayer={props.splitPercentToPayer}
+                            setSplitPercentToPayer={(splitPercent) => props.setSplitPercentToPayer(index, splitPercent)}
+                        />
+                        <TextInput
+                            label='Memo'
+                            placeholder='Enter memo'
+                            onChangeText={(text) => props.setMemo(text)}
+                        />
+                    </>
+                    : null
+                }
             </View>
             <Divider />
         </View>
