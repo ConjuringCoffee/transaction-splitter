@@ -17,11 +17,6 @@ plugins:
   - import
 rules:
   max-len: off # Can't get it to work properly 
-    # - 1
-    # - code: 100
-    # - comments: 100
-    # - ignoreUrls: true
-  react/prop-types: off
   require-jsdoc: off
   indent: ["error", 4, { "SwitchCase": 1 }]
   object-curly-spacing: 
@@ -32,7 +27,6 @@ rules:
   operator-linebreak:
   - 2
   - "before"
-  react/react-in-jsx-scope: off # Not needed since we're using >= React 17
   import/no-default-export: error
   import/export: error
   
@@ -43,6 +37,8 @@ rules:
   no-unused-vars: off
   "@typescript-eslint/no-unused-vars": error
 
+  react/prop-types: off
+  react/react-in-jsx-scope: off # Not needed since we're using >= React 17
   react/jsx-closing-tag-location: error
   react/jsx-closing-bracket-location: error
   react/jsx-wrap-multilines: error
