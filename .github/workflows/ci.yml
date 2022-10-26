@@ -7,15 +7,15 @@ on:
       types: [opened, synchronize, reopened]
 
 jobs:
-  jest:
-    name: Execute jest
+  lint:
+    name: Execute ESLint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: npm ci
       - name: Run ESLint
-        run: npx eslint . --ext .js,.jsx,.ts,.tsx
+        run: npm lint
 
   test:
     name: Execute tests
@@ -52,7 +52,7 @@ jobs:
   build:
     name: Build on EAS
     runs-on: ubuntu-latest
-    needs: [jest, test, sonarcloud]
+    needs: [lint, test, sonarcloud]
     if: github.event_name != 'pull_request' && github.ref_name == 'main'
     steps:
       - name: Check out repository
