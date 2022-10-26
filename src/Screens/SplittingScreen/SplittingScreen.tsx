@@ -59,7 +59,8 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
             additions={
                 <Appbar.Action
                     onPress={navigateToSettingsScreen}
-                    icon={ICON_SETTINGS} />
+                    icon={ICON_SETTINGS}
+                />
             }
         />
     ), [navigation, navigateToSettingsScreen]);
@@ -134,7 +135,8 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
             />
             <Button
                 disabled={!everythingSelected}
-                onPress={navigateToAmountsScreen}>
+                onPress={navigateToAmountsScreen}
+            >
                 Continue
             </Button>
         </CustomScrollView>

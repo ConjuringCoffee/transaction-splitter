@@ -34,9 +34,11 @@ export const AccessTokenInput = (props: Props) => {
                 }
             />
             {props.connectionStatus.status === LoadingStatus.ERROR
-                ? <HelperText type="error">
-                    {`Error ${props.connectionStatus.error?.id}: ${props.connectionStatus.error?.detail}`}
-                </HelperText>
+                ? (
+                    <HelperText type="error">
+                        {`Error ${props.connectionStatus.error?.id}: ${props.connectionStatus.error?.detail}`}
+                    </HelperText>
+                )
                 : null
             }
         </>);

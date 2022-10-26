@@ -31,7 +31,8 @@ export const CategoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenN
                     additions={
                         <Appbar.Action
                             onPress={() => selectAndNavigateBack(undefined)}
-                            icon={ICON_DESELECT} />
+                            icon={ICON_DESELECT}
+                        />
                     }
                 />
             ),
@@ -47,11 +48,13 @@ export const CategoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenN
                 value={nameFilter}
                 autoFocus={true}
                 onChangeText={setNameFilter}
-                placeholder='Search categories' />
+                placeholder='Search categories'
+            />
             <CategoryList
                 categoryNameFilter={nameFilter}
                 budgetId={route.params.budgetId}
-                onCategorySelect={selectAndNavigateBack} />
+                onCategorySelect={selectAndNavigateBack}
+            />
         </View>
     );
 };

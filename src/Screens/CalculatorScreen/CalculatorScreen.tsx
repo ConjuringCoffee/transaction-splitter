@@ -95,7 +95,8 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
             additions={
                 <Appbar.Action
                     onPress={navigateToHistoryScreen}
-                    icon={ICON_HISTORY} />
+                    icon={ICON_HISTORY}
+                />
             }
         />
     ), [navigation, navigateToHistoryScreen]);
@@ -185,7 +186,8 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
                 onClearPress={onClearPress}
                 onCalculatePress={onCalculatePress}
                 onConfirmPress={onConfirmPress}
-                onCancelPress={onCancelPress} />
+                onCancelPress={onCancelPress}
+            />
         </>
     );
 };

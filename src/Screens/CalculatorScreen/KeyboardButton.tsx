@@ -30,7 +30,8 @@ export const KeyboardButton = (props: Props) => {
                 styles.pressable]}
             onPress={() => {
                 props.onPress();
-            }}>
+            }}
+        >
             <Text style={styles.text}>
                 {props.value}
             </Text>

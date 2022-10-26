@@ -11,5 +11,7 @@ export const KeyboardNumberButton = (props: Props) => {
         <KeyboardButton
             value={String(props.number)}
             color='white'
-            onPress={() => props.onPress(props.number)} />);
+            onPress={() => props.onPress(props.number)}
+        />
+    );
 };

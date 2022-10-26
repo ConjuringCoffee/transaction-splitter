@@ -61,10 +61,12 @@ export const SaveTransactionListSection = (props: Props) => {
                         <MultiLineTextDataTableCellView text={accountName} />
                     </DataTable.Row>
                     {props.saveTransaction.category_id
-                        ? <DataTable.Row>
-                            <DataTable.Cell>Category</DataTable.Cell>
-                            <MultiLineTextDataTableCellView text={categories[props.saveTransaction.category_id].name} />
-                        </DataTable.Row>
+                        ? (
+                            <DataTable.Row>
+                                <DataTable.Cell>Category</DataTable.Cell>
+                                <MultiLineTextDataTableCellView text={categories[props.saveTransaction.category_id].name} />
+                            </DataTable.Row>
+                        )
                         : null}
                     <DataTable.Row>
                         <DataTable.Cell>Total Amount</DataTable.Cell>
@@ -81,16 +83,18 @@ export const SaveTransactionListSection = (props: Props) => {
                 </DataTable>
             </List.Accordion>
             {props.saveTransaction.subtransactions
-                ? <List.Accordion title='Subtransactions'
-                    expanded={subTransactionsExpanded}
-                    onPress={toggleSubTransactionsExpanded}
-                    style={styles.subTransactionListSection}
-                >
-                    <SubTransactionsDataTable
-                        budgetId={props.budgetId}
-                        subTransactions={props.saveTransaction.subtransactions}
-                    />
-                </List.Accordion>
+                ? (
+                    <List.Accordion title='Subtransactions'
+                        expanded={subTransactionsExpanded}
+                        onPress={toggleSubTransactionsExpanded}
+                        style={styles.subTransactionListSection}
+                    >
+                        <SubTransactionsDataTable
+                            budgetId={props.budgetId}
+                            subTransactions={props.saveTransaction.subtransactions}
+                        />
+                    </List.Accordion>
+                )
                 : null}
         </List.Section>
     );

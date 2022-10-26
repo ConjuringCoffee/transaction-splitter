@@ -27,22 +27,26 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
                 description='Necessary to access the YNAB API'
                 onPress={() => {
                     navigation.navigate(ScreenNames.ACCESS_TOKEN_SCREEN);
-                }} />
+                }}
+            />
             <List.Item
                 title='Profile'
                 description='Connect two budgets of your account'
-                onPress={navigateToProfileSettings} />
+                onPress={navigateToProfileSettings}
+            />
             <List.Item
                 title='Category Combinations'
                 description='Combine categories under a single name'
                 onPress={() => {
                     navigation.navigate(ScreenNames.CATEGORY_COMBO_SETTINGS_SCREEN);
-                }} />
+                }}
+            />
             <List.Item
                 title='Display Settings'
                 onPress={() => {
                     navigation.navigate(ScreenNames.DISPLAY_SETTINGS_SCREEN);
-                }} />
+                }}
+            />
         </View>
     );
 };

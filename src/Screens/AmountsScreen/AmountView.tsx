@@ -104,19 +104,21 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                     />
                 </View>
                 {!props.quickModeEnabled
-                    ? <>
-                        <SplitPercentInput
-                            payerCategoryChosen={props.payerCategoryId !== undefined}
-                            debtorCategoryChosen={props.debtorCategoryId !== undefined}
-                            splitPercentToPayer={props.splitPercentToPayer}
-                            setSplitPercentToPayer={(splitPercent) => props.setSplitPercentToPayer(index, splitPercent)}
-                        />
-                        <TextInput
-                            label='Memo'
-                            placeholder='Enter memo'
-                            onChangeText={(text) => props.setMemo(text)}
-                        />
-                    </>
+                    ? (
+                        <>
+                            <SplitPercentInput
+                                payerCategoryChosen={props.payerCategoryId !== undefined}
+                                debtorCategoryChosen={props.debtorCategoryId !== undefined}
+                                splitPercentToPayer={props.splitPercentToPayer}
+                                setSplitPercentToPayer={(splitPercent) => props.setSplitPercentToPayer(index, splitPercent)}
+                            />
+                            <TextInput
+                                label='Memo'
+                                placeholder='Enter memo'
+                                onChangeText={(text) => props.setMemo(text)}
+                            />
+                        </>
+                    )
                     : null
                 }
             </View>

@@ -68,7 +68,9 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
                 <NavigationBar
                     title={SCREEN_TITLE}
                     navigation={navigation}
-                    additions={additions} />),
+                    additions={additions}
+                />
+            ),
         });
     }, [
         everythingLoaded,

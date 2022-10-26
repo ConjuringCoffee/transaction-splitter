@@ -42,3 +42,7 @@ rules:
 
   no-unused-vars: off
   "@typescript-eslint/no-unused-vars": error
+
+  react/jsx-closing-tag-location: error
+  react/jsx-closing-bracket-location: error
+  

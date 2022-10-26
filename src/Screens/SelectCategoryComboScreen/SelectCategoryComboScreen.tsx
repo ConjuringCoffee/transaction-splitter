@@ -38,7 +38,9 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
                     <NavigationBar
                         title={SCREEN_TITLE}
                         navigation={navigation}
-                        additions={additions} />),
+                        additions={additions}
+                    />
+                ),
             });
         },
         [navigation],

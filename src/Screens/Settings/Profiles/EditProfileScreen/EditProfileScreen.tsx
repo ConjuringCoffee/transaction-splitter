@@ -48,13 +48,15 @@ export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
             <AppBarMoreMenu
                 key='more'
                 visible={menuVisible}
-                setVisible={setMenuVisible}>
+                setVisible={setMenuVisible}
+            >
                 <Menu.Item
                     title="Delete"
                     onPress={() => {
                         deleteAndNavigate();
                         setMenuVisible(false);
-                    }} />
+                    }}
+                />
             </AppBarMoreMenu>);
     }, [
         profileId,

@@ -53,10 +53,12 @@ export const SubAmountInput = <T extends keyof StackParameterList>({ value, setV
             keyboardType={'numeric'}
             style={styles.textInput}
             label={'Amount'}
-            right={<TextInput.Icon
-                icon={ICON_CALCULATOR}
-                onPress={navigateToCalculatorScreen}
-            />}
+            right={
+                <TextInput.Icon
+                    icon={ICON_CALCULATOR}
+                    onPress={navigateToCalculatorScreen}
+                />
+            }
         />
     );
 };

@@ -46,10 +46,12 @@ export const SubTransactionDataTableRow = ({ budgetId, subTransaction, displayMe
                 {humanAmountText}
             </DataTable.Cell>
             {displayMemoCell
-                ? <MemoDataTableCell
-                    memo={subTransaction.memo}
-                    triggerMemoDisplay={triggerMemoDisplay}
-                />
+                ? (
+                    <MemoDataTableCell
+                        memo={subTransaction.memo}
+                        triggerMemoDisplay={triggerMemoDisplay}
+                    />
+                )
                 : null
             }
         </DataTable.Row>);

@@ -41,7 +41,9 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
                 onPress={() => {
                     dispatch(saveAccessToken(enteredToken));
                     navigateBack();
-                }} />);
+                }}
+            />
+        );
 
         navigation.setOptions({
             header: () => (
@@ -70,11 +72,13 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
             <AccessTokenInput
                 token={enteredToken}
                 setToken={setEnteredToken}
-                connectionStatus={connectionStatus} />
+                connectionStatus={connectionStatus}
+            />
             <Button
                 loading={connectionStatus.status === LoadingStatus.LOADING}
                 icon={getIconForButton()}
-                onPress={() => testConnection(enteredToken)} >
+                onPress={() => testConnection(enteredToken)}
+            >
                 Test connection
             </Button>
         </View >

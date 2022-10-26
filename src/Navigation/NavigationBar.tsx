@@ -18,10 +18,13 @@ export const NavigationBar = <A extends keyof StackParameterList>(props: Props<A
         <Appbar.Header dark={theme.darkAppBar}>
             {
                 props.navigation.canGoBack()
-                    ? <Appbar.BackAction onPress={() => {
-                        Keyboard.dismiss();
-                        props.navigation.goBack();
-                    }} />
+                    ? (
+                        <Appbar.BackAction onPress={() => {
+                            Keyboard.dismiss();
+                            props.navigation.goBack();
+                        }}
+                        />
+                    )
                     : null
             }
             <Appbar.Content

@@ -29,57 +29,71 @@ export const CalculatorKeyboard = (props: Props) => {
                     <KeyboardButton
                         value='AC'
                         color={DARK_COLOR}
-                        onPress={props.onClearPress} />
+                        onPress={props.onClearPress}
+                    />
                     <KeyboardButton
                         value='Del'
                         color={DARK_COLOR}
-                        onPress={props.onBackPress} />
+                        onPress={props.onBackPress}
+                    />
                 </View>
                 <View style={styles.numberRow}>
                     <KeyboardNumberButton
                         number={7}
-                        onPress={props.onDigitPress} />
+                        onPress={props.onDigitPress}
+                    />
                     <KeyboardNumberButton
                         number={8}
-                        onPress={props.onDigitPress} />
+                        onPress={props.onDigitPress}
+                    />
                     <KeyboardNumberButton
                         number={9}
-                        onPress={props.onDigitPress} />
+                        onPress={props.onDigitPress}
+                    />
                 </View>
                 <View style={styles.numberRow}>
                     <KeyboardNumberButton
                         number={4}
-                        onPress={props.onDigitPress} />
+                        onPress={props.onDigitPress}
+                    />
                     <KeyboardNumberButton
                         number={5}
-                        onPress={props.onDigitPress} />
+                        onPress={props.onDigitPress}
+                    />
                     <KeyboardNumberButton
                         number={6}
-                        onPress={props.onDigitPress} />
+                        onPress={props.onDigitPress}
+                    />
                 </View>
                 <View style={styles.numberRow}>
                     <KeyboardNumberButton
                         number={3}
-                        onPress={props.onDigitPress} />
+                        onPress={props.onDigitPress}
+                    />
                     <KeyboardNumberButton
                         number={2}
-                        onPress={props.onDigitPress} />
+                        onPress={props.onDigitPress}
+                    />
                     <KeyboardNumberButton
                         number={1}
-                        onPress={props.onDigitPress} />
+                        onPress={props.onDigitPress}
+                    />
                 </View>
                 <View style={styles.numberRow}>
                     <KeyboardButton
                         value='Cancel'
                         color={DARK_COLOR}
-                        onPress={props.onCancelPress} />
+                        onPress={props.onCancelPress}
+                    />
                     <KeyboardNumberButton
                         number={0}
-                        onPress={props.onDigitPress} />
+                        onPress={props.onDigitPress}
+                    />
                     <KeyboardButton
                         value={numberFormatSettings.decimalSeparator}
                         color={'white'}
-                        onPress={props.onDecimalSeparatorPress} />
+                        onPress={props.onDecimalSeparatorPress}
+                    />
 
                 </View>
             </View>
@@ -87,19 +101,23 @@ export const CalculatorKeyboard = (props: Props) => {
                 <KeyboardButton
                     value='-'
                     color={DARK_COLOR}
-                    onPress={props.onOperatorSubtractPress} />
+                    onPress={props.onOperatorSubtractPress}
+                />
                 <KeyboardButton
                     value='+'
                     color={DARK_COLOR}
-                    onPress={props.onOperatorAddPress} />
+                    onPress={props.onOperatorAddPress}
+                />
                 <KeyboardButton
                     value='='
                     color={DARK_COLOR}
-                    onPress={props.onCalculatePress} />
+                    onPress={props.onCalculatePress}
+                />
                 <KeyboardButton
                     value='OK'
                     color={DARK_COLOR}
-                    onPress={props.onConfirmPress} />
+                    onPress={props.onConfirmPress}
+                />
             </View>
         </View>
     );

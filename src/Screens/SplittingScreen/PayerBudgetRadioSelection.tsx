@@ -26,11 +26,13 @@ export const PayerBudgetRadioSelection = ({ profile, payerBudgetIndex, setPayerB
             throw new Error(`Budget for ID ${budgetInProfile.budgetId} was not found`);
         }
 
-        return (<RadioButton.Item
-            key={budgetInProfile.budgetId}
-            label={displayedName}
-            value={index.toString()}
-        />);
+        return (
+            <RadioButton.Item
+                key={budgetInProfile.budgetId}
+                label={displayedName}
+                value={index.toString()}
+            />
+        );
     }, [budgets]);
 
     return (

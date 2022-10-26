@@ -16,7 +16,8 @@ export const CalculationHistoryScreen = ({ route, navigation }: MyStackScreenPro
             onPress={() => {
                 route.params.onSelectCalculation(item);
                 navigateBack();
-            }} />
+            }}
+        />
     );
 
     return (

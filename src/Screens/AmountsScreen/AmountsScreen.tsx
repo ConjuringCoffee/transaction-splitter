@@ -76,10 +76,12 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                 <AppBarMoreMenu
                     key='more'
                     visible={menuVisible}
-                    setVisible={setMenuVisible}>
+                    setVisible={setMenuVisible}
+                >
                     <Menu.Item
                         title={title}
-                        onPress={toggleQuickModeAndCloseMenu} />
+                        onPress={toggleQuickModeAndCloseMenu}
+                    />
                 </AppBarMoreMenu>);
         },
         [quickModeEnabled, menuVisible, setQuickModeEnabled]);
@@ -194,91 +196,93 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
     return (
         <CustomScrollView>
             {categoriesAreLoaded
-                ? <View style={styles.view}>
-                    {amountEntries.map((amountEntry, index) => {
-                        return (
-                            <AmountView
-                                key={index}
-                                index={index}
-                                amountText={amountEntry.amountText}
-                                payerBudgetId={basicData.payer.budgetId}
-                                debtorBudgetId={basicData.debtor.budgetId}
-                                setAmountText={(amount) => setAmountText(index, amount)}
-                                setMemo={(memo) => setMemo(index, memo)}
-                                payerCategoryId={amountEntry.payerCategoryId}
-                                setPayerCategoryId={(categoryId) => setPayerCategoryId(index, categoryId)}
-                                debtorCategoryId={amountEntry.debtorCategoryId}
-                                setDebtorCategoryId={(categoryId) => setDebtorCategoryId(index, categoryId)}
-                                splitPercentToPayer={amountEntry.splitPercentToPayer}
-                                setSplitPercentToPayer={setSplitPercentToPayer}
-                                onRemovePress={() => removeAmountEntry(index)}
-                                navigation={navigation}
-                                quickModeEnabled={quickModeEnabled}
-                            />
-                        );
-                    })}
-
-                    <Button
-                        disabled={addingDisabled}
-                        mode='contained'
-                        style={styles.button}
-                        onPress={() => {
-                            addAmountEntry('');
-                            Keyboard.dismiss();
-                        }}
-                    >
-                        Add
-                    </Button>
-                    <Button
-                        disabled={addingDisabled}
-                        mode='contained'
-                        style={styles.button}
-                        onPress={() => {
-                            addAmountEntry(convertNumberToText(remainingAmount));
-                            Keyboard.dismiss();
-                        }}
-                    >
-                        Add remaining
-                    </Button>
-
-                    <Divider />
-
-                    <Text>
-                        {`Remaining amount: ${convertNumberToText(remainingAmount)}€`}
-                    </Text>
-
-                    <Button
-                        disabled={!okayToContinue}
-                        mode='contained'
-                        style={styles.button}
-                        onPress={() => {
-                            const convertedAmountEntries: AmountEntry[] = [];
-
-                            amountEntries.forEach((amountEntry) => {
-                                convertedAmountEntries.push({
-                                    amount: convertTextToNumber(amountEntry.amountText),
-                                    debtorCategoryId: amountEntry.debtorCategoryId,
-                                    payerCategoryId: amountEntry.payerCategoryId,
-                                    splitPercentToPayer: amountEntry.splitPercentToPayer,
-                                    memo: amountEntry.memo,
-                                });
-                            });
-
-                            const saveTransactions = buildSaveTransactions(convertedAmountEntries, basicData);
-
-                            navigation.navigate(
-                                ScreenNames.SAVE_SCREEN,
-                                {
-                                    basicData: basicData,
-                                    payerSaveTransaction: saveTransactions.payer,
-                                    debtorSaveTransaction: saveTransactions.debtor,
-                                },
+                ? (
+                    <View style={styles.view}>
+                        {amountEntries.map((amountEntry, index) => {
+                            return (
+                                <AmountView
+                                    key={index}
+                                    index={index}
+                                    amountText={amountEntry.amountText}
+                                    payerBudgetId={basicData.payer.budgetId}
+                                    debtorBudgetId={basicData.debtor.budgetId}
+                                    setAmountText={(amount) => setAmountText(index, amount)}
+                                    setMemo={(memo) => setMemo(index, memo)}
+                                    payerCategoryId={amountEntry.payerCategoryId}
+                                    setPayerCategoryId={(categoryId) => setPayerCategoryId(index, categoryId)}
+                                    debtorCategoryId={amountEntry.debtorCategoryId}
+                                    setDebtorCategoryId={(categoryId) => setDebtorCategoryId(index, categoryId)}
+                                    splitPercentToPayer={amountEntry.splitPercentToPayer}
+                                    setSplitPercentToPayer={setSplitPercentToPayer}
+                                    onRemovePress={() => removeAmountEntry(index)}
+                                    navigation={navigation}
+                                    quickModeEnabled={quickModeEnabled}
+                                />
                             );
-                        }}
-                    >
-                        Continue
-                    </Button>
-                </View>
+                        })}
+
+                        <Button
+                            disabled={addingDisabled}
+                            mode='contained'
+                            style={styles.button}
+                            onPress={() => {
+                                addAmountEntry('');
+                                Keyboard.dismiss();
+                            }}
+                        >
+                            Add
+                        </Button>
+                        <Button
+                            disabled={addingDisabled}
+                            mode='contained'
+                            style={styles.button}
+                            onPress={() => {
+                                addAmountEntry(convertNumberToText(remainingAmount));
+                                Keyboard.dismiss();
+                            }}
+                        >
+                            Add remaining
+                        </Button>
+
+                        <Divider />
+
+                        <Text>
+                            {`Remaining amount: ${convertNumberToText(remainingAmount)}€`}
+                        </Text>
+
+                        <Button
+                            disabled={!okayToContinue}
+                            mode='contained'
+                            style={styles.button}
+                            onPress={() => {
+                                const convertedAmountEntries: AmountEntry[] = [];
+
+                                amountEntries.forEach((amountEntry) => {
+                                    convertedAmountEntries.push({
+                                        amount: convertTextToNumber(amountEntry.amountText),
+                                        debtorCategoryId: amountEntry.debtorCategoryId,
+                                        payerCategoryId: amountEntry.payerCategoryId,
+                                        splitPercentToPayer: amountEntry.splitPercentToPayer,
+                                        memo: amountEntry.memo,
+                                    });
+                                });
+
+                                const saveTransactions = buildSaveTransactions(convertedAmountEntries, basicData);
+
+                                navigation.navigate(
+                                    ScreenNames.SAVE_SCREEN,
+                                    {
+                                        basicData: basicData,
+                                        payerSaveTransaction: saveTransactions.payer,
+                                        debtorSaveTransaction: saveTransactions.debtor,
+                                    },
+                                );
+                            }}
+                        >
+                            Continue
+                        </Button>
+                    </View>
+                )
                 : <LoadingComponent />}
         </CustomScrollView>);
 };

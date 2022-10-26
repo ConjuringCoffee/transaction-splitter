@@ -37,11 +37,14 @@ export const CreateProfileScreen = ({ navigation }: MyStackScreenProps<ScreenNam
     }, [navigateBack, save]);
 
     useLayoutEffect(() => {
-        const addition = <Appbar.Action
-            key='save'
-            icon={ICON_SAVE}
-            disabled={!isValid}
-            onPress={saveAndNavigate} />;
+        const addition = (
+            <Appbar.Action
+                key='save'
+                icon={ICON_SAVE}
+                disabled={!isValid}
+                onPress={saveAndNavigate}
+            />
+        );
 
         navigation.setOptions({
             header: () => (

@@ -34,29 +34,31 @@ export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<Scr
             navigateBack();
         };
 
-        const addition = <Appbar.Action
-            key='add'
-            icon={ICON_SAVE}
-            disabled={!readyToSave}
-            onPress={() => {
-                if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
-                    throw new Error('Not ready to save yet');
-                }
+        const addition = (
+            <Appbar.Action
+                key='add'
+                icon={ICON_SAVE}
+                disabled={!readyToSave}
+                onPress={() => {
+                    if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
+                        throw new Error('Not ready to save yet');
+                    }
 
-                saveAndNavigate({
-                    name: name,
-                    categories: [
-                        {
-                            budgetId: profileUsed.budgets[0].budgetId,
-                            id: categoryIdFirstProfile,
-                        },
-                        {
-                            budgetId: profileUsed.budgets[1].budgetId,
-                            id: categoryIdSecondProfile,
-                        }],
-                });
-            }} />;
-
+                    saveAndNavigate({
+                        name: name,
+                        categories: [
+                            {
+                                budgetId: profileUsed.budgets[0].budgetId,
+                                id: categoryIdFirstProfile,
+                            },
+                            {
+                                budgetId: profileUsed.budgets[1].budgetId,
+                                id: categoryIdSecondProfile,
+                            }],
+                    });
+                }}
+            />
+        );
 
         navigation.setOptions({
             header: () => (
@@ -86,6 +88,7 @@ export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<Scr
             categoryIdFirstProfile={categoryIdFirstProfile}
             setCategoryIdFirstProfile={setCategoryIdFirstProfile}
             categoryIdSecondProfile={categoryIdSecondProfile}
-            setCategoryIdSecondProfile={setCategoryIdSecondProfile} />
+            setCategoryIdSecondProfile={setCategoryIdSecondProfile}
+        />
     );
 };

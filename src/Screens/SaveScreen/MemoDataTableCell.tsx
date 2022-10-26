@@ -20,7 +20,8 @@ export const MemoDataTableCell = (props: Props) => {
                             throw new Error('Impossible to get here if memo is not set');
                         }
                         props.triggerMemoDisplay(props.memo);
-                    }} />
+                    }}
+                />
             </DataTableCellView>
         );
     } else {

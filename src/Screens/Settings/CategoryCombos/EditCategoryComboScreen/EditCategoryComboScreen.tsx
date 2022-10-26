@@ -44,13 +44,15 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
             <AppBarMoreMenu
                 key='more'
                 visible={menuVisible}
-                setVisible={setMenuVisible}>
+                setVisible={setMenuVisible}
+            >
                 <Menu.Item
                     title="Delete"
                     onPress={() => {
                         deleteAndNavigate();
                         setMenuVisible(false);
-                    }} />
+                    }}
+                />
             </AppBarMoreMenu>);
     }, [
         dispatch,
@@ -88,7 +90,8 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
                                 id: categoryIdSecondProfile,
                             }],
                     });
-                }} />,
+                }}
+            />,
             moreMenu(),
         ];
 
@@ -122,6 +125,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
             categoryIdFirstProfile={categoryIdFirstProfile}
             setCategoryIdFirstProfile={setCategoryIdFirstProfile}
             categoryIdSecondProfile={categoryIdSecondProfile}
-            setCategoryIdSecondProfile={setCategoryIdSecondProfile} />
+            setCategoryIdSecondProfile={setCategoryIdSecondProfile}
+        />
     );
 };

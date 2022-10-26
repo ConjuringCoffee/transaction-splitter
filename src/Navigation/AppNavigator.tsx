@@ -91,7 +91,8 @@ const StackNavigator = () => {
                     header: (headerProps) => (
                         <NavigationBar
                             title='Save'
-                            navigation={headerProps.navigation} />
+                            navigation={headerProps.navigation}
+                        />
                     ),
                 }}
             />
