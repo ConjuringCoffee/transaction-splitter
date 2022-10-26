@@ -15,7 +15,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run ESLint
-        run: npm lint
+        run: npm run lint
 
   test:
     name: Execute tests
@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run tests
-        run: npm test
+        run: npm run test
 
   sonarcloud:
     name: Analyze on SonarCloud
