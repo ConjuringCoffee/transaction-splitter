@@ -10,6 +10,9 @@ parserOptions:
     jsx: true
   ecmaVersion: 13
   sourceType: module
+settings:
+  react:
+    version: detect
 plugins:
   - react
   - "@typescript-eslint"
