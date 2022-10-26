@@ -10,9 +10,9 @@ class Calculation {
         this.numberFormatSettings = numberFormatSettings;
     }
 
-    public getCalculationString = (): string => {
+    public getCalculationString(): string {
         return this.calculationString;
-    }
+    };
 
     public addDigit(digit: number): void {
         this.calculationString = this.shouldZeroReplace()
