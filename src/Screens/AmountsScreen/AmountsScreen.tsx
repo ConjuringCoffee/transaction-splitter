@@ -1,11 +1,9 @@
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Keyboard, StyleSheet, View } from 'react-native';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { LoadingComponent } from '../../Component/LoadingComponent';
 import { roundToTwoDecimalPlaces } from '../../Helper/AmountHelper';
-import { StackParameterList } from '../../Navigation/ScreenParameters';
+import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { AmountEntry, buildSaveTransactions } from '../../YnabApi/BuildSaveTransactions';
 import { AmountView } from './AmountView';
 import { ScreenNames } from '../../Navigation/ScreenNames';
@@ -13,17 +11,13 @@ import { useAppSelector } from '../../Hooks/useAppSelector';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
-import { Button, Divider, Text } from 'react-native-paper';
+import { Button, Divider, Menu, Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useAppDispatch } from '../../Hooks/useAppDispatch';
+import { AppBarMoreMenu } from '../../Component/AppBarMoreMenu';
+import { NavigationBar } from '../../Navigation/NavigationBar';
 
-type MyNavigationProp = StackNavigationProp<StackParameterList, 'Amounts'>;
-type MyRouteProp = RouteProp<StackParameterList, 'Amounts'>;
-
-type Props = {
-    navigation: MyNavigationProp;
-    route: MyRouteProp;
-}
+type ScreenName = 'Amounts';
 
 interface UserInterfaceAmountEntry {
     amountText: string,
@@ -33,14 +27,18 @@ interface UserInterfaceAmountEntry {
     splitPercentToPayer?: number
 }
 
-export const AmountsScreen = (props: Props) => {
+const SCREEN_TITLE = 'Enter amounts';
+
+export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
+    const [menuVisible, setMenuVisible] = React.useState<boolean>(false);
+    const [quickModeEnabled, setQuickModeEnabled] = useState<boolean>(true);
     const [amountEntries, setAmountEntries] = useState<Array<UserInterfaceAmountEntry>>([]);
     const [convertTextToNumber, convertNumberToText] = useAmountConversion();
     const accessToken = useAppSelector(selectAccessToken);
 
     const dispatch = useAppDispatch();
 
-    const basicData = props.route.params.basicData;
+    const basicData = route.params.basicData;
     const payerBudgetId = basicData.payer.budgetId;
     const debtorBudgetId = basicData.debtor.budgetId;
 
@@ -48,17 +46,58 @@ export const AmountsScreen = (props: Props) => {
     const payerCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, payerBudgetId));
     const debtorCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, debtorBudgetId));
 
-    useEffect(() => {
-        if (payerCategoriesFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: payerBudgetId }));
-        }
-    }, [payerCategoriesFetchStatus, dispatch, payerBudgetId, accessToken]);
+    useEffect(
+        () => {
+            if (payerCategoriesFetchStatus === LoadingStatus.IDLE) {
+                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: payerBudgetId }));
+            }
+        },
+        [payerCategoriesFetchStatus, dispatch, payerBudgetId, accessToken],
+    );
 
-    useEffect(() => {
-        if (debtorCategoriesFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: debtorBudgetId }));
-        }
-    }, [debtorCategoriesFetchStatus, dispatch, debtorBudgetId, accessToken]);
+    useEffect(
+        () => {
+            if (debtorCategoriesFetchStatus === LoadingStatus.IDLE) {
+                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: debtorBudgetId }));
+            }
+        },
+        [debtorCategoriesFetchStatus, dispatch, debtorBudgetId, accessToken],
+    );
+
+    const moreMenu = useMemo(
+        () => {
+            const title = quickModeEnabled ? 'Disable Quick Mode' : 'Enable Quick Mode';
+            const toggleQuickModeAndCloseMenu = () => {
+                setQuickModeEnabled(!quickModeEnabled);
+                setMenuVisible(!menuVisible);
+            };
+
+            return (
+                <AppBarMoreMenu
+                    key='more'
+                    visible={menuVisible}
+                    setVisible={setMenuVisible}>
+                    <Menu.Item
+                        title={title}
+                        onPress={toggleQuickModeAndCloseMenu} />
+                </AppBarMoreMenu>);
+        },
+        [quickModeEnabled, menuVisible, setQuickModeEnabled]);
+
+    useLayoutEffect(
+        () => {
+            navigation.setOptions({
+                header: () => (
+                    <NavigationBar
+                        title={SCREEN_TITLE}
+                        navigation={navigation}
+                        additions={moreMenu}
+                    />
+                ),
+            });
+        },
+        [navigation, moreMenu],
+    );
 
     const addAmountEntry = (amountText: string) => {
         const entries = [...amountEntries, {
@@ -173,7 +212,9 @@ export const AmountsScreen = (props: Props) => {
                                 splitPercentToPayer={amountEntry.splitPercentToPayer}
                                 setSplitPercentToPayer={setSplitPercentToPayer}
                                 onRemovePress={() => removeAmountEntry(index)}
-                                navigation={props.navigation} />
+                                navigation={navigation}
+                                quickModeEnabled={quickModeEnabled}
+                            />
                         );
                     })}
 
@@ -184,7 +225,8 @@ export const AmountsScreen = (props: Props) => {
                         onPress={() => {
                             addAmountEntry('');
                             Keyboard.dismiss();
-                        }}>
+                        }}
+                    >
                         Add
                     </Button>
                     <Button
@@ -194,7 +236,8 @@ export const AmountsScreen = (props: Props) => {
                         onPress={() => {
                             addAmountEntry(convertNumberToText(remainingAmount));
                             Keyboard.dismiss();
-                        }}>
+                        }}
+                    >
                         Add remaining
                     </Button>
 
@@ -223,7 +266,7 @@ export const AmountsScreen = (props: Props) => {
 
                             const saveTransactions = buildSaveTransactions(convertedAmountEntries, basicData);
 
-                            props.navigation.navigate(
+                            navigation.navigate(
                                 ScreenNames.SAVE_SCREEN,
                                 {
                                     basicData: basicData,

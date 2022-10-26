@@ -59,14 +59,6 @@ const StackNavigator = () => {
             <Stack.Screen
                 name={ScreenNames.AMOUNTS_SCREEN}
                 component={AmountsScreen}
-                options={{
-                    header: (headerProps) => (
-                        <NavigationBar
-                            title='Enter amounts'
-                            navigation={headerProps.navigation}
-                        />
-                    ),
-                }}
             />
             <Stack.Screen
                 name={ScreenNames.CATEGORY_SCREEN}

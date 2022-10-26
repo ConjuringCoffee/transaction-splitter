@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo } from 'react';
 import { CustomScrollView } from '../../../../Component/CustomScrollView';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { BudgetInProfileInputSection } from '../BudgetInProfileInputSection';
@@ -38,7 +38,7 @@ export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
         navigateBack();
     }, [navigateBack, save]);
 
-    const moreMenu = useCallback(() => {
+    const moreMenu = useMemo(() => {
         const deleteAndNavigate = async () => {
             await dispatch(deleteProfile(profileId));
             navigateBack();
@@ -63,26 +63,30 @@ export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
         dispatch,
     ]);
 
-    useLayoutEffect(() => {
-        const additions = [
-            <Appbar.Action
-                key='save'
-                icon={ICON_SAVE}
-                disabled={!isValid}
-                onPress={saveAndNavigate} />,
-            moreMenu(),
-        ];
+    useLayoutEffect(
+        () => {
+            const additions = [
+                <Appbar.Action
+                    key='save'
+                    icon={ICON_SAVE}
+                    disabled={!isValid}
+                    onPress={saveAndNavigate}
+                />,
+                moreMenu,
+            ];
 
-        navigation.setOptions({
-            header: () => (
-                <NavigationBar
-                    title={SCREEN_TITLE}
-                    navigation={navigation}
-                    additions={additions}
-                />
-            ),
-        });
-    }, [navigation, isValid, saveAndNavigate, moreMenu]);
+            navigation.setOptions({
+                header: () => (
+                    <NavigationBar
+                        title={SCREEN_TITLE}
+                        navigation={navigation}
+                        additions={additions}
+                    />
+                ),
+            });
+        },
+        [navigation, isValid, saveAndNavigate, moreMenu],
+    );
 
     return (
         <CustomScrollView>
