@@ -46,4 +46,5 @@ rules:
   react/jsx-closing-tag-location: error
   react/jsx-closing-bracket-location: error
   react/jsx-wrap-multilines: error
+  react/hook-use-state: error
   
