@@ -6,7 +6,7 @@ jobs:
     name: Execute jest
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install dependencies
         run: npm ci
       - name: Run ESLint
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install dependencies
         run: npm ci
       - name: Run tests
@@ -28,13 +28,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16.x
+          cache: npm
       - name: Install dependencies
         run: npm ci
       - name: SonarCloud Scan
@@ -50,9 +51,9 @@ jobs:
     if: github.event_name != 'pull_request' && github.ref_name == 'main'
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/checkout@v3
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
         with:
           node-version: 16.x
           cache: npm
