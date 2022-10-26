@@ -49,4 +49,5 @@ rules:
   react/hook-use-state: error
   react/no-danger: error
   react/no-this-in-sfc: error
+  react/no-unsafe: error
   
