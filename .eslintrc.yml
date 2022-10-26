@@ -47,4 +47,5 @@ rules:
   react/jsx-closing-bracket-location: error
   react/jsx-wrap-multilines: error
   react/hook-use-state: error
+  react/no-danger: error
   
