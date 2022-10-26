@@ -91,7 +91,7 @@ export const CalculatorKeyboard = (props: Props) => {
                     />
                     <KeyboardButton
                         value={numberFormatSettings.decimalSeparator}
-                        color={'white'}
+                        color='white'
                         onPress={props.onDecimalSeparatorPress}
                     />
 

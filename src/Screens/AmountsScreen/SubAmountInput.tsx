@@ -46,13 +46,13 @@ export const SubAmountInput = <T extends keyof StackParameterList>({ value, setV
 
     return (
         <TextInput
-            placeholder={'€'}
+            placeholder='€'
             value={value}
             error={!isValid}
             onChangeText={setValue}
-            keyboardType={'numeric'}
+            keyboardType='numeric'
             style={styles.textInput}
-            label={'Amount'}
+            label='Amount'
             right={
                 <TextInput.Icon
                     icon={ICON_CALCULATOR}
