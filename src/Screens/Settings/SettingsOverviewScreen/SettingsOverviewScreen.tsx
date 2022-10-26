@@ -5,11 +5,19 @@ import { View } from 'react-native';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { useCallback } from 'react';
 import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
+import { useNavigationBar } from '../../../Hooks/useNavigationBar';
 
 type ScreenName = 'Settings Overview';
 
+const SCREEN_TITLE = 'Settings';
+
 export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const profiles = useAppSelector(selectProfiles);
+
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+    });
 
     const navigateToProfileSettings = useCallback(() => {
         if (profiles.length) {

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Keyboard, StyleSheet, View } from 'react-native';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { LoadingComponent } from '../../Component/LoadingComponent';
@@ -15,7 +15,7 @@ import { Button, Divider, Menu, Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useAppDispatch } from '../../Hooks/useAppDispatch';
 import { AppBarMoreMenu } from '../../Component/AppBarMoreMenu';
-import { NavigationBar } from '../../Navigation/NavigationBar';
+import { useNavigationBar } from '../../Hooks/useNavigationBar';
 
 type ScreenName = 'Amounts';
 
@@ -64,7 +64,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         [debtorCategoriesFetchStatus, dispatch, debtorBudgetId, accessToken],
     );
 
-    const moreMenu = useMemo(
+    const navigationBarAddition = useMemo(
         () => {
             const title = quickModeEnabled ? 'Disable Quick Mode' : 'Enable Quick Mode';
             const toggleQuickModeAndCloseMenu = () => {
@@ -84,22 +84,14 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                     />
                 </AppBarMoreMenu>);
         },
-        [quickModeEnabled, menuVisible, setQuickModeEnabled]);
-
-    useLayoutEffect(
-        () => {
-            navigation.setOptions({
-                header: () => (
-                    <NavigationBar
-                        title={SCREEN_TITLE}
-                        navigation={navigation}
-                        additions={moreMenu}
-                    />
-                ),
-            });
-        },
-        [navigation, moreMenu],
+        [quickModeEnabled, menuVisible, setQuickModeEnabled],
     );
+
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+        additions: navigationBarAddition,
+    });
 
     const addAmountEntry = (amountText: string) => {
         const entries = [...amountEntries, {

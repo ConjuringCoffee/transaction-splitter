@@ -1,19 +1,19 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Appbar } from 'react-native-paper';
 import { CategoryComboInputView } from '../CategoryComboInputView';
-import { NavigationBar } from '../../../../Navigation/NavigationBar';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
-import { addCategoryCombo, CategoryComboToCreate } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
+import { addCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
+import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
 
 type ScreenName = 'Create Category Combo';
 
 const ICON_SAVE = 'content-save';
 
-const SCREEN_TITLE = 'Add Category Combo';
+const SCREEN_TITLE = 'Create';
 
 export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
@@ -28,57 +28,46 @@ export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<Scr
     const [categoryIdSecondProfile, setCategoryIdSecondProfile] = useState<string | undefined>(undefined);
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
 
-    useLayoutEffect(() => {
-        const saveAndNavigate = async (newCategoryCombo: CategoryComboToCreate): Promise<void> => {
-            dispatch(addCategoryCombo(newCategoryCombo));
-            navigateBack();
-        };
+    const saveAndNavigate = useCallback(
+        () => {
+            if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
+                throw new Error('Not ready to save yet');
+            }
 
-        const addition = (
+            dispatch(addCategoryCombo({
+                name: name,
+                categories: [
+                    {
+                        budgetId: profileUsed.budgets[0].budgetId,
+                        id: categoryIdFirstProfile,
+                    },
+                    {
+                        budgetId: profileUsed.budgets[1].budgetId,
+                        id: categoryIdSecondProfile,
+                    }],
+            }));
+            navigateBack();
+        },
+        [categoryIdFirstProfile, categoryIdSecondProfile, dispatch, name, navigateBack, profileUsed.budgets],
+    );
+
+    const navigationBarAddition = useMemo(
+        () => (
             <Appbar.Action
                 key='add'
                 icon={ICON_SAVE}
                 disabled={!readyToSave}
-                onPress={() => {
-                    if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
-                        throw new Error('Not ready to save yet');
-                    }
-
-                    saveAndNavigate({
-                        name: name,
-                        categories: [
-                            {
-                                budgetId: profileUsed.budgets[0].budgetId,
-                                id: categoryIdFirstProfile,
-                            },
-                            {
-                                budgetId: profileUsed.budgets[1].budgetId,
-                                id: categoryIdSecondProfile,
-                            }],
-                    });
-                }}
+                onPress={saveAndNavigate}
             />
-        );
+        ),
+        [readyToSave, saveAndNavigate],
+    );
 
-        navigation.setOptions({
-            header: () => (
-                <NavigationBar
-                    title={SCREEN_TITLE}
-                    navigation={navigation}
-                    additions={addition}
-                />
-            ),
-        });
-    }, [
-        navigation,
-        readyToSave,
-        name,
-        categoryIdFirstProfile,
-        categoryIdSecondProfile,
-        profileUsed,
-        dispatch,
-        navigateBack,
-    ]);
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+        additions: navigationBarAddition,
+    });
 
     return (
         <CategoryComboInputView

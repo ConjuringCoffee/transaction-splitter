@@ -1,6 +1,5 @@
-import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
-import { NavigationBar } from '../../Navigation/NavigationBar';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { Appbar, Button, TextInput } from 'react-native-paper';
 import { useAppSelector } from '../../Hooks/useAppSelector';
@@ -12,6 +11,7 @@ import { DatePickerInput } from 'react-native-paper-dates';
 import { AccountRadioSelection } from './AccountRadioSelection';
 import { PayerBudgetRadioSelection } from './PayerBudgetRadioSelection';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
+import { useNavigationBar } from '../../Hooks/useNavigationBar';
 
 type ScreenName = 'Split Transaction';
 
@@ -52,24 +52,21 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
         navigation.navigate(ScreenNames.SETTINGS_OVERVIEW_SCREEN);
     }, [navigation]);
 
-    const navigationBar = useCallback(() => (
-        <NavigationBar
-            title={SCREEN_TITLE}
-            navigation={navigation}
-            additions={
-                <Appbar.Action
-                    onPress={navigateToSettingsScreen}
-                    icon={ICON_SETTINGS}
-                />
-            }
-        />
-    ), [navigation, navigateToSettingsScreen]);
+    const navigationBarAddition = useMemo(
+        () => (
+            <Appbar.Action
+                onPress={navigateToSettingsScreen}
+                icon={ICON_SETTINGS}
+            />
+        ),
+        [navigateToSettingsScreen],
+    );
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            header: navigationBar,
-        });
-    }, [navigation, navigationBar]);
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+        additions: navigationBarAddition,
+    });
 
     const navigateToAmountsScreen = () => {
         navigation.navigate(

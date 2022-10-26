@@ -1,13 +1,13 @@
-import React, { useLayoutEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { Appbar, List, TextInput } from 'react-native-paper';
-import { NavigationBar } from '../../Navigation/NavigationBar';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { CategoryCombo, selectCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../Hooks/useAppSelector';
+import { useNavigationBar } from '../../Hooks/useNavigationBar';
 
 type ScreenName = 'Category Combinations';
 
@@ -23,28 +23,22 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
         [categoryCombos, nameFilter],
     );
 
-    useLayoutEffect(
-        () => {
-            const additions = (
-                <Appbar.Action
-                    icon={ICON_ADD}
-                    onPress={() => {
-                        navigation.navigate(ScreenNames.CREATE_CATEGORY_COMBO_SCREEN);
-                    }}
-                />);
-
-            navigation.setOptions({
-                header: () => (
-                    <NavigationBar
-                        title={SCREEN_TITLE}
-                        navigation={navigation}
-                        additions={additions}
-                    />
-                ),
-            });
-        },
+    const navigationBarAddition = useMemo(
+        () => (
+            <Appbar.Action
+                icon={ICON_ADD}
+                onPress={() => {
+                    navigation.navigate(ScreenNames.CREATE_CATEGORY_COMBO_SCREEN);
+                }}
+            />),
         [navigation],
     );
+
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+        additions: navigationBarAddition,
+    });
 
     const [navigateBack] = useNavigateBack(navigation);
 

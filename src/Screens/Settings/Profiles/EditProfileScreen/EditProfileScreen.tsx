@@ -1,14 +1,14 @@
-import React, { useCallback, useLayoutEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { CustomScrollView } from '../../../../Component/CustomScrollView';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { BudgetInProfileInputSection } from '../BudgetInProfileInputSection';
 import { Appbar, Menu } from 'react-native-paper';
-import { NavigationBar } from '../../../../Navigation/NavigationBar';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { useEditableBudgetsInProfiles } from '../../../../Hooks/useEditableBudgetsInProfiles';
 import { deleteProfile } from '../../../../redux/features/profiles/profilesSlice';
 import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
+import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
 
 type ScreenName = 'EditProfile';
 
@@ -65,9 +65,9 @@ export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
         dispatch,
     ]);
 
-    useLayoutEffect(
-        () => {
-            const additions = [
+    const navigationBarAdditions = useMemo(
+        () => (
+            [
                 <Appbar.Action
                     key='save'
                     icon={ICON_SAVE}
@@ -75,20 +75,16 @@ export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
                     onPress={saveAndNavigate}
                 />,
                 moreMenu,
-            ];
-
-            navigation.setOptions({
-                header: () => (
-                    <NavigationBar
-                        title={SCREEN_TITLE}
-                        navigation={navigation}
-                        additions={additions}
-                    />
-                ),
-            });
-        },
-        [navigation, isValid, saveAndNavigate, moreMenu],
+            ]
+        ),
+        [isValid, moreMenu, saveAndNavigate],
     );
+
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+        additions: navigationBarAdditions,
+    });
 
     return (
         <CustomScrollView>

@@ -4,10 +4,21 @@ import { List } from 'react-native-paper';
 import { selectThemeTypeSetting } from '../../../redux/features/displaySettings/displaySettingsSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { ThemeModalPortal } from './ThemeModalPortal';
+import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
+import { useNavigationBar } from '../../../Hooks/useNavigationBar';
 
-export const DisplaySettingsScreen = () => {
+type ScreenName = 'DisplaySettings';
+
+const SCREEN_TITLE = 'Display Settings';
+
+export const DisplaySettingsScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const [themeModalVisible, setThemeModalVisible] = useState<boolean>(false);
     const themeTypeSetting = useAppSelector(selectThemeTypeSetting);
+
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+    });
 
     const toggleThemeModalVisible = useCallback(
         () => setThemeModalVisible(!themeModalVisible),

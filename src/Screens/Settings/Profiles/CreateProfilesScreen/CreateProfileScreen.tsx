@@ -1,11 +1,11 @@
-import React, { useCallback, useLayoutEffect } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { BudgetInProfileInputSection } from '../BudgetInProfileInputSection';
 import { CustomScrollView } from '../../../../Component/CustomScrollView';
 import { Appbar } from 'react-native-paper';
-import { NavigationBar } from '../../../../Navigation/NavigationBar';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { useEditableBudgetsInProfiles } from '../../../../Hooks/useEditableBudgetsInProfiles';
+import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
 
 type ScreenName = 'CreateProfile';
 
@@ -36,26 +36,23 @@ export const CreateProfileScreen = ({ navigation }: MyStackScreenProps<ScreenNam
         navigateBack();
     }, [navigateBack, save]);
 
-    useLayoutEffect(() => {
-        const addition = (
+    const navigationBarAddition = useMemo(
+        () => (
             <Appbar.Action
                 key='save'
                 icon={ICON_SAVE}
                 disabled={!isValid}
                 onPress={saveAndNavigate}
             />
-        );
+        ),
+        [isValid, saveAndNavigate],
+    );
 
-        navigation.setOptions({
-            header: () => (
-                <NavigationBar
-                    title={SCREEN_TITLE}
-                    navigation={navigation}
-                    additions={addition}
-                />
-            ),
-        });
-    }, [navigation, isValid, saveAndNavigate]);
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+        additions: navigationBarAddition,
+    });
 
     return (
         <CustomScrollView>

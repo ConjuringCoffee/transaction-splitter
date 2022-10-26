@@ -50,4 +50,5 @@ rules:
   react/no-danger: error
   react/no-this-in-sfc: error
   react/no-unsafe: error
+  react/no-unstable-nested-components: error
   

@@ -1,10 +1,10 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { Appbar, TextInput } from 'react-native-paper';
-import { NavigationBar } from '../../Navigation/NavigationBar';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { View } from 'react-native';
 import { CategoryList } from './CategoryList';
+import { useNavigationBar } from '../../Hooks/useNavigationBar';
 
 type ScreenName = 'Category Selection';
 
@@ -22,25 +22,22 @@ export const CategoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenN
         navigateBack();
     }, [onSelect, navigateBack]);
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            header: () => (
-                <NavigationBar
-                    title={SCREEN_TITLE}
-                    navigation={navigation}
-                    additions={
-                        <Appbar.Action
-                            onPress={() => selectAndNavigateBack(undefined)}
-                            icon={ICON_DESELECT}
-                        />
-                    }
-                />
-            ),
-        });
-    }, [
-        navigation,
-        selectAndNavigateBack,
-    ]);
+
+    const navigationBarAddition = useMemo(
+        () => (
+            <Appbar.Action
+                onPress={() => selectAndNavigateBack(undefined)}
+                icon={ICON_DESELECT}
+            />
+        ),
+        [selectAndNavigateBack],
+    );
+
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+        additions: navigationBarAddition,
+    });
 
     return (
         <View>

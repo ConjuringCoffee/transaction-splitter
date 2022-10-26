@@ -1,7 +1,6 @@
-import React, { useEffect, useLayoutEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../../../Navigation/ScreenNames';
-import { NavigationBar } from '../../../../Navigation/NavigationBar';
 import { Appbar, List } from 'react-native-paper';
 import { CategoryCombo, selectCategoryCombos } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
@@ -12,6 +11,7 @@ import { LoadingStatus } from '../../../../Helper/LoadingStatus';
 import { LoadingComponent } from '../../../../Component/LoadingComponent';
 import { selectAccessToken } from '../../../../redux/features/accessToken/accessTokenSlice';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
+import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
 
 type ScreenName = 'Category Combinations Settings';
 
@@ -53,31 +53,24 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         = categoriesFirstProfileFetchStatus === LoadingStatus.SUCCESSFUL
         && categoriesSecondProfileFetchStatus === LoadingStatus.SUCCESSFUL;
 
-    useLayoutEffect(() => {
-        const additions = (
+    const navigationBarAddition = useMemo(
+        () => (
             <Appbar.Action
                 icon={ICON_ADD}
                 disabled={!everythingLoaded}
                 onPress={() => {
                     navigation.navigate(ScreenNames.CREATE_CATEGORY_COMBO_SCREEN);
                 }}
-            />);
+            />
+        ),
+        [everythingLoaded, navigation],
+    );
 
-        navigation.setOptions({
-            header: () => (
-                <NavigationBar
-                    title={SCREEN_TITLE}
-                    navigation={navigation}
-                    additions={additions}
-                />
-            ),
-        });
-    }, [
-        everythingLoaded,
-        navigation,
-        profiles,
-        dispatch,
-    ]);
+    useNavigationBar({
+        title: SCREEN_TITLE,
+        navigation: navigation,
+        additions: navigationBarAddition,
+    });
 
     const renderListItem = (categoryCombo: CategoryCombo) => (
         <List.Item

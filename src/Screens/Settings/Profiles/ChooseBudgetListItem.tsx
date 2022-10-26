@@ -22,6 +22,7 @@ export const ChooseBudgetListItem = (props: Props) => {
         <>
             <List.Item
                 title={budgetName ?? 'No budget selected'}
+                // eslint-disable-next-line react/no-unstable-nested-components
                 left={(props) => <List.Icon {...props} icon={budgetName ? ICON_BUDGET_SET : ICON_BUDGET_NOT_SET} />}
                 onPress={() => setModalVisible(true)}
             />
