@@ -59,6 +59,7 @@ type StackParameterList = {
     [ScreenNames.EDIT_PROFILE_SCREEN]: {
         profileId: string,
     };
+    [ScreenNames.INITIAL_SCREEN]: undefined;
 }
 
 export type MyStackScreenProps<K extends keyof StackParameterList> = StackScreenProps<StackParameterList, K>;

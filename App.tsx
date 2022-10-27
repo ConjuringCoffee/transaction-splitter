@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { } from 'react';
 import 'react-native-gesture-handler';
 import { LogBox, View, StyleSheet } from 'react-native';
 import { AppNavigator } from './src/Navigation/AppNavigator';
@@ -9,8 +9,9 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { Store } from './src/redux/store';
 import * as SplashScreen from 'expo-splash-screen';
 import { de, registerTranslation } from 'react-native-paper-dates';
-import { useInitialFetch } from './src/Hooks/useInitialFetch';
 import { useTheme } from './src/Hooks/useTheme';
+import { ScreenNames } from './src/Navigation/ScreenNames';
+import { InitialFetchStatus, useInitialFetchStatus } from './src/Hooks/useInitialFetchStatus';
 
 LogBox.ignoreLogs([
     // Ignore this because we don't use state persistence or deep screen linking,
@@ -25,25 +26,19 @@ registerTranslation('de', de);
 SplashScreen.preventAutoHideAsync();
 
 const ReduxProvidedApp = () => {
-    const [everythingLoaded] = useInitialFetch();
     const [theme] = useTheme();
-    const [appIsReady, setAppIsReady] = useState(false);
 
-    useEffect(() => {
-        if (everythingLoaded) {
-            setAppIsReady(true);
-        }
-    }, [everythingLoaded]);
+    const [initialFetchStatus] = useInitialFetchStatus();
 
-    if (!appIsReady) {
+    if (initialFetchStatus === InitialFetchStatus.UNKNOWN) {
         return null;
     }
 
     return (
         <View
             style={styles.rootView}
-            // This tells the splash screen to hide immediately. If we'd call this directly after
-            //   `setAppIsReady`, then a blank screen briefly flashes while the app is
+            // This tells the splash screen to hide immediately. If we'd call this in a
+            //   `useEffect`, then a blank screen briefly flashes while the app is
             //   loading its initial state and rendering its first pixels. So instead,
             //   we hide the splash screen once we know the root view has already
             //   performed layout. The NavigationContainer's onReady doesn't work as an alternative.
@@ -53,8 +48,12 @@ const ReduxProvidedApp = () => {
             <PaperProvider theme={theme}>
                 <NavigationContainer theme={theme}>
                     {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
-                    <StatusBar style={theme.statusBarColorScheme} />
-                    <AppNavigator />
+                    <StatusBar
+                        style={theme.statusBarColorScheme}
+                    />
+                    <AppNavigator
+                        initialRouteName={initialFetchStatus === InitialFetchStatus.READY ? ScreenNames.SPLITTING_SCREEN : ScreenNames.INITIAL_SCREEN}
+                    />
                 </NavigationContainer>
             </PaperProvider>
         </View>

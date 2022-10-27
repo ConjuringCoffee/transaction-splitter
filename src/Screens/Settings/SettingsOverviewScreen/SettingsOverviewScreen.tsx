@@ -19,14 +19,17 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
         navigation: navigation,
     });
 
-    const navigateToProfileSettings = useCallback(() => {
-        if (profiles.length) {
-            // TODO: Support more than one profile
-            navigation.navigate(ScreenNames.EDIT_PROFILE_SCREEN, { profileId: profiles[0].id });
-        } else {
-            navigation.navigate(ScreenNames.CREATE_PROFILE_SCREEN);
-        }
-    }, [navigation, profiles]);
+    const navigateToProfileSettings = useCallback(
+        () => {
+            if (profiles.length) {
+                // TODO: Support more than one profile
+                navigation.navigate(ScreenNames.EDIT_PROFILE_SCREEN, { profileId: profiles[0].id });
+            } else {
+                navigation.navigate(ScreenNames.CREATE_PROFILE_SCREEN);
+            }
+        },
+        [navigation, profiles],
+    );
 
     return (
         <View>
