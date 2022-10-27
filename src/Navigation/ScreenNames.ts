@@ -14,4 +14,5 @@ export class ScreenNames {
     public static readonly DISPLAY_SETTINGS_SCREEN = 'DisplaySettings';
     public static readonly CREATE_PROFILE_SCREEN = 'CreateProfile';
     public static readonly EDIT_PROFILE_SCREEN = 'EditProfile';
+    public static readonly INITIAL_SCREEN = 'InitialScreen';
 }

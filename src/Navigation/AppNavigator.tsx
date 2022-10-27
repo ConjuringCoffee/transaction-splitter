@@ -17,24 +17,23 @@ import { CreateCategoryComboScreen } from '../Screens/Settings/CategoryCombos/Cr
 import { DisplaySettingsScreen } from '../Screens/Settings/DisplaySettingsScreen/DisplaySettingsScreen';
 import { EditProfileScreen } from '../Screens/Settings/Profiles/EditProfileScreen/EditProfileScreen';
 import { CreateProfileScreen } from '../Screens/Settings/Profiles/CreateProfilesScreen/CreateProfileScreen';
-import { useAppSelector } from '../Hooks/useAppSelector';
-import { selectProfiles } from '../redux/features/profiles/profilesSlice';
+import { InitialScreen } from '../Screens/InitialScreen/InitialScreen';
 
-export const AppNavigator = () => {
+interface Props {
+    initialRouteName: keyof StackParameterList,
+}
+
+export const AppNavigator = ({ initialRouteName }: Props) => {
     return (
-        <StackNavigator />
+        <StackNavigator
+            initialRouteName={initialRouteName}
+        />
     );
 };
 
 const Stack = createStackNavigator<StackParameterList>();
 
-const StackNavigator = () => {
-    const profiles = useAppSelector(selectProfiles);
-
-    const initialRouteName = profiles.length === 1
-        ? ScreenNames.SPLITTING_SCREEN
-        : ScreenNames.SETTINGS_OVERVIEW_SCREEN;
-
+const StackNavigator = ({ initialRouteName }: Props) => {
     return (
         <Stack.Navigator
             initialRouteName={initialRouteName}
@@ -98,6 +97,10 @@ const StackNavigator = () => {
             <Stack.Screen
                 name={ScreenNames.CREATE_PROFILE_SCREEN}
                 component={CreateProfileScreen}
+            />
+            <Stack.Screen
+                name={ScreenNames.INITIAL_SCREEN}
+                component={InitialScreen}
             />
         </Stack.Navigator>
     );
