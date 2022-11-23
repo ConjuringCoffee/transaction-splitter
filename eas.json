@@ -12,7 +12,7 @@
         "buildType": "apk"
       }
     },
-    "preproduction": {
+    "staging": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"

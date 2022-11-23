@@ -71,4 +71,4 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build on EAS
-        run: eas build --platform android --profile preproduction --non-interactive
+        run: eas build --platform android --profile staging --non-interactive
