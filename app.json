@@ -13,7 +13,8 @@
     },
     "jsEngine": "hermes",
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/a696a7fc-1c64-400a-a279-c33ccdbce5db"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -54,6 +55,9 @@
       "eas": {
         "projectId": "a696a7fc-1c64-400a-a279-c33ccdbce5db"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }
