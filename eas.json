@@ -8,12 +8,14 @@
     },
     "preview": {
       "distribution": "internal",
+      "channel": "preview",
       "android": {
         "buildType": "apk"
       }
     },
-    "preproduction": {
+    "staging": {
       "distribution": "internal",
+      "channel": "staging",
       "android": {
         "buildType": "apk"
       }

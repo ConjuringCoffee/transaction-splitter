@@ -1,11 +1,12 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../../Navigation/ScreenNames';
-import { List } from 'react-native-paper';
-import { View } from 'react-native';
+import { List, Text } from 'react-native-paper';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
 import { useNavigationBar } from '../../../Hooks/useNavigationBar';
+import Constants from 'expo-constants';
+import { View, StyleSheet } from 'react-native';
 
 type ScreenName = 'Settings Overview';
 
@@ -30,6 +31,9 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
         },
         [navigation, profiles],
     );
+
+    // @ts-ignore
+    const branchName = Constants.manifest2?.metadata.branchName ?? '';
 
     return (
         <View>
@@ -58,6 +62,15 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
                     navigation.navigate(ScreenNames.DISPLAY_SETTINGS_SCREEN);
                 }}
             />
+            <Text style={styles.text}>
+                {branchName} @ {Constants.manifest2?.createdAt}
+            </Text>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    text: {
+        margin: 8,
+    },
+});
