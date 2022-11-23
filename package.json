@@ -38,7 +38,8 @@
     "react-redux": "^8.0.2",
     "url": "^0.11.0",
     "use-immer": "^0.7.0",
-    "ynab": "^1.25.0"
+    "ynab": "^1.25.0",
+    "expo-constants": "~14.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
