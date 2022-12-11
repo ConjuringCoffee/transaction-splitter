@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { Appbar, Button, TextInput } from 'react-native-paper';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectProfiles } from '../../redux/features/profiles/profilesSlice';
-import { selectAccountById, selectActiveAccounts, selectBudgetById } from '../../redux/features/ynab/ynabSlice';
+import { fetchCategoryGroups, selectAccountById, selectActiveAccounts, selectBudgetById, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { TotalAmountInput } from './TotalAmountInput';
 import { DatePickerInput } from 'react-native-paper-dates';
@@ -12,6 +12,9 @@ import { AccountRadioSelection } from './AccountRadioSelection';
 import { PayerBudgetRadioSelection } from './PayerBudgetRadioSelection';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useNavigationBar } from '../../Hooks/useNavigationBar';
+import { LoadingStatus } from '../../Helper/LoadingStatus';
+import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
+import { useAppDispatch } from '../../Hooks/useAppDispatch';
 
 type ScreenName = 'Split Transaction';
 
@@ -23,7 +26,10 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
     const [convertTextToNumber] = useAmountConversion();
 
     // TODO: Support switching profiles
-    const profileUsed = profiles[0];
+    const profileUsed = useMemo(
+        () => profiles[0],
+        [profiles],
+    );
 
     const [payerBudgetIndex, setPayerBudgetIndex] = useState<number>(0);
     const [payeeName, setPayeeName] = useState<string>('');
@@ -31,8 +37,15 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
     const [date, setDate] = useState<Date>(new Date());
     const [memo, setMemo] = useState<string>('[Generated]');
 
-    const payerBudgetInProfile = profileUsed.budgets[payerBudgetIndex];
-    const debtorBudgetInProfile = profileUsed.budgets[1 - payerBudgetIndex];
+    const payerBudgetInProfile = useMemo(
+        () => profileUsed.budgets[payerBudgetIndex],
+        [profileUsed, payerBudgetIndex],
+    );
+
+    const debtorBudgetInProfile = useMemo(
+        () => profileUsed.budgets[1 - payerBudgetIndex],
+        [profileUsed, payerBudgetIndex],
+    );
 
     const payerBudget = useAppSelector((state) => selectBudgetById(state, payerBudgetInProfile.budgetId));
     const [payerAccountID, setPayerAccountID] = useState<string>(payerBudget.accounts[0].id);
@@ -47,6 +60,30 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
     );
 
     const everythingSelected = totalAmount > 0;
+
+    const dispatch = useAppDispatch();
+    const accessToken = useAppSelector(selectAccessToken);
+    const payerCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, payerBudgetInProfile.budgetId));
+    const debtorCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, debtorBudgetInProfile.budgetId));
+
+    // Categories are not needed on this screen, but already initiating the fetch saves time on the next screen
+    useEffect(
+        () => {
+            if (payerCategoriesFetchStatus === LoadingStatus.IDLE) {
+                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: payerBudgetInProfile.budgetId }));
+            }
+        },
+        [payerCategoriesFetchStatus, accessToken, payerBudgetInProfile, dispatch],
+    );
+
+    useEffect(
+        () => {
+            if (debtorCategoriesFetchStatus === LoadingStatus.IDLE) {
+                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: debtorBudgetInProfile.budgetId }));
+            }
+        },
+        [debtorCategoriesFetchStatus, accessToken, debtorBudgetInProfile, dispatch],
+    );
 
     const navigateToSettingsScreen = useCallback(() => {
         navigation.navigate(ScreenNames.SETTINGS_OVERVIEW_SCREEN);
