@@ -34,29 +34,29 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
 
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
 
-    const moreMenu = useMemo(
-        () => {
-            const deleteAndNavigate = async () => {
-                dispatch(deleteCategoryCombo(categoryCombo.id));
-                navigateBack();
-            };
-
-            return (
-                <AppBarMoreMenu
-                    key='more'
-                    visible={menuVisible}
-                    setVisible={setMenuVisible}
-                >
-                    <Menu.Item
-                        title="Delete"
-                        onPress={() => {
-                            deleteAndNavigate();
-                            setMenuVisible(false);
-                        }}
-                    />
-                </AppBarMoreMenu>);
+    const onSelectDeletion = useCallback(
+        (): void => {
+            dispatch(deleteCategoryCombo(categoryCombo.id));
+            setMenuVisible(false);
+            navigateBack();
         },
-        [categoryCombo.id, dispatch, menuVisible, navigateBack],
+        [categoryCombo.id, dispatch, navigateBack],
+    );
+
+    const moreMenu = useMemo(
+        () => (
+            <AppBarMoreMenu
+                key='more'
+                visible={menuVisible}
+                setVisible={setMenuVisible}
+            >
+                <Menu.Item
+                    title="Delete"
+                    onPress={onSelectDeletion}
+                />
+            </AppBarMoreMenu>
+        ),
+        [menuVisible, onSelectDeletion],
     );
 
     const saveAndNavigate = useCallback(
