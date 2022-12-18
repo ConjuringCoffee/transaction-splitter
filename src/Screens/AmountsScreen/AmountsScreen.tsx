@@ -158,17 +158,23 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         [amountEntries],
     );
 
-    const setPayerCategoryId = (index: number, id: string | undefined) => {
-        const entries = [...amountEntries];
-        entries[index].payerCategoryId = id;
-        setAmountEntries(entries);
-    };
+    const setPayerCategoryId = useCallback(
+        (index: number, id: string | undefined) => {
+            const entries = [...amountEntries];
+            entries[index].payerCategoryId = id;
+            setAmountEntries(entries);
+        },
+        [amountEntries],
+    );
 
-    const setDebtorCategoryId = (index: number, id: string | undefined) => {
-        const entries = [...amountEntries];
-        entries[index].debtorCategoryId = id;
-        setAmountEntries(entries);
-    };
+    const setDebtorCategoryId = useCallback(
+        (index: number, id: string | undefined) => {
+            const entries = [...amountEntries];
+            entries[index].debtorCategoryId = id;
+            setAmountEntries(entries);
+        },
+        [amountEntries],
+    );
 
     const setSplitPercentToPayer = useCallback((index: number, splitPercent: number | undefined) => {
         const entries = [...amountEntries];

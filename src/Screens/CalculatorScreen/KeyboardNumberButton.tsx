@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { KeyboardButton } from './KeyboardButton';
 
 interface Props {
@@ -6,12 +6,17 @@ interface Props {
     onPress: (number: number) => void
 }
 
-export const KeyboardNumberButton = (props: Props) => {
+export const KeyboardNumberButton = ({ number, onPress }: Props) => {
+    const onPressNumber = useCallback(
+        () => onPress(number),
+        [onPress, number],
+    );
+
     return (
         <KeyboardButton
-            value={String(props.number)}
+            value={String(number)}
             color='white'
-            onPress={() => props.onPress(props.number)}
+            onPress={onPressNumber}
         />
     );
 };

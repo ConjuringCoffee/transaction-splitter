@@ -104,57 +104,77 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         additions: navigationBarAddition,
     });
 
-    const onDigitPress = (digit: number): void => {
-        const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
-        newCalculation.addDigit(digit);
-        setCurrentCalculation(newCalculation.getCalculationString());
-    };
+    const onDigitPress = useCallback(
+        (digit: number): void => {
+            const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
+            newCalculation.addDigit(digit);
+            setCurrentCalculation(newCalculation.getCalculationString());
+        },
+        [currentCalculation, numberFormatSettings],
+    );
 
-    const onDecimalSeparatorPress = (): void => {
-        const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
-        newCalculation.addDecimalSeparator();
-        setCurrentCalculation(newCalculation.getCalculationString());
-    };
+    const onDecimalSeparatorPress = useCallback(
+        (): void => {
+            const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
+            newCalculation.addDecimalSeparator();
+            setCurrentCalculation(newCalculation.getCalculationString());
+        },
+        [currentCalculation, numberFormatSettings],
+    );
 
-    const onOperatorAddPress = (): void => {
-        addOperatorToCurrentCalculation('+');
-    };
+    const addOperatorToCurrentCalculation = useCallback(
+        (operator: string): void => {
+            const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
+            newCalculation.addOperator(operator);
+            setCurrentCalculation(newCalculation.getCalculationString());
+        },
+        [currentCalculation, numberFormatSettings],
+    );
 
-    const addOperatorToCurrentCalculation = (operator: string): void => {
-        const newCalculation = new Calculation(currentCalculation, numberFormatSettings);
-        newCalculation.addOperator(operator);
-        setCurrentCalculation(newCalculation.getCalculationString());
-    };
+    const onOperatorAddPress = useCallback(
+        (): void => addOperatorToCurrentCalculation('+'),
+        [addOperatorToCurrentCalculation],
+    );
 
-    const onOperatorSubtractPress = (): void => {
-        addOperatorToCurrentCalculation('-');
-    };
+    const onOperatorSubtractPress = useCallback(
+        (): void => addOperatorToCurrentCalculation('-'),
+        [addOperatorToCurrentCalculation],
+    );
 
-    const onBackPress = (): void => {
-        setCurrentCalculation(currentCalculation.slice(0, -1));
-    };
+    const onBackPress = useCallback(
+        (): void => setCurrentCalculation(currentCalculation.slice(0, -1)),
+        [currentCalculation],
+    );
 
-    const onClearPress = (): void => {
-        setCurrentCalculation('');
-    };
+    const onClearPress = useCallback(
+        (): void => setCurrentCalculation(''),
+        [],
+    );
 
-    const onCalculatePress = (): void => {
-        const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
-        setCurrentCalculation(convertNumberToText(currentResult));
-        addPreviousCalculation(currentCalculation);
-    };
+    const onCalculatePress = useCallback(
+        (): void => {
+            const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
+            setCurrentCalculation(convertNumberToText(currentResult));
+            addPreviousCalculation(currentCalculation);
+        },
+        [addPreviousCalculation, convertNumberToText, currentCalculation, numberFormatSettings],
+    );
 
-    const onConfirmPress = (): void => {
-        const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
+    const onConfirmPress = useCallback(
+        (): void => {
+            const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
 
-        setAmount(currentResult);
-        addPreviousCalculation(currentCalculation);
-        navigation.goBack();
-    };
+            setAmount(currentResult);
+            addPreviousCalculation(currentCalculation);
+            navigation.goBack();
+        },
+        [addPreviousCalculation, currentCalculation, navigation, numberFormatSettings, setAmount],
+    );
 
-    const onCancelPress = (): void => {
-        navigation.goBack();
-    };
+    const onCancelPress = useCallback(
+        (): void => navigation.goBack(),
+        [navigation],
+    );
 
     const resultText: string = useMemo(
         () => {
