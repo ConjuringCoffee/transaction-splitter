@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { DataTable, List, useTheme } from 'react-native-paper';
 import { SaveTransaction } from 'ynab';
 import { StyleSheet } from 'react-native';
@@ -30,9 +30,15 @@ export const SaveTransactionListSection = (props: Props) => {
     const amountHuman = convertApiAmountToHumanAmount(props.saveTransaction.amount);
     const amountText = convertNumberToText(amountHuman);
 
-    const toggleDetailsExpanded = () => setDetailsExpanded(!detailsExpanded);
-    const toggleSubTransactionsExpanded = () => setSubTransactionsExpanded(!subTransactionsExpanded);
+    const toggleDetailsExpanded = useCallback(
+        (): void => setDetailsExpanded(!detailsExpanded),
+        [detailsExpanded],
+    );
 
+    const toggleSubTransactionsExpanded = useCallback(
+        (): void => setSubTransactionsExpanded(!subTransactionsExpanded),
+        [subTransactionsExpanded],
+    );
 
     const styles = StyleSheet.create({
         sectionTitle: {

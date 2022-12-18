@@ -36,7 +36,7 @@ type StackParameterList = {
         onSelect: (categoryId?: string) => void
     };
     [ScreenNames.SELECT_CATEGORY_COMBO_SCREEN]: {
-        onSelect: (categoryCombo: CategoryCombo) => void
+        onSelect: (categoryComboId: string) => void
     }
     [ScreenNames.CALCULATOR_SCREEN]: {
         currentAmount: number,

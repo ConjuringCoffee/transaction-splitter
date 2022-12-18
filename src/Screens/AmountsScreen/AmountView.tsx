@@ -8,6 +8,7 @@ import { SubAmountInput } from './SubAmountInput';
 import { Divider, IconButton, TextInput } from 'react-native-paper';
 import { CategoryInput } from './CategoryInput';
 import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
+import { selectCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
 
 interface Props<T extends keyof StackParameterList> {
     key: number,
@@ -34,6 +35,8 @@ const ICON_CATEGORY_COMBO = 'vector-combine';
 const ICON_DELETE = 'delete';
 
 export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) => {
+    const categoryCombos = useAppSelector(selectCategoryCombos);
+
     const setSplitPercentToPayer = useCallback(
         (splitPercent?: number) => props.setSplitPercentToPayer(props.index, splitPercent),
         [props],
@@ -79,7 +82,13 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
     const navigateToCategoryComboScreen = useCallback(
         () => {
             props.navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
-                onSelect: (categoryCombo) => {
+                onSelect: (categoryComboId) => {
+                    const categoryCombo = categoryCombos.find((c) => c.id === categoryComboId);
+
+                    if (!categoryCombo) {
+                        throw new Error(`Expected to find a category como for ID ${categoryComboId}, but did not`);
+                    }
+
                     categoryCombo.categories.forEach((category) => {
                         if (props.payerBudgetId === category.budgetId) {
                             setPayerCategoryId(category.id);
@@ -92,7 +101,7 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                 },
             });
         },
-        [props, setPayerCategoryId, setDebtorCategoryId],
+        [props.navigation, props.payerBudgetId, props.debtorBudgetId, categoryCombos, setPayerCategoryId, setDebtorCategoryId],
     );
 
     const payerCategories = useAppSelector((state) => selectCategories(state, props.payerBudgetId));

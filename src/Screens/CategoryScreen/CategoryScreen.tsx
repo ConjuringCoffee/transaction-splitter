@@ -17,20 +17,26 @@ export const CategoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenN
     const [navigateBack] = useNavigateBack(navigation);
     const { onSelect } = route.params;
 
-    const selectAndNavigateBack = useCallback((categoryId: string | undefined): void => {
-        onSelect(categoryId);
-        navigateBack();
-    }, [onSelect, navigateBack]);
+    const selectAndNavigateBack = useCallback(
+        (categoryId: string | undefined): void => {
+            onSelect(categoryId);
+            navigateBack();
+        }, [onSelect, navigateBack],
+    );
 
+    const deselectAndNavigateBack = useCallback(
+        (): void => selectAndNavigateBack(undefined),
+        [selectAndNavigateBack],
+    );
 
     const navigationBarAddition = useMemo(
         () => (
             <Appbar.Action
-                onPress={() => selectAndNavigateBack(undefined)}
+                onPress={deselectAndNavigateBack}
                 icon={ICON_DESELECT}
             />
         ),
-        [selectAndNavigateBack],
+        [deselectAndNavigateBack],
     );
 
     useNavigationBar({

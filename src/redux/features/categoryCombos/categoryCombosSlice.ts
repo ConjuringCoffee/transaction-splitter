@@ -156,3 +156,12 @@ export const categoryCombosSlice = createSlice({
 export const selectCategoryCombos = (state: RootState) => state.categoryCombos.objects;
 export const selectCategoryCombosFetchStatus = (state: RootState) => state.categoryCombos.fetchStatus;
 export const selectCategoryCombosSaveStatus = (state: RootState) => state.categoryCombos.saveStatus;
+export const selectCategoryCombo = (state: RootState, categoryComboId: string): CategoryCombo => {
+    const categoryCombo = state.categoryCombos.objects.find((c) => c.id === categoryComboId);
+
+    if (!categoryCombo) {
+        throw new Error(`Expected to find a category como for ID ${categoryComboId}, but did not`);
+    }
+
+    return categoryCombo;
+};

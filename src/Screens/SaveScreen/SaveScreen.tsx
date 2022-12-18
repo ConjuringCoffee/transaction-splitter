@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { createTransaction } from '../../YnabApi/YnabApiWrapper';
 import { ScrollView } from 'react-native-gesture-handler';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
@@ -43,26 +43,29 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
         }
     }, [navigation, payerTransactionSaveStatus, debtorTransactionSaveStatus]);
 
-    const save = () => {
-        setPayerTransactionSaveStatus(LoadingStatus.LOADING);
-        setDebtorTransactionSaveStatus(LoadingStatus.LOADING);
+    const save = useCallback(
+        (): void => {
+            setPayerTransactionSaveStatus(LoadingStatus.LOADING);
+            setDebtorTransactionSaveStatus(LoadingStatus.LOADING);
 
-        createTransaction(basicData.payer.budgetId, payerSaveTransaction, accessToken)
-            .then(() => {
-                setPayerTransactionSaveStatus(LoadingStatus.SUCCESSFUL);
-            }).catch((error) => {
-                console.error(error);
-                setPayerTransactionSaveStatus(LoadingStatus.ERROR);
-            });
+            createTransaction(basicData.payer.budgetId, payerSaveTransaction, accessToken)
+                .then(() => {
+                    setPayerTransactionSaveStatus(LoadingStatus.SUCCESSFUL);
+                }).catch((error) => {
+                    console.error(error);
+                    setPayerTransactionSaveStatus(LoadingStatus.ERROR);
+                });
 
-        createTransaction(basicData.debtor.budgetId, debtorSaveTransaction, accessToken)
-            .then(() => {
-                setDebtorTransactionSaveStatus(LoadingStatus.SUCCESSFUL);
-            }).catch((error) => {
-                console.error(error);
-                setDebtorTransactionSaveStatus(LoadingStatus.ERROR);
-            });
-    };
+            createTransaction(basicData.debtor.budgetId, debtorSaveTransaction, accessToken)
+                .then(() => {
+                    setDebtorTransactionSaveStatus(LoadingStatus.SUCCESSFUL);
+                }).catch((error) => {
+                    console.error(error);
+                    setDebtorTransactionSaveStatus(LoadingStatus.ERROR);
+                });
+        },
+        [accessToken, basicData.debtor.budgetId, basicData.payer.budgetId, debtorSaveTransaction, payerSaveTransaction],
+    );
 
     const getOverallSaveStatus = (): LoadingStatus => {
         if (payerTransactionSaveStatus === LoadingStatus.ERROR || debtorTransactionSaveStatus === LoadingStatus.ERROR) {
