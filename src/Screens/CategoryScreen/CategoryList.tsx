@@ -3,6 +3,7 @@ import { FlatList } from 'react-native';
 import { List } from 'react-native-paper';
 import { selectCategoryGroups, selectCategories, selectInternalMasterCategoryGroupId, CategoryGroup } from '../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../Hooks/useAppSelector';
+import { CategoryListItem } from './CategoryListItem';
 
 interface Props {
     categoryNameFilter: string,
@@ -43,11 +44,13 @@ export const CategoryList = (props: Props) => {
                     const category = categories[categoryId];
 
                     return (
-                        <List.Item
+                        <CategoryListItem
                             key={category.id}
-                            title={category.name}
-                            onPress={() => props.onCategorySelect(category.id)}
-                        />);
+                            budgetId={props.budgetId}
+                            categoryId={category.id}
+                            onCategorySelect={props.onCategorySelect}
+                        />
+                    );
                 })
                 }
             </List.Section >);
