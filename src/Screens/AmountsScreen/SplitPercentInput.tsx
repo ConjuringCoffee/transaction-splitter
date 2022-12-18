@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { TextInput } from 'react-native-paper';
 
 interface Props {
@@ -8,7 +8,12 @@ interface Props {
     setSplitPercentToPayer: (splitPercent: number) => void,
 }
 
-export const SplitPercentInput = (props: Props) => {
+export const SplitPercentInput = ({ setSplitPercentToPayer, ...props }: Props) => {
+    const convertAndSetSplitPercentToPayer = useCallback(
+        (text: string) => setSplitPercentToPayer(Number(text)),
+        [setSplitPercentToPayer],
+    );
+
     if (!props.payerCategoryChosen || !props.debtorCategoryChosen) {
         return null;
     }
@@ -20,7 +25,7 @@ export const SplitPercentInput = (props: Props) => {
             label='Split % to payer'
             keyboardType="numeric"
             value={value}
-            onChangeText={(text) => props.setSplitPercentToPayer(Number(text))}
+            onChangeText={convertAndSetSplitPercentToPayer}
         />
     );
 };

@@ -64,13 +64,17 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         [debtorCategoriesFetchStatus, dispatch, debtorBudgetId, accessToken],
     );
 
+    const toggleQuickModeAndCloseMenu = useCallback(
+        () => {
+            setQuickModeEnabled(!quickModeEnabled);
+            setMenuVisible(!menuVisible);
+        },
+        [setQuickModeEnabled, setMenuVisible, quickModeEnabled, menuVisible],
+    );
+
     const navigationBarAddition = useMemo(
         () => {
             const title = quickModeEnabled ? 'Disable Quick Mode' : 'Enable Quick Mode';
-            const toggleQuickModeAndCloseMenu = () => {
-                setQuickModeEnabled(!quickModeEnabled);
-                setMenuVisible(!menuVisible);
-            };
 
             return (
                 <AppBarMoreMenu
@@ -84,7 +88,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                     />
                 </AppBarMoreMenu>);
         },
-        [quickModeEnabled, menuVisible, setQuickModeEnabled],
+        [toggleQuickModeAndCloseMenu, menuVisible, quickModeEnabled],
     );
 
     useNavigationBar({
@@ -94,12 +98,21 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
     });
 
     const addAmountEntry = (amountText: string) => {
+        Keyboard.dismiss();
         const entries = [...amountEntries, {
             amountText: amountText ?? '',
             memo: '',
 
         }];
         setAmountEntries(entries);
+    };
+
+    const addEmptyAmountEntry = () => {
+        addAmountEntry('');
+    };
+
+    const addRemainingAmountEntry = () => {
+        addAmountEntry(convertNumberToText(remainingAmount));
     };
 
     const setAmountText = (index: number, amountText: string) => {
@@ -179,6 +192,34 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         [remainingAmount, amountEntries, convertTextToNumber],
     );
 
+    const navigateToSaveScreen = useCallback(
+        () => {
+            const convertedAmountEntries: AmountEntry[] = [];
+
+            amountEntries.forEach((amountEntry) => {
+                convertedAmountEntries.push({
+                    amount: convertTextToNumber(amountEntry.amountText),
+                    debtorCategoryId: amountEntry.debtorCategoryId,
+                    payerCategoryId: amountEntry.payerCategoryId,
+                    splitPercentToPayer: amountEntry.splitPercentToPayer,
+                    memo: amountEntry.memo,
+                });
+            });
+
+            const saveTransactions = buildSaveTransactions(convertedAmountEntries, basicData);
+
+            navigation.navigate(
+                ScreenNames.SAVE_SCREEN,
+                {
+                    basicData: basicData,
+                    payerSaveTransaction: saveTransactions.payer,
+                    debtorSaveTransaction: saveTransactions.debtor,
+                },
+            );
+        },
+        [amountEntries, basicData, convertTextToNumber, navigation],
+    );
+
     const addingDisabled = remainingAmount === 0;
 
     const categoriesAreLoaded
@@ -198,15 +239,15 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                                     amountText={amountEntry.amountText}
                                     payerBudgetId={basicData.payer.budgetId}
                                     debtorBudgetId={basicData.debtor.budgetId}
-                                    setAmountText={(amount) => setAmountText(index, amount)}
-                                    setMemo={(memo) => setMemo(index, memo)}
+                                    setAmountText={setAmountText}
+                                    setMemo={setMemo}
                                     payerCategoryId={amountEntry.payerCategoryId}
-                                    setPayerCategoryId={(categoryId) => setPayerCategoryId(index, categoryId)}
+                                    setPayerCategoryId={setPayerCategoryId}
                                     debtorCategoryId={amountEntry.debtorCategoryId}
-                                    setDebtorCategoryId={(categoryId) => setDebtorCategoryId(index, categoryId)}
+                                    setDebtorCategoryId={setDebtorCategoryId}
                                     splitPercentToPayer={amountEntry.splitPercentToPayer}
                                     setSplitPercentToPayer={setSplitPercentToPayer}
-                                    onRemovePress={() => removeAmountEntry(index)}
+                                    onRemovePress={removeAmountEntry}
                                     navigation={navigation}
                                     quickModeEnabled={quickModeEnabled}
                                 />
@@ -217,10 +258,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                             disabled={addingDisabled}
                             mode='contained'
                             style={styles.button}
-                            onPress={() => {
-                                addAmountEntry('');
-                                Keyboard.dismiss();
-                            }}
+                            onPress={addEmptyAmountEntry}
                         >
                             Add
                         </Button>
@@ -228,10 +266,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                             disabled={addingDisabled}
                             mode='contained'
                             style={styles.button}
-                            onPress={() => {
-                                addAmountEntry(convertNumberToText(remainingAmount));
-                                Keyboard.dismiss();
-                            }}
+                            onPress={addRemainingAmountEntry}
                         >
                             Add remaining
                         </Button>
@@ -246,30 +281,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                             disabled={!okayToContinue}
                             mode='contained'
                             style={styles.button}
-                            onPress={() => {
-                                const convertedAmountEntries: AmountEntry[] = [];
-
-                                amountEntries.forEach((amountEntry) => {
-                                    convertedAmountEntries.push({
-                                        amount: convertTextToNumber(amountEntry.amountText),
-                                        debtorCategoryId: amountEntry.debtorCategoryId,
-                                        payerCategoryId: amountEntry.payerCategoryId,
-                                        splitPercentToPayer: amountEntry.splitPercentToPayer,
-                                        memo: amountEntry.memo,
-                                    });
-                                });
-
-                                const saveTransactions = buildSaveTransactions(convertedAmountEntries, basicData);
-
-                                navigation.navigate(
-                                    ScreenNames.SAVE_SCREEN,
-                                    {
-                                        basicData: basicData,
-                                        payerSaveTransaction: saveTransactions.payer,
-                                        debtorSaveTransaction: saveTransactions.debtor,
-                                    },
-                                );
-                            }}
+                            onPress={navigateToSaveScreen}
                         >
                             Continue
                         </Button>

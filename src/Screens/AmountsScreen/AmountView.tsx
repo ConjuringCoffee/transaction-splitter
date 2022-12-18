@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { SplitPercentInput } from './SplitPercentInput';
@@ -15,15 +15,15 @@ interface Props<T extends keyof StackParameterList> {
     amountText: string,
     payerBudgetId: string,
     debtorBudgetId: string,
-    setAmountText: (newAmount: string) => void,
-    setMemo: (memo: string) => void,
+    setAmountText: (index: number, newAmount: string) => void,
+    setMemo: (index: number, memo: string) => void,
     payerCategoryId: string | undefined,
-    setPayerCategoryId: (id: string | undefined) => void,
+    setPayerCategoryId: (index: number, id: string | undefined) => void,
     debtorCategoryId: string | undefined,
-    setDebtorCategoryId: (id: string | undefined) => void,
+    setDebtorCategoryId: (index: number, id: string | undefined) => void,
     splitPercentToPayer: number | undefined,
     setSplitPercentToPayer: (index: number, splitPercent: number | undefined) => void,
-    onRemovePress: () => void,
+    onRemovePress: (index: number) => void,
     navigation: MyStackNavigationProp<T>,
     quickModeEnabled: boolean,
 }
@@ -34,18 +34,66 @@ const ICON_CATEGORY_COMBO = 'vector-combine';
 const ICON_DELETE = 'delete';
 
 export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) => {
-    const { index, payerCategoryId, debtorCategoryId, splitPercentToPayer, setSplitPercentToPayer } = props;
+    const setSplitPercentToPayer = useCallback(
+        (splitPercent?: number) => props.setSplitPercentToPayer(props.index, splitPercent),
+        [props],
+    );
+
+    const setAmountText = useCallback(
+        (amountText: string) => props.setAmountText(props.index, amountText),
+        [props],
+    );
+
+    const setPayerCategoryId = useCallback(
+        (id: string | undefined) => props.setPayerCategoryId(props.index, id),
+        [props],
+    );
+
+    const setDebtorCategoryId = useCallback(
+        (id: string | undefined) => props.setDebtorCategoryId(props.index, id),
+        [props],
+    );
+
+    const setMemo = useCallback(
+        (memo: string) => props.setMemo(props.index, memo),
+        [props],
+    );
+
+    const onRemovePress = useCallback(
+        () => props.onRemovePress(props.index),
+        [props],
+    );
 
     useEffect(() => {
         // TODO: Clean this up
-        if (payerCategoryId === undefined || debtorCategoryId === undefined) {
-            if (splitPercentToPayer !== undefined) {
-                setSplitPercentToPayer(index, undefined);
+        if (props.payerCategoryId === undefined || props.debtorCategoryId === undefined) {
+            if (props.splitPercentToPayer !== undefined) {
+                setSplitPercentToPayer();
             }
-        } else if (payerCategoryId !== undefined && debtorCategoryId !== undefined && splitPercentToPayer === undefined) {
-            setSplitPercentToPayer(index, DEFAULT_SPLIT_PERCENT_TO_PAYER);
+        } else if (props.payerCategoryId !== undefined && props.debtorCategoryId !== undefined && props.splitPercentToPayer === undefined) {
+            setSplitPercentToPayer(DEFAULT_SPLIT_PERCENT_TO_PAYER);
         }
-    }, [payerCategoryId, debtorCategoryId, splitPercentToPayer, index, setSplitPercentToPayer]);
+    }, [props, setSplitPercentToPayer]);
+
+
+    const navigateToCategoryComboScreen = useCallback(
+        () => {
+            props.navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
+                onSelect: (categoryCombo) => {
+                    categoryCombo.categories.forEach((category) => {
+                        if (props.payerBudgetId === category.budgetId) {
+                            setPayerCategoryId(category.id);
+                        } else if (props.debtorBudgetId === category.budgetId) {
+                            setDebtorCategoryId(category.id);
+                        } else {
+                            throw new Error('Combination belongs to another budget');
+                        }
+                    });
+                },
+            });
+        },
+        [props, setPayerCategoryId, setDebtorCategoryId],
+    );
 
     const payerCategories = useAppSelector((state) => selectCategories(state, props.payerBudgetId));
     const debtorCategories = useAppSelector((state) => selectCategories(state, props.debtorBudgetId));
@@ -59,12 +107,12 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                 <View style={styles.flexContainer}>
                     <SubAmountInput
                         value={props.amountText}
-                        setValue={props.setAmountText}
+                        setValue={setAmountText}
                         navigation={props.navigation}
                     />
                     <IconButton
                         icon={ICON_DELETE}
-                        onPress={() => props.onRemovePress()}
+                        onPress={onRemovePress}
                     />
                 </View>
 
@@ -73,33 +121,19 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                         label='Payer Category'
                         text={payerCategory?.name ? payerCategory?.name : ''}
                         budgetId={props.payerBudgetId}
-                        onSelect={props.setPayerCategoryId}
+                        onSelect={setPayerCategoryId}
                         navigation={props.navigation}
                     />
                     <IconButton
                         style={styles.categoryComboButton}
                         icon={ICON_CATEGORY_COMBO}
-                        onPress={() => {
-                            props.navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
-                                onSelect: (categoryCombo) => {
-                                    categoryCombo.categories.forEach((category) => {
-                                        if (props.payerBudgetId === category.budgetId) {
-                                            props.setPayerCategoryId(category.id);
-                                        } else if (props.debtorBudgetId === category.budgetId) {
-                                            props.setDebtorCategoryId(category.id);
-                                        } else {
-                                            throw new Error('Combination belongs to another budget');
-                                        }
-                                    });
-                                },
-                            });
-                        }}
+                        onPress={navigateToCategoryComboScreen}
                     />
                     <CategoryInput
                         label='Debtor Category'
                         text={debtorCategory?.name ? debtorCategory?.name : ''}
                         budgetId={props.debtorBudgetId}
-                        onSelect={props.setDebtorCategoryId}
+                        onSelect={setDebtorCategoryId}
                         navigation={props.navigation}
                     />
                 </View>
@@ -110,12 +144,12 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                                 payerCategoryChosen={props.payerCategoryId !== undefined}
                                 debtorCategoryChosen={props.debtorCategoryId !== undefined}
                                 splitPercentToPayer={props.splitPercentToPayer}
-                                setSplitPercentToPayer={(splitPercent) => props.setSplitPercentToPayer(index, splitPercent)}
+                                setSplitPercentToPayer={setSplitPercentToPayer}
                             />
                             <TextInput
                                 label='Memo'
                                 placeholder='Enter memo'
-                                onChangeText={(text) => props.setMemo(text)}
+                                onChangeText={setMemo}
                             />
                         </>
                     )
