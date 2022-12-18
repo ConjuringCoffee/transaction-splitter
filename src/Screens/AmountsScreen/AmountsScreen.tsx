@@ -97,35 +97,66 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         additions: navigationBarAddition,
     });
 
-    const addAmountEntry = (amountText: string) => {
-        Keyboard.dismiss();
-        const entries = [...amountEntries, {
-            amountText: amountText ?? '',
-            memo: '',
+    const remainingAmount = useMemo(
+        () => {
+            let remainingAmount = basicData.totalAmount;
 
-        }];
-        setAmountEntries(entries);
-    };
+            amountEntries.forEach((amountEntry) => {
+                const amount = convertTextToNumber(amountEntry.amountText);
 
-    const addEmptyAmountEntry = () => {
-        addAmountEntry('');
-    };
+                if (isNaN(amount)) {
+                    // Skip invalid amounts
+                    return;
+                }
 
-    const addRemainingAmountEntry = () => {
-        addAmountEntry(convertNumberToText(remainingAmount));
-    };
+                remainingAmount = roundToTwoDecimalPlaces(remainingAmount - amount);
+            });
 
-    const setAmountText = (index: number, amountText: string) => {
-        const entries = [...amountEntries];
-        entries[index].amountText = amountText;
-        setAmountEntries(entries);
-    };
+            return remainingAmount;
+        },
+        [basicData, amountEntries, convertTextToNumber],
+    );
 
-    const setMemo = (index: number, memo: string) => {
-        const entries = [...amountEntries];
-        entries[index].memo = memo;
-        setAmountEntries(entries);
-    };
+    const addAmountEntry = useCallback(
+        (amountText: string) => {
+            Keyboard.dismiss();
+            const entries = [...amountEntries, {
+                amountText: amountText ?? '',
+                memo: '',
+
+            }];
+            setAmountEntries(entries);
+        },
+        [amountEntries],
+    );
+
+    const addEmptyAmountEntry = useCallback(
+        () => addAmountEntry(''),
+        [addAmountEntry],
+    );
+
+    const addRemainingAmountEntry = useCallback(
+        () => addAmountEntry(convertNumberToText(remainingAmount)),
+        [addAmountEntry, convertNumberToText, remainingAmount],
+    );
+
+    const setAmountText = useCallback(
+        (index: number, amountText: string) => {
+            const entries = [...amountEntries];
+            entries[index].amountText = amountText;
+            setAmountEntries(entries);
+        },
+        [amountEntries],
+    );
+
+    const setMemo = useCallback(
+        (index: number, memo: string) => {
+            const entries = [...amountEntries];
+            entries[index].memo = memo;
+            setAmountEntries(entries);
+        },
+        [amountEntries],
+    );
 
     const setPayerCategoryId = (index: number, id: string | undefined) => {
         const entries = [...amountEntries];
@@ -145,30 +176,13 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         setAmountEntries(entries);
     }, [amountEntries]);
 
-    const removeAmountEntry = (index: number) => {
-        const entries = [...amountEntries];
-        entries.splice(index, 1);
-        setAmountEntries(entries);
-    };
-
-    const remainingAmount = useMemo(
-        () => {
-            let remainingAmount = basicData.totalAmount;
-
-            amountEntries.forEach((amountEntry) => {
-                const amount = convertTextToNumber(amountEntry.amountText);
-
-                if (isNaN(amount)) {
-                    // Skip invalid amounts
-                    return;
-                }
-
-                remainingAmount = roundToTwoDecimalPlaces(remainingAmount - amount);
-            });
-
-            return remainingAmount;
+    const removeAmountEntry = useCallback(
+        (index: number) => {
+            const entries = [...amountEntries];
+            entries.splice(index, 1);
+            setAmountEntries(entries);
         },
-        [basicData, amountEntries, convertTextToNumber],
+        [amountEntries],
     );
 
     const okayToContinue = useMemo(
