@@ -1,9 +1,9 @@
 import React from 'react';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { FlatList, View } from 'react-native';
-import { List } from 'react-native-paper';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { useNavigationBar } from '../../Hooks/useNavigationBar';
+import { HistoryListItem } from './HistoryListItem';
 
 type ScreenName = 'Calculation History';
 
@@ -19,12 +19,10 @@ export const CalculationHistoryScreen = ({ route, navigation }: MyStackScreenPro
     });
 
     const renderItem = ({ item }: { item: string }) => (
-        <List.Item
-            title={`${item}`}
-            onPress={() => {
-                route.params.onSelectCalculation(item);
-                navigateBack();
-            }}
+        <HistoryListItem
+            calculation={item}
+            selectCalculation={route.params.onSelectCalculation}
+            navigateBack={navigateBack}
         />
     );
 

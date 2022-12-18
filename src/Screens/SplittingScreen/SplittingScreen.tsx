@@ -105,29 +105,45 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
         additions: navigationBarAddition,
     });
 
-    const navigateToAmountsScreen = () => {
-        navigation.navigate(
-            ScreenNames.AMOUNTS_SCREEN,
-            {
-                basicData: {
-                    payer: {
-                        budgetId: payerBudgetInProfile.budgetId,
-                        accountId: payerAccountID,
-                        transferAccountId: payerBudgetInProfile.debtorAccountId,
-                        transferAccountPayeeId: payerTransferAccount.transferPayeeID,
+    const navigateToAmountsScreen = useCallback(
+        (): void => {
+            navigation.navigate(
+                ScreenNames.AMOUNTS_SCREEN,
+                {
+                    basicData: {
+                        payer: {
+                            budgetId: payerBudgetInProfile.budgetId,
+                            accountId: payerAccountID,
+                            transferAccountId: payerBudgetInProfile.debtorAccountId,
+                            transferAccountPayeeId: payerTransferAccount.transferPayeeID,
+                        },
+                        debtor: {
+                            budgetId: debtorBudgetInProfile.budgetId,
+                            accountId: debtorBudgetInProfile.debtorAccountId,
+                        },
+                        payeeName,
+                        date: toIsoDateString(date),
+                        memo,
+                        totalAmount,
                     },
-                    debtor: {
-                        budgetId: debtorBudgetInProfile.budgetId,
-                        accountId: debtorBudgetInProfile.debtorAccountId,
-                    },
-                    payeeName,
-                    date: toIsoDateString(date),
-                    memo,
-                    totalAmount,
                 },
-            },
-        );
-    };
+            );
+        },
+        [
+            date, debtorBudgetInProfile.budgetId, debtorBudgetInProfile.debtorAccountId,
+            memo, navigation, payeeName, payerAccountID, payerBudgetInProfile.budgetId,
+            payerBudgetInProfile.debtorAccountId, payerTransferAccount.transferPayeeID, totalAmount,
+        ],
+    );
+
+    const setDateIfProvided = useCallback(
+        (date: Date | undefined) => {
+            if (date) {
+                setDate(date);
+            }
+        },
+        [],
+    );
 
     return (
         <CustomScrollView>
@@ -160,11 +176,7 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
                 locale="de"
                 label="Date"
                 value={date}
-                onChange={(date) => {
-                    if (date) {
-                        setDate(date);
-                    }
-                }}
+                onChange={setDateIfProvided}
                 inputMode="start"
             />
             <Button

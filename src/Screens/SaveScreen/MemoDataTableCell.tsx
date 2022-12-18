@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { DataTable, IconButton } from 'react-native-paper';
 import { DataTableCellView } from './DataTableCellView';
 
@@ -9,18 +9,24 @@ interface Props {
 
 const ICON_DISPLAY_MEMO = 'information-outline';
 
-export const MemoDataTableCell = (props: Props) => {
-    if (props.memo) {
+export const MemoDataTableCell = ({ memo, triggerMemoDisplay }: Props) => {
+    const triggerDisplay = useCallback(
+        () => {
+            if (!memo) {
+                throw new Error('Calling this function is not supported if no memo is set');
+            }
+
+            triggerMemoDisplay(memo);
+        },
+        [triggerMemoDisplay, memo],
+    );
+
+    if (memo) {
         return (
             <DataTableCellView alignRight={true}>
                 <IconButton
                     icon={ICON_DISPLAY_MEMO}
-                    onPress={() => {
-                        if (!props.memo) {
-                            throw new Error('Impossible to get here if memo is not set');
-                        }
-                        props.triggerMemoDisplay(props.memo);
-                    }}
+                    onPress={triggerDisplay}
                 />
             </DataTableCellView>
         );

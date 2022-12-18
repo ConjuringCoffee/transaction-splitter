@@ -1,13 +1,14 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import { Appbar, List, TextInput } from 'react-native-paper';
+import { Appbar, TextInput } from 'react-native-paper';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { CategoryCombo, selectCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { useNavigationBar } from '../../Hooks/useNavigationBar';
+import { CategoryComboListItem } from './CategoryComboListItem';
 
 type ScreenName = 'Category Combinations';
 
@@ -23,15 +24,18 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
         [categoryCombos, nameFilter],
     );
 
+    const navigateToCrateCategoryComboScreen = useCallback(
+        () => navigation.navigate(ScreenNames.CREATE_CATEGORY_COMBO_SCREEN),
+        [navigation],
+    );
+
     const navigationBarAddition = useMemo(
         () => (
             <Appbar.Action
                 icon={ICON_ADD}
-                onPress={() => {
-                    navigation.navigate(ScreenNames.CREATE_CATEGORY_COMBO_SCREEN);
-                }}
+                onPress={navigateToCrateCategoryComboScreen}
             />),
-        [navigation],
+        [navigateToCrateCategoryComboScreen],
     );
 
     useNavigationBar({
@@ -42,14 +46,19 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
 
     const [navigateBack] = useNavigateBack(navigation);
 
+    const onSelect = useCallback(
+        (categoryComboId: string): void => {
+            route.params.onSelect(categoryComboId);
+            navigateBack();
+        },
+        [navigateBack, route.params],
+    );
+
     const renderListItem = ({ item }: { item: CategoryCombo }) => (
-        <List.Item
+        <CategoryComboListItem
             key={item.id}
-            title={item.name}
-            onPress={() => {
-                route.params.onSelect(item);
-                navigateBack();
-            }}
+            categoryComboId={item.id}
+            onSelect={onSelect}
         />
     );
 

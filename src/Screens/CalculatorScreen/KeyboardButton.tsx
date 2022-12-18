@@ -28,9 +28,7 @@ export const KeyboardButton = (props: Props) => {
                     backgroundColor: pressed ? '#d2d1d6' : props.color,
                 },
                 styles.pressable]}
-            onPress={() => {
-                props.onPress();
-            }}
+            onPress={props.onPress}
         >
             <Text style={styles.text}>
                 {props.value}

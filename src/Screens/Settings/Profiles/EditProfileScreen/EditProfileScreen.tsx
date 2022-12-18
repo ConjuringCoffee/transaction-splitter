@@ -38,12 +38,16 @@ export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
         navigateBack();
     }, [navigateBack, save]);
 
-    const moreMenu = useMemo(() => {
-        const deleteAndNavigate = async () => {
-            await dispatch(deleteProfile(profileId));
+    const onSelectDeletion = useCallback(
+        (): void => {
+            dispatch(deleteProfile(profileId));
+            setMenuVisible(false);
             navigateBack();
-        };
+        },
+        [profileId, dispatch, navigateBack],
+    );
 
+    const moreMenu = useMemo(() => {
         return (
             <AppBarMoreMenu
                 key='more'
@@ -52,18 +56,10 @@ export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
             >
                 <Menu.Item
                     title="Delete"
-                    onPress={() => {
-                        deleteAndNavigate();
-                        setMenuVisible(false);
-                    }}
+                    onPress={onSelectDeletion}
                 />
             </AppBarMoreMenu>);
-    }, [
-        profileId,
-        navigateBack,
-        menuVisible,
-        dispatch,
-    ]);
+    }, [menuVisible, onSelectDeletion]);
 
     const navigationBarAdditions = useMemo(
         () => (

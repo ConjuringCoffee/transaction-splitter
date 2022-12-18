@@ -20,7 +20,7 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
         navigation: navigation,
     });
 
-    const navigateToProfileSettings = useCallback(
+    const navigateToProfileSettingsScreen = useCallback(
         () => {
             if (profiles.length) {
                 // TODO: Support more than one profile
@@ -32,6 +32,21 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
         [navigation, profiles],
     );
 
+    const navigateToAccessTokenScreen = useCallback(
+        () => navigation.navigate(ScreenNames.ACCESS_TOKEN_SCREEN),
+        [navigation],
+    );
+
+    const navigateToCategoryComboSettingsScreen = useCallback(
+        () => navigation.navigate(ScreenNames.CATEGORY_COMBO_SETTINGS_SCREEN),
+        [navigation],
+    );
+
+    const navigateToDisplaySettingsScreen = useCallback(
+        () => navigation.navigate(ScreenNames.DISPLAY_SETTINGS_SCREEN),
+        [navigation],
+    );
+
     // @ts-ignore
     const branchName = Constants.manifest2?.metadata.branchName ?? '';
 
@@ -40,27 +55,21 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
             <List.Item
                 title='Access Token'
                 description='Necessary to access the YNAB API'
-                onPress={() => {
-                    navigation.navigate(ScreenNames.ACCESS_TOKEN_SCREEN);
-                }}
+                onPress={navigateToAccessTokenScreen}
             />
             <List.Item
                 title='Profile'
                 description='Connect two budgets of your account'
-                onPress={navigateToProfileSettings}
+                onPress={navigateToProfileSettingsScreen}
             />
             <List.Item
                 title='Category Combinations'
                 description='Combine categories under a single name'
-                onPress={() => {
-                    navigation.navigate(ScreenNames.CATEGORY_COMBO_SETTINGS_SCREEN);
-                }}
+                onPress={navigateToCategoryComboSettingsScreen}
             />
             <List.Item
                 title='Display Settings'
-                onPress={() => {
-                    navigation.navigate(ScreenNames.DISPLAY_SETTINGS_SCREEN);
-                }}
+                onPress={navigateToDisplaySettingsScreen}
             />
             <Text style={styles.text}>
                 {branchName} @ {Constants.manifest2?.createdAt}

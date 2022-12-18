@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button, Text } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { ScreenNames } from '../../Navigation/ScreenNames';
@@ -12,25 +12,32 @@ interface Props<T extends keyof StackParameterList> {
     navigation: MyStackNavigationProp<T>,
 }
 
-export const CategoryInput = <T extends keyof StackParameterList>(props: Props<T>) => (
-    <View style={styles.view}>
-        <Text>
-            {props.label}
-        </Text>
+export const CategoryInput = <T extends keyof StackParameterList>({ navigation, budgetId, onSelect, ...props }: Props<T>) => {
+    const navigateToCategoryScreen = useCallback(
+        () => {
+            navigation.navigate(ScreenNames.CATEGORY_SCREEN, {
+                budgetId: budgetId,
+                onSelect: (categoryId?: string) => onSelect(categoryId),
+            });
+        },
+        [budgetId, navigation, onSelect],
+    );
 
-        <Button
-            mode='contained'
-            onPress={() => {
-                props.navigation.navigate(ScreenNames.CATEGORY_SCREEN, {
-                    budgetId: props.budgetId,
-                    onSelect: (categoryId?: string) => props.onSelect(categoryId),
-                });
-            }}
-        >
-            {props.text}
-        </Button>
-    </View>
-);
+    return (
+        <View style={styles.view}>
+            <Text>
+                {props.label}
+            </Text>
+
+            <Button
+                mode='contained'
+                onPress={navigateToCategoryScreen}
+            >
+                {props.text}
+            </Button>
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     view: {
