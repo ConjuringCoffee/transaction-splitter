@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { SplittingScreen } from '../Screens/SplittingScreen/SplittingScreen';
 import { SaveScreen } from '../Screens/SaveScreen/SaveScreen';
 import { AmountsScreen } from '../Screens/AmountsScreen/AmountsScreen';
 import { CategoryScreen } from '../Screens/CategoryScreen/CategoryScreen';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, StackHeaderProps } from '@react-navigation/stack';
 import { StackParameterList } from './ScreenParameters';
 import { AccessTokenScreen } from '../Screens/Settings/AccessTokenScreen/AccessTokenScreen';
 import { CalculatorScreen } from '../Screens/CalculatorScreen/CalculatorScreen';
@@ -19,6 +19,8 @@ import { EditProfileScreen } from '../Screens/Settings/Profiles/EditProfileScree
 import { CreateProfileScreen } from '../Screens/Settings/Profiles/CreateProfilesScreen/CreateProfileScreen';
 import { InitialScreen } from '../Screens/InitialScreen/InitialScreen';
 import { DevelopmentSettingsScreen } from '../Screens/Settings/DevelopmentSettingsScreen/DevelopmentSettingsScreen';
+import { Appbar, useTheme } from 'react-native-paper';
+import { Keyboard } from 'react-native';
 
 interface Props {
     initialRouteName: keyof StackParameterList,
@@ -35,9 +37,45 @@ export const AppNavigator = ({ initialRouteName }: Props) => {
 const Stack = createStackNavigator<StackParameterList>();
 
 const StackNavigator = ({ initialRouteName }: Props) => {
+    const theme = useTheme();
+
+    const navigateBack = useCallback(
+        (stackHeaderProps: StackHeaderProps) => {
+            Keyboard.dismiss();
+            stackHeaderProps.navigation.goBack();
+        },
+        [],
+    );
+
+    const header = useCallback(
+        (stackHeaderProps: StackHeaderProps) => (
+            <Appbar.Header dark={theme.darkAppBar}>
+                {
+                    stackHeaderProps.back
+                        ? (
+                            <Appbar.BackAction
+                                onPress={() => navigateBack(stackHeaderProps)}
+                            />
+                        )
+                        : null
+                }
+                <Appbar.Content
+                    title={stackHeaderProps.options.title}
+                />
+                {stackHeaderProps.options.headerRight
+                    ? stackHeaderProps.options.headerRight({})
+                    : null}
+            </Appbar.Header>
+        ),
+        [navigateBack, theme.darkAppBar],
+    );
+
     return (
         <Stack.Navigator
             initialRouteName={initialRouteName}
+            screenOptions={{
+                header: header,
+            }}
         >
             <Stack.Screen
                 name={ScreenNames.SPLITTING_SCREEN}
@@ -107,6 +145,6 @@ const StackNavigator = ({ initialRouteName }: Props) => {
                 name={ScreenNames.DEVELOPMENT_SETTINGS_SCREEN}
                 component={DevelopmentSettingsScreen}
             />
-        </Stack.Navigator>
+        </Stack.Navigator >
     );
 };

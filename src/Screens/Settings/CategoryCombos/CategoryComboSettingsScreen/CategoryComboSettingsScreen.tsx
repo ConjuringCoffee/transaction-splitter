@@ -11,7 +11,7 @@ import { LoadingStatus } from '../../../../Helper/LoadingStatus';
 import { LoadingComponent } from '../../../../Component/LoadingComponent';
 import { selectAccessToken } from '../../../../redux/features/accessToken/accessTokenSlice';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
-import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
 
 type ScreenName = 'Category Combinations Settings';
 
@@ -66,7 +66,7 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         [everythingLoaded, navigation],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAddition,

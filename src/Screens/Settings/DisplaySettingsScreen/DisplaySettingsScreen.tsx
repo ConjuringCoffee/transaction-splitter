@@ -5,7 +5,7 @@ import { selectThemeTypeSetting } from '../../../redux/features/displaySettings/
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { ThemeModalPortal } from './ThemeModalPortal';
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
-import { useNavigationBar } from '../../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
 
 type ScreenName = 'DisplaySettings';
 
@@ -15,7 +15,7 @@ export const DisplaySettingsScreen = ({ navigation }: MyStackScreenProps<ScreenN
     const [themeModalVisible, setThemeModalVisible] = useState<boolean>(false);
     const themeTypeSetting = useAppSelector(selectThemeTypeSetting);
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
     });

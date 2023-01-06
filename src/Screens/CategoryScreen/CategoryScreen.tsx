@@ -4,7 +4,7 @@ import { Appbar, TextInput } from 'react-native-paper';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { View } from 'react-native';
 import { CategoryList } from './CategoryList';
-import { useNavigationBar } from '../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 
 type ScreenName = 'Category Selection';
 
@@ -39,7 +39,7 @@ export const CategoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenN
         [deselectAndNavigateBack],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAddition,

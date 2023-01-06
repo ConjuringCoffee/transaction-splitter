@@ -9,7 +9,7 @@ import { AccessTokenInput } from './AccessTokenInput';
 import { useNavigateBack } from '../../../Hooks/useNavigateBack';
 import { useConnectionTest } from '../../../Hooks/useConnectionTest';
 import { useAppDispatch } from '../../../Hooks/useAppDispatch';
-import { useNavigationBar } from '../../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
 
 type ScreenName = 'Access Token';
 
@@ -47,7 +47,7 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
         [dispatch, enteredToken, navigateBack],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAddition,

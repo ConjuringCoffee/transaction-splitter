@@ -15,7 +15,7 @@ import { Button, Divider, Menu, Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useAppDispatch } from '../../Hooks/useAppDispatch';
 import { AppBarMoreMenu } from '../../Component/AppBarMoreMenu';
-import { useNavigationBar } from '../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 
 type ScreenName = 'Amounts';
 
@@ -91,7 +91,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         [toggleQuickModeAndCloseMenu, menuVisible, quickModeEnabled],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAddition,

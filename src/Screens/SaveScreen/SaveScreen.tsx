@@ -8,7 +8,7 @@ import { selectAccessToken } from '../../redux/features/accessToken/accessTokenS
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { SaveTransactionListSection } from './SaveTransactionListSection';
 import { SaveFAB } from './SaveFAB';
-import { useNavigationBar } from '../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 
 type ScreenName = 'Save';
 
@@ -25,7 +25,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
         debtorSaveTransaction,
     } = route.params;
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
     });

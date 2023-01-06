@@ -7,7 +7,7 @@ import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { CategoryCombo, selectCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../Hooks/useAppSelector';
-import { useNavigationBar } from '../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { CategoryComboListItem } from './CategoryComboListItem';
 
 type ScreenName = 'Category Combinations';
@@ -38,7 +38,7 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
         [navigateToCrateCategoryComboScreen],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAddition,

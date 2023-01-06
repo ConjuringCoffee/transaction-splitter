@@ -4,7 +4,7 @@ import { Appbar, List } from 'react-native-paper';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import React, { useCallback, useMemo } from 'react';
 import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
-import { useNavigationBar } from '../../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
 import { BackHandler, View } from 'react-native';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../../Hooks/useInitialFetchStatus';
 import { useFocusEffect } from '@react-navigation/native';
@@ -40,7 +40,7 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
         [navigateToSplittingScreen, initialFetchstatus],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAddition,

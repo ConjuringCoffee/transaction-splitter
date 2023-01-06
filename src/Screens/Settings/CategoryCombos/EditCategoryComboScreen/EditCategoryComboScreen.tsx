@@ -8,7 +8,7 @@ import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { CategoryComboInputView } from '../CategoryComboInputView';
 import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
-import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
 
 type ScreenName = 'Edit Category Combo';
 
@@ -102,7 +102,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
         [moreMenu, readyToSave, saveAndNavigate],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAdditions,
