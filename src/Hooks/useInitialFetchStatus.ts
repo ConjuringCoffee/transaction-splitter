@@ -80,11 +80,6 @@ export const useInitialFetchStatus = (): [InitialFetchStatus] => {
 
     useEffect(
         () => {
-            if (initialFetchStatus !== InitialFetchStatus.UNKNOWN) {
-                // No switching back
-                return;
-            }
-
             if (!localLoaded || connectionStatus.status === LoadingStatus.IDLE || connectionStatus.status === LoadingStatus.LOADING) {
                 // Still unknown
                 return;

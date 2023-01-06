@@ -6,6 +6,7 @@ import React, { useCallback, useMemo } from 'react';
 import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
 import { useNavigationBar } from '../../../Hooks/useNavigationBar';
 import { View } from 'react-native';
+import { InitialFetchStatus, useInitialFetchStatus } from '../../../Hooks/useInitialFetchStatus';
 
 type ScreenName = 'Settings Overview';
 
@@ -14,6 +15,7 @@ const SCREEN_TITLE = 'Settings';
 const ICON_CONFIRM = 'check';
 
 export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
+    const [initialFetchstatus] = useInitialFetchStatus();
     const profiles = useAppSelector(selectProfiles);
 
     const navigateToSplittingScreen = useCallback(
@@ -31,9 +33,10 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
             <Appbar.Action
                 icon={ICON_CONFIRM}
                 onPress={navigateToSplittingScreen}
+                disabled={initialFetchstatus !== InitialFetchStatus.READY}
             />
         ),
-        [navigateToSplittingScreen],
+        [navigateToSplittingScreen, initialFetchstatus],
     );
 
     useNavigationBar({
