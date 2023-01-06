@@ -11,7 +11,7 @@ import { DatePickerInput } from 'react-native-paper-dates';
 import { AccountRadioSelection } from './AccountRadioSelection';
 import { PayerBudgetRadioSelection } from './PayerBudgetRadioSelection';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
-import { useNavigationBar } from '../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
 import { useAppDispatch } from '../../Hooks/useAppDispatch';
@@ -102,7 +102,7 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
         [navigateToSettingsScreen],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAddition,

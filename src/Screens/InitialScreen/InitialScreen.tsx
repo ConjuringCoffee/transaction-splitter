@@ -5,7 +5,7 @@ import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { useAppDispatch } from '../../Hooks/useAppDispatch';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { useAutomaticConnectionTest } from '../../Hooks/useAutomaticConnectionTest';
-import { useNavigationBar } from '../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
@@ -22,7 +22,7 @@ export const InitialScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
     const [continueInitiated, setContinueInitiated] = useState(false);
     const dispatch = useAppDispatch();
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
     });

@@ -2,7 +2,7 @@ import React from 'react';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { FlatList, View } from 'react-native';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
-import { useNavigationBar } from '../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { HistoryListItem } from './HistoryListItem';
 
 type ScreenName = 'Calculation History';
@@ -13,7 +13,7 @@ export const CalculationHistoryScreen = ({ route, navigation }: MyStackScreenPro
     const { previousCalculations } = route.params;
     const [navigateBack] = useNavigateBack(navigation);
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
     });

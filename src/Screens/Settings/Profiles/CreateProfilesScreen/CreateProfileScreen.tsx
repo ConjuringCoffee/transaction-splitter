@@ -5,7 +5,7 @@ import { CustomScrollView } from '../../../../Component/CustomScrollView';
 import { Appbar } from 'react-native-paper';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { useEditableBudgetsInProfiles } from '../../../../Hooks/useEditableBudgetsInProfiles';
-import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
 
 type ScreenName = 'CreateProfile';
 
@@ -48,7 +48,7 @@ export const CreateProfileScreen = ({ navigation }: MyStackScreenProps<ScreenNam
         [isValid, saveAndNavigate],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAddition,

@@ -10,7 +10,7 @@ import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 import { Appbar, Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
-import { useNavigationBar } from '../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 
 type ScreenName = 'Calculator';
 
@@ -98,7 +98,7 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         [navigateToHistoryScreen],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAddition,

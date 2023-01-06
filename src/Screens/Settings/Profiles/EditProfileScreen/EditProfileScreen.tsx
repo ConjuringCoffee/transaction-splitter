@@ -8,7 +8,7 @@ import { useEditableBudgetsInProfiles } from '../../../../Hooks/useEditableBudge
 import { deleteProfile } from '../../../../redux/features/profiles/profilesSlice';
 import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
-import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
 
 type ScreenName = 'EditProfile';
 
@@ -76,7 +76,7 @@ export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
         [isValid, moreMenu, saveAndNavigate],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAdditions,

@@ -7,7 +7,7 @@ import { addCategoryCombo } from '../../../../redux/features/categoryCombos/cate
 import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
-import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
 
 type ScreenName = 'Create Category Combo';
 
@@ -63,7 +63,7 @@ export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<Scr
         [readyToSave, saveAndNavigate],
     );
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
         additions: navigationBarAddition,

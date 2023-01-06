@@ -1,6 +1,6 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { Button, List } from 'react-native-paper';
-import { useNavigationBar } from '../../../Hooks/useNavigationBar';
+import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as Updates from 'expo-updates';
@@ -18,7 +18,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
     const [latestUpdate, setLatestUpdate] = useState<UpdateCheckResult | undefined>(undefined);
     const dispatch = useAppDispatch();
 
-    useNavigationBar({
+    useNavigationSettings({
         title: SCREEN_TITLE,
         navigation: navigation,
     });
