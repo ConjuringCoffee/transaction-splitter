@@ -39,35 +39,34 @@ const Stack = createStackNavigator<StackParameterList>();
 const StackNavigator = ({ initialRouteName }: Props) => {
     const theme = useTheme();
 
-    const navigateBack = useCallback(
-        (stackHeaderProps: StackHeaderProps) => {
-            Keyboard.dismiss();
-            stackHeaderProps.navigation.goBack();
-        },
-        [],
-    );
-
     const header = useCallback(
-        (stackHeaderProps: StackHeaderProps) => (
-            <Appbar.Header dark={theme.darkAppBar}>
-                {
-                    stackHeaderProps.back
-                        ? (
-                            <Appbar.BackAction
-                                onPress={() => navigateBack(stackHeaderProps)}
-                            />
-                        )
-                        : null
-                }
-                <Appbar.Content
-                    title={stackHeaderProps.options.title}
-                />
-                {stackHeaderProps.options.headerRight
-                    ? stackHeaderProps.options.headerRight({})
-                    : null}
-            </Appbar.Header>
-        ),
-        [navigateBack, theme.darkAppBar],
+        (stackHeaderProps: StackHeaderProps) => {
+            const navigateBack = () => {
+                Keyboard.dismiss();
+                stackHeaderProps.navigation.goBack();
+            };
+
+            return (
+                <Appbar.Header dark={theme.darkAppBar}>
+                    {
+                        stackHeaderProps.back
+                            ? (
+                                <Appbar.BackAction
+                                    onPress={navigateBack}
+                                />
+                            )
+                            : null
+                    }
+                    <Appbar.Content
+                        title={stackHeaderProps.options.title}
+                    />
+                    {stackHeaderProps.options.headerRight
+                        ? stackHeaderProps.options.headerRight({})
+                        : null}
+                </Appbar.Header>
+            );
+        },
+        [theme.darkAppBar],
     );
 
     return (
