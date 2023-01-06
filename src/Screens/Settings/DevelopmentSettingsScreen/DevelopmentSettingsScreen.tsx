@@ -7,6 +7,7 @@ import * as Updates from 'expo-updates';
 import { UpdateCheckResult } from 'expo-updates';
 import { useAppDispatch } from '../../../Hooks/useAppDispatch';
 import { deleteAllCategoryCombos } from '../../../redux/features/categoryCombos/categoryCombosSlice';
+import { deleteAllProfiles } from '../../../redux/features/profiles/profilesSlice';
 
 type ScreenName = 'DevelopmentSettings';
 
@@ -100,9 +101,9 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
     );
 
     const onDeleteButtonPress = useCallback(
-        () => {
-            dispatch(deleteAllCategoryCombos());
-            // TODO: Delete profiles
+        async () => {
+            await dispatch(deleteAllCategoryCombos());
+            await dispatch(deleteAllProfiles());
             // TODO: Delete access token
             // TODO: Delete display settings
         },
