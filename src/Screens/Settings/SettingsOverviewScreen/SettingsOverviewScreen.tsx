@@ -1,8 +1,8 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../../Navigation/ScreenNames';
-import { List } from 'react-native-paper';
+import { Appbar, List } from 'react-native-paper';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
 import { useNavigationBar } from '../../../Hooks/useNavigationBar';
 import { View } from 'react-native';
@@ -11,12 +11,35 @@ type ScreenName = 'Settings Overview';
 
 const SCREEN_TITLE = 'Settings';
 
+const ICON_CONFIRM = 'check';
+
 export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const profiles = useAppSelector(selectProfiles);
+
+    const navigateToSplittingScreen = useCallback(
+        (): void => {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: ScreenNames.SPLITTING_SCREEN }],
+            });
+        },
+        [navigation],
+    );
+
+    const navigationBarAddition = useMemo(
+        () => (
+            <Appbar.Action
+                icon={ICON_CONFIRM}
+                onPress={navigateToSplittingScreen}
+            />
+        ),
+        [navigateToSplittingScreen],
+    );
 
     useNavigationBar({
         title: SCREEN_TITLE,
         navigation: navigation,
+        additions: navigationBarAddition,
     });
 
     const navigateToProfileSettingsScreen = useCallback(

@@ -86,7 +86,10 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
     );
 
     const navigateToSettingsScreen = useCallback(() => {
-        navigation.navigate(ScreenNames.SETTINGS_OVERVIEW_SCREEN);
+        navigation.reset({
+            index: 0,
+            routes: [{ name: ScreenNames.SETTINGS_OVERVIEW_SCREEN }],
+        });
     }, [navigation]);
 
     const navigationBarAddition = useMemo(
