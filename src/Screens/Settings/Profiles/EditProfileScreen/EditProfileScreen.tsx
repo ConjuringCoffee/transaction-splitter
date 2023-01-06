@@ -39,9 +39,9 @@ export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
     }, [navigateBack, save]);
 
     const onSelectDeletion = useCallback(
-        (): void => {
-            dispatch(deleteProfile(profileId));
+        async (): Promise<void> => {
             setMenuVisible(false);
+            await dispatch(deleteProfile(profileId));
             navigateBack();
         },
         [profileId, dispatch, navigateBack],
