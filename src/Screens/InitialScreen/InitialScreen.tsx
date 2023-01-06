@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
@@ -19,6 +19,7 @@ type ScreenName = 'InitialScreen';
 const SCREEN_TITLE = 'Initial setup';
 
 export const InitialScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
+    const [continueInitiated, setContinueInitiated] = useState(false);
     const dispatch = useAppDispatch();
 
     useNavigationBar({
@@ -33,21 +34,26 @@ export const InitialScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
 
     useEffect(
         () => {
-            if (connectionStatus.status === LoadingStatus.SUCCESSFUL && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL) {
+            if (!continueInitiated) {
+                return;
+            }
+
+            if (connectionStatus.status === LoadingStatus.SUCCESSFUL && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL && profiles.length >= 1) {
                 navigation.reset({
                     index: 0,
                     routes: [{ name: ScreenNames.SPLITTING_SCREEN }],
                 });
             }
         },
-        [accessToken, budgetsFetchStatus, connectionStatus, navigation],
+        [accessToken, budgetsFetchStatus, connectionStatus, navigation, continueInitiated, profiles],
     );
 
-    const triggerBudgetLoad = useCallback(
+    const onContinuePress = useCallback(
         () => {
             if (budgetsFetchStatus.status === LoadingStatus.IDLE) {
                 dispatch(fetchBudgets(accessToken));
             }
+            setContinueInitiated(true);
         },
         [dispatch, accessToken, budgetsFetchStatus],
     );
@@ -67,7 +73,7 @@ export const InitialScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
             />
             <Button
                 disabled={!isReadyToContinue}
-                onPress={triggerBudgetLoad}
+                onPress={onContinuePress}
             >
                 Continue
             </Button>
