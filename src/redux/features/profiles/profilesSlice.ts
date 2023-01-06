@@ -99,6 +99,12 @@ export const deleteProfile = createAsyncThunk<
     return newProfiles;
 });
 
+export const deleteAllProfiles = createAsyncThunk('profiles/deleteAllProfiles', async () => {
+    const newProfiles: Profile[] = [];
+    await saveProfiles(newProfiles);
+    return newProfiles;
+});
+
 export const profilesSlice = createSlice({
     name: 'profiles',
     initialState,
@@ -124,20 +130,20 @@ export const profilesSlice = createSlice({
                     error: action.error,
                 };
             })
-            .addMatcher(isOneOf([updateProfile.pending, addProfile.pending, deleteProfile.pending]), (state) => {
+            .addMatcher(isOneOf([updateProfile.pending, addProfile.pending, deleteProfile.pending, deleteAllProfiles.pending]), (state) => {
                 state.saveStatus = {
                     status: LoadingStatus.LOADING,
                     error: null,
                 };
             })
-            .addMatcher(isOneOf([updateProfile.fulfilled, addProfile.fulfilled, deleteProfile.fulfilled]), (state, action) => {
+            .addMatcher(isOneOf([updateProfile.fulfilled, addProfile.fulfilled, deleteProfile.fulfilled, deleteAllProfiles.fulfilled]), (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.SUCCESSFUL,
                     error: null,
                 };
                 state.objects = action.payload;
             })
-            .addMatcher(isOneOf([updateProfile.rejected, addProfile.rejected, deleteProfile.rejected]), (state, action) => {
+            .addMatcher(isOneOf([updateProfile.rejected, addProfile.rejected, deleteProfile.rejected, deleteAllProfiles.rejected]), (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.ERROR,
                     error: action.error,
