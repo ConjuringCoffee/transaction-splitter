@@ -1,25 +1,28 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
-import { List } from 'react-native-paper';
+import { Button, List } from 'react-native-paper';
 import { useNavigationBar } from '../../../Hooks/useNavigationBar';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as Updates from 'expo-updates';
 import { UpdateCheckResult } from 'expo-updates';
+import { useAppDispatch } from '../../../Hooks/useAppDispatch';
+import { deleteAllCategoryCombos } from '../../../redux/features/categoryCombos/categoryCombosSlice';
 
 type ScreenName = 'DevelopmentSettings';
 
 const SCREEN_TITLE = 'Development Settings';
 
 export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
-    const isDevelopmentMode = __DEV__;
-
     const [refreshing, setRefreshing] = useState(false);
     const [latestUpdate, setLatestUpdate] = useState<UpdateCheckResult | undefined>(undefined);
+    const dispatch = useAppDispatch();
 
     useNavigationBar({
         title: SCREEN_TITLE,
         navigation: navigation,
     });
+
+    const isDevelopmentMode = __DEV__;
 
     const checkForUpdate = useCallback(
         async () => {
@@ -33,9 +36,12 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
 
     useEffect(
         () => {
+            if (isDevelopmentMode) {
+                return;
+            }
             checkForUpdate();
         },
-        [checkForUpdate],
+        [checkForUpdate, isDevelopmentMode],
     );
 
     const refreshControl = useMemo(
@@ -93,6 +99,16 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
         [latestUpdate, updateApp],
     );
 
+    const onDeleteButtonPress = useCallback(
+        () => {
+            dispatch(deleteAllCategoryCombos());
+            // TODO: Delete profiles
+            // TODO: Delete access token
+            // TODO: Delete display settings
+        },
+        [dispatch],
+    );
+
     return (
         <ScrollView
             refreshControl={refreshControl}
@@ -114,6 +130,13 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
                 description={updateAvailabilityText}
                 onPress={onPressUpdate}
             />
+            <Button
+                onPress={onDeleteButtonPress}
+                mode='contained'
+                disabled={!isDevelopmentMode}
+            >
+                Delete all data
+            </Button>
         </ScrollView>
     );
 };

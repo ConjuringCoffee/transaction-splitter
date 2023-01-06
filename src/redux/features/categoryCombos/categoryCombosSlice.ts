@@ -106,6 +106,12 @@ export const deleteCategoryCombo = createAsyncThunk<
     return newCategoryCombos;
 });
 
+export const deleteAllCategoryCombos = createAsyncThunk('categoryCombos/deleteAllCategoryCombos', async () => {
+    const newCategoryCombos: CategoryCombo[] = [];
+    await saveCategoryCombos(newCategoryCombos);
+    return newCategoryCombos;
+});
+
 export const categoryCombosSlice = createSlice({
     name: 'categoryCombos',
     initialState,
@@ -131,20 +137,20 @@ export const categoryCombosSlice = createSlice({
                     error: action.error,
                 };
             })
-            .addMatcher(isOneOf([updateCategoryCombo.pending, addCategoryCombo.pending, deleteCategoryCombo.pending]), (state) => {
+            .addMatcher(isOneOf([updateCategoryCombo.pending, addCategoryCombo.pending, deleteCategoryCombo.pending, deleteAllCategoryCombos.pending]), (state) => {
                 state.saveStatus = {
                     status: LoadingStatus.LOADING,
                     error: null,
                 };
             })
-            .addMatcher(isOneOf([updateCategoryCombo.fulfilled, addCategoryCombo.fulfilled, deleteCategoryCombo.fulfilled]), (state, action) => {
+            .addMatcher(isOneOf([updateCategoryCombo.fulfilled, addCategoryCombo.fulfilled, deleteCategoryCombo.fulfilled, deleteAllCategoryCombos.fulfilled]), (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.SUCCESSFUL,
                     error: null,
                 };
                 state.objects = action.payload;
             })
-            .addMatcher(isOneOf([updateCategoryCombo.rejected, addCategoryCombo.rejected, deleteCategoryCombo.rejected]), (state, action) => {
+            .addMatcher(isOneOf([updateCategoryCombo.rejected, addCategoryCombo.rejected, deleteCategoryCombo.rejected, deleteAllCategoryCombos.rejected]), (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.ERROR,
                     error: action.error,
