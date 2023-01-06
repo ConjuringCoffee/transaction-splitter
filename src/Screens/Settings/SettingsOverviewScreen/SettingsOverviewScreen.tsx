@@ -1,23 +1,67 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../../Navigation/ScreenNames';
-import { List } from 'react-native-paper';
+import { Appbar, List } from 'react-native-paper';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
 import { useNavigationBar } from '../../../Hooks/useNavigationBar';
-import { View } from 'react-native';
+import { BackHandler, View } from 'react-native';
+import { InitialFetchStatus, useInitialFetchStatus } from '../../../Hooks/useInitialFetchStatus';
+import { useFocusEffect } from '@react-navigation/native';
 
 type ScreenName = 'Settings Overview';
 
 const SCREEN_TITLE = 'Settings';
 
+const ICON_CONFIRM = 'check';
+
 export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
+    const [initialFetchstatus] = useInitialFetchStatus();
     const profiles = useAppSelector(selectProfiles);
+
+    const navigateToSplittingScreen = useCallback(
+        (): void => {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: ScreenNames.SPLITTING_SCREEN }],
+            });
+        },
+        [navigation],
+    );
+
+    const navigationBarAddition = useMemo(
+        () => (
+            <Appbar.Action
+                icon={ICON_CONFIRM}
+                onPress={navigateToSplittingScreen}
+                disabled={initialFetchstatus !== InitialFetchStatus.READY}
+            />
+        ),
+        [navigateToSplittingScreen, initialFetchstatus],
+    );
 
     useNavigationBar({
         title: SCREEN_TITLE,
         navigation: navigation,
+        additions: navigationBarAddition,
     });
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (initialFetchstatus === InitialFetchStatus.READY) {
+                    navigateToSplittingScreen();
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => subscription.remove();
+        }, [initialFetchstatus, navigateToSplittingScreen]),
+    );
 
     const navigateToProfileSettingsScreen = useCallback(
         () => {

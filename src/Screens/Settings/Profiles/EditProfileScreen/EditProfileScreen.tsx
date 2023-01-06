@@ -13,7 +13,7 @@ import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
 type ScreenName = 'EditProfile';
 
 const SCREEN_TITLE = 'Edit Profile';
-const ICON_SAVE = 'content-save';
+const ICON_SAVE = 'check';
 
 export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
     const { navigation } = props;
@@ -39,9 +39,9 @@ export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
     }, [navigateBack, save]);
 
     const onSelectDeletion = useCallback(
-        (): void => {
-            dispatch(deleteProfile(profileId));
+        async (): Promise<void> => {
             setMenuVisible(false);
+            await dispatch(deleteProfile(profileId));
             navigateBack();
         },
         [profileId, dispatch, navigateBack],

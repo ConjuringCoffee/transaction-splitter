@@ -15,7 +15,7 @@ type ScreenName = 'Access Token';
 
 const SCREEN_TITLE = 'Access Token';
 
-const ICON_SAVE = 'content-save';
+const ICON_SAVE = 'check';
 const ICON_CONNECTION_SUCCESS = 'check';
 const ICON_CONNECTION_ERROR = 'alert-circle';
 
