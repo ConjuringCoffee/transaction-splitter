@@ -5,8 +5,9 @@ import { useAppSelector } from '../../../Hooks/useAppSelector';
 import React, { useCallback, useMemo } from 'react';
 import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
 import { useNavigationBar } from '../../../Hooks/useNavigationBar';
-import { View } from 'react-native';
+import { BackHandler, View } from 'react-native';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../../Hooks/useInitialFetchStatus';
+import { useFocusEffect } from '@react-navigation/native';
 
 type ScreenName = 'Settings Overview';
 
@@ -44,6 +45,23 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
         navigation: navigation,
         additions: navigationBarAddition,
     });
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (initialFetchstatus === InitialFetchStatus.READY) {
+                    navigateToSplittingScreen();
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => subscription.remove();
+        }, [initialFetchstatus, navigateToSplittingScreen]),
+    );
 
     const navigateToProfileSettingsScreen = useCallback(
         () => {
