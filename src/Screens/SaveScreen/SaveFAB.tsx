@@ -8,7 +8,7 @@ interface Props {
     save: () => void,
 }
 
-const ICON_DEFAULT = 'content-save';
+const ICON_DEFAULT = 'check';
 const ICON_SUCCESS = 'check';
 const ICON_ERROR = 'close-circle-outline';
 

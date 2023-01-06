@@ -11,7 +11,7 @@ import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
 
 type ScreenName = 'Create Category Combo';
 
-const ICON_SAVE = 'content-save';
+const ICON_SAVE = 'check';
 
 const SCREEN_TITLE = 'Create';
 

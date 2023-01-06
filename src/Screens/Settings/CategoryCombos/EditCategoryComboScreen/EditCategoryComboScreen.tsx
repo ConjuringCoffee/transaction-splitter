@@ -14,7 +14,7 @@ type ScreenName = 'Edit Category Combo';
 
 const SCREEN_TITLE = 'Edit';
 
-const ICON_SAVE = 'content-save';
+const ICON_SAVE = 'check';
 
 export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();

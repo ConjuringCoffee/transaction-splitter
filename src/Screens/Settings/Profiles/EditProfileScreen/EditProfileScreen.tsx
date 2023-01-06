@@ -13,7 +13,7 @@ import { useNavigationBar } from '../../../../Hooks/useNavigationBar';
 type ScreenName = 'EditProfile';
 
 const SCREEN_TITLE = 'Edit Profile';
-const ICON_SAVE = 'content-save';
+const ICON_SAVE = 'check';
 
 export const EditProfileScreen = (props: MyStackScreenProps<ScreenName>) => {
     const { navigation } = props;
