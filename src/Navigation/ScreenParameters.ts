@@ -60,6 +60,7 @@ type StackParameterList = {
         profileId: string,
     };
     [ScreenNames.INITIAL_SCREEN]: undefined;
+    [ScreenNames.DEVELOPMENT_SETTINGS_SCREEN]: undefined;
 }
 
 export type MyStackScreenProps<K extends keyof StackParameterList> = StackScreenProps<StackParameterList, K>;

@@ -1,12 +1,11 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../../Navigation/ScreenNames';
-import { List, Text } from 'react-native-paper';
+import { List } from 'react-native-paper';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import React, { useCallback } from 'react';
 import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
 import { useNavigationBar } from '../../../Hooks/useNavigationBar';
-import Constants from 'expo-constants';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 
 type ScreenName = 'Settings Overview';
 
@@ -47,8 +46,10 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
         [navigation],
     );
 
-    // @ts-ignore
-    const branchName = Constants.manifest2?.metadata.branchName ?? '';
+    const navigateToDevelopmentSettingsScreen = useCallback(
+        () => navigation.navigate(ScreenNames.DEVELOPMENT_SETTINGS_SCREEN),
+        [navigation],
+    );
 
     return (
         <View>
@@ -71,15 +72,10 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
                 title='Display Settings'
                 onPress={navigateToDisplaySettingsScreen}
             />
-            <Text style={styles.text}>
-                {branchName} @ {Constants.manifest2?.createdAt}
-            </Text>
+            <List.Item
+                title='Development Settings'
+                onPress={navigateToDevelopmentSettingsScreen}
+            />
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    text: {
-        margin: 8,
-    },
-});

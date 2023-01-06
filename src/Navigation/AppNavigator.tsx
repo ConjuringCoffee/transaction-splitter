@@ -18,6 +18,7 @@ import { DisplaySettingsScreen } from '../Screens/Settings/DisplaySettingsScreen
 import { EditProfileScreen } from '../Screens/Settings/Profiles/EditProfileScreen/EditProfileScreen';
 import { CreateProfileScreen } from '../Screens/Settings/Profiles/CreateProfilesScreen/CreateProfileScreen';
 import { InitialScreen } from '../Screens/InitialScreen/InitialScreen';
+import { DevelopmentSettingsScreen } from '../Screens/Settings/DevelopmentSettingsScreen/DevelopmentSettingsScreen';
 
 interface Props {
     initialRouteName: keyof StackParameterList,
@@ -101,6 +102,10 @@ const StackNavigator = ({ initialRouteName }: Props) => {
             <Stack.Screen
                 name={ScreenNames.INITIAL_SCREEN}
                 component={InitialScreen}
+            />
+            <Stack.Screen
+                name={ScreenNames.DEVELOPMENT_SETTINGS_SCREEN}
+                component={DevelopmentSettingsScreen}
             />
         </Stack.Navigator>
     );
