@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import * as SecureStore from 'expo-secure-store';
-import { getLocalizationAsync } from 'expo-localization';
+import { getLocales } from 'expo-localization';
 import { RootState } from '../../store';
 import { ThemeType } from './ThemeType';
 
@@ -43,8 +43,8 @@ const initialState: DisplaySettingsState = {
     },
     displaySettings: {
         numberFormat: {
-            decimalSeparator: '',
-            digitGroupingSeparator: '',
+            decimalSeparator: ',',
+            digitGroupingSeparator: '.',
         },
         themeType: ThemeType.SYSTEM_DEFAULT,
     },
@@ -67,18 +67,20 @@ const saveDisplaySettings = async (displaySettings: DisplaySettings): Promise<vo
     await SecureStore.setItemAsync(STORAGE_KEY, jsonValue, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
 };
 
-const readSystemNumberFormatSettings = async (): Promise<NumberFormatSettings> => {
-    const localization = await getLocalizationAsync();
+const getDefaultNumberFormatSettings = (): NumberFormatSettings => {
+    const locales = getLocales();
+    const localeToUse = locales[0];
+
     return {
-        decimalSeparator: localization.decimalSeparator,
-        digitGroupingSeparator: localization.digitGroupingSeparator,
+        decimalSeparator: localeToUse.decimalSeparator ?? initialState.displaySettings.numberFormat.decimalSeparator,
+        digitGroupingSeparator: localeToUse.digitGroupingSeparator ?? initialState.displaySettings.numberFormat.digitGroupingSeparator,
     };
 };
 
 export const fetchDisplaySettings = createAsyncThunk<DisplaySettings, void, {}>('displaySettings/fetchDisplaySettings', async () => {
     const displaySettingsRead = await readDisplaySettings();
 
-    const numberFormatSettings = displaySettingsRead.numberFormat ?? await readSystemNumberFormatSettings();
+    const numberFormatSettings = displaySettingsRead.numberFormat ?? getDefaultNumberFormatSettings();
     const themeType = displaySettingsRead.themeType ?? initialState.displaySettings.themeType;
 
     return {
