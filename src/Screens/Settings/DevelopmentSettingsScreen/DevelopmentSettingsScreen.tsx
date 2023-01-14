@@ -78,6 +78,17 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
         [isDevelopmentMode, latestUpdate],
     );
 
+    const releaseChannel = useMemo(
+        (): string => {
+            if (Updates.channel && Updates.channel.length > 0) {
+                return Updates.channel;
+            } else {
+                return 'Unavailable';
+            }
+        },
+        [],
+    );
+
     const updateApp = useCallback(
         async () => {
             if (isDevelopmentMode) {
@@ -120,7 +131,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
             />
             <List.Item
                 title='Release Channel'
-                description={Updates.releaseChannel}
+                description={releaseChannel}
             />
             <List.Item
                 title='Date of current update'
