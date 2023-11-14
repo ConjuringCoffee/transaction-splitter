@@ -31,7 +31,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
     });
 
     useEffect(() => {
-        const navigate = async () => {
+        const navigate = () => {
             navigation.reset({
                 index: 0,
                 routes: [{ name: ScreenNames.SPLITTING_SCREEN }],
