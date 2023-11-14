@@ -14,7 +14,7 @@
     "@react-navigation/stack": "^6.3.10",
     "@reduxjs/toolkit": "^1.8.5",
     "deepmerge": "^4.2.2",
-    "expo": "^48.0.10",
+    "expo": "^49.0.18",
     "expo-localization": "~14.1.1",
     "expo-secure-store": "~12.1.1",
     "expo-splash-screen": "~0.18.1",
