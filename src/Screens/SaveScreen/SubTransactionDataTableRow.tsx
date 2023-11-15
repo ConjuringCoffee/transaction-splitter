@@ -8,7 +8,7 @@ import { useAppSelector } from '../../Hooks/useAppSelector';
 import { MemoDataTableCell } from './MemoDataTableCell';
 import { MultiLineTextDataTableCellView } from './MultiLineTextDataTableCellView';
 
-interface Props {
+type Props = {
     budgetId: string,
     subTransaction: SaveSubTransaction,
     displayMemoCell: boolean,

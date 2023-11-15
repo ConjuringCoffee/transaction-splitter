@@ -5,7 +5,7 @@ import { Keyboard } from 'react-native';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectBudgets } from '../../redux/features/ynab/ynabSlice';
 
-interface Props {
+type Props = {
     profile: Profile,
     payerBudgetIndex: number,
     setPayerBudgetIndex: (index: number) => void,

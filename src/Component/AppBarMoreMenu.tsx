@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Platform } from 'react-native';
 import { Appbar, Menu, useTheme } from 'react-native-paper';
 
-interface Props {
+type Props = {
     children: React.ReactNode,
     visible: boolean,
     setVisible: (visible: boolean) => void,

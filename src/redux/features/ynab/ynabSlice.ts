@@ -4,7 +4,7 @@ import { Account, Budget, getBudgetsWithAccountsFromApi } from '../../../YnabApi
 import { RootState } from '../../store';
 import * as ynab from 'ynab';
 
-export interface CategoryGroup {
+export type CategoryGroup = {
     id: string,
     name: string,
     hidden: boolean,
@@ -12,14 +12,14 @@ export interface CategoryGroup {
     categories: string[],
 }
 
-export interface Category {
+export type Category = {
     id: string;
     name: string;
     hidden: boolean;
     deleted: boolean;
 }
 
-interface YnabState {
+type YnabState = {
     fetchBudgetsStatus: {
         status: LoadingStatus
         error: SerializedError | null

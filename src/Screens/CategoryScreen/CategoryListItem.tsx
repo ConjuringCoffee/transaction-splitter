@@ -3,7 +3,7 @@ import { List } from 'react-native-paper';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectCategory } from '../../redux/features/ynab/ynabSlice';
 
-interface Props {
+type Props = {
     budgetId: string,
     categoryId: string,
     onCategorySelect: (categoryId: string) => void,

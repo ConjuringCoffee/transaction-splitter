@@ -2,12 +2,12 @@ import { convertHumanAmountToApiAmount, divideApiAmount } from '../Helper/Amount
 import { BasicData } from '../Navigation/ScreenParameters';
 import * as ynab from 'ynab';
 
-interface SaveTransactions {
+type SaveTransactions = {
     payer: ynab.SaveTransaction,
     debtor: ynab.SaveTransaction
 }
 
-interface AmountEntry {
+type AmountEntry = {
     amount: number,
     memo: string,
     payerCategoryId?: string,

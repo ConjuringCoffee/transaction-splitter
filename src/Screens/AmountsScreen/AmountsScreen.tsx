@@ -19,7 +19,7 @@ import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 
 type ScreenName = 'Amounts';
 
-interface UserInterfaceAmountEntry {
+type UserInterfaceAmountEntry = {
     amountText: string,
     memo: string,
     payerCategoryId?: string,

@@ -5,7 +5,7 @@ import { useAutomaticConnectionTest } from '../../Hooks/useAutomaticConnectionTe
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
 
-interface Props<T extends keyof StackParameterList> {
+type Props<T extends keyof StackParameterList> = {
     navigation: MyStackNavigationProp<T>,
 }
 

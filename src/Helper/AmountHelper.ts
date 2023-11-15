@@ -1,6 +1,6 @@
 import { NumberFormatSettings } from '../redux/features/displaySettings/displaySettingsSlice';
 
-export interface DividedAmount {
+export type DividedAmount = {
     dividedAmount: number
     remainingAmount: number,
 }

@@ -4,22 +4,19 @@ import * as SecureStore from 'expo-secure-store';
 import { isOneOf } from '../../isOneOf';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 
-interface CategoryInCategoryCombo {
+type CategoryInCategoryCombo = {
     id: string,
     budgetId: string
 }
-export interface CategoryCombo {
+export type CategoryCombo = {
     id: string,
     name: string,
     categories: [CategoryInCategoryCombo, CategoryInCategoryCombo]
 }
 
-export interface CategoryComboToCreate {
-    name: string,
-    categories: [CategoryInCategoryCombo, CategoryInCategoryCombo]
-}
+export type CategoryComboToCreate = Omit<CategoryCombo, 'id'>;
 
-interface CategoryCombosState {
+type CategoryCombosState = {
     fetchStatus: {
         status: LoadingStatus
         error: SerializedError | null

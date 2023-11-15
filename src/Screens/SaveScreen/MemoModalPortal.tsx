@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { Portal, Modal, useTheme, Text } from 'react-native-paper';
 
-interface Props {
+type Props = {
     visible: boolean,
     toggleVisible: () => void,
     memo: string,

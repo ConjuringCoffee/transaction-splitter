@@ -5,22 +5,22 @@ import { getLocales } from 'expo-localization';
 import { RootState } from '../../store';
 import { ThemeType } from './ThemeType';
 
-export interface NumberFormatSettings {
+export type NumberFormatSettings = {
     decimalSeparator: string,
     digitGroupingSeparator: string,
 }
 
-interface DisplaySettings {
+type DisplaySettings = {
     numberFormat: NumberFormatSettings,
     themeType: ThemeType,
 }
 
-interface SavedDisplaySettings {
+type SavedDisplaySettings = {
     numberFormat?: NumberFormatSettings,
     themeType?: ThemeType,
 }
 
-interface DisplaySettingsState {
+type DisplaySettingsState = {
     fetchStatus: {
         status: LoadingStatus
         error: SerializedError | null

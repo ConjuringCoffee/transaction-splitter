@@ -22,7 +22,7 @@ import { DevelopmentSettingsScreen } from '../Screens/Settings/DevelopmentSettin
 import { Appbar, useTheme } from 'react-native-paper';
 import { Keyboard } from 'react-native';
 
-interface Props {
+type Props = {
     initialRouteName: keyof StackParameterList,
 }
 

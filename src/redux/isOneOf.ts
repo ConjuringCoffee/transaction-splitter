@@ -2,7 +2,7 @@
 
 import { Action, AnyAction } from '@reduxjs/toolkit';
 
-declare interface TypedActionCreator<Type extends string> {
+type TypedActionCreator<Type extends string> = {
     (...args: any[]): Action<Type>;
     type: Type;
 }

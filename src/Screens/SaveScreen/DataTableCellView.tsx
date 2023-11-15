@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-interface Props {
+type Props = {
     children: React.ReactNode,
     alignRight?: boolean,
 }

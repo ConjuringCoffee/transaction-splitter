@@ -5,7 +5,7 @@ import { MyStackNavigationProp, StackParameterList } from '../../Navigation/Scre
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 
-interface Props<T extends keyof StackParameterList> {
+type Props<T extends keyof StackParameterList> = {
     value: string,
     setValue: (newValue: string) => void,
     navigation: MyStackNavigationProp<T>,

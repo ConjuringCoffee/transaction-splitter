@@ -4,7 +4,7 @@ import { selectActiveAccounts, selectBudgetById } from '../../../redux/features/
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Account } from '../../../YnabApi/YnabApiWrapper';
 
-interface Props {
+type Props = {
     budgetId: string,
     displayName?: string,
     setDisplayName: (name: string) => void,

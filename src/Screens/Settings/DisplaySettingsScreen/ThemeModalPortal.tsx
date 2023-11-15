@@ -6,7 +6,7 @@ import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { StyleSheet } from 'react-native';
 import { useAppDispatch } from '../../../Hooks/useAppDispatch';
 
-interface Props {
+type Props = {
     visible: boolean,
     toggleVisible: () => void,
 }

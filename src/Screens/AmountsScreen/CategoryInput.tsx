@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
 
-interface Props<T extends keyof StackParameterList> {
+type Props<T extends keyof StackParameterList> = {
     label: string,
     text: string,
     budgetId: string,

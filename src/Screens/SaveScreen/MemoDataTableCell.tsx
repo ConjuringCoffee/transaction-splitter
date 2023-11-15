@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { DataTable, IconButton } from 'react-native-paper';
 import { DataTableCellView } from './DataTableCellView';
 
-interface Props {
+type Props = {
     memo: string | null | undefined,
     triggerMemoDisplay: (memo: string) => void,
 }
