@@ -5,7 +5,7 @@ import { selectCategoryGroups, selectCategories, selectInternalMasterCategoryGro
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { CategoryListItem } from './CategoryListItem';
 
-interface Props {
+type Props = {
     categoryNameFilter: string,
     budgetId: string,
     onCategorySelect: (categoryId: string) => void,

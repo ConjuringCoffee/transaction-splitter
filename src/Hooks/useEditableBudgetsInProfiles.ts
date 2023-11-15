@@ -4,7 +4,7 @@ import { addProfile, BudgetInProfile, Profile, ProfileToCreate, selectProfile, u
 import { useAppDispatch } from './useAppDispatch';
 import { useAppSelector } from './useAppSelector';
 
-export interface EditableBudgetInProfile {
+export type EditableBudgetInProfile = {
     budgetId?: string,
     name?: string,
     debtorAccountId?: string,

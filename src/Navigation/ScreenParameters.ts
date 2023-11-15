@@ -3,7 +3,7 @@ import * as ynab from 'ynab';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { CategoryCombo } from '../redux/features/categoryCombos/categoryCombosSlice';
 
-interface BasicData {
+type BasicData = {
     payer: {
         budgetId: string,
         accountId: string,

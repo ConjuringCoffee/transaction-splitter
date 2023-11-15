@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Account } from '../../YnabApi/YnabApiWrapper';
 import { Keyboard } from 'react-native';
 
-interface Props {
+type Props = {
     accounts: Account[],
     selectedAccountId: string,
     setSelectedAccountId: (id: string) => void,

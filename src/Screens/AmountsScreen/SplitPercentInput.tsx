@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { TextInput } from 'react-native-paper';
 
-interface Props {
+type Props = {
     payerCategoryChosen: boolean,
     debtorCategoryChosen: boolean,
     splitPercentToPayer: number | undefined,

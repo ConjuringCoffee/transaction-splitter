@@ -5,7 +5,7 @@ import { MyStackNavigationProp, StackParameterList } from '../../../Navigation/S
 import { selectBudgetById, selectCategories } from '../../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 
-interface Props<T extends keyof StackParameterList> {
+type Props<T extends keyof StackParameterList> = {
     budgetId: string,
     budgetDisplayName: string | undefined,
     navigation: MyStackNavigationProp<T>,

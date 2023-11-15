@@ -9,7 +9,7 @@ import { SubTransactionsDataTable } from './SubTransactionsDataTable';
 import { MultiLineTextDataTableCellView } from './MultiLineTextDataTableCellView';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 
-interface Props {
+type Props = {
     saveTransaction: SaveTransaction,
     sectionTitle: string,
     budgetId: string,

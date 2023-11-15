@@ -4,7 +4,7 @@ import { HelperText, TextInput } from 'react-native-paper';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { ConnectionStatus } from './AccessTokenScreen';
 
-interface Props {
+type Props = {
     token: string,
     setToken: (token: string) => void,
     connectionStatus: ConnectionStatus

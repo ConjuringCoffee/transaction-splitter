@@ -12,7 +12,7 @@ type ScreenName = 'CreateProfile';
 const SCREEN_TITLE = 'Add Profile';
 const ICON_SAVE = 'check';
 
-export interface EditableBudgetInProfile {
+export type EditableBudgetInProfile = {
     budgetId?: string,
     name?: string,
     debtorAccountId?: string,

@@ -3,7 +3,7 @@ import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { getItemAsync, setItemAsync, WHEN_UNLOCKED } from 'expo-secure-store';
 import { RootState } from '../../store';
 
-interface AccessTokenState {
+type AccessTokenState = {
     fetchStatus: {
         status: LoadingStatus
         error: SerializedError | null

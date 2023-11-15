@@ -2,7 +2,7 @@ import React from 'react';
 import { DataTableCellView } from './DataTableCellView';
 import { Text } from 'react-native-paper';
 
-interface Props {
+type Props = {
     text: string | undefined,
 }
 

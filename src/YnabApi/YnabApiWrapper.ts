@@ -1,7 +1,7 @@
 import { API, SaveTransaction, TransactionDetail, SaveTransactionWrapper, CategoryGroupWithCategories } from 'ynab';
 import { Category } from '../redux/features/ynab/ynabSlice';
 
-export interface Account {
+export type Account = {
     id: string;
     name: string;
     onBudget: boolean;
@@ -10,7 +10,7 @@ export interface Account {
     deleted: boolean;
 }
 
-export interface Budget {
+export type Budget = {
     id: string;
     name: string;
     accounts: Array<Account>;

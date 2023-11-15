@@ -5,7 +5,7 @@ import { SaveSubTransaction } from 'ynab';
 import { MemoModalPortal } from './MemoModalPortal';
 import { SubTransactionDataTableRow } from './SubTransactionDataTableRow';
 
-interface Props {
+type Props = {
     budgetId: string,
     subTransactions: SaveSubTransaction[],
 }

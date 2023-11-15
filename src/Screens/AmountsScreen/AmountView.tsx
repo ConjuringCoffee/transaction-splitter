@@ -10,7 +10,7 @@ import { CategoryInput } from './CategoryInput';
 import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
 import { selectCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
 
-interface Props<T extends keyof StackParameterList> {
+type Props<T extends keyof StackParameterList> = {
     key: number,
     index: number,
     amountText: string,

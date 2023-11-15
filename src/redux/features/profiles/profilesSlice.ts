@@ -4,7 +4,7 @@ import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { isOneOf } from '../../isOneOf';
 import { RootState } from '../../store';
 
-export interface BudgetInProfile {
+export type BudgetInProfile = {
     budgetId: string,
     name?: string,
     debtorAccountId: string,
@@ -12,16 +12,14 @@ export interface BudgetInProfile {
 }
 
 
-export interface Profile {
+export type Profile = {
     id: string,
     budgets: [BudgetInProfile, BudgetInProfile]
 }
 
-export interface ProfileToCreate {
-    budgets: [BudgetInProfile, BudgetInProfile]
-}
+export type ProfileToCreate = Omit<Profile, 'id'>;
 
-interface ProfilesState {
+type ProfilesState = {
     fetchStatus: {
         status: LoadingStatus
         error: SerializedError | null

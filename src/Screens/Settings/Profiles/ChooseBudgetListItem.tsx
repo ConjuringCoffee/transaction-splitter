@@ -4,7 +4,7 @@ import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { BudgetSelectModalPortal } from './BudgetSelectModalPortal';
 
-interface Props {
+type Props = {
     selectedBudgetId?: string,
     selectBudgetId: (budgetId: string) => void,
 }

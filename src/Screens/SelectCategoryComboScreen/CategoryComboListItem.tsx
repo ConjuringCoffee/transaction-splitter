@@ -3,7 +3,7 @@ import { List } from 'react-native-paper';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
 
-interface Props {
+type Props = {
     categoryComboId: string,
     onSelect: (categoryComboId: string) => void,
 }

@@ -6,7 +6,7 @@ import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { ChooseCategoryListItem } from './ChooseCategoryListItem';
 
-interface Props<T extends keyof StackParameterList> {
+type Props<T extends keyof StackParameterList> = {
     navigation: MyStackNavigationProp<T>,
     name: string,
     setName: (name: string) => void,

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { List } from 'react-native-paper';
 
-interface Props {
+type Props = {
     calculation: string,
     selectCalculation: (calculation: string) => void,
     navigateBack: () => void,

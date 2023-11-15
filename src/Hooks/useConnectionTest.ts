@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { API } from 'ynab';
 import { LoadingStatus } from '../Helper/LoadingStatus';
 
-export interface ConnectionStatus {
+export type ConnectionStatus = {
     status: LoadingStatus,
     error?: {
         id: string,

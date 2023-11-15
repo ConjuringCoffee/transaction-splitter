@@ -8,7 +8,7 @@ import { ChooseBudgetListItem } from './ChooseBudgetListItem';
 import { EditableBudgetInProfile } from './CreateProfilesScreen/CreateProfileScreen';
 import { ProfileBudgetDetailInput } from './ProfileBudgetDetailInput';
 
-interface Props {
+type Props = {
     editableBudgetInProfile: EditableBudgetInProfile,
     setEditableBudgetInProfile: Updater<EditableBudgetInProfile>,
 }

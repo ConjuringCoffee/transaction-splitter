@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { KeyboardButton } from './KeyboardButton';
 
-interface Props {
+type Props = {
     number: number
     onPress: (number: number) => void
 }

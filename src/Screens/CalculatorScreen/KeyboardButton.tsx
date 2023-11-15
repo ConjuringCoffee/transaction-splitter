@@ -2,7 +2,7 @@ import { Text } from 'react-native-paper';
 import React from 'react';
 import { ColorValue, Pressable, StyleSheet } from 'react-native';
 
-interface Props {
+type Props = {
     value: string,
     color: ColorValue,
     onPress: () => void

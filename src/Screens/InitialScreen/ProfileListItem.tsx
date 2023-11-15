@@ -5,7 +5,7 @@ import { ScreenNames } from '../../Navigation/ScreenNames';
 import { StackParameterList, MyStackNavigationProp } from '../../Navigation/ScreenParameters';
 import { selectProfiles } from '../../redux/features/profiles/profilesSlice';
 
-interface Props<T extends keyof StackParameterList> {
+type Props<T extends keyof StackParameterList> = {
     navigation: MyStackNavigationProp<T>,
 }
 

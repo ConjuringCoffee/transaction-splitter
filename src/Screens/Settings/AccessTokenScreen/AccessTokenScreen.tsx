@@ -19,7 +19,7 @@ const ICON_SAVE = 'check';
 const ICON_CONNECTION_SUCCESS = 'check';
 const ICON_CONNECTION_ERROR = 'alert-circle';
 
-export interface ConnectionStatus {
+export type ConnectionStatus = {
     status: LoadingStatus,
     error?: {
         id: string,

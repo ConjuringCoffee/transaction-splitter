@@ -5,7 +5,7 @@ import { KeyboardNumberButton } from './KeyboardNumberButton';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
 
-interface Props {
+type Props = {
     onDigitPress: (digit: number) => void
     onDecimalSeparatorPress: () => void
     onOperatorAddPress: () => void

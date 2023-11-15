@@ -3,7 +3,7 @@ import { FAB } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 
-interface Props {
+type Props = {
     saveStatus: LoadingStatus,
     save: () => void,
 }

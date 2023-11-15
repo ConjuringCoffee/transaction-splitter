@@ -5,7 +5,7 @@ import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Budget } from '../../../YnabApi/YnabApiWrapper';
 
-interface Props {
+type Props = {
     visible: boolean,
     toggleVisible: () => void,
     selectedBudgetId?: string,
