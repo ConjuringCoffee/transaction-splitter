@@ -28,12 +28,19 @@ export const ChooseBudgetListItem = (props: Props) => {
 
     const budgetName = props.selectedBudgetId ? budgets.find((budget) => budget.id === props.selectedBudgetId)?.name : undefined;
 
+    const listIcon = useCallback(
+        (props: object) => {
+            const icon = budgetName ? ICON_BUDGET_SET : ICON_BUDGET_NOT_SET;
+            return <List.Icon {...props} icon={icon} />;
+        },
+        [budgetName],
+    );
+
     return (
         <>
             <List.Item
                 title={budgetName ?? 'No budget selected'}
-                // eslint-disable-next-line react/no-unstable-nested-components
-                left={(props) => <List.Icon {...props} icon={budgetName ? ICON_BUDGET_SET : ICON_BUDGET_NOT_SET} />}
+                left={listIcon}
                 onPress={showModal}
             />
             <BudgetSelectModalPortal

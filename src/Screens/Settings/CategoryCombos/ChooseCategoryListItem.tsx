@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { List } from 'react-native-paper';
 import { ScreenNames } from '../../../Navigation/ScreenNames';
 import { MyStackNavigationProp, StackParameterList } from '../../../Navigation/ScreenParameters';
@@ -50,12 +50,16 @@ export const ChooseCategoryListItem = <T extends keyof StackParameterList>({ sel
         [categoryName, selectedCategoryId],
     );
 
+    const listIcon = useCallback(
+        (props: object) => (<List.Icon {...props} icon={icon} />),
+        [icon],
+    );
+
     return (
         <List.Item
             title={title}
             description={`Category from ${displayBudgetName}`}
-            // eslint-disable-next-line react/no-unstable-nested-components
-            left={(props) => <List.Icon {...props} icon={icon} />}
+            left={listIcon}
             onPress={() => {
                 props.navigation.navigate(ScreenNames.CATEGORY_SCREEN, {
                     budgetId: props.budgetId,
