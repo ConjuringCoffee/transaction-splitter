@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { List } from 'react-native-paper';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { useAutomaticConnectionTest } from '../../Hooks/useAutomaticConnectionTest';
@@ -22,16 +22,18 @@ export const AccessTokenListItem = <T extends keyof StackParameterList>({ naviga
         [navigation],
     );
 
-    const icon = useMemo(
-        () => connectionStatus.status === LoadingStatus.SUCCESSFUL ? ICON_CONNECTION_OK : ICON_CONNECTION_NOT_OK,
+    const listIcon = useCallback(
+        (props: object) => {
+            const icon = connectionStatus.status === LoadingStatus.SUCCESSFUL ? ICON_CONNECTION_OK : ICON_CONNECTION_NOT_OK;
+            return <List.Icon {...props} icon={icon} />;
+        },
         [connectionStatus],
     );
 
     return (
         <List.Item
             title='Connect YNAB account'
-            // eslint-disable-next-line react/no-unstable-nested-components
-            left={(props) => <List.Icon {...props} icon={icon} />}
+            left={listIcon}
             onPress={navigateToAccessTokenScreen}
         />
     );

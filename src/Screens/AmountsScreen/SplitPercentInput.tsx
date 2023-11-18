@@ -18,7 +18,7 @@ export const SplitPercentInput = ({ setSplitPercentToPayer, ...props }: Props) =
         return null;
     }
 
-    const value = String(props.splitPercentToPayer || '');
+    const value = String(props.splitPercentToPayer ?? '');
 
     return (
         <TextInput

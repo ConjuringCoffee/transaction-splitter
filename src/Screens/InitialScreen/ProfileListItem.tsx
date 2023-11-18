@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { List } from 'react-native-paper';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { ScreenNames } from '../../Navigation/ScreenNames';
@@ -27,16 +27,18 @@ export const ProfileListItem = <T extends keyof StackParameterList>({ navigation
         [navigation, profiles],
     );
 
-    const icon = useMemo(
-        () => profiles.length ? ICON_PROFILE_EXISTS : ICON_PROFILE_MISSING,
+    const listIcon = useCallback(
+        (props: object) => {
+            const icon = profiles.length ? ICON_PROFILE_EXISTS : ICON_PROFILE_MISSING;
+            return <List.Icon {...props} icon={icon} />;
+        },
         [profiles],
     );
 
     return (
         <List.Item
             title='Set up profile'
-            // eslint-disable-next-line react/no-unstable-nested-components
-            left={(props) => <List.Icon {...props} icon={icon} />}
+            left={listIcon}
             onPress={navigateToProfileSettings}
         />
     );

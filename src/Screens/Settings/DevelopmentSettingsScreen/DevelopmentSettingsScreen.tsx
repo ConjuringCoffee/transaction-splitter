@@ -78,7 +78,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
         [isDevelopmentMode, latestUpdate],
     );
 
-    const releaseChannel = useMemo(
+    const channel = useMemo(
         (): string => {
             if (Updates.channel && Updates.channel.length > 0) {
                 return Updates.channel;
@@ -107,7 +107,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
     );
 
     const onPressUpdate = useMemo(
-        () => latestUpdate && latestUpdate.isAvailable ? updateApp : undefined,
+        () => latestUpdate?.isAvailable ? updateApp : undefined,
         [latestUpdate, updateApp],
     );
 
@@ -115,8 +115,6 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
         async () => {
             await dispatch(deleteAllCategoryCombos());
             await dispatch(deleteAllProfiles());
-            // TODO: Delete access token
-            // TODO: Delete display settings
         },
         [dispatch],
     );
@@ -130,8 +128,8 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
                 description={isDevelopmentMode ? 'Development' : 'Release'}
             />
             <List.Item
-                title='Release Channel'
-                description={releaseChannel}
+                title='Channel'
+                description={channel}
             />
             <List.Item
                 title='Date of current update'
@@ -147,7 +145,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
                 mode='contained'
                 disabled={!isDevelopmentMode}
             >
-                Delete all data
+                Delete profiles and category combos
             </Button>
         </ScrollView>
     );

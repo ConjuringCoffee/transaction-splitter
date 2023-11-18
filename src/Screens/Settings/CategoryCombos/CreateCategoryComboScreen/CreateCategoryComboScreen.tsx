@@ -26,7 +26,7 @@ export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<Scr
     const [name, setName] = useState<string>('');
     const [categoryIdFirstProfile, setCategoryIdFirstProfile] = useState<string | undefined>(undefined);
     const [categoryIdSecondProfile, setCategoryIdSecondProfile] = useState<string | undefined>(undefined);
-    const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
+    const readyToSave = name.length > 0 && categoryIdFirstProfile;
 
     const saveAndNavigate = useCallback(
         () => {
