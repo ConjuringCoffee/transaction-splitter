@@ -32,7 +32,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
 
     const [navigateBack] = useNavigateBack(navigation);
 
-    const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile ? true : false;
+    const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile;
 
     const onSelectDeletion = useCallback(
         (): void => {

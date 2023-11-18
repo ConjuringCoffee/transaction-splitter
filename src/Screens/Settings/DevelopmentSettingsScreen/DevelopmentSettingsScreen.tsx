@@ -107,7 +107,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
     );
 
     const onPressUpdate = useMemo(
-        () => latestUpdate && latestUpdate.isAvailable ? updateApp : undefined,
+        () => latestUpdate?.isAvailable ? updateApp : undefined,
         [latestUpdate, updateApp],
     );
 
@@ -115,8 +115,6 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
         async () => {
             await dispatch(deleteAllCategoryCombos());
             await dispatch(deleteAllProfiles());
-            // TODO: Delete access token
-            // TODO: Delete display settings
         },
         [dispatch],
     );
@@ -147,7 +145,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
                 mode='contained'
                 disabled={!isDevelopmentMode}
             >
-                Delete all data
+                Delete profiles and category combos
             </Button>
         </ScrollView>
     );

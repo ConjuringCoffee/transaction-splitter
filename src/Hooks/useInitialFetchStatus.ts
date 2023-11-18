@@ -81,14 +81,11 @@ export const useInitialFetchStatus = (): [InitialFetchStatus] => {
     useEffect(
         () => {
             if (!localLoaded || connectionStatus.status === LoadingStatus.IDLE || connectionStatus.status === LoadingStatus.LOADING) {
-                // Still unknown
                 return;
             } else if (connectionStatus.status === LoadingStatus.ERROR || profiles.length === 0) {
                 setInitialFetchStatus(InitialFetchStatus.SETUP_REQUIRED);
-            } else {
-                if (budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL) {
-                    setInitialFetchStatus(InitialFetchStatus.READY);
-                }
+            } else if (budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL) {
+                setInitialFetchStatus(InitialFetchStatus.READY);
             }
         },
         [localLoaded, connectionStatus, profiles, budgetsFetchStatus, initialFetchStatus],

@@ -11,7 +11,6 @@ import { MyStackNavigationProp, StackParameterList } from '../../Navigation/Scre
 import { selectCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
 
 type Props<T extends keyof StackParameterList> = {
-    key: number,
     index: number,
     amountText: string,
     payerBudgetId: string,
