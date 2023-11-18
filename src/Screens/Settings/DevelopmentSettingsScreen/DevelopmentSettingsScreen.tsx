@@ -128,7 +128,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
                 description={isDevelopmentMode ? 'Development' : 'Release'}
             />
             <List.Item
-                title='Release Channel'
+                title='Channel'
                 description={releaseChannel}
             />
             <List.Item
