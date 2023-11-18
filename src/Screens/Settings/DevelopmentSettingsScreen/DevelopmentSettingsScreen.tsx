@@ -78,7 +78,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
         [isDevelopmentMode, latestUpdate],
     );
 
-    const releaseChannel = useMemo(
+    const channel = useMemo(
         (): string => {
             if (Updates.channel && Updates.channel.length > 0) {
                 return Updates.channel;
@@ -129,7 +129,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
             />
             <List.Item
                 title='Channel'
-                description={releaseChannel}
+                description={channel}
             />
             <List.Item
                 title='Date of current update'
