@@ -24,4 +24,4 @@ jobs:
       - name: Update on EAS
         run: eas update --branch preview --auto
       - name: Build on EAS
-        run: eas build --profile preview --non-interactive
+        run: eas build --platform all --profile preview --non-interactive

@@ -73,4 +73,4 @@ jobs:
       - name: Update on EAS
         run: eas update --branch staging --auto
       - name: Build on EAS
-        run: eas build --profile staging --non-interactive
+        run: eas build --platform all --profile staging --non-interactive
