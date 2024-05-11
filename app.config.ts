@@ -64,5 +64,6 @@ module.exports = ({ config }: ConfigContext): ExpoConfig => ({
     },
     plugins: [
         'expo-localization',
+        'expo-secure-store',
     ],
 });
