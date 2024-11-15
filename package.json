@@ -33,7 +33,8 @@
     "react-redux": "^8.0.2",
     "url": "^0.11.0",
     "use-immer": "^0.7.0",
-    "ynab": "^1.28.0"
+    "ynab": "^1.28.0",
+    "@types/react": "18.3.12"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
