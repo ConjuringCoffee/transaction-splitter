@@ -1,6 +1,6 @@
 import merge from 'deepmerge';
 import { DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
-import { DarkTheme as PaperDarkTheme, DefaultTheme as PaperDefaultTheme } from 'react-native-paper';
+import { MD3DarkTheme as PaperDarkTheme, DefaultTheme as PaperDefaultTheme } from 'react-native-paper';
 import { useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { selectThemeTypeSetting } from '../redux/features/displaySettings/displaySettingsSlice';
