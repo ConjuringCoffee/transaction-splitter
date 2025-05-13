@@ -48,9 +48,7 @@ const ReduxProvidedApp = () => {
             <PaperProvider theme={theme}>
                 <NavigationContainer theme={theme}>
                     {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
-                    <StatusBar
-                        style={theme.statusBarColorScheme}
-                    />
+                    <StatusBar />
                     <AppNavigator
                         initialRouteName={initialFetchStatus === InitialFetchStatus.READY ? ScreenNames.SPLITTING_SCREEN : ScreenNames.INITIAL_SCREEN}
                     />
