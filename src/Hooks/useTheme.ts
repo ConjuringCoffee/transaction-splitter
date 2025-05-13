@@ -6,7 +6,6 @@ import { useColorScheme } from 'react-native';
 import { selectThemeTypeSetting } from '../redux/features/displaySettings/displaySettingsSlice';
 import { useAppSelector } from './useAppSelector';
 import { ThemeType } from '../redux/features/displaySettings/ThemeType';
-import { StatusBarStyle } from 'expo-status-bar';
 
 const DARK_COLOR_SCHEME = 'dark';
 
@@ -15,25 +14,13 @@ export const useTheme = () => {
     const themeTypeSetting = useAppSelector(selectThemeTypeSetting);
 
     const lightTheme = useMemo(() => {
-        const theme = merge(
-            merge(PaperDefaultTheme, NavigationDefaultTheme),
-            {
-                darkAppBar: true,
-                statusBarColorScheme: 'light' as StatusBarStyle,
-                colors: { textOnAppBar: 'white' },
-            });
+        const theme = merge(PaperDefaultTheme, NavigationDefaultTheme);
         theme.colors.primary = '#5C9CA4';
         return theme;
     }, []);
 
     const darkTheme = useMemo(() => {
-        const theme = merge(
-            merge(PaperDarkTheme, NavigationDarkTheme),
-            {
-                darkAppBar: true,
-                statusBarColorScheme: 'light' as StatusBarStyle,
-                colors: { textOnAppBar: 'white' },
-            });
+        const theme = merge(PaperDarkTheme, NavigationDarkTheme);
         theme.colors.primary = '#5C9CA4';
         return theme;
     }, []);

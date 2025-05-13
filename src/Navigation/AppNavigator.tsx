@@ -19,7 +19,7 @@ import { EditProfileScreen } from '../Screens/Settings/Profiles/EditProfileScree
 import { CreateProfileScreen } from '../Screens/Settings/Profiles/CreateProfilesScreen/CreateProfileScreen';
 import { InitialScreen } from '../Screens/InitialScreen/InitialScreen';
 import { DevelopmentSettingsScreen } from '../Screens/Settings/DevelopmentSettingsScreen/DevelopmentSettingsScreen';
-import { Appbar, useTheme } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
 import { Keyboard } from 'react-native';
 
 type Props = {
@@ -37,8 +37,6 @@ export const AppNavigator = ({ initialRouteName }: Props) => {
 const Stack = createStackNavigator<StackParameterList>();
 
 const StackNavigator = ({ initialRouteName }: Props) => {
-    const theme = useTheme();
-
     const header = useCallback(
         (stackHeaderProps: StackHeaderProps) => {
             const navigateBack = () => {
@@ -47,7 +45,7 @@ const StackNavigator = ({ initialRouteName }: Props) => {
             };
 
             return (
-                <Appbar.Header dark={theme.darkAppBar}>
+                <Appbar.Header>
                     {
                         stackHeaderProps.back
                             ? (
@@ -66,7 +64,7 @@ const StackNavigator = ({ initialRouteName }: Props) => {
                 </Appbar.Header>
             );
         },
-        [theme.darkAppBar],
+        [],
     );
 
     return (
