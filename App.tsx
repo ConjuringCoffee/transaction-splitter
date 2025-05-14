@@ -1,6 +1,6 @@
 import React, { } from 'react';
 import 'react-native-gesture-handler';
-import { LogBox, View, StyleSheet } from 'react-native';
+import { LogBox, View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { AppNavigator } from './src/Navigation/AppNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -45,15 +45,23 @@ const ReduxProvidedApp = () => {
             //   Based on: https://docs.expo.dev/versions/v46.0.0/sdk/splash-screen/
             onLayout={SplashScreen.hideAsync}
         >
-            <PaperProvider theme={theme}>
-                <NavigationContainer theme={theme}>
-                    {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
-                    <StatusBar />
-                    <AppNavigator
-                        initialRouteName={initialFetchStatus === InitialFetchStatus.READY ? ScreenNames.SPLITTING_SCREEN : ScreenNames.INITIAL_SCREEN}
-                    />
-                </NavigationContainer>
-            </PaperProvider>
+            <KeyboardAvoidingView
+                // This view serves two purposes:
+                // 1. When an input is focused, the view automatically scrolls to make the focused input visible.
+                // 2. When the keyboard is open, the view automatically resizes so that scrolling to the very bottom is still possible.
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Taken directly from the React Native documentation
+                style={styles.keyboardAvoidingView}
+            >
+                <PaperProvider theme={theme} >
+                    <NavigationContainer theme={theme} >
+                        {/* StatusBar is required to fix it being a white bar without elements in EAS build */}
+                        <StatusBar />
+                        <AppNavigator
+                            initialRouteName={initialFetchStatus === InitialFetchStatus.READY ? ScreenNames.SPLITTING_SCREEN : ScreenNames.INITIAL_SCREEN}
+                        />
+                    </NavigationContainer>
+                </PaperProvider>
+            </KeyboardAvoidingView>
         </View>
     );
 };
@@ -70,6 +78,9 @@ const styles = StyleSheet.create({
     rootView: {
         // Without flex 1 the screen would remain empty
         //   See: https://stackoverflow.com/a/72410810
+        flex: 1,
+    },
+    keyboardAvoidingView: {
         flex: 1,
     },
 });
