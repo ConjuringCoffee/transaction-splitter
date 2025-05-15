@@ -62,9 +62,7 @@ export const fetchCategoryCombos = createAsyncThunk('categoryCombos/fetchCategor
 
     // TODO: Remove this migration step in a later release
     for (const categoryCombo of categoryCombos) {
-        if (categoryCombo.id === undefined) {
-            categoryCombo.id = nanoid();
-        }
+        categoryCombo.id ??= nanoid();
     }
 
     return categoryCombos;
