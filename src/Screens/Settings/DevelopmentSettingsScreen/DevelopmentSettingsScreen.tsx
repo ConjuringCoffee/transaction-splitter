@@ -1,13 +1,14 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { Button, List } from 'react-native-paper';
 import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
-import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
+import { RefreshControl } from 'react-native-gesture-handler';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as Updates from 'expo-updates';
 import { UpdateCheckResult } from 'expo-updates';
 import { useAppDispatch } from '../../../Hooks/useAppDispatch';
 import { deleteAllCategoryCombos } from '../../../redux/features/categoryCombos/categoryCombosSlice';
 import { deleteAllProfiles } from '../../../redux/features/profiles/profilesSlice';
+import { CustomScrollView } from '../../../Component/CustomScrollView';
 
 type ScreenName = 'DevelopmentSettings';
 
@@ -120,7 +121,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
     );
 
     return (
-        <ScrollView
+        <CustomScrollView
             refreshControl={refreshControl}
         >
             <List.Item
@@ -147,6 +148,6 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
             >
                 Delete profiles and category combos
             </Button>
-        </ScrollView>
+        </CustomScrollView>
     );
 };
