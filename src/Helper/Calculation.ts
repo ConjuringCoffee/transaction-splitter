@@ -45,7 +45,7 @@ class Calculation {
         } else {
             // Make sure the eval below can't do anything except addition and subtraction
             // Assume the content of the decimal and grouping separator. If necessary, add additional ones later
-            if (!this.calculationString.match(/^[\+\-\.\,0-9]+$/)) {
+            if (!this.calculationString.match(/^[+\-.,0-9]+$/)) {
                 throw new Error('Calculation string contains illegal characters');
             }
 
