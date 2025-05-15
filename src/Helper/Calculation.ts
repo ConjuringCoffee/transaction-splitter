@@ -3,7 +3,7 @@ import { reverseNumberFormatSettingsFromLocale } from './AmountHelper';
 
 class Calculation {
     private calculationString: string;
-    private numberFormatSettings: NumberFormatSettings;
+    private readonly numberFormatSettings: NumberFormatSettings;
 
     public constructor(calculationString: string, numberFormatSettings: NumberFormatSettings) {
         this.calculationString = calculationString;
