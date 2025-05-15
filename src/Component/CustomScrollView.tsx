@@ -11,6 +11,7 @@ export const CustomScrollView = ({ children }: Props) => {
             // keyboardShouldPersistTaps is needed to allow pressing buttons when keyboard is open,
             // see: https://stackoverflow.com/a/57941568
             keyboardShouldPersistTaps='handled'
+            style={{ padding: 8 }}
         >
             {children}
         </ScrollView>
