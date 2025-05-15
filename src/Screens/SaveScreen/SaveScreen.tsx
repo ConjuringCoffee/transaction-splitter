@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { createTransaction } from '../../YnabApi/YnabApiWrapper';
-import { ScrollView } from 'react-native-gesture-handler';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { useAppSelector } from '../../Hooks/useAppSelector';
@@ -9,6 +8,7 @@ import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { SaveTransactionListSection } from './SaveTransactionListSection';
 import { SaveFAB } from './SaveFAB';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
+import { CustomScrollView } from '../../Component/CustomScrollView';
 
 type ScreenName = 'Save';
 
@@ -83,7 +83,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
 
     return (
         <>
-            <ScrollView>
+            <CustomScrollView>
                 <SaveTransactionListSection
                     saveTransaction={payerSaveTransaction}
                     sectionTitle='Payer transaction'
@@ -99,7 +99,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
                     payeeName={basicData.payeeName}
                     memo={basicData.memo}
                 />
-            </ScrollView>
+            </CustomScrollView>
             <SaveFAB
                 saveStatus={overallSaveStatus}
                 save={save}

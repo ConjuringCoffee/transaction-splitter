@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { DataTable, List, useTheme } from 'react-native-paper';
+import { DataTable, List } from 'react-native-paper';
 import { SaveTransaction } from 'ynab';
 import { StyleSheet } from 'react-native';
 import { convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
@@ -21,7 +21,6 @@ export const SaveTransactionListSection = (props: Props) => {
     const [, convertNumberToText] = useAmountConversion();
     const [detailsExpanded, setDetailsExpanded] = useState<boolean>(true);
     const [subTransactionsExpanded, setSubTransactionsExpanded] = useState<boolean>(true);
-    const theme = useTheme();
 
     const budget = useAppSelector((state) => selectBudgetById(state, props.budgetId));
     const categories = useAppSelector((state) => selectCategories(state, props.budgetId));
@@ -43,7 +42,6 @@ export const SaveTransactionListSection = (props: Props) => {
     const styles = StyleSheet.create({
         sectionTitle: {
             fontSize: 20,
-            color: theme.colors.text,
         },
         subTransactionListSection: {
             paddingTop: 20,

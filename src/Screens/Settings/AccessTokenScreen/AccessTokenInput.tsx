@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
 import { HelperText, TextInput } from 'react-native-paper';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { ConnectionStatus } from './AccessTokenScreen';
@@ -24,7 +23,6 @@ export const AccessTokenInput = (props: Props) => {
                 value={props.token}
                 secureTextEntry={inputHidden}
                 error={props.connectionStatus.status === LoadingStatus.ERROR}
-                style={styles.input}
                 right={
                     <TextInput.Icon
                         icon={inputHidden ? ICON_INPUT_HIDDEN : ICON_INPUT_VISIBLE}
@@ -43,9 +41,3 @@ export const AccessTokenInput = (props: Props) => {
             }
         </>);
 };
-
-const styles = StyleSheet.create({
-    input: {
-        margin: 8,
-    },
-});

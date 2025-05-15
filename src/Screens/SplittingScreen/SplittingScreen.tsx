@@ -15,6 +15,7 @@ import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
 import { useAppDispatch } from '../../Hooks/useAppDispatch';
+import { View } from 'react-native';
 
 type ScreenName = 'Split Transaction';
 
@@ -150,44 +151,47 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
 
     return (
         <CustomScrollView>
-            <TotalAmountInput
-                value={totalAmountText}
-                setValue={setTotalAmountText}
-            />
-            <TextInput
-                label='Payee'
-                value={payeeName}
-                onChangeText={setPayeeName}
-            />
-            <TextInput
-                label='Memo'
-                value={memo}
-                onChangeText={setMemo}
-            />
-            <PayerBudgetRadioSelection
-                profile={profileUsed}
-                payerBudgetIndex={payerBudgetIndex}
-                setPayerBudgetIndex={setPayerBudgetIndex}
-            />
-            <AccountRadioSelection
-                accounts={elegibleAccounts}
-                selectedAccountId={payerAccountID}
-                setSelectedAccountId={setPayerAccountID}
-            />
-            <DatePickerInput
-                // All locales used must be registered beforehand (see App.tsx)
-                locale="de"
-                label="Date"
-                value={date}
-                onChange={setDateIfProvided}
-                inputMode="start"
-            />
-            <Button
-                disabled={!everythingSelected}
-                onPress={navigateToAmountsScreen}
-            >
-                Continue
-            </Button>
+            <View style={{ gap: 8 }}>
+                <TotalAmountInput
+                    value={totalAmountText}
+                    setValue={setTotalAmountText}
+                />
+                <TextInput
+                    label='Payee'
+                    value={payeeName}
+                    onChangeText={setPayeeName}
+                />
+                <TextInput
+                    label='Memo'
+                    value={memo}
+                    onChangeText={setMemo}
+                />
+                <PayerBudgetRadioSelection
+                    profile={profileUsed}
+                    payerBudgetIndex={payerBudgetIndex}
+                    setPayerBudgetIndex={setPayerBudgetIndex}
+                />
+                <AccountRadioSelection
+                    accounts={elegibleAccounts}
+                    selectedAccountId={payerAccountID}
+                    setSelectedAccountId={setPayerAccountID}
+                />
+                <DatePickerInput
+                    // All locales used must be registered beforehand (see App.tsx)
+                    locale="de"
+                    label="Date"
+                    value={date}
+                    onChange={setDateIfProvided}
+                    inputMode="start"
+                />
+                <Button
+                    disabled={!everythingSelected}
+                    onPress={navigateToAmountsScreen}
+                    mode='contained'
+                >
+                    Continue
+                </Button>
+            </View>
         </CustomScrollView>
     );
 };

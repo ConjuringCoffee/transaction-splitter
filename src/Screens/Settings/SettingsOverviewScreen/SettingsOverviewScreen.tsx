@@ -8,6 +8,7 @@ import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
 import { BackHandler, View } from 'react-native';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../../Hooks/useInitialFetchStatus';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from '../../../Hooks/useTheme';
 
 type ScreenName = 'Settings Overview';
 
@@ -18,6 +19,7 @@ const ICON_CONFIRM = 'check';
 export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const [initialFetchstatus] = useInitialFetchStatus();
     const profiles = useAppSelector(selectProfiles);
+    const [theme] = useTheme();
 
     const navigateToSplittingScreen = useCallback(
         (): void => {
@@ -96,7 +98,7 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
     );
 
     return (
-        <View>
+        <View style={{ padding: theme.spacing }}>
             <List.Item
                 title='Access Token'
                 description='Necessary to access the YNAB API'
