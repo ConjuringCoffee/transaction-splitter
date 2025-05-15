@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, nanoid, SerializedError } from '@reduxjs/toolkit';
-import { RootState } from '../../store';
 import * as SecureStore from 'expo-secure-store';
 import { isOneOf } from '../../isOneOf';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
+import { RootState } from '../RootState';
 
 type CategoryInCategoryCombo = {
     id: string,

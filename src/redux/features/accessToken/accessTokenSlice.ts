@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { getItemAsync, setItemAsync, WHEN_UNLOCKED } from 'expo-secure-store';
-import { RootState } from '../../store';
+import { RootState } from '../RootState';
 
 type AccessTokenState = {
     fetchStatus: {

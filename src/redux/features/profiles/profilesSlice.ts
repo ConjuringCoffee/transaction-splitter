@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, nanoid, SerializedError } from '@reduxjs
 import * as SecureStore from 'expo-secure-store';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { isOneOf } from '../../isOneOf';
-import { RootState } from '../../store';
+import { RootState } from '../RootState';
 
 export type BudgetInProfile = {
     budgetId: string,

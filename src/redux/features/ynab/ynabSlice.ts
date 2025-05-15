@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { Account, Budget, getBudgetsWithAccountsFromApi } from '../../../YnabApi/YnabApiWrapper';
-import { RootState } from '../../store';
 import * as ynab from 'ynab';
+import { RootState } from '../RootState';
 
 export type CategoryGroup = {
     id: string,

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import * as SecureStore from 'expo-secure-store';
 import { getLocales } from 'expo-localization';
-import { RootState } from '../../store';
+import { RootState } from '../RootState';
 import { ThemeType } from './ThemeType';
 
 export type NumberFormatSettings = {
