@@ -86,3 +86,9 @@ test('Rounding error of eval is avoided', () => {
     expect(calculation.getResult()).toBe(29.78);
 });
 
+test('Error when calculation string contains an illegal character', () => {
+    const calculation = createCalculation('1*1');
+    expect(() => {
+        calculation.getResult();
+    }).toThrow();
+});
