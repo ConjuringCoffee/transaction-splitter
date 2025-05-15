@@ -10,6 +10,7 @@ import { useNavigateBack } from '../../../Hooks/useNavigateBack';
 import { useConnectionTest } from '../../../Hooks/useConnectionTest';
 import { useAppDispatch } from '../../../Hooks/useAppDispatch';
 import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
+import { useTheme } from '../../../Hooks/useTheme';
 
 type ScreenName = 'Access Token';
 
@@ -33,6 +34,7 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
     const [enteredToken, setEnteredToken] = useState<string>(accessToken);
     const [connectionStatus, testConnection] = useConnectionTest();
     const [navigateBack] = useNavigateBack(navigation);
+    const [theme] = useTheme();
 
     const navigationBarAddition = useMemo(
         () => (
@@ -68,7 +70,7 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
     );
 
     return (
-        <View>
+        <View style={{ padding: theme.spacing }}>
             <AccessTokenInput
                 token={enteredToken}
                 setToken={setEnteredToken}

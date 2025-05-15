@@ -13,17 +13,19 @@ export const useTheme = () => {
     const colorScheme = useColorScheme();
     const themeTypeSetting = useAppSelector(selectThemeTypeSetting);
 
+    const styles = useMemo(() => ({ spacing: 8 }), []);
+
     const lightTheme = useMemo(() => {
-        const theme = merge(PaperDefaultTheme, NavigationDefaultTheme);
+        const theme = merge(merge(PaperDefaultTheme, NavigationDefaultTheme), styles);
         theme.colors.primary = '#5C9CA4';
         return theme;
-    }, []);
+    }, [styles]);
 
     const darkTheme = useMemo(() => {
-        const theme = merge(PaperDarkTheme, NavigationDarkTheme);
+        const theme = merge(merge(PaperDarkTheme, NavigationDarkTheme), styles);
         theme.colors.primary = '#5C9CA4';
         return theme;
-    }, []);
+    }, [styles]);
 
     const themeToUse = useMemo(() => {
         switch (themeTypeSetting) {
