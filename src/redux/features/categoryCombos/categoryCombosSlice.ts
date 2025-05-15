@@ -59,14 +59,6 @@ const saveCategoryCombos = async (categoryCombos: CategoryCombo[]): Promise<void
 
 export const fetchCategoryCombos = createAsyncThunk('categoryCombos/fetchCategoryCombos', async () => {
     const categoryCombos = await readCategoryCombos();
-
-    // TODO: Remove this migration step in a later release
-    for (const categoryCombo of categoryCombos) {
-        if (categoryCombo.id === undefined) {
-            categoryCombo.id = nanoid();
-        }
-    }
-
     return categoryCombos;
 });
 

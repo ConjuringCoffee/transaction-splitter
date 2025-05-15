@@ -20,14 +20,6 @@ const ICON_SAVE = 'check';
 const ICON_CONNECTION_SUCCESS = 'check';
 const ICON_CONNECTION_ERROR = 'alert-circle';
 
-export type ConnectionStatus = {
-    status: LoadingStatus,
-    error?: {
-        id: string,
-        detail: string
-    }
-}
-
 export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
     const accessToken = useAppSelector(selectAccessToken);

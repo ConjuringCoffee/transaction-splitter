@@ -3,7 +3,7 @@ import { reverseNumberFormatSettingsFromLocale } from './AmountHelper';
 
 class Calculation {
     private calculationString: string;
-    private numberFormatSettings: NumberFormatSettings;
+    private readonly numberFormatSettings: NumberFormatSettings;
 
     public constructor(calculationString: string, numberFormatSettings: NumberFormatSettings) {
         this.calculationString = calculationString;
@@ -45,7 +45,7 @@ class Calculation {
         } else {
             // Make sure the eval below can't do anything except addition and subtraction
             // Assume the content of the decimal and grouping separator. If necessary, add additional ones later
-            if (!this.calculationString.match(/^[\+\-\.\,0-9]+$/)) {
+            if (!this.calculationString.match(/^[+\-.,0-9]+$/)) {
                 throw new Error('Calculation string contains illegal characters');
             }
 

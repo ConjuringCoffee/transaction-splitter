@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { HelperText, TextInput } from 'react-native-paper';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
-import { ConnectionStatus } from './AccessTokenScreen';
+import { ConnectionStatus } from '../../../Hooks/useConnectionTest';
 
 type Props = {
     token: string,
     setToken: (token: string) => void,
-    connectionStatus: ConnectionStatus
+    connectionStatus: ConnectionStatus,
 }
 
 const ICON_INPUT_HIDDEN = 'eye-off';

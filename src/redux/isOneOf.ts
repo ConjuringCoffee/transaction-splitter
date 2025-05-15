@@ -1,6 +1,6 @@
 // Taken from https://stackoverflow.com/a/64917926
 
-import { Action, AnyAction } from '@reduxjs/toolkit';
+import { Action } from '@reduxjs/toolkit';
 
 type TypedActionCreator<Type extends string> = {
     (...args: any[]): Action<Type>;
@@ -8,7 +8,7 @@ type TypedActionCreator<Type extends string> = {
 }
 
 export const isOneOf = <ActionCreator extends TypedActionCreator<string>>(actions: ActionCreator[]) => (
-    (action: AnyAction): action is ReturnType<ActionCreator> => (
+    (action: Action): action is ReturnType<ActionCreator> => (
         actions.map(({ type }) => type).includes(action.type)
     )
 );

@@ -1,5 +1,4 @@
-import { API, SaveTransaction, TransactionDetail, SaveTransactionWrapper, CategoryGroupWithCategories } from 'ynab';
-import { Category } from '../redux/features/ynab/ynabSlice';
+import { API, SaveTransaction, TransactionDetail, SaveTransactionWrapper, CategoryGroupWithCategories, Category } from 'ynab';
 
 export type Account = {
     id: string;

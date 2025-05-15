@@ -127,7 +127,7 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                 <View style={styles.flexContainer}>
                     <CategoryInput
                         label='Payer Category'
-                        text={payerCategory?.name ? payerCategory?.name : ''}
+                        text={payerCategory?.name ?? ''}
                         budgetId={props.payerBudgetId}
                         onSelect={setPayerCategoryId}
                         navigation={props.navigation}
@@ -139,7 +139,7 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                     />
                     <CategoryInput
                         label='Debtor Category'
-                        text={debtorCategory?.name ? debtorCategory?.name : ''}
+                        text={debtorCategory?.name ?? ''}
                         budgetId={props.debtorBudgetId}
                         onSelect={setDebtorCategoryId}
                         navigation={props.navigation}
