@@ -5,7 +5,7 @@ import { RefreshControlProps } from 'react-native';
 
 type Props = {
     children: ReactNode,
-    refreshControl?: React.ReactElement<RefreshControlProps, string | React.JSXElementConstructor<any>> | undefined,
+    refreshControl?: React.ReactElement<RefreshControlProps, string | React.JSXElementConstructor<any>>,
 }
 
 export const CustomScrollView = (props: Props) => {
