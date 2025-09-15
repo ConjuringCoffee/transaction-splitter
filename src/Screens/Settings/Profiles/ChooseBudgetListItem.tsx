@@ -3,6 +3,7 @@ import { List } from 'react-native-paper';
 import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { BudgetSelectModalPortal } from './BudgetSelectModalPortal';
+import { View } from 'react-native';
 
 type Props = {
     selectedBudgetId?: string,
@@ -37,7 +38,7 @@ export const ChooseBudgetListItem = (props: Props) => {
     );
 
     return (
-        <>
+        <View>
             <List.Item
                 title={budgetName ?? 'No budget selected'}
                 left={listIcon}
@@ -49,6 +50,6 @@ export const ChooseBudgetListItem = (props: Props) => {
                 selectedBudgetId={props.selectedBudgetId}
                 selectBudgetId={props.selectBudgetId}
             />
-        </>
+        </View>
     );
 };

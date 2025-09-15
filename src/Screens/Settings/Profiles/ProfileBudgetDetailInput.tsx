@@ -3,6 +3,7 @@ import { Checkbox, HelperText, List, RadioButton, TextInput } from 'react-native
 import { selectActiveAccounts, selectBudgetById } from '../../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Account } from '../../../YnabApi/YnabApiWrapper';
+import { View } from 'react-native';
 
 type Props = {
     budgetId: string,
@@ -37,7 +38,7 @@ export const ProfileBudgetDetailInput = (props: Props) => {
     );
 
     return (
-        <>
+        <View>
             <TextInput
                 label='Displayed name'
                 value={props.displayName}
@@ -56,6 +57,6 @@ export const ProfileBudgetDetailInput = (props: Props) => {
             </RadioButton.Group>
             <List.Subheader>Elegible accounts</List.Subheader>
             {activeAccounts.map(renderCheckbox)}
-        </>
+        </View>
     );
 };

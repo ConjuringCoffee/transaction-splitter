@@ -147,7 +147,7 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                 </View>
                 {!props.quickModeEnabled
                     ? (
-                        <>
+                        <View>
                             <SplitPercentInput
                                 payerCategoryChosen={props.payerCategoryId !== undefined}
                                 debtorCategoryChosen={props.debtorCategoryId !== undefined}
@@ -159,7 +159,7 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                                 placeholder='Enter memo'
                                 onChangeText={setMemo}
                             />
-                        </>
+                        </View>
                     )
                     : null
                 }
