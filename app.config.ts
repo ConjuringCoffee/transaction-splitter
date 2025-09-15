@@ -4,6 +4,7 @@ const IS_PREVIEW_VARIANT = process.env.APP_VARIANT === 'preview';
 
 module.exports = ({ config }: ConfigContext): ExpoConfig => ({
     ...config,
+    platforms: ['ios', 'android'],
     name: IS_PREVIEW_VARIANT ? 'Transaction Splitter (Preview)' : 'Transaction Splitter',
     slug: 'transaction-splitter',
     version: '1.0.0',
