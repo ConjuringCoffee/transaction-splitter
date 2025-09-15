@@ -25,6 +25,7 @@ module.exports = ({ config }: ConfigContext): ExpoConfig => ({
     ],
     ios: {
         supportsTablet: true,
+        bundleIdentifier: IS_PREVIEW_VARIANT ? 'com.conjuringcoffee.transactionsplitter.preview' : 'com.conjuringcoffee.transactionsplitter',
         splash: {
             image: './assets/splash.png',
             backgroundColor: '#FFFFFF',
