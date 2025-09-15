@@ -74,5 +74,5 @@ jobs:
         run: eas update --branch staging --auto
       - name: Build on EAS (Android)
         run: eas build --platform android --profile staging --non-interactive
-      - name: Build on EAS (iOS)
-        run: eas build --platform ios --profile staging --non-interactive
+      # - name: Build on EAS (iOS)
+      #   run: eas build --platform ios --profile staging --non-interactive
