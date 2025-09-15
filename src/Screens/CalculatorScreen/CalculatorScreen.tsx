@@ -185,7 +185,7 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     );
 
     return (
-        <>
+        <View>
             <View>
                 <Text style={[styles.text, styles.calculation]}>
                     {currentCalculation}
@@ -205,7 +205,7 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
                 onConfirmPress={onConfirmPress}
                 onCancelPress={onCancelPress}
             />
-        </>
+        </View>
     );
 };
 

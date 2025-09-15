@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { HelperText, TextInput } from 'react-native-paper';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { ConnectionStatus } from '../../../Hooks/useConnectionTest';
+import { View } from 'react-native';
 
 type Props = {
     token: string,
@@ -16,7 +17,7 @@ export const AccessTokenInput = (props: Props) => {
     const [inputHidden, setInputHidden] = useState<boolean>(true);
 
     return (
-        <>
+        <View>
             <TextInput
                 label="YNAB Personal Access Token"
                 onChangeText={props.setToken}
@@ -39,5 +40,5 @@ export const AccessTokenInput = (props: Props) => {
                 )
                 : null
             }
-        </>);
+        </View>);
 };

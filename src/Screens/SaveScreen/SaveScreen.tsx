@@ -9,6 +9,7 @@ import { SaveTransactionListSection } from './SaveTransactionListSection';
 import { SaveFAB } from './SaveFAB';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { CustomScrollView } from '../../Component/CustomScrollView';
+import { View } from 'react-native';
 
 type ScreenName = 'Save';
 
@@ -82,7 +83,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
     const overallSaveStatus = getOverallSaveStatus();
 
     return (
-        <>
+        <View>
             <CustomScrollView>
                 <SaveTransactionListSection
                     saveTransaction={payerSaveTransaction}
@@ -104,6 +105,6 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
                 saveStatus={overallSaveStatus}
                 save={save}
             />
-        </>
+        </View>
     );
 };
