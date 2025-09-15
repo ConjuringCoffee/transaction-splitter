@@ -51,9 +51,6 @@ module.exports = ({ config }: ConfigContext): ExpoConfig => ({
             },
         },
     },
-    web: {
-        'favicon': './assets/favicon.png',
-    },
     extra: {
         eas: {
             projectId: 'a696a7fc-1c64-400a-a279-c33ccdbce5db',
