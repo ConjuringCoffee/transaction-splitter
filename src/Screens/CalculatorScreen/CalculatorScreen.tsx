@@ -185,7 +185,7 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     );
 
     return (
-        <View>
+        <View style={styles.container}>
             <View>
                 <Text style={[styles.text, styles.calculation]}>
                     {currentCalculation}
@@ -210,6 +210,10 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'space-between', // Ensures display is at top, keyboard at bottom
+    },
     calculation: {
         fontSize: 40,
     },
