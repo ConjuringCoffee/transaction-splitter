@@ -1,38 +1,40 @@
-import { Text } from 'react-native-paper';
+import { Text, useTheme } from 'react-native-paper';
 import React from 'react';
-import { ColorValue, Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 type Props = {
     value: string,
-    color: ColorValue,
+    variant: 'digit' | 'action',
     onPress: () => void
 }
 
-export const KeyboardButton = (props: Props) => {
-    const styles = StyleSheet.create({
-        pressable: {
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: 60,
-        },
-        text: {
-            fontSize: 25,
-        },
-    });
+export const KeyboardButton = ({ value, variant, onPress }: Props) => {
+    const theme = useTheme();
+    const backgroundColor = variant === 'action' ? theme.colors.surfaceVariant : theme.colors.surface;
 
     return (
         <Pressable
             style={({ pressed }) => [
-                {
-                    backgroundColor: pressed ? '#d2d1d6' : props.color,
-                },
-                styles.pressable]}
-            onPress={props.onPress}
+                { backgroundColor: pressed ? theme.colors.surfaceVariant : backgroundColor },
+                styles.pressable,
+            ]}
+            onPress={onPress}
         >
             <Text style={styles.text}>
-                {props.value}
+                {value}
             </Text>
         </Pressable>
     );
 };
+
+const styles = StyleSheet.create({
+    pressable: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 60,
+    },
+    text: {
+        fontSize: 25,
+    },
+});
