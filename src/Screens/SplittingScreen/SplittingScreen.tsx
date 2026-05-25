@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
-import { Appbar, Button, TextInput } from 'react-native-paper';
+import { Appbar, Button, Surface, TextInput } from 'react-native-paper';
+import { useTheme } from '../../Hooks/useTheme';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectProfile } from '../../redux/features/profile/profileSlice';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../Hooks/useInitialFetchStatus';
@@ -98,6 +99,8 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
         [debtorCategoriesFetchStatus, accessToken, debtorBudgetInProfile, dispatch],
     );
 
+    const [theme] = useTheme();
+
     const navigateToSettingsScreen = useCallback(() => {
         navigation.reset({
             index: 0,
@@ -163,38 +166,41 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
 
     return (
         <CustomScrollView>
-            <View style={{ gap: 8 }}>
-                <TotalAmountInput
-                    value={totalAmountText}
-                    setValue={setTotalAmountText}
-                />
-                <TextInput
-                    label='Payee'
-                    value={payeeName}
-                    onChangeText={setPayeeName}
-                />
-                <TextInput
-                    label='Memo'
-                    value={memo}
-                    onChangeText={setMemo}
-                />
-                <PayerBudgetSelection
-                    payerBudgetIndex={payerBudgetIndex}
-                    setPayerBudgetIndex={setPayerBudgetIndex}
-                />
-                <AccountSelection
-                    accounts={elegibleAccounts}
-                    selectedAccountId={payerAccountID}
-                    setSelectedAccountId={setPayerAccountID}
-                />
-                <DatePickerInput
-                    // All locales used must be registered beforehand (see App.tsx)
-                    locale="de"
-                    label="Date"
-                    value={date}
-                    onChange={setDateIfProvided}
-                    inputMode="start"
-                />
+            <View style={{ gap: theme.spacing }}>
+                <Surface elevation={1} style={{ padding: theme.spacing, gap: theme.spacing }}>
+                    <TotalAmountInput
+                        value={totalAmountText}
+                        setValue={setTotalAmountText}
+                    />
+                    <TextInput
+                        label='Payee'
+                        value={payeeName}
+                        onChangeText={setPayeeName}
+                    />
+                    <DatePickerInput
+                        locale="de"
+                        label="Date"
+                        value={date}
+                        onChange={setDateIfProvided}
+                        inputMode="start"
+                    />
+                    <TextInput
+                        label='Memo'
+                        value={memo}
+                        onChangeText={setMemo}
+                    />
+                </Surface>
+                <Surface elevation={1} style={{ padding: theme.spacing, gap: theme.spacing }}>
+                    <PayerBudgetSelection
+                        payerBudgetIndex={payerBudgetIndex}
+                        setPayerBudgetIndex={setPayerBudgetIndex}
+                    />
+                    <AccountSelection
+                        accounts={elegibleAccounts}
+                        selectedAccountId={payerAccountID}
+                        setSelectedAccountId={setPayerAccountID}
+                    />
+                </Surface>
                 <Button
                     disabled={!everythingSelected}
                     onPress={navigateToAmountsScreen}
