@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, TextInput } from 'react-native';
 import { Text } from 'react-native-paper';
-import { TextInput } from 'react-native';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useTheme } from '../../Hooks/useTheme';
 
@@ -17,7 +16,7 @@ export const TotalAmountInput = ({ value, setValue }: Props) => {
     const [theme] = useTheme();
 
     const isValid = useMemo(
-        () => !isNaN(convertTextToNumber(value)),
+        () => !Number.isNaN(convertTextToNumber(value)),
         [value, convertTextToNumber],
     );
 
