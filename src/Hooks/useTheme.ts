@@ -19,6 +19,8 @@ export const useTheme = () => {
         const theme = merge(merge(PaperDefaultTheme, NavigationDefaultTheme), styles);
         theme.colors.primary = '#5C9CA4';
         theme.colors.onPrimary = '#FFFFFF';
+        theme.colors.secondaryContainer = '#B2DEE3';
+        theme.colors.onSecondaryContainer = '#003640';
         return theme;
     }, [styles]);
 
@@ -26,6 +28,8 @@ export const useTheme = () => {
         const theme = merge(merge(PaperDarkTheme, NavigationDarkTheme), styles);
         theme.colors.primary = '#3D7A82';
         theme.colors.onPrimary = '#FFFFFF';
+        theme.colors.secondaryContainer = '#1E5560';
+        theme.colors.onSecondaryContainer = '#B2DEE3';
         return theme;
     }, [styles]);
 
