@@ -100,7 +100,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     );
 
     const [theme] = useTheme();
-    const cardStyle = useMemo(() => ({ padding: theme.cardPadding, gap: theme.cardPadding }), [theme]);
+    const cardStyle = useMemo(() => ({ padding: theme.cardPadding, gap: theme.cardPadding, borderRadius: theme.roundness * 3 }), [theme]);
 
     const navigateToSettingsScreen = useCallback(() => {
         navigation.reset({
