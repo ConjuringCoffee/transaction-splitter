@@ -8,6 +8,7 @@ import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { CategoryCombo, selectCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
+import { useTheme } from '../../Hooks/useTheme';
 import { CategoryComboListItem } from './CategoryComboListItem';
 
 type ScreenName = 'Category Combinations';
@@ -17,6 +18,7 @@ const ICON_ADD = 'plus';
 
 export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenProps<ScreenName>) => {
     const [nameFilter, setNameFilter] = useState<string>('');
+    const [theme] = useTheme();
     const categoryCombos = useAppSelector(selectCategoryCombos);
 
     const categoryCombosToDisplay = useMemo(
@@ -33,9 +35,10 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
         () => (
             <Appbar.Action
                 icon={ICON_ADD}
+                iconColor={theme.colors.onPrimary}
                 onPress={navigateToCrateCategoryComboScreen}
             />),
-        [navigateToCrateCategoryComboScreen],
+        [navigateToCrateCategoryComboScreen, theme],
     );
 
     useNavigationSettings({

@@ -11,6 +11,7 @@ import { selectNumberFormatSettings } from '../../redux/features/displaySettings
 import { Appbar, Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
+import { useTheme } from '../../Hooks/useTheme';
 
 type ScreenName = 'Calculator';
 
@@ -88,14 +89,17 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         [navigation, previousCalculations, addPreviousCalculation, setCurrentCalculation, currentCalculation],
     );
 
+    const [theme] = useTheme();
+
     const navigationBarAddition = useMemo(
         () => (
             <Appbar.Action
                 onPress={navigateToHistoryScreen}
                 icon={ICON_HISTORY}
+                iconColor={theme.colors.onPrimary}
             />
         ),
-        [navigateToHistoryScreen],
+        [navigateToHistoryScreen, theme],
     );
 
     useNavigationSettings({
