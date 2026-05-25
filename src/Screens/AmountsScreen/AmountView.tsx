@@ -1,14 +1,15 @@
 import React, { useCallback, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { SplitPercentInput } from './SplitPercentInput';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { SubAmountInput } from './SubAmountInput';
-import { Divider, IconButton, TextInput } from 'react-native-paper';
+import { IconButton, Surface, TextInput } from 'react-native-paper';
 import { CategoryInput } from './CategoryInput';
 import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
 import { selectCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { useTheme } from '../../Hooks/useTheme';
 
 type Props<T extends keyof StackParameterList> = {
     index: number,
@@ -34,6 +35,7 @@ const ICON_CATEGORY_COMBO = 'vector-combine';
 const ICON_DELETE = 'delete';
 
 export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) => {
+    const [theme] = useTheme();
     const categoryCombos = useAppSelector(selectCategoryCombos);
 
     const setSplitPercentToPayer = useCallback(
@@ -109,33 +111,35 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
     const payerCategory = props.payerCategoryId ? payerCategories[props.payerCategoryId] : undefined;
     const debtorCategory = props.debtorCategoryId ? debtorCategories[props.debtorCategoryId] : undefined;
 
+    const cardStyle = {
+        padding: theme.cardPadding,
+        gap: theme.spacing,
+        borderRadius: theme.roundness * 3,
+    };
+
     return (
-        <View>
-            <View style={styles.mainView}>
-                <View style={styles.flexContainer}>
+        <Surface elevation={1} style={cardStyle}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                <View style={{ flex: 1 }}>
                     <SubAmountInput
                         value={props.amountText}
                         setValue={setAmountText}
                         navigation={props.navigation}
                     />
-                    <IconButton
-                        icon={ICON_DELETE}
-                        onPress={onRemovePress}
-                    />
                 </View>
-
-                <View style={styles.flexContainer}>
+                <IconButton
+                    icon={ICON_DELETE}
+                    onPress={onRemovePress}
+                />
+            </View>
+            <View style={{ flexDirection: 'row', gap: theme.spacing }}>
+                <View style={{ flex: 1, gap: theme.spacing }}>
                     <CategoryInput
                         label='Payer Category'
                         text={payerCategory?.name ?? ''}
                         budgetId={props.payerBudgetId}
                         onSelect={setPayerCategoryId}
                         navigation={props.navigation}
-                    />
-                    <IconButton
-                        style={styles.categoryComboButton}
-                        icon={ICON_CATEGORY_COMBO}
-                        onPress={navigateToCategoryComboScreen}
                     />
                     <CategoryInput
                         label='Debtor Category'
@@ -145,42 +149,28 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                         navigation={props.navigation}
                     />
                 </View>
-                {!props.quickModeEnabled
-                    ? (
-                        <View>
-                            <SplitPercentInput
-                                payerCategoryChosen={props.payerCategoryId !== undefined}
-                                debtorCategoryChosen={props.debtorCategoryId !== undefined}
-                                splitPercentToPayer={props.splitPercentToPayer}
-                                setSplitPercentToPayer={setSplitPercentToPayer}
-                            />
-                            <TextInput
-                                label='Memo'
-                                placeholder='Enter memo'
-                                onChangeText={setMemo}
-                            />
-                        </View>
-                    )
-                    : null
-                }
+                <View style={{ justifyContent: 'center' }}>
+                    <IconButton icon={ICON_CATEGORY_COMBO} onPress={navigateToCategoryComboScreen} />
+                </View>
             </View>
-            <Divider />
-        </View>
+            {!props.quickModeEnabled
+                ? (
+                    <View style={{ gap: theme.spacing }}>
+                        <SplitPercentInput
+                            payerCategoryChosen={props.payerCategoryId !== undefined}
+                            debtorCategoryChosen={props.debtorCategoryId !== undefined}
+                            splitPercentToPayer={props.splitPercentToPayer}
+                            setSplitPercentToPayer={setSplitPercentToPayer}
+                        />
+                        <TextInput
+                            label='Memo'
+                            placeholder='Enter memo'
+                            onChangeText={setMemo}
+                        />
+                    </View>
+                )
+                : null
+            }
+        </Surface>
     );
 };
-
-const styles = StyleSheet.create({
-    mainView: {
-        marginVertical: 10,
-    },
-    flexContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    categoryComboButton: {
-        // TODO: Fix this mess. Research table layout, see also:
-        //   https://github.com/steve192/opencookbook-frontend/blob/dbe12bd38d69ba0fc582a7dc7e3a39cc800b0825/src/components/IngredientList.tsx#L39
-        marginTop: 25,
-        marginBottom: 5,
-    },
-});
