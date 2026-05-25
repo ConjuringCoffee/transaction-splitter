@@ -51,12 +51,12 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     const [memo, setMemo] = useState<string>('[Generated]');
 
     const payerBudgetInProfile = useMemo(
-        () => profile!.budgets[payerBudgetIndex],
+        () => profile.budgets[payerBudgetIndex],
         [profile, payerBudgetIndex],
     );
 
     const debtorBudgetInProfile = useMemo(
-        () => profile!.budgets[1 - payerBudgetIndex],
+        () => profile.budgets[1 - payerBudgetIndex],
         [profile, payerBudgetIndex],
     );
 
