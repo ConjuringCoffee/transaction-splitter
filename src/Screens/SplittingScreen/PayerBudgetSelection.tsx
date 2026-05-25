@@ -1,7 +1,7 @@
-import { List, RadioButton } from 'react-native-paper';
-import { BudgetInProfile, selectProfile } from '../../redux/features/profile/profileSlice';
 import React, { useCallback } from 'react';
-import { Keyboard } from 'react-native';
+import { Keyboard, View } from 'react-native';
+import { SegmentedButtons, Text } from 'react-native-paper';
+import { BudgetInProfile, selectProfile } from '../../redux/features/profile/profileSlice';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectBudgets } from '../../redux/features/ynab/ynabSlice';
 
@@ -10,7 +10,7 @@ type Props = {
     setPayerBudgetIndex: (index: number) => void,
 }
 
-export const PayerBudgetRadioSelection = ({ payerBudgetIndex, setPayerBudgetIndex }: Props) => {
+export const PayerBudgetSelection = ({ payerBudgetIndex, setPayerBudgetIndex }: Props) => {
     const profile = useAppSelector(selectProfile);
     const budgets = useAppSelector(selectBudgets);
 
@@ -19,30 +19,24 @@ export const PayerBudgetRadioSelection = ({ payerBudgetIndex, setPayerBudgetInde
         setPayerBudgetIndex(Number(newValue));
     }, [setPayerBudgetIndex]);
 
-    const renderItem = useCallback((budgetInProfile: BudgetInProfile, index: number) => {
+    const buttons = profile!.budgets.map((budgetInProfile: BudgetInProfile, index: number) => {
         const displayedName = budgetInProfile.name ?? budgets.find((budget) => budget.id === budgetInProfile.budgetId)?.name;
 
         if (displayedName === undefined) {
             throw new Error(`Budget for ID ${budgetInProfile.budgetId} was not found`);
         }
 
-        return (
-            <RadioButton.Item
-                key={budgetInProfile.budgetId}
-                label={displayedName}
-                value={index.toString()}
-            />
-        );
-    }, [budgets]);
+        return { value: index.toString(), label: displayedName };
+    });
 
     return (
-        <List.Section title='Payer budget'>
-            <RadioButton.Group
-                onValueChange={onValueChange}
+        <View style={{ gap: 4 }}>
+            <Text variant='labelMedium'>Payer budget</Text>
+            <SegmentedButtons
                 value={payerBudgetIndex.toString()}
-            >
-                {profile!.budgets.map(renderItem)}
-            </RadioButton.Group>
-        </List.Section>
+                onValueChange={onValueChange}
+                buttons={buttons}
+            />
+        </View>
     );
 };

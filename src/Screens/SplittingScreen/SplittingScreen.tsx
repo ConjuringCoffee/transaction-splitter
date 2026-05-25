@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
-import { Appbar, Button, TextInput } from 'react-native-paper';
+import { Appbar, Button, Surface, TextInput } from 'react-native-paper';
+import { useTheme } from '../../Hooks/useTheme';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectProfile } from '../../redux/features/profile/profileSlice';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../Hooks/useInitialFetchStatus';
@@ -9,8 +10,8 @@ import { fetchCategoryGroups, selectAccountById, selectActiveAccounts, selectBud
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { TotalAmountInput } from './TotalAmountInput';
 import { DatePickerInput } from 'react-native-paper-dates';
-import { AccountRadioSelection } from './AccountRadioSelection';
-import { PayerBudgetRadioSelection } from './PayerBudgetRadioSelection';
+import { AccountSelection } from './AccountSelection';
+import { PayerBudgetSelection } from './PayerBudgetSelection';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
@@ -98,6 +99,9 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
         [debtorCategoriesFetchStatus, accessToken, debtorBudgetInProfile, dispatch],
     );
 
+    const [theme] = useTheme();
+    const cardStyle = useMemo(() => ({ padding: theme.cardPadding, gap: theme.spacing }), [theme]);
+
     const navigateToSettingsScreen = useCallback(() => {
         navigation.reset({
             index: 0,
@@ -162,39 +166,55 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     );
 
     return (
-        <CustomScrollView>
-            <View style={{ gap: 8 }}>
-                <TotalAmountInput
-                    value={totalAmountText}
-                    setValue={setTotalAmountText}
-                />
-                <TextInput
-                    label='Payee'
-                    value={payeeName}
-                    onChangeText={setPayeeName}
-                />
-                <TextInput
-                    label='Memo'
-                    value={memo}
-                    onChangeText={setMemo}
-                />
-                <PayerBudgetRadioSelection
-                    payerBudgetIndex={payerBudgetIndex}
-                    setPayerBudgetIndex={setPayerBudgetIndex}
-                />
-                <AccountRadioSelection
-                    accounts={elegibleAccounts}
-                    selectedAccountId={payerAccountID}
-                    setSelectedAccountId={setPayerAccountID}
-                />
-                <DatePickerInput
-                    // All locales used must be registered beforehand (see App.tsx)
-                    locale="de"
-                    label="Date"
-                    value={date}
-                    onChange={setDateIfProvided}
-                    inputMode="start"
-                />
+        <View style={{ flex: 1 }}>
+            <CustomScrollView>
+                <View style={{ gap: theme.spacing }}>
+                    <Surface
+                        elevation={1}
+                        style={cardStyle}
+                    >
+                        <TotalAmountInput
+                            value={totalAmountText}
+                            setValue={setTotalAmountText}
+                        />
+                        <TextInput
+                            label='Payee'
+                            mode='outlined'
+                            value={payeeName}
+                            onChangeText={setPayeeName}
+                        />
+                        <DatePickerInput
+                            locale="de"
+                            label="Date"
+                            mode='outlined'
+                            value={date}
+                            onChange={setDateIfProvided}
+                            inputMode="start"
+                        />
+                        <TextInput
+                            label='Memo'
+                            mode='outlined'
+                            value={memo}
+                            onChangeText={setMemo}
+                        />
+                    </Surface>
+                    <Surface
+                        elevation={1}
+                        style={cardStyle}
+                    >
+                        <PayerBudgetSelection
+                            payerBudgetIndex={payerBudgetIndex}
+                            setPayerBudgetIndex={setPayerBudgetIndex}
+                        />
+                        <AccountSelection
+                            accounts={elegibleAccounts}
+                            selectedAccountId={payerAccountID}
+                            setSelectedAccountId={setPayerAccountID}
+                        />
+                    </Surface>
+                </View>
+            </CustomScrollView>
+            <View style={{ padding: theme.cardPadding }}>
                 <Button
                     disabled={!everythingSelected}
                     onPress={navigateToAmountsScreen}
@@ -203,7 +223,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                     Continue
                 </Button>
             </View>
-        </CustomScrollView>
+        </View>
     );
 };
 

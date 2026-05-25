@@ -26,6 +26,7 @@ export const TotalAmountInput = ({ value, setValue }: Props) => {
             error={!isValid}
             onChangeText={setValue}
             label='Total amount'
+            mode='outlined'
             style={styles.textInput}
             right={<TextInput.Affix text="€" />}
         />
