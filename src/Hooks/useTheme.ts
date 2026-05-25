@@ -13,7 +13,7 @@ export const useTheme = () => {
     const colorScheme = useColorScheme();
     const themeTypeSetting = useAppSelector(selectThemeTypeSetting);
 
-    const styles = useMemo(() => ({ spacing: 8 }), []);
+    const styles = useMemo(() => ({ spacing: 8, cardPadding: 16 }), []);
 
     const lightTheme = useMemo(() => {
         const theme = merge(merge(PaperDefaultTheme, NavigationDefaultTheme), styles);

@@ -100,6 +100,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     );
 
     const [theme] = useTheme();
+    const cardStyle = useMemo(() => ({ padding: theme.cardPadding, gap: theme.spacing }), [theme]);
 
     const navigateToSettingsScreen = useCallback(() => {
         navigation.reset({
@@ -167,7 +168,10 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     return (
         <CustomScrollView>
             <View style={{ gap: theme.spacing }}>
-                <Surface elevation={1} style={{ padding: theme.spacing, gap: theme.spacing }}>
+                <Surface 
+                    elevation={1} 
+                    style={cardStyle}
+                >
                     <TotalAmountInput
                         value={totalAmountText}
                         setValue={setTotalAmountText}
@@ -190,7 +194,10 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                         onChangeText={setMemo}
                     />
                 </Surface>
-                <Surface elevation={1} style={{ padding: theme.spacing, gap: theme.spacing }}>
+                <Surface 
+                    elevation={1} 
+                    style={cardStyle}
+                >
                     <PayerBudgetSelection
                         payerBudgetIndex={payerBudgetIndex}
                         setPayerBudgetIndex={setPayerBudgetIndex}
