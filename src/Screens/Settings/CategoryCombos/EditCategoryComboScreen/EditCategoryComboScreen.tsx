@@ -21,6 +21,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     const { categoryCombo } = route.params;
 
     const profile = useAppSelector(selectProfile);
+    const budgets = profile!.budgets;
 
     const [name, setName] = useState<string>(categoryCombo?.name ?? '');
     const [categoryIdFirstProfile, setCategoryIdFirstProfile] = useState<string | undefined>(categoryCombo?.categories[0].id);
@@ -69,11 +70,11 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
                         name: name,
                         categories: [
                             {
-                                budgetId: profile!.budgets[0].budgetId,
+                                budgetId: budgets[0].budgetId,
                                 id: categoryIdFirstProfile,
                             },
                             {
-                                budgetId: profile!.budgets[1].budgetId,
+                                budgetId: budgets[1].budgetId,
                                 id: categoryIdSecondProfile,
                             }],
                     },
@@ -81,7 +82,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
             ));
             navigateBack();
         },
-        [categoryCombo.id, categoryIdFirstProfile, categoryIdSecondProfile, dispatch, name, navigateBack, profile!.budgets],
+        [categoryCombo.id, categoryIdFirstProfile, categoryIdSecondProfile, dispatch, name, navigateBack, budgets],
     );
 
     const navigationBarAdditions = useMemo(

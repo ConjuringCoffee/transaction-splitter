@@ -19,6 +19,7 @@ export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<Scr
     const dispatch = useAppDispatch();
     const [navigateBack] = useNavigateBack(navigation);
     const profile = useAppSelector(selectProfile);
+    const budgets = profile!.budgets;
 
     const [name, setName] = useState<string>('');
     const [categoryIdFirstProfile, setCategoryIdFirstProfile] = useState<string | undefined>(undefined);
@@ -35,17 +36,17 @@ export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<Scr
                 name: name,
                 categories: [
                     {
-                        budgetId: profile!.budgets[0].budgetId,
+                        budgetId: budgets[0].budgetId,
                         id: categoryIdFirstProfile,
                     },
                     {
-                        budgetId: profile!.budgets[1].budgetId,
+                        budgetId: budgets[1].budgetId,
                         id: categoryIdSecondProfile,
                     }],
             }));
             navigateBack();
         },
-        [categoryIdFirstProfile, categoryIdSecondProfile, dispatch, name, navigateBack, profile!.budgets],
+        [categoryIdFirstProfile, categoryIdSecondProfile, dispatch, name, navigateBack, budgets],
     );
 
     const navigationBarAddition = useMemo(

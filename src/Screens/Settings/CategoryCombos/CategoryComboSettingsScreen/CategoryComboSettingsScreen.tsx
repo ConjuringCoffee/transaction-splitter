@@ -30,21 +30,22 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
     );
 
     const profile = useAppSelector(selectProfile);
+    const budgets = profile!.budgets;
 
-    const categoriesFirstProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profile!.budgets[0].budgetId));
-    const categoriesSecondProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profile!.budgets[1].budgetId));
+    const categoriesFirstProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, budgets[0].budgetId));
+    const categoriesSecondProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, budgets[1].budgetId));
 
     useEffect(() => {
         if (categoriesFirstProfileFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: profile!.budgets[0].budgetId }));
+            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: budgets[0].budgetId }));
         }
-    }, [dispatch, profile!, categoriesFirstProfileFetchStatus, accessToken]);
+    }, [dispatch, budgets, categoriesFirstProfileFetchStatus, accessToken]);
 
     useEffect(() => {
         if (categoriesSecondProfileFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: profile!.budgets[1].budgetId }));
+            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: budgets[1].budgetId }));
         }
-    }, [dispatch, profile!, categoriesSecondProfileFetchStatus, accessToken]);
+    }, [dispatch, budgets, categoriesSecondProfileFetchStatus, accessToken]);
 
     const everythingLoaded
         = categoriesFirstProfileFetchStatus === LoadingStatus.SUCCESSFUL
