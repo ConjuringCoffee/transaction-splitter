@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSelector, createSlice, SerializedError } from '@reduxjs/toolkit';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { Account, Budget, getBudgetsWithAccountsFromApi } from '../../../YnabApi/YnabApiWrapper';
 import { RootState } from '../../store';
@@ -151,10 +151,11 @@ export const selectAccountById = (state: RootState, budgetId: string, accountId:
     return account;
 };
 
-export const selectActiveAccounts = (state: RootState, budgetId: string): Account[] => {
-    const budget = selectBudgetById(state, budgetId);
-    return budget.accounts.filter((account) => account.onBudget && !account.closed && !account.deleted);
-};
+// Memoized because filter() always returns a new array reference, which would cause unnecessary rerenders.
+export const selectActiveAccounts = createSelector(
+    (state: RootState, budgetId: string) => selectBudgetById(state, budgetId),
+    (budget) => budget.accounts.filter((account) => account.onBudget && !account.closed && !account.deleted),
+);
 
 export const selectCategoriesFetchStatus = (state: RootState, budgetId: string): LoadingStatus =>
     state.ynab.categoryGroups[budgetId]?.status ?? LoadingStatus.IDLE;
