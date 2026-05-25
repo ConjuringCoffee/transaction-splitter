@@ -135,8 +135,9 @@ export const AmountView = <T extends keyof StackParameterList>({
                     <IconButton icon={ICON_CATEGORY_COMBO} onPress={navigateToCategoryComboScreen} style={{ transform: [{ rotate: '270deg' }] }} />
                 </View>
             </View>
-            {!quickModeEnabled
-                ? (
+            {quickModeEnabled
+                ? null
+                : (
                     <View style={{ gap: theme.spacing }}>
                         <TextInput
                             label='Memo'
@@ -152,7 +153,6 @@ export const AmountView = <T extends keyof StackParameterList>({
                         />
                     </View>
                 )
-                : null
             }
         </Surface>
     );
