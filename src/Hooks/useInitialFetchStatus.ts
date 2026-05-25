@@ -3,7 +3,7 @@ import { LoadingStatus } from '../Helper/LoadingStatus';
 import { selectAccessTokenFetchStatus, fetchAccessToken, selectAccessToken } from '../redux/features/accessToken/accessTokenSlice';
 import { selectCategoryCombosFetchStatus, fetchCategoryCombos } from '../redux/features/categoryCombos/categoryCombosSlice';
 import { selectDisplaySettingsFetchStatus, fetchDisplaySettings } from '../redux/features/displaySettings/displaySettingsSlice';
-import { selectProfileFetchStatus, fetchProfile, selectProfile } from '../redux/features/profiles/profilesSlice';
+import { selectProfileFetchStatus, fetchProfile, selectProfile } from '../redux/features/profile/profileSlice';
 import { selectBudgetsFetchStatus, fetchBudgets } from '../redux/features/ynab/ynabSlice';
 import { useAppDispatch } from './useAppDispatch';
 import { useAppSelector } from './useAppSelector';

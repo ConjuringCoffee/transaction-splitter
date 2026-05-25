@@ -7,7 +7,7 @@ import * as Updates from 'expo-updates';
 import { UpdateCheckResult } from 'expo-updates';
 import { useAppDispatch } from '../../../Hooks/useAppDispatch';
 import { deleteAllCategoryCombos } from '../../../redux/features/categoryCombos/categoryCombosSlice';
-import { deleteProfile } from '../../../redux/features/profiles/profilesSlice';
+import { deleteProfile } from '../../../redux/features/profile/profileSlice';
 import { CustomScrollView } from '../../../Component/CustomScrollView';
 
 type ScreenName = 'DevelopmentSettings';

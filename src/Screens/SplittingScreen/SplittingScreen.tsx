@@ -3,7 +3,7 @@ import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { Appbar, Button, TextInput } from 'react-native-paper';
 import { useAppSelector } from '../../Hooks/useAppSelector';
-import { selectProfile } from '../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../redux/features/profile/profileSlice';
 import { fetchCategoryGroups, selectAccountById, selectActiveAccounts, selectBudgetById, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { TotalAmountInput } from './TotalAmountInput';

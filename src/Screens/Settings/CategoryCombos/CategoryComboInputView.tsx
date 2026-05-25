@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { List, TextInput } from 'react-native-paper';
 import { MyStackNavigationProp, StackParameterList } from '../../../Navigation/ScreenParameters';
-import { selectProfile } from '../../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../../redux/features/profile/profileSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { ChooseCategoryListItem } from './ChooseCategoryListItem';
 

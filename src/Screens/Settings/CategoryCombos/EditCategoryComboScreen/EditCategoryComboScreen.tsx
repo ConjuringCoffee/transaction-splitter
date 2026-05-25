@@ -3,7 +3,7 @@ import { Appbar, Menu } from 'react-native-paper';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { deleteCategoryCombo, updateCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
-import { selectProfile } from '../../../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../../../redux/features/profile/profileSlice';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { CategoryComboInputView } from '../CategoryComboInputView';
 import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';

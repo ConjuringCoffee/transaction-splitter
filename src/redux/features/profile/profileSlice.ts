@@ -15,7 +15,7 @@ export type Profile = {
     budgets: [BudgetInProfile, BudgetInProfile]
 }
 
-type ProfilesState = {
+type ProfileState = {
     fetchStatus: {
         status: LoadingStatus
         error: SerializedError | null
@@ -27,7 +27,7 @@ type ProfilesState = {
     profile: Profile | null
 }
 
-const initialState: ProfilesState = {
+const initialState: ProfileState = {
     fetchStatus: {
         status: LoadingStatus.IDLE,
         error: null,
@@ -72,25 +72,25 @@ const writeProfile = async (profile: Profile | null): Promise<void> => {
     await SecureStore.setItemAsync(STORAGE_KEY, json, SECURE_STORE_OPTIONS);
 };
 
-export const fetchProfile = createAsyncThunk('profiles/fetchProfile', async () => {
+export const fetchProfile = createAsyncThunk('profile/fetchProfile', async () => {
     return readProfile();
 });
 
 export const saveProfile = createAsyncThunk<Profile, Profile>(
-    'profiles/saveProfile',
+    'profile/saveProfile',
     async (profile) => {
         await writeProfile(profile);
         return profile;
     },
 );
 
-export const deleteProfile = createAsyncThunk('profiles/deleteProfile', async () => {
+export const deleteProfile = createAsyncThunk('profile/deleteProfile', async () => {
     await writeProfile(null);
     return null;
 });
 
-export const profilesSlice = createSlice({
-    name: 'profiles',
+export const profileSlice = createSlice({
+    name: 'profile',
     initialState,
     reducers: {},
     extraReducers(builder) {
@@ -136,6 +136,6 @@ export const profilesSlice = createSlice({
     },
 });
 
-export const selectProfile = (state: RootState) => state.profiles.profile;
-export const selectProfileFetchStatus = (state: RootState) => state.profiles.fetchStatus;
-export const selectProfileSaveStatus = (state: RootState) => state.profiles.saveStatus;
+export const selectProfile = (state: RootState) => state.profile.profile;
+export const selectProfileFetchStatus = (state: RootState) => state.profile.fetchStatus;
+export const selectProfileSaveStatus = (state: RootState) => state.profile.saveStatus;

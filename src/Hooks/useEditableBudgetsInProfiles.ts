@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { Updater, useImmer } from 'use-immer';
-import { BudgetInProfile, Profile, saveProfile, selectProfile } from '../redux/features/profiles/profilesSlice';
+import { BudgetInProfile, Profile, saveProfile, selectProfile } from '../redux/features/profile/profileSlice';
 import { useAppDispatch } from './useAppDispatch';
 import { useAppSelector } from './useAppSelector';
 

@@ -1,5 +1,5 @@
 import { List, RadioButton } from 'react-native-paper';
-import { BudgetInProfile, selectProfile } from '../../redux/features/profiles/profilesSlice';
+import { BudgetInProfile, selectProfile } from '../../redux/features/profile/profileSlice';
 import React, { useCallback } from 'react';
 import { Keyboard } from 'react-native';
 import { useAppSelector } from '../../Hooks/useAppSelector';

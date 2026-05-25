@@ -3,7 +3,7 @@ import { List } from 'react-native-paper';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { StackParameterList, MyStackNavigationProp } from '../../Navigation/ScreenParameters';
-import { selectProfile } from '../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../redux/features/profile/profileSlice';
 
 type Props<T extends keyof StackParameterList> = {
     navigation: MyStackNavigationProp<T>,

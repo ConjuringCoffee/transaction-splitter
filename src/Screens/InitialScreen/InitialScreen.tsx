@@ -9,7 +9,7 @@ import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
-import { selectProfile } from '../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../redux/features/profile/profileSlice';
 import { fetchBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { AccessTokenListItem } from './AccessTokenListItem';
 import { ProfileListItem } from './ProfileListItem';

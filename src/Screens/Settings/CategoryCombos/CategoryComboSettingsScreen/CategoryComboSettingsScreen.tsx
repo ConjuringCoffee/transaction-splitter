@@ -5,7 +5,7 @@ import { Appbar, List } from 'react-native-paper';
 import { CategoryCombo, selectCategoryCombos } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { View } from 'react-native';
-import { selectProfile } from '../../../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../../../redux/features/profile/profileSlice';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../../../Helper/LoadingStatus';
 import { LoadingComponent } from '../../../../Component/LoadingComponent';

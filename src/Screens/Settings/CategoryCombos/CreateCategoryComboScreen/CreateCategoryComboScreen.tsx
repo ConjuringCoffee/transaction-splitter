@@ -4,7 +4,7 @@ import { CategoryComboInputView } from '../CategoryComboInputView';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { addCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
-import { selectProfile } from '../../../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../../../redux/features/profile/profileSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
 import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
