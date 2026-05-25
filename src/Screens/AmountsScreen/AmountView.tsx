@@ -31,7 +31,7 @@ type Props<T extends keyof StackParameterList> = {
 
 const DEFAULT_SPLIT_PERCENT_TO_PAYER = 50;
 
-const ICON_CATEGORY_COMBO = 'vector-combine';
+const ICON_CATEGORY_COMBO = 'call-split';
 const ICON_DELETE = 'delete';
 
 export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) => {
@@ -150,7 +150,7 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                     />
                 </View>
                 <View style={{ justifyContent: 'center' }}>
-                    <IconButton icon={ICON_CATEGORY_COMBO} onPress={navigateToCategoryComboScreen} />
+                    <IconButton icon={ICON_CATEGORY_COMBO} onPress={navigateToCategoryComboScreen} style={{ transform: [{ rotate: '270deg' }] }} />
                 </View>
             </View>
             {!props.quickModeEnabled
