@@ -178,18 +178,21 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                     />
                     <TextInput
                         label='Payee'
+                        mode='outlined'
                         value={payeeName}
                         onChangeText={setPayeeName}
                     />
                     <DatePickerInput
                         locale="de"
                         label="Date"
+                        mode='outlined'
                         value={date}
                         onChange={setDateIfProvided}
                         inputMode="start"
                     />
                     <TextInput
                         label='Memo'
+                        mode='outlined'
                         value={memo}
                         onChangeText={setMemo}
                     />
