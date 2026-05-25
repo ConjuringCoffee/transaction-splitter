@@ -4,6 +4,7 @@ import { ScreenNames } from '../../Navigation/ScreenNames';
 import { Appbar, Button, TextInput } from 'react-native-paper';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectProfile } from '../../redux/features/profile/profileSlice';
+import { InitialFetchStatus, useInitialFetchStatus } from '../../Hooks/useInitialFetchStatus';
 import { fetchCategoryGroups, selectAccountById, selectActiveAccounts, selectBudgetById, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { TotalAmountInput } from './TotalAmountInput';
@@ -22,8 +23,25 @@ type ScreenName = 'Split Transaction';
 const SCREEN_TITLE = 'Transaction Splitter';
 const ICON_SETTINGS = 'cog';
 
-export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
-    const profile = useAppSelector(selectProfile);
+// Split into outer + inner component so the guard can precede all hooks in SplittingScreenContent.
+export const SplittingScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
+    const [initialFetchStatus] = useInitialFetchStatus();
+
+    useEffect(() => {
+        if (initialFetchStatus === InitialFetchStatus.SETUP_REQUIRED) {
+            navigation.reset({ index: 0, routes: [{ name: ScreenNames.INITIAL_SCREEN }] });
+        }
+    }, [initialFetchStatus, navigation]);
+
+    if (initialFetchStatus !== InitialFetchStatus.READY) {
+        return null;
+    }
+
+    return <SplittingScreenContent navigation={navigation} route={route} />;
+};
+
+const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) => {
+    const profile = useAppSelector(selectProfile)!;
     const [convertTextToNumber] = useAmountConversion();
 
     const [payerBudgetIndex, setPayerBudgetIndex] = useState<number>(0);
