@@ -36,7 +36,7 @@ const ReduxProvidedApp = () => {
 
     return (
         <View
-            style={styles.rootView}
+            style={[styles.rootView, { backgroundColor: theme.colors.background }]}
             // This tells the splash screen to hide immediately. If we'd call this in a
             //   `useEffect`, then a blank screen briefly flashes while the app is
             //   loading its initial state and rendering its first pixels. So instead,

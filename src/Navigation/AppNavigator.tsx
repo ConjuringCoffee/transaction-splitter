@@ -20,6 +20,7 @@ import { InitialScreen } from '../Screens/InitialScreen/InitialScreen';
 import { DevelopmentSettingsScreen } from '../Screens/Settings/DevelopmentSettingsScreen/DevelopmentSettingsScreen';
 import { Appbar } from 'react-native-paper';
 import { Keyboard } from 'react-native';
+import { useTheme } from '../Hooks/useTheme';
 
 type Props = {
     initialRouteName: keyof StackParameterList,
@@ -36,6 +37,8 @@ export const AppNavigator = ({ initialRouteName }: Props) => {
 const Stack = createStackNavigator<StackParameterList>();
 
 const StackNavigator = ({ initialRouteName }: Props) => {
+    const [theme] = useTheme();
+
     const header = useCallback(
         (stackHeaderProps: StackHeaderProps) => {
             const navigateBack = () => {
@@ -71,6 +74,7 @@ const StackNavigator = ({ initialRouteName }: Props) => {
             initialRouteName={initialRouteName}
             screenOptions={{
                 header: header,
+                cardStyle: { backgroundColor: theme.colors.background },
             }}
         >
             <Stack.Screen
