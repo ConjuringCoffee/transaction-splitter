@@ -166,51 +166,55 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     );
 
     return (
-        <CustomScrollView>
-            <View style={{ gap: theme.spacing }}>
-                <Surface 
-                    elevation={1} 
-                    style={cardStyle}
-                >
-                    <TotalAmountInput
-                        value={totalAmountText}
-                        setValue={setTotalAmountText}
-                    />
-                    <TextInput
-                        label='Payee'
-                        mode='outlined'
-                        value={payeeName}
-                        onChangeText={setPayeeName}
-                    />
-                    <DatePickerInput
-                        locale="de"
-                        label="Date"
-                        mode='outlined'
-                        value={date}
-                        onChange={setDateIfProvided}
-                        inputMode="start"
-                    />
-                    <TextInput
-                        label='Memo'
-                        mode='outlined'
-                        value={memo}
-                        onChangeText={setMemo}
-                    />
-                </Surface>
-                <Surface 
-                    elevation={1} 
-                    style={cardStyle}
-                >
-                    <PayerBudgetSelection
-                        payerBudgetIndex={payerBudgetIndex}
-                        setPayerBudgetIndex={setPayerBudgetIndex}
-                    />
-                    <AccountSelection
-                        accounts={elegibleAccounts}
-                        selectedAccountId={payerAccountID}
-                        setSelectedAccountId={setPayerAccountID}
-                    />
-                </Surface>
+        <View style={{ flex: 1 }}>
+            <CustomScrollView>
+                <View style={{ gap: theme.spacing }}>
+                    <Surface
+                        elevation={1}
+                        style={cardStyle}
+                    >
+                        <TotalAmountInput
+                            value={totalAmountText}
+                            setValue={setTotalAmountText}
+                        />
+                        <TextInput
+                            label='Payee'
+                            mode='outlined'
+                            value={payeeName}
+                            onChangeText={setPayeeName}
+                        />
+                        <DatePickerInput
+                            locale="de"
+                            label="Date"
+                            mode='outlined'
+                            value={date}
+                            onChange={setDateIfProvided}
+                            inputMode="start"
+                        />
+                        <TextInput
+                            label='Memo'
+                            mode='outlined'
+                            value={memo}
+                            onChangeText={setMemo}
+                        />
+                    </Surface>
+                    <Surface
+                        elevation={1}
+                        style={cardStyle}
+                    >
+                        <PayerBudgetSelection
+                            payerBudgetIndex={payerBudgetIndex}
+                            setPayerBudgetIndex={setPayerBudgetIndex}
+                        />
+                        <AccountSelection
+                            accounts={elegibleAccounts}
+                            selectedAccountId={payerAccountID}
+                            setSelectedAccountId={setPayerAccountID}
+                        />
+                    </Surface>
+                </View>
+            </CustomScrollView>
+            <View style={{ padding: theme.cardPadding }}>
                 <Button
                     disabled={!everythingSelected}
                     onPress={navigateToAmountsScreen}
@@ -219,7 +223,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                     Continue
                 </Button>
             </View>
-        </CustomScrollView>
+        </View>
     );
 };
 
