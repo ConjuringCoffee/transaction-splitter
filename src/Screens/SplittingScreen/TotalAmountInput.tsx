@@ -27,7 +27,7 @@ export const TotalAmountInput = ({ value, setValue }: Props) => {
                 The invisible TextInput fills the same bounds to capture keyboard input. */}
             <View>
                 <Text style={[{ fontSize: FONT_SIZE }, !isValid && { color: theme.colors.error }]}>
-                    {`-${value || '0'} €`}
+                    {`-${value || '0'}€`}
                 </Text>
                 <TextInput
                     keyboardType='numeric'
