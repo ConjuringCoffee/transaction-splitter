@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
-import { Appbar, Button, Surface, TextInput } from 'react-native-paper';
+import { Appbar, Button, Surface, Text, TextInput } from 'react-native-paper';
 import { useTheme } from '../../Hooks/useTheme';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectProfile } from '../../redux/features/profile/profileSlice';
@@ -100,7 +100,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     );
 
     const [theme] = useTheme();
-    const cardStyle = useMemo(() => ({ padding: theme.cardPadding, gap: theme.spacing }), [theme]);
+    const cardStyle = useMemo(() => ({ padding: theme.cardPadding, gap: theme.cardPadding, borderRadius: theme.roundness * 3 }), [theme]);
 
     const navigateToSettingsScreen = useCallback(() => {
         navigation.reset({
@@ -114,9 +114,10 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
             <Appbar.Action
                 onPress={navigateToSettingsScreen}
                 icon={ICON_SETTINGS}
+                iconColor={theme.colors.onPrimary}
             />
         ),
-        [navigateToSettingsScreen],
+        [navigateToSettingsScreen, theme.colors.onPrimary],
     );
 
     useNavigationSettings({
@@ -167,16 +168,32 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
 
     return (
         <View style={{ flex: 1 }}>
+            <TotalAmountInput
+                value={totalAmountText}
+                setValue={setTotalAmountText}
+            />
             <CustomScrollView>
                 <View style={{ gap: theme.spacing }}>
                     <Surface
                         elevation={1}
                         style={cardStyle}
                     >
-                        <TotalAmountInput
-                            value={totalAmountText}
-                            setValue={setTotalAmountText}
+                        <Text variant='titleMedium'>Payer</Text>
+                        <PayerBudgetSelection
+                            payerBudgetIndex={payerBudgetIndex}
+                            setPayerBudgetIndex={setPayerBudgetIndex}
                         />
+                        <AccountSelection
+                            accounts={elegibleAccounts}
+                            selectedAccountId={payerAccountID}
+                            setSelectedAccountId={setPayerAccountID}
+                        />
+                    </Surface>
+                    <Surface
+                        elevation={1}
+                        style={cardStyle}
+                    >
+                        <Text variant='titleMedium'>Details</Text>
                         <TextInput
                             label='Payee'
                             mode='outlined'
@@ -196,20 +213,6 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                             mode='outlined'
                             value={memo}
                             onChangeText={setMemo}
-                        />
-                    </Surface>
-                    <Surface
-                        elevation={1}
-                        style={cardStyle}
-                    >
-                        <PayerBudgetSelection
-                            payerBudgetIndex={payerBudgetIndex}
-                            setPayerBudgetIndex={setPayerBudgetIndex}
-                        />
-                        <AccountSelection
-                            accounts={elegibleAccounts}
-                            selectedAccountId={payerAccountID}
-                            setSelectedAccountId={setPayerAccountID}
                         />
                     </Surface>
                 </View>

@@ -9,6 +9,7 @@ import { CategoryComboInputView } from '../CategoryComboInputView';
 import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
 import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
+import { useTheme } from '../../../../Hooks/useTheme';
 
 type ScreenName = 'Edit Category Combo';
 
@@ -29,6 +30,7 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     const [menuVisible, setMenuVisible] = React.useState<boolean>(false);
 
     const [navigateBack] = useNavigateBack(navigation);
+    const [theme] = useTheme();
 
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile;
 
@@ -91,13 +93,14 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
                 <Appbar.Action
                     key='save'
                     icon={ICON_SAVE}
+                    iconColor={theme.colors.onPrimary}
                     disabled={!readyToSave}
                     onPress={saveAndNavigate}
                 />,
                 moreMenu,
             ]
         ),
-        [moreMenu, readyToSave, saveAndNavigate],
+        [moreMenu, readyToSave, saveAndNavigate, theme],
     );
 
     useNavigationSettings({

@@ -8,6 +8,7 @@ import { selectProfile } from '../../../../redux/features/profile/profileSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
 import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
+import { useTheme } from '../../../../Hooks/useTheme';
 
 type ScreenName = 'Create Category Combo';
 
@@ -18,6 +19,7 @@ const SCREEN_TITLE = 'Create';
 export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
     const [navigateBack] = useNavigateBack(navigation);
+    const [theme] = useTheme();
     const profile = useAppSelector(selectProfile);
     const budgets = profile!.budgets;
 
@@ -54,11 +56,12 @@ export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<Scr
             <Appbar.Action
                 key='add'
                 icon={ICON_SAVE}
+                iconColor={theme.colors.onPrimary}
                 disabled={!readyToSave}
                 onPress={saveAndNavigate}
             />
         ),
-        [readyToSave, saveAndNavigate],
+        [readyToSave, saveAndNavigate, theme],
     );
 
     useNavigationSettings({

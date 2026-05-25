@@ -47,26 +47,28 @@ const StackNavigator = ({ initialRouteName }: Props) => {
             };
 
             return (
-                <Appbar.Header>
+                <Appbar.Header style={{ backgroundColor: theme.colors.primary, height: 52 }}>
                     {
                         stackHeaderProps.back
                             ? (
                                 <Appbar.BackAction
                                     onPress={navigateBack}
+                                    iconColor={theme.colors.onPrimary}
                                 />
                             )
                             : null
                     }
                     <Appbar.Content
-                        title={stackHeaderProps.options.title}
+                        title={stackHeaderProps.options.title ?? ''}
+                        titleStyle={{ color: theme.colors.onPrimary }}
                     />
                     {stackHeaderProps.options.headerRight
-                        ? stackHeaderProps.options.headerRight({})
+                        ? stackHeaderProps.options.headerRight({ tintColor: theme.colors.onPrimary })
                         : null}
                 </Appbar.Header>
             );
         },
-        [],
+        [theme],
     );
 
     return (

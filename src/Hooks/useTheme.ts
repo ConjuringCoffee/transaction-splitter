@@ -18,12 +18,22 @@ export const useTheme = () => {
     const lightTheme = useMemo(() => {
         const theme = merge(merge(PaperDefaultTheme, NavigationDefaultTheme), styles);
         theme.colors.primary = '#5C9CA4';
+        theme.colors.onPrimary = '#FFFFFF';
+        theme.colors.secondaryContainer = '#B2DEE3';
+        theme.colors.onSecondaryContainer = '#003640';
+        theme.colors.background = '#F5FAFB';
+        theme.colors.elevation = { ...theme.colors.elevation, level1: '#EDF5F6' };
         return theme;
     }, [styles]);
 
     const darkTheme = useMemo(() => {
         const theme = merge(merge(PaperDarkTheme, NavigationDarkTheme), styles);
-        theme.colors.primary = '#5C9CA4';
+        theme.colors.primary = '#3D7A82';
+        theme.colors.onPrimary = '#FFFFFF';
+        theme.colors.secondaryContainer = '#1E5560';
+        theme.colors.onSecondaryContainer = '#B2DEE3';
+        theme.colors.background = '#141C1E';
+        theme.colors.elevation = { ...theme.colors.elevation, level1: '#1A2A2F' };
         return theme;
     }, [styles]);
 

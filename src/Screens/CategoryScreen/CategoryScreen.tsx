@@ -5,6 +5,7 @@ import { useNavigateBack } from '../../Hooks/useNavigateBack';
 import { View } from 'react-native';
 import { CategoryList } from './CategoryList';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
+import { useTheme } from '../../Hooks/useTheme';
 
 type ScreenName = 'Category Selection';
 
@@ -15,6 +16,7 @@ export const CategoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenN
     const [nameFilter, setNameFilter] = useState<string>('');
 
     const [navigateBack] = useNavigateBack(navigation);
+    const [theme] = useTheme();
     const { onSelect } = route.params;
 
     const selectAndNavigateBack = useCallback(
@@ -34,9 +36,10 @@ export const CategoryScreen = ({ route, navigation }: MyStackScreenProps<ScreenN
             <Appbar.Action
                 onPress={deselectAndNavigateBack}
                 icon={ICON_DESELECT}
+                iconColor={theme.colors.onPrimary}
             />
         ),
-        [deselectAndNavigateBack],
+        [deselectAndNavigateBack, theme],
     );
 
     useNavigationSettings({

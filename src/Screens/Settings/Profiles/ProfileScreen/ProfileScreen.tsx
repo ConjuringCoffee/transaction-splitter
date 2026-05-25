@@ -6,6 +6,7 @@ import { Appbar } from 'react-native-paper';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { useEditableBudgetsInProfiles } from '../../../../Hooks/useEditableBudgetsInProfiles';
 import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
+import { useTheme } from '../../../../Hooks/useTheme';
 
 type ScreenName = 'Profile';
 
@@ -23,6 +24,7 @@ export const ProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
     ] = useEditableBudgetsInProfiles();
 
     const [navigateBack] = useNavigateBack(navigation);
+    const [theme] = useTheme();
 
     const saveAndNavigate = useCallback(async (): Promise<void> => {
         save();
@@ -34,11 +36,12 @@ export const ProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
             <Appbar.Action
                 key='save'
                 icon={ICON_SAVE}
+                iconColor={theme.colors.onPrimary}
                 disabled={!isValid}
                 onPress={saveAndNavigate}
             />
         ),
-        [isValid, saveAndNavigate],
+        [isValid, saveAndNavigate, theme],
     );
 
     useNavigationSettings({

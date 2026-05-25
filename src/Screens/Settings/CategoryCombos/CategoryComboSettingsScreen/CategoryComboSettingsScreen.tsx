@@ -12,6 +12,7 @@ import { LoadingComponent } from '../../../../Component/LoadingComponent';
 import { selectAccessToken } from '../../../../redux/features/accessToken/accessTokenSlice';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
 import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
+import { useTheme } from '../../../../Hooks/useTheme';
 
 type ScreenName = 'Category Combinations Settings';
 
@@ -51,17 +52,20 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         = categoriesFirstProfileFetchStatus === LoadingStatus.SUCCESSFUL
         && categoriesSecondProfileFetchStatus === LoadingStatus.SUCCESSFUL;
 
+    const [theme] = useTheme();
+
     const navigationBarAddition = useMemo(
         () => (
             <Appbar.Action
                 icon={ICON_ADD}
+                iconColor={theme.colors.onPrimary}
                 disabled={!everythingLoaded}
                 onPress={() => {
                     navigation.navigate(ScreenNames.CREATE_CATEGORY_COMBO_SCREEN);
                 }}
             />
         ),
-        [everythingLoaded, navigation],
+        [everythingLoaded, navigation, theme],
     );
 
     useNavigationSettings({

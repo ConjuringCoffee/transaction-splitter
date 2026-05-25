@@ -32,11 +32,12 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
         () => (
             <Appbar.Action
                 icon={ICON_CONFIRM}
+                iconColor={theme.colors.onPrimary}
                 onPress={navigateToSplittingScreen}
                 disabled={initialFetchstatus !== InitialFetchStatus.READY}
             />
         ),
-        [navigateToSplittingScreen, initialFetchstatus],
+        [navigateToSplittingScreen, initialFetchstatus, theme],
     );
 
     useNavigationSettings({
