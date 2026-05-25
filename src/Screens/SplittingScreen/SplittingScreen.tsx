@@ -178,6 +178,21 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                         elevation={1}
                         style={cardStyle}
                     >
+                        <Text variant='titleMedium'>Payer</Text>
+                        <PayerBudgetSelection
+                            payerBudgetIndex={payerBudgetIndex}
+                            setPayerBudgetIndex={setPayerBudgetIndex}
+                        />
+                        <AccountSelection
+                            accounts={elegibleAccounts}
+                            selectedAccountId={payerAccountID}
+                            setSelectedAccountId={setPayerAccountID}
+                        />
+                    </Surface>
+                    <Surface
+                        elevation={1}
+                        style={cardStyle}
+                    >
                         <Text variant='titleMedium'>Details</Text>
                         <TextInput
                             label='Payee'
@@ -198,21 +213,6 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                             mode='outlined'
                             value={memo}
                             onChangeText={setMemo}
-                        />
-                    </Surface>
-                    <Surface
-                        elevation={1}
-                        style={cardStyle}
-                    >
-                        <Text variant='titleMedium'>Payer</Text>
-                        <PayerBudgetSelection
-                            payerBudgetIndex={payerBudgetIndex}
-                            setPayerBudgetIndex={setPayerBudgetIndex}
-                        />
-                        <AccountSelection
-                            accounts={elegibleAccounts}
-                            selectedAccountId={payerAccountID}
-                            setSelectedAccountId={setPayerAccountID}
                         />
                     </Surface>
                 </View>
