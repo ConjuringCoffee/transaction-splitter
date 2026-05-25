@@ -33,24 +33,38 @@ const DEFAULT_SPLIT_PERCENT_TO_PAYER = 50;
 const ICON_CATEGORY_COMBO = 'call-split';
 const ICON_DELETE = 'delete';
 
-export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) => {
+export const AmountView = <T extends keyof StackParameterList>({
+    amountText,
+    payerBudgetId,
+    debtorBudgetId,
+    setAmountText,
+    setMemo,
+    payerCategoryId,
+    setPayerCategoryId,
+    debtorCategoryId,
+    setDebtorCategoryId,
+    splitPercentToPayer,
+    setSplitPercentToPayer,
+    onRemovePress,
+    navigation,
+    quickModeEnabled,
+}: Props<T>) => {
     const [theme] = useTheme();
     const categoryCombos = useAppSelector(selectCategoryCombos);
 
     useEffect(() => {
-        if (props.payerCategoryId !== undefined && props.debtorCategoryId !== undefined) {
-            if (props.splitPercentToPayer === undefined) {
-                props.setSplitPercentToPayer(DEFAULT_SPLIT_PERCENT_TO_PAYER);
+        if (payerCategoryId !== undefined && debtorCategoryId !== undefined) {
+            if (splitPercentToPayer === undefined) {
+                setSplitPercentToPayer(DEFAULT_SPLIT_PERCENT_TO_PAYER);
             }
-        } else if (props.splitPercentToPayer !== undefined) {
-            props.setSplitPercentToPayer(undefined);
+        } else if (splitPercentToPayer !== undefined) {
+            setSplitPercentToPayer(undefined);
         }
-    }, [props.payerCategoryId, props.debtorCategoryId, props.splitPercentToPayer, props.setSplitPercentToPayer]);
-
+    }, [payerCategoryId, debtorCategoryId, splitPercentToPayer, setSplitPercentToPayer]);
 
     const navigateToCategoryComboScreen = useCallback(
         () => {
-            props.navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
+            navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
                 onSelect: (categoryComboId) => {
                     const categoryCombo = categoryCombos.find((c) => c.id === categoryComboId);
 
@@ -59,10 +73,10 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                     }
 
                     categoryCombo.categories.forEach((category) => {
-                        if (props.payerBudgetId === category.budgetId) {
-                            props.setPayerCategoryId(category.id);
-                        } else if (props.debtorBudgetId === category.budgetId) {
-                            props.setDebtorCategoryId(category.id);
+                        if (payerBudgetId === category.budgetId) {
+                            setPayerCategoryId(category.id);
+                        } else if (debtorBudgetId === category.budgetId) {
+                            setDebtorCategoryId(category.id);
                         } else {
                             throw new Error('Combination belongs to another budget');
                         }
@@ -70,14 +84,14 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                 },
             });
         },
-        [props.navigation, props.payerBudgetId, props.debtorBudgetId, categoryCombos, props.setPayerCategoryId, props.setDebtorCategoryId],
+        [navigation, payerBudgetId, debtorBudgetId, categoryCombos, setPayerCategoryId, setDebtorCategoryId],
     );
 
-    const payerCategories = useAppSelector((state) => selectCategories(state, props.payerBudgetId));
-    const debtorCategories = useAppSelector((state) => selectCategories(state, props.debtorBudgetId));
+    const payerCategories = useAppSelector((state) => selectCategories(state, payerBudgetId));
+    const debtorCategories = useAppSelector((state) => selectCategories(state, debtorBudgetId));
 
-    const payerCategory = props.payerCategoryId ? payerCategories[props.payerCategoryId] : undefined;
-    const debtorCategory = props.debtorCategoryId ? debtorCategories[props.debtorCategoryId] : undefined;
+    const payerCategory = payerCategoryId ? payerCategories[payerCategoryId] : undefined;
+    const debtorCategory = debtorCategoryId ? debtorCategories[debtorCategoryId] : undefined;
 
     const cardStyle = {
         padding: theme.cardPadding,
@@ -90,14 +104,14 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
                 <View style={{ flex: 1 }}>
                     <SubAmountInput
-                        value={props.amountText}
-                        setValue={props.setAmountText}
-                        navigation={props.navigation}
+                        value={amountText}
+                        setValue={setAmountText}
+                        navigation={navigation}
                     />
                 </View>
                 <IconButton
                     icon={ICON_DELETE}
-                    onPress={props.onRemovePress}
+                    onPress={onRemovePress}
                 />
             </View>
             <View style={{ flexDirection: 'row', gap: theme.spacing }}>
@@ -105,36 +119,36 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                     <CategoryInput
                         label='Payer Category'
                         text={payerCategory?.name ?? ''}
-                        budgetId={props.payerBudgetId}
-                        onSelect={props.setPayerCategoryId}
-                        navigation={props.navigation}
+                        budgetId={payerBudgetId}
+                        onSelect={setPayerCategoryId}
+                        navigation={navigation}
                     />
                     <CategoryInput
                         label='Debtor Category'
                         text={debtorCategory?.name ?? ''}
-                        budgetId={props.debtorBudgetId}
-                        onSelect={props.setDebtorCategoryId}
-                        navigation={props.navigation}
+                        budgetId={debtorBudgetId}
+                        onSelect={setDebtorCategoryId}
+                        navigation={navigation}
                     />
                 </View>
                 <View style={{ justifyContent: 'center' }}>
                     <IconButton icon={ICON_CATEGORY_COMBO} onPress={navigateToCategoryComboScreen} style={{ transform: [{ rotate: '270deg' }] }} />
                 </View>
             </View>
-            {!props.quickModeEnabled
+            {!quickModeEnabled
                 ? (
                     <View style={{ gap: theme.spacing }}>
                         <TextInput
                             label='Memo'
                             placeholder='Enter memo'
                             mode='outlined'
-                            onChangeText={props.setMemo}
+                            onChangeText={setMemo}
                         />
                         <SplitPercentInput
-                            payerCategoryChosen={props.payerCategoryId !== undefined}
-                            debtorCategoryChosen={props.debtorCategoryId !== undefined}
-                            splitPercentToPayer={props.splitPercentToPayer}
-                            setSplitPercentToPayer={props.setSplitPercentToPayer}
+                            payerCategoryChosen={payerCategoryId !== undefined}
+                            debtorCategoryChosen={debtorCategoryId !== undefined}
+                            splitPercentToPayer={splitPercentToPayer}
+                            setSplitPercentToPayer={setSplitPercentToPayer}
                         />
                     </View>
                 )
