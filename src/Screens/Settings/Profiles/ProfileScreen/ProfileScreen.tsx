@@ -1,25 +1,18 @@
 import React, { useCallback, useMemo } from 'react';
+import { CustomScrollView } from '../../../../Component/CustomScrollView';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { BudgetInProfileInputSection } from '../BudgetInProfileInputSection';
-import { CustomScrollView } from '../../../../Component/CustomScrollView';
 import { Appbar } from 'react-native-paper';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { useEditableBudgetsInProfiles } from '../../../../Hooks/useEditableBudgetsInProfiles';
 import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
 
-type ScreenName = 'CreateProfile';
+type ScreenName = 'Profile';
 
-const SCREEN_TITLE = 'Add Profile';
+const SCREEN_TITLE = 'Profile';
 const ICON_SAVE = 'check';
 
-export type EditableBudgetInProfile = {
-    budgetId?: string,
-    name?: string,
-    debtorAccountId?: string,
-    elegibleAccountIds: Array<string>
-}
-
-export const CreateProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
+export const ProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const [
         budgetInProfile1,
         setBudgetInProfile1,

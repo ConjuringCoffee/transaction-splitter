@@ -9,7 +9,7 @@ import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
-import { selectProfiles } from '../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../redux/features/profile/profileSlice';
 import { fetchBudgets, selectBudgetsFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { AccessTokenListItem } from './AccessTokenListItem';
 import { ProfileListItem } from './ProfileListItem';
@@ -29,7 +29,7 @@ export const InitialScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
 
     const accessToken = useAppSelector(selectAccessToken);
     const [connectionStatus] = useAutomaticConnectionTest();
-    const profiles = useAppSelector(selectProfiles);
+    const profile = useAppSelector(selectProfile);
     const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
 
     useEffect(
@@ -38,14 +38,14 @@ export const InitialScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
                 return;
             }
 
-            if (connectionStatus.status === LoadingStatus.SUCCESSFUL && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL && profiles.length >= 1) {
+            if (connectionStatus.status === LoadingStatus.SUCCESSFUL && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL && profile !== null) {
                 navigation.reset({
                     index: 0,
                     routes: [{ name: ScreenNames.SPLITTING_SCREEN }],
                 });
             }
         },
-        [accessToken, budgetsFetchStatus, connectionStatus, navigation, continueInitiated, profiles],
+        [accessToken, budgetsFetchStatus, connectionStatus, navigation, continueInitiated, profile],
     );
 
     const onContinuePress = useCallback(
@@ -59,8 +59,8 @@ export const InitialScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
     );
 
     const isReadyToContinue: boolean = useMemo(
-        () => [profiles.length && connectionStatus.status === LoadingStatus.SUCCESSFUL].every(Boolean),
-        [profiles, connectionStatus],
+        () => profile !== null && connectionStatus.status === LoadingStatus.SUCCESSFUL,
+        [profile, connectionStatus],
     );
 
     return (

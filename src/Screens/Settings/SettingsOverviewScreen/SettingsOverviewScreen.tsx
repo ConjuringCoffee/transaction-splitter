@@ -1,9 +1,7 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../../Navigation/ScreenNames';
 import { Appbar, List } from 'react-native-paper';
-import { useAppSelector } from '../../../Hooks/useAppSelector';
 import React, { useCallback, useMemo } from 'react';
-import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
 import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
 import { BackHandler, View } from 'react-native';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../../Hooks/useInitialFetchStatus';
@@ -18,7 +16,6 @@ const ICON_CONFIRM = 'check';
 
 export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const [initialFetchstatus] = useInitialFetchStatus();
-    const profiles = useAppSelector(selectProfiles);
     const [theme] = useTheme();
 
     const navigateToSplittingScreen = useCallback(
@@ -66,15 +63,8 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
     );
 
     const navigateToProfileSettingsScreen = useCallback(
-        () => {
-            if (profiles.length) {
-                // TODO: Support more than one profile
-                navigation.navigate(ScreenNames.EDIT_PROFILE_SCREEN, { profileId: profiles[0].id });
-            } else {
-                navigation.navigate(ScreenNames.CREATE_PROFILE_SCREEN);
-            }
-        },
-        [navigation, profiles],
+        () => navigation.navigate(ScreenNames.PROFILE_SCREEN),
+        [navigation],
     );
 
     const navigateToAccessTokenScreen = useCallback(

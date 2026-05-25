@@ -7,7 +7,7 @@ import * as Updates from 'expo-updates';
 import { UpdateCheckResult } from 'expo-updates';
 import { useAppDispatch } from '../../../Hooks/useAppDispatch';
 import { deleteAllCategoryCombos } from '../../../redux/features/categoryCombos/categoryCombosSlice';
-import { deleteAllProfiles } from '../../../redux/features/profiles/profilesSlice';
+import { deleteProfile } from '../../../redux/features/profile/profileSlice';
 import { CustomScrollView } from '../../../Component/CustomScrollView';
 
 type ScreenName = 'DevelopmentSettings';
@@ -115,7 +115,7 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
     const onDeleteButtonPress = useCallback(
         async () => {
             await dispatch(deleteAllCategoryCombos());
-            await dispatch(deleteAllProfiles());
+            await dispatch(deleteProfile());
         },
         [dispatch],
     );

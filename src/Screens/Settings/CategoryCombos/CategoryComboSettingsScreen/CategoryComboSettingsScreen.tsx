@@ -5,7 +5,7 @@ import { Appbar, List } from 'react-native-paper';
 import { CategoryCombo, selectCategoryCombos } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { View } from 'react-native';
-import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../../../redux/features/profile/profileSlice';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../../../Helper/LoadingStatus';
 import { LoadingComponent } from '../../../../Component/LoadingComponent';
@@ -29,25 +29,23 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         [categoryCombos],
     );
 
-    const profiles = useAppSelector(selectProfiles);
+    const profile = useAppSelector(selectProfile);
+    const budgets = profile!.budgets;
 
-    // TODO: Allow selection of profile
-    const profileUsed = profiles[0];
-
-    const categoriesFirstProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profileUsed.budgets[0].budgetId));
-    const categoriesSecondProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, profileUsed.budgets[1].budgetId));
+    const categoriesFirstProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, budgets[0].budgetId));
+    const categoriesSecondProfileFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, budgets[1].budgetId));
 
     useEffect(() => {
         if (categoriesFirstProfileFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: profileUsed.budgets[0].budgetId }));
+            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: budgets[0].budgetId }));
         }
-    }, [dispatch, profileUsed, categoriesFirstProfileFetchStatus, accessToken]);
+    }, [dispatch, budgets, categoriesFirstProfileFetchStatus, accessToken]);
 
     useEffect(() => {
         if (categoriesSecondProfileFetchStatus === LoadingStatus.IDLE) {
-            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: profileUsed.budgets[1].budgetId }));
+            dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: budgets[1].budgetId }));
         }
-    }, [dispatch, profileUsed, categoriesSecondProfileFetchStatus, accessToken]);
+    }, [dispatch, budgets, categoriesSecondProfileFetchStatus, accessToken]);
 
     const everythingLoaded
         = categoriesFirstProfileFetchStatus === LoadingStatus.SUCCESSFUL

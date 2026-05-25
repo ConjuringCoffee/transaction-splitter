@@ -3,7 +3,7 @@ import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { Appbar, Button, TextInput } from 'react-native-paper';
 import { useAppSelector } from '../../Hooks/useAppSelector';
-import { selectProfiles } from '../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../redux/features/profile/profileSlice';
 import { fetchCategoryGroups, selectAccountById, selectActiveAccounts, selectBudgetById, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { TotalAmountInput } from './TotalAmountInput';
@@ -23,14 +23,8 @@ const SCREEN_TITLE = 'Transaction Splitter';
 const ICON_SETTINGS = 'cog';
 
 export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
-    const profiles = useAppSelector(selectProfiles);
+    const profile = useAppSelector(selectProfile);
     const [convertTextToNumber] = useAmountConversion();
-
-    // TODO: Support switching profiles
-    const profileUsed = useMemo(
-        () => profiles[0],
-        [profiles],
-    );
 
     const [payerBudgetIndex, setPayerBudgetIndex] = useState<number>(0);
     const [payeeName, setPayeeName] = useState<string>('');
@@ -39,13 +33,13 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
     const [memo, setMemo] = useState<string>('[Generated]');
 
     const payerBudgetInProfile = useMemo(
-        () => profileUsed.budgets[payerBudgetIndex],
-        [profileUsed, payerBudgetIndex],
+        () => profile!.budgets[payerBudgetIndex],
+        [profile, payerBudgetIndex],
     );
 
     const debtorBudgetInProfile = useMemo(
-        () => profileUsed.budgets[1 - payerBudgetIndex],
-        [profileUsed, payerBudgetIndex],
+        () => profile!.budgets[1 - payerBudgetIndex],
+        [profile, payerBudgetIndex],
     );
 
     const payerBudget = useAppSelector((state) => selectBudgetById(state, payerBudgetInProfile.budgetId));
@@ -167,7 +161,6 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
                     onChangeText={setMemo}
                 />
                 <PayerBudgetRadioSelection
-                    profile={profileUsed}
                     payerBudgetIndex={payerBudgetIndex}
                     setPayerBudgetIndex={setPayerBudgetIndex}
                 />

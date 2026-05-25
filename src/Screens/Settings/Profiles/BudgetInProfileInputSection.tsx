@@ -5,7 +5,7 @@ import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Budget } from '../../../YnabApi/YnabApiWrapper';
 import { ChooseBudgetListItem } from './ChooseBudgetListItem';
-import { EditableBudgetInProfile } from './CreateProfilesScreen/CreateProfileScreen';
+import { EditableBudgetInProfile } from '../../../Hooks/useEditableBudgetsInProfiles';
 import { ProfileBudgetDetailInput } from './ProfileBudgetDetailInput';
 
 type Props = {
@@ -42,7 +42,7 @@ export const BudgetInProfileInputSection = ({ editableBudgetInProfile, setEditab
         setEditableBudgetInProfile((draft) => {
             draft.debtorAccountId = id;
 
-            const index = draft.elegibleAccountIds.findIndex((i) => i === id);
+            const index = draft.elegibleAccountIds.indexOf(id);
             if (index >= 0) {
                 draft.elegibleAccountIds.splice(index, 1);
             }
@@ -51,7 +51,7 @@ export const BudgetInProfileInputSection = ({ editableBudgetInProfile, setEditab
 
     const toggleAccountElegible = useCallback((id: string) => {
         setEditableBudgetInProfile((draft) => {
-            const index = draft.elegibleAccountIds.findIndex((i) => i === id);
+            const index = draft.elegibleAccountIds.indexOf(id);
 
             if (index >= 0) {
                 draft.elegibleAccountIds.splice(index, 1);
