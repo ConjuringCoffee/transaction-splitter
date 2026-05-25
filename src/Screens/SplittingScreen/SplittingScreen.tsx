@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
-import { Appbar, Button, Surface, TextInput } from 'react-native-paper';
+import { Appbar, Button, Surface, Text, TextInput } from 'react-native-paper';
 import { useTheme } from '../../Hooks/useTheme';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectProfile } from '../../redux/features/profile/profileSlice';
@@ -100,7 +100,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     );
 
     const [theme] = useTheme();
-    const cardStyle = useMemo(() => ({ padding: theme.cardPadding, gap: theme.spacing }), [theme]);
+    const cardStyle = useMemo(() => ({ padding: theme.cardPadding, gap: theme.cardPadding }), [theme]);
 
     const navigateToSettingsScreen = useCallback(() => {
         navigation.reset({
@@ -173,6 +173,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                         elevation={1}
                         style={cardStyle}
                     >
+                        <Text variant='titleMedium'>Transaction</Text>
                         <TotalAmountInput
                             value={totalAmountText}
                             setValue={setTotalAmountText}
@@ -202,6 +203,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                         elevation={1}
                         style={cardStyle}
                     >
+                        <Text variant='titleMedium'>Payer</Text>
                         <PayerBudgetSelection
                             payerBudgetIndex={payerBudgetIndex}
                             setPayerBudgetIndex={setPayerBudgetIndex}

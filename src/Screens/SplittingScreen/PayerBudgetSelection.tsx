@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { Keyboard, View } from 'react-native';
-import { SegmentedButtons, Text } from 'react-native-paper';
+import { Keyboard } from 'react-native';
+import { SegmentedButtons } from 'react-native-paper';
 import { BudgetInProfile, selectProfile } from '../../redux/features/profile/profileSlice';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectBudgets } from '../../redux/features/ynab/ynabSlice';
@@ -30,13 +30,10 @@ export const PayerBudgetSelection = ({ payerBudgetIndex, setPayerBudgetIndex }: 
     });
 
     return (
-        <View style={{ gap: 4 }}>
-            <Text variant='labelMedium'>Payer budget</Text>
-            <SegmentedButtons
-                value={payerBudgetIndex.toString()}
-                onValueChange={onValueChange}
-                buttons={buttons}
-            />
-        </View>
+        <SegmentedButtons
+            value={payerBudgetIndex.toString()}
+            onValueChange={onValueChange}
+            buttons={buttons}
+        />
     );
 };
