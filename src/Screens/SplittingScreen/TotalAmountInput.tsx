@@ -26,7 +26,7 @@ export const TotalAmountInput = ({ value, setValue }: Props) => {
             {/* Text sizes the container to its content so the € always sits flush against the number.
                 The invisible TextInput fills the same bounds to capture keyboard input. */}
             <View>
-                <Text style={{ fontSize: FONT_SIZE, color: isValid ? undefined : theme.colors.error }}>
+                <Text style={[{ fontSize: FONT_SIZE }, !isValid && { color: theme.colors.error }]}>
                     {`${value || '0'} €`}
                 </Text>
                 <TextInput
