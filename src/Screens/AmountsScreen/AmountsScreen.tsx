@@ -238,19 +238,18 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                             {amountEntries.map((amountEntry, index) => (
                                 <AmountView
                                     key={index}
-                                    index={index}
                                     amountText={amountEntry.amountText}
                                     payerBudgetId={basicData.payer.budgetId}
                                     debtorBudgetId={basicData.debtor.budgetId}
-                                    setAmountText={setAmountText}
-                                    setMemo={setMemo}
+                                    setAmountText={(text) => setAmountText(index, text)}
+                                    setMemo={(memo) => setMemo(index, memo)}
                                     payerCategoryId={amountEntry.payerCategoryId}
-                                    setPayerCategoryId={setPayerCategoryId}
+                                    setPayerCategoryId={(id) => setPayerCategoryId(index, id)}
                                     debtorCategoryId={amountEntry.debtorCategoryId}
-                                    setDebtorCategoryId={setDebtorCategoryId}
+                                    setDebtorCategoryId={(id) => setDebtorCategoryId(index, id)}
                                     splitPercentToPayer={amountEntry.splitPercentToPayer}
-                                    setSplitPercentToPayer={setSplitPercentToPayer}
-                                    onRemovePress={removeAmountEntry}
+                                    setSplitPercentToPayer={(pct) => setSplitPercentToPayer(index, pct)}
+                                    onRemovePress={() => removeAmountEntry(index)}
                                     navigation={navigation}
                                     quickModeEnabled={quickModeEnabled}
                                 />
