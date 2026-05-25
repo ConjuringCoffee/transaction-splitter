@@ -25,6 +25,7 @@ export const SplitPercentInput = ({ setSplitPercentToPayer, ...props }: Props) =
             label='Split % to payer'
             keyboardType="numeric"
             value={value}
+            mode='outlined'
             onChangeText={convertAndSetSplitPercentToPayer}
         />
     );

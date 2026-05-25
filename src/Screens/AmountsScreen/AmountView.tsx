@@ -165,6 +165,7 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                         <TextInput
                             label='Memo'
                             placeholder='Enter memo'
+                            mode='outlined'
                             onChangeText={setMemo}
                         />
                     </View>
