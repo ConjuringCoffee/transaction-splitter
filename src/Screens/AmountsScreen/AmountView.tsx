@@ -40,7 +40,7 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
 
     const setSplitPercentToPayer = useCallback(
         (splitPercent?: number) => props.setSplitPercentToPayer(props.index, splitPercent),
-        [props],
+        [props.index, props.setSplitPercentToPayer],
     );
 
     const setAmountText = useCallback(
@@ -69,15 +69,14 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
     );
 
     useEffect(() => {
-        // TODO: Clean this up
-        if (props.payerCategoryId === undefined || props.debtorCategoryId === undefined) {
-            if (props.splitPercentToPayer !== undefined) {
-                setSplitPercentToPayer();
+        if (props.payerCategoryId !== undefined && props.debtorCategoryId !== undefined) {
+            if (props.splitPercentToPayer === undefined) {
+                setSplitPercentToPayer(DEFAULT_SPLIT_PERCENT_TO_PAYER);
             }
-        } else if (props.payerCategoryId !== undefined && props.debtorCategoryId !== undefined && props.splitPercentToPayer === undefined) {
-            setSplitPercentToPayer(DEFAULT_SPLIT_PERCENT_TO_PAYER);
+        } else if (props.splitPercentToPayer !== undefined) {
+            setSplitPercentToPayer(undefined);
         }
-    }, [props, setSplitPercentToPayer]);
+    }, [props.payerCategoryId, props.debtorCategoryId, props.splitPercentToPayer, setSplitPercentToPayer]);
 
 
     const navigateToCategoryComboScreen = useCallback(
@@ -156,17 +155,17 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
             {!props.quickModeEnabled
                 ? (
                     <View style={{ gap: theme.spacing }}>
-                        <SplitPercentInput
-                            payerCategoryChosen={props.payerCategoryId !== undefined}
-                            debtorCategoryChosen={props.debtorCategoryId !== undefined}
-                            splitPercentToPayer={props.splitPercentToPayer}
-                            setSplitPercentToPayer={setSplitPercentToPayer}
-                        />
                         <TextInput
                             label='Memo'
                             placeholder='Enter memo'
                             mode='outlined'
                             onChangeText={setMemo}
+                        />
+                        <SplitPercentInput
+                            payerCategoryChosen={props.payerCategoryId !== undefined}
+                            debtorCategoryChosen={props.debtorCategoryId !== undefined}
+                            splitPercentToPayer={props.splitPercentToPayer}
+                            setSplitPercentToPayer={setSplitPercentToPayer}
                         />
                     </View>
                 )
