@@ -10,7 +10,7 @@ import { CustomScrollView } from '../../Component/CustomScrollView';
 import { TotalAmountInput } from './TotalAmountInput';
 import { DatePickerInput } from 'react-native-paper-dates';
 import { AccountRadioSelection } from './AccountRadioSelection';
-import { PayerBudgetRadioSelection } from './PayerBudgetRadioSelection';
+import { PayerBudgetSelection } from './PayerBudgetSelection';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
@@ -178,7 +178,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                     value={memo}
                     onChangeText={setMemo}
                 />
-                <PayerBudgetRadioSelection
+                <PayerBudgetSelection
                     payerBudgetIndex={payerBudgetIndex}
                     setPayerBudgetIndex={setPayerBudgetIndex}
                 />
