@@ -58,9 +58,9 @@ const readProfile = async (): Promise<Profile | null> => {
         const legacy = JSON.parse(legacyJson) as LegacyProfile[];
         if (legacy.length > 0) {
             const { budgets } = legacy[0];
-            const migrated: Profile = { budgets };
-            await SecureStore.setItemAsync(STORAGE_KEY, JSON.stringify(migrated), SECURE_STORE_OPTIONS);
-            return migrated;
+            const migratedProfile: Profile = { budgets };
+            await SecureStore.setItemAsync(STORAGE_KEY, JSON.stringify(migratedProfile), SECURE_STORE_OPTIONS);
+            return migratedProfile;
         }
     }
 
