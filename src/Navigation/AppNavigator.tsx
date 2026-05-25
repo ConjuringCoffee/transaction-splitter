@@ -47,7 +47,7 @@ const StackNavigator = ({ initialRouteName }: Props) => {
             };
 
             return (
-                <Appbar.Header style={{ backgroundColor: theme.colors.primary }}>
+                <Appbar.Header style={{ backgroundColor: theme.colors.primary, height: 52 }}>
                     {
                         stackHeaderProps.back
                             ? (
