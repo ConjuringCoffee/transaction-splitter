@@ -1,17 +1,17 @@
 import { List, RadioButton } from 'react-native-paper';
-import { BudgetInProfile, Profile } from '../../redux/features/profiles/profilesSlice';
+import { BudgetInProfile, selectProfile } from '../../redux/features/profiles/profilesSlice';
 import React, { useCallback } from 'react';
 import { Keyboard } from 'react-native';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectBudgets } from '../../redux/features/ynab/ynabSlice';
 
 type Props = {
-    profile: Profile,
     payerBudgetIndex: number,
     setPayerBudgetIndex: (index: number) => void,
 }
 
-export const PayerBudgetRadioSelection = ({ profile, payerBudgetIndex, setPayerBudgetIndex }: Props) => {
+export const PayerBudgetRadioSelection = ({ payerBudgetIndex, setPayerBudgetIndex }: Props) => {
+    const profile = useAppSelector(selectProfile);
     const budgets = useAppSelector(selectBudgets);
 
     const onValueChange = useCallback((newValue: string) => {
@@ -41,7 +41,7 @@ export const PayerBudgetRadioSelection = ({ profile, payerBudgetIndex, setPayerB
                 onValueChange={onValueChange}
                 value={payerBudgetIndex.toString()}
             >
-                {profile.budgets.map(renderItem)}
+                {profile!.budgets.map(renderItem)}
             </RadioButton.Group>
         </List.Section>
     );

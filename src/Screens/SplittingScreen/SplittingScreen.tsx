@@ -161,7 +161,6 @@ export const SplittingScreen = ({ navigation }: MyStackScreenProps<ScreenName>) 
                     onChangeText={setMemo}
                 />
                 <PayerBudgetRadioSelection
-                    profile={profile!}
                     payerBudgetIndex={payerBudgetIndex}
                     setPayerBudgetIndex={setPayerBudgetIndex}
                 />
