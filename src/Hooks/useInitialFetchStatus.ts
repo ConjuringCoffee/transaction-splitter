@@ -3,7 +3,7 @@ import { LoadingStatus } from '../Helper/LoadingStatus';
 import { selectAccessTokenFetchStatus, fetchAccessToken, selectAccessToken } from '../redux/features/accessToken/accessTokenSlice';
 import { selectCategoryCombosFetchStatus, fetchCategoryCombos } from '../redux/features/categoryCombos/categoryCombosSlice';
 import { selectDisplaySettingsFetchStatus, fetchDisplaySettings } from '../redux/features/displaySettings/displaySettingsSlice';
-import { selectProfilesFetchStatus, fetchProfiles, selectProfiles } from '../redux/features/profiles/profilesSlice';
+import { selectProfileFetchStatus, fetchProfile, selectProfile } from '../redux/features/profiles/profilesSlice';
 import { selectBudgetsFetchStatus, fetchBudgets } from '../redux/features/ynab/ynabSlice';
 import { useAppDispatch } from './useAppDispatch';
 import { useAppSelector } from './useAppSelector';
@@ -19,13 +19,13 @@ export const useInitialFetchStatus = (): [InitialFetchStatus] => {
     const dispatch = useAppDispatch();
 
     const accessToken = useAppSelector(selectAccessToken);
-    const profiles = useAppSelector(selectProfiles);
+    const profile = useAppSelector(selectProfile);
 
     const [initialFetchStatus, setInitialFetchStatus] = useState<InitialFetchStatus>(InitialFetchStatus.UNKNOWN);
     const [connectionStatus, testConnection] = useConnectionTest();
     const accessTokenFetchStatus = useAppSelector(selectAccessTokenFetchStatus);
     const displaySettingsFetchStatus = useAppSelector(selectDisplaySettingsFetchStatus);
-    const profilesFetchStatus = useAppSelector(selectProfilesFetchStatus);
+    const profileFetchStatus = useAppSelector(selectProfileFetchStatus);
     const budgetsFetchStatus = useAppSelector(selectBudgetsFetchStatus);
     const categoryCombosFetchStatus = useAppSelector(selectCategoryCombosFetchStatus);
 
@@ -51,10 +51,10 @@ export const useInitialFetchStatus = (): [InitialFetchStatus] => {
     );
 
     useEffect(() => {
-        if (profilesFetchStatus.status === LoadingStatus.IDLE) {
-            dispatch(fetchProfiles());
+        if (profileFetchStatus.status === LoadingStatus.IDLE) {
+            dispatch(fetchProfile());
         }
-    }, [profilesFetchStatus, dispatch]);
+    }, [profileFetchStatus, dispatch]);
 
     useEffect(() => {
         if (budgetsFetchStatus.status === LoadingStatus.IDLE && connectionStatus.status === LoadingStatus.SUCCESSFUL) {
@@ -72,23 +72,23 @@ export const useInitialFetchStatus = (): [InitialFetchStatus] => {
         () => {
             return accessTokenFetchStatus.status === LoadingStatus.SUCCESSFUL
                 && displaySettingsFetchStatus.status === LoadingStatus.SUCCESSFUL
-                && profilesFetchStatus.status === LoadingStatus.SUCCESSFUL
+                && profileFetchStatus.status === LoadingStatus.SUCCESSFUL
                 && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
         },
-        [accessTokenFetchStatus, categoryCombosFetchStatus, displaySettingsFetchStatus, profilesFetchStatus],
+        [accessTokenFetchStatus, categoryCombosFetchStatus, displaySettingsFetchStatus, profileFetchStatus],
     );
 
     useEffect(
         () => {
             if (!localLoaded || connectionStatus.status === LoadingStatus.IDLE || connectionStatus.status === LoadingStatus.LOADING) {
                 return;
-            } else if (connectionStatus.status === LoadingStatus.ERROR || profiles.length === 0) {
+            } else if (connectionStatus.status === LoadingStatus.ERROR || profile === null) {
                 setInitialFetchStatus(InitialFetchStatus.SETUP_REQUIRED);
             } else if (budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL) {
                 setInitialFetchStatus(InitialFetchStatus.READY);
             }
         },
-        [localLoaded, connectionStatus, profiles, budgetsFetchStatus, initialFetchStatus],
+        [localLoaded, connectionStatus, profile, budgetsFetchStatus, initialFetchStatus],
     );
 
     return [

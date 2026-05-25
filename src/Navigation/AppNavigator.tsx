@@ -15,8 +15,7 @@ import { ScreenNames } from './ScreenNames';
 import { CategoryComboSettingsScreen } from '../Screens/Settings/CategoryCombos/CategoryComboSettingsScreen/CategoryComboSettingsScreen';
 import { CreateCategoryComboScreen } from '../Screens/Settings/CategoryCombos/CreateCategoryComboScreen/CreateCategoryComboScreen';
 import { DisplaySettingsScreen } from '../Screens/Settings/DisplaySettingsScreen/DisplaySettingsScreen';
-import { EditProfileScreen } from '../Screens/Settings/Profiles/EditProfileScreen/EditProfileScreen';
-import { CreateProfileScreen } from '../Screens/Settings/Profiles/CreateProfilesScreen/CreateProfileScreen';
+import { ProfileScreen } from '../Screens/Settings/Profiles/ProfileScreen/ProfileScreen';
 import { InitialScreen } from '../Screens/InitialScreen/InitialScreen';
 import { DevelopmentSettingsScreen } from '../Screens/Settings/DevelopmentSettingsScreen/DevelopmentSettingsScreen';
 import { Appbar } from 'react-native-paper';
@@ -127,12 +126,8 @@ const StackNavigator = ({ initialRouteName }: Props) => {
                 component={DisplaySettingsScreen}
             />
             <Stack.Screen
-                name={ScreenNames.EDIT_PROFILE_SCREEN}
-                component={EditProfileScreen}
-            />
-            <Stack.Screen
-                name={ScreenNames.CREATE_PROFILE_SCREEN}
-                component={CreateProfileScreen}
+                name={ScreenNames.PROFILE_SCREEN}
+                component={ProfileScreen}
             />
             <Stack.Screen
                 name={ScreenNames.INITIAL_SCREEN}

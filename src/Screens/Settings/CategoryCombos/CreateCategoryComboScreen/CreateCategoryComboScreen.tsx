@@ -4,7 +4,7 @@ import { CategoryComboInputView } from '../CategoryComboInputView';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { addCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
-import { selectProfiles } from '../../../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../../../redux/features/profiles/profilesSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
 import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
@@ -18,10 +18,7 @@ const SCREEN_TITLE = 'Create';
 export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const dispatch = useAppDispatch();
     const [navigateBack] = useNavigateBack(navigation);
-    const profiles = useAppSelector(selectProfiles);
-
-    // TODO: Allow selection of profile
-    const profileUsed = profiles[0];
+    const profile = useAppSelector(selectProfile);
 
     const [name, setName] = useState<string>('');
     const [categoryIdFirstProfile, setCategoryIdFirstProfile] = useState<string | undefined>(undefined);
@@ -38,17 +35,17 @@ export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<Scr
                 name: name,
                 categories: [
                     {
-                        budgetId: profileUsed.budgets[0].budgetId,
+                        budgetId: profile!.budgets[0].budgetId,
                         id: categoryIdFirstProfile,
                     },
                     {
-                        budgetId: profileUsed.budgets[1].budgetId,
+                        budgetId: profile!.budgets[1].budgetId,
                         id: categoryIdSecondProfile,
                     }],
             }));
             navigateBack();
         },
-        [categoryIdFirstProfile, categoryIdSecondProfile, dispatch, name, navigateBack, profileUsed.budgets],
+        [categoryIdFirstProfile, categoryIdSecondProfile, dispatch, name, navigateBack, profile!.budgets],
     );
 
     const navigationBarAddition = useMemo(

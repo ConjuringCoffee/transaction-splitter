@@ -55,10 +55,7 @@ type StackParameterList = {
     }
     [ScreenNames.CREATE_CATEGORY_COMBO_SCREEN]: undefined,
     [ScreenNames.DISPLAY_SETTINGS_SCREEN]: undefined;
-    [ScreenNames.CREATE_PROFILE_SCREEN]: undefined;
-    [ScreenNames.EDIT_PROFILE_SCREEN]: {
-        profileId: string,
-    };
+    [ScreenNames.PROFILE_SCREEN]: undefined;
     [ScreenNames.INITIAL_SCREEN]: undefined;
     [ScreenNames.DEVELOPMENT_SETTINGS_SCREEN]: undefined;
 }

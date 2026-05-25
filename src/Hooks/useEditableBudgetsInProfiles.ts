@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { Updater, useImmer } from 'use-immer';
-import { addProfile, BudgetInProfile, Profile, ProfileToCreate, selectProfile, updateProfile } from '../redux/features/profiles/profilesSlice';
+import { BudgetInProfile, Profile, saveProfile, selectProfile } from '../redux/features/profiles/profilesSlice';
 import { useAppDispatch } from './useAppDispatch';
 import { useAppSelector } from './useAppSelector';
 
@@ -20,12 +20,11 @@ export type Returning = [
     () => Promise<void>,
 ];
 
-export const useEditableBudgetsInProfiles = (profileId?: string): Returning => {
-    const savedProfile = useAppSelector((state) => selectProfile(state, profileId));
+export const useEditableBudgetsInProfiles = (): Returning => {
+    const savedProfile = useAppSelector(selectProfile);
 
     const emptyBudgetInProfile: EditableBudgetInProfile = { elegibleAccountIds: [] };
 
-    // TODO: Convert the two separate states into a single tuple state
     const [budgetInProfile1, setBudgetInProfile1] = useImmer<EditableBudgetInProfile>(savedProfile ? savedProfile.budgets[0] : emptyBudgetInProfile);
     const [budgetInProfile2, setBudgetInProfile2] = useImmer<EditableBudgetInProfile>(savedProfile ? savedProfile.budgets[1] : emptyBudgetInProfile);
 
@@ -58,25 +57,14 @@ export const useEditableBudgetsInProfiles = (profileId?: string): Returning => {
     }, []);
 
     const save = useCallback(async (): Promise<void> => {
-        if (savedProfile) {
-            const profileToUpdate: Profile = {
-                id: savedProfile.id,
-                budgets: [
-                    finalizeEditableBudgetInProfile(budgetInProfile1),
-                    finalizeEditableBudgetInProfile(budgetInProfile2),
-                ],
-            };
-            dispatch(updateProfile({ profile: profileToUpdate }));
-        } else {
-            const profileToAdd: ProfileToCreate = {
-                budgets: [
-                    finalizeEditableBudgetInProfile(budgetInProfile1),
-                    finalizeEditableBudgetInProfile(budgetInProfile2),
-                ],
-            };
-            dispatch(addProfile(profileToAdd));
-        }
-    }, [finalizeEditableBudgetInProfile, budgetInProfile1, budgetInProfile2, savedProfile, dispatch]);
+        const profile: Profile = {
+            budgets: [
+                finalizeEditableBudgetInProfile(budgetInProfile1),
+                finalizeEditableBudgetInProfile(budgetInProfile2),
+            ],
+        };
+        dispatch(saveProfile(profile));
+    }, [finalizeEditableBudgetInProfile, budgetInProfile1, budgetInProfile2, dispatch]);
 
     return [
         budgetInProfile1,

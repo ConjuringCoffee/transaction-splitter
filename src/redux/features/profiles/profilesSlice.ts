@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, nanoid, SerializedError } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import * as SecureStore from 'expo-secure-store';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { isOneOf } from '../../isOneOf';
@@ -11,13 +11,9 @@ export type BudgetInProfile = {
     elegibleAccountIds: Array<string>
 }
 
-
 export type Profile = {
-    id: string,
     budgets: [BudgetInProfile, BudgetInProfile]
 }
-
-export type ProfileToCreate = Omit<Profile, 'id'>;
 
 type ProfilesState = {
     fetchStatus: {
@@ -28,7 +24,7 @@ type ProfilesState = {
         status: LoadingStatus
         error: SerializedError | null
     },
-    objects: Profile[]
+    profile: Profile | null
 }
 
 const initialState: ProfilesState = {
@@ -40,67 +36,57 @@ const initialState: ProfilesState = {
         status: LoadingStatus.IDLE,
         error: null,
     },
-    objects: [],
+    profile: null,
 };
 
-const STORAGE_KEY = 'profiles-v2';
+const STORAGE_KEY = 'profile-v3';
+const LEGACY_STORAGE_KEY = 'profiles-v2';
 
-const readProfiles = async (): Promise<Profile[]> => {
-    const jsonValue = await SecureStore.getItemAsync(STORAGE_KEY);
+const SECURE_STORE_OPTIONS: SecureStore.SecureStoreOptions = { keychainAccessible: SecureStore.WHEN_UNLOCKED };
 
-    if (!jsonValue) {
-        return [];
+type LegacyProfile = { id: string, budgets: [BudgetInProfile, BudgetInProfile] };
+
+const readProfile = async (): Promise<Profile | null> => {
+    const json = await SecureStore.getItemAsync(STORAGE_KEY);
+    if (json) {
+        return JSON.parse(json) as Profile;
     }
 
-    return JSON.parse(jsonValue);
+    // migrate from profiles-v2 (array format)
+    const legacyJson = await SecureStore.getItemAsync(LEGACY_STORAGE_KEY);
+    if (legacyJson) {
+        const legacy = JSON.parse(legacyJson) as LegacyProfile[];
+        if (legacy.length > 0) {
+            const { budgets } = legacy[0];
+            const migrated: Profile = { budgets };
+            await SecureStore.setItemAsync(STORAGE_KEY, JSON.stringify(migrated), SECURE_STORE_OPTIONS);
+            return migrated;
+        }
+    }
+
+    return null;
 };
 
-const saveProfiles = async (profiles: Profile[]): Promise<void> => {
-    const jsonValue = JSON.stringify(profiles);
-    await SecureStore.setItemAsync(STORAGE_KEY, jsonValue, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
+const writeProfile = async (profile: Profile | null): Promise<void> => {
+    const json = JSON.stringify(profile);
+    await SecureStore.setItemAsync(STORAGE_KEY, json, SECURE_STORE_OPTIONS);
 };
 
-export const fetchProfiles = createAsyncThunk('profiles/fetchProfiles', async () => {
-    return readProfiles();
+export const fetchProfile = createAsyncThunk('profiles/fetchProfile', async () => {
+    return readProfile();
 });
 
-export const addProfile = createAsyncThunk<
-    Profile[], ProfileToCreate, { state: RootState }
->('profiles/addProfile', async (profile, thunkAPI) => {
-    const newProfile: Profile = { ...profile, id: nanoid() };
-    const newProfiles = [...thunkAPI.getState().profiles.objects, newProfile];
+export const saveProfile = createAsyncThunk<Profile, Profile>(
+    'profiles/saveProfile',
+    async (profile) => {
+        await writeProfile(profile);
+        return profile;
+    },
+);
 
-    await saveProfiles(newProfiles);
-
-    return newProfiles;
-});
-
-export const updateProfile = createAsyncThunk<
-    Profile[], { profile: Profile }, { state: RootState }
->('profiles/updateProfile', async ({ profile }, { getState }) => {
-    const newProfiles = [...getState().profiles.objects];
-    const index = newProfiles.findIndex((c) => c.id = profile.id);
-
-    newProfiles[index] = profile;
-
-    await saveProfiles(newProfiles);
-
-    return newProfiles;
-});
-
-export const deleteProfile = createAsyncThunk<
-    Profile[], string, { state: RootState }
->('profiles/deleteProfile', async (profileId, thunkAPI) => {
-    const newProfiles = thunkAPI.getState().profiles.objects.filter((profile) => profile.id !== profileId);
-    await saveProfiles(newProfiles);
-
-    return newProfiles;
-});
-
-export const deleteAllProfiles = createAsyncThunk('profiles/deleteAllProfiles', async () => {
-    const newProfiles: Profile[] = [];
-    await saveProfiles(newProfiles);
-    return newProfiles;
+export const deleteProfile = createAsyncThunk('profiles/deleteProfile', async () => {
+    await writeProfile(null);
+    return null;
 });
 
 export const profilesSlice = createSlice({
@@ -109,39 +95,39 @@ export const profilesSlice = createSlice({
     reducers: {},
     extraReducers(builder) {
         builder
-            .addCase(fetchProfiles.pending, (state) => {
+            .addCase(fetchProfile.pending, (state) => {
                 state.fetchStatus = {
                     status: LoadingStatus.LOADING,
                     error: null,
                 };
             })
-            .addCase(fetchProfiles.fulfilled, (state, action) => {
+            .addCase(fetchProfile.fulfilled, (state, action) => {
                 state.fetchStatus = {
                     status: LoadingStatus.SUCCESSFUL,
                     error: null,
                 };
-                state.objects = action.payload;
+                state.profile = action.payload;
             })
-            .addCase(fetchProfiles.rejected, (state, action) => {
+            .addCase(fetchProfile.rejected, (state, action) => {
                 state.fetchStatus = {
                     status: LoadingStatus.ERROR,
                     error: action.error,
                 };
             })
-            .addMatcher(isOneOf([updateProfile.pending, addProfile.pending, deleteProfile.pending, deleteAllProfiles.pending]), (state) => {
+            .addMatcher(isOneOf([saveProfile.pending, deleteProfile.pending]), (state) => {
                 state.saveStatus = {
                     status: LoadingStatus.LOADING,
                     error: null,
                 };
             })
-            .addMatcher(isOneOf([updateProfile.fulfilled, addProfile.fulfilled, deleteProfile.fulfilled, deleteAllProfiles.fulfilled]), (state, action) => {
+            .addMatcher(isOneOf([saveProfile.fulfilled, deleteProfile.fulfilled]), (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.SUCCESSFUL,
                     error: null,
                 };
-                state.objects = action.payload;
+                state.profile = action.payload;
             })
-            .addMatcher(isOneOf([updateProfile.rejected, addProfile.rejected, deleteProfile.rejected, deleteAllProfiles.rejected]), (state, action) => {
+            .addMatcher(isOneOf([saveProfile.rejected, deleteProfile.rejected]), (state, action) => {
                 state.saveStatus = {
                     status: LoadingStatus.ERROR,
                     error: action.error,
@@ -150,7 +136,6 @@ export const profilesSlice = createSlice({
     },
 });
 
-export const selectProfiles = (state: RootState) => state.profiles.objects;
-export const selectProfile = (state: RootState, id: string | undefined) => state.profiles.objects.find((profile) => profile.id === id);
-export const selectProfilesFetchStatus = (state: RootState) => state.profiles.fetchStatus;
-export const selectProfilesSaveStatus = (state: RootState) => state.profiles.saveStatus;
+export const selectProfile = (state: RootState) => state.profiles.profile;
+export const selectProfileFetchStatus = (state: RootState) => state.profiles.fetchStatus;
+export const selectProfileSaveStatus = (state: RootState) => state.profiles.saveStatus;

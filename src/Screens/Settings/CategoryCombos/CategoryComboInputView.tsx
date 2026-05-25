@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { List, TextInput } from 'react-native-paper';
 import { MyStackNavigationProp, StackParameterList } from '../../../Navigation/ScreenParameters';
-import { selectProfiles } from '../../../redux/features/profiles/profilesSlice';
+import { selectProfile } from '../../../redux/features/profiles/profilesSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { ChooseCategoryListItem } from './ChooseCategoryListItem';
 
@@ -17,8 +17,7 @@ type Props<T extends keyof StackParameterList> = {
 }
 
 export const CategoryComboInputView = <T extends keyof StackParameterList>(props: Props<T>) => {
-    const profiles = useAppSelector(selectProfiles);
-    const profileToUse = profiles[0];
+    const profile = useAppSelector(selectProfile);
 
     return (
         <View>
@@ -33,15 +32,15 @@ export const CategoryComboInputView = <T extends keyof StackParameterList>(props
                     Categories
                 </List.Subheader>
                 <ChooseCategoryListItem
-                    budgetId={profileToUse.budgets[0].budgetId}
-                    budgetDisplayName={profileToUse.budgets[0].name}
+                    budgetId={profile!.budgets[0].budgetId}
+                    budgetDisplayName={profile!.budgets[0].name}
                     navigation={props.navigation}
                     selectedCategoryId={props.categoryIdFirstProfile}
                     onCategorySelect={props.setCategoryIdFirstProfile}
                 />
                 <ChooseCategoryListItem
-                    budgetId={profileToUse.budgets[1].budgetId}
-                    budgetDisplayName={profileToUse.budgets[1].name}
+                    budgetId={profile!.budgets[1].budgetId}
+                    budgetDisplayName={profile!.budgets[1].name}
                     navigation={props.navigation}
                     selectedCategoryId={props.categoryIdSecondProfile}
                     onCategorySelect={props.setCategoryIdSecondProfile}

@@ -5,7 +5,7 @@ import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Budget } from '../../../YnabApi/YnabApiWrapper';
 import { ChooseBudgetListItem } from './ChooseBudgetListItem';
-import { EditableBudgetInProfile } from './CreateProfilesScreen/CreateProfileScreen';
+import { EditableBudgetInProfile } from '../../../Hooks/useEditableBudgetsInProfiles';
 import { ProfileBudgetDetailInput } from './ProfileBudgetDetailInput';
 
 type Props = {

@@ -12,8 +12,7 @@ export class ScreenNames {
     public static readonly SELECT_CATEGORY_COMBO_SCREEN = 'Category Combinations';
     public static readonly SETTINGS_OVERVIEW_SCREEN = 'Settings Overview';
     public static readonly DISPLAY_SETTINGS_SCREEN = 'DisplaySettings';
-    public static readonly CREATE_PROFILE_SCREEN = 'CreateProfile';
-    public static readonly EDIT_PROFILE_SCREEN = 'EditProfile';
+    public static readonly PROFILE_SCREEN = 'Profile';
     public static readonly INITIAL_SCREEN = 'InitialScreen';
     public static readonly DEVELOPMENT_SETTINGS_SCREEN = 'DevelopmentSettings';
 }
