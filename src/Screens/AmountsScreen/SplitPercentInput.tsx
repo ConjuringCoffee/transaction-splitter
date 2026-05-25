@@ -28,7 +28,7 @@ export const SplitPercentInput = ({ setSplitPercentToPayer, ...props }: Props) =
         (text: string) => {
             setTextValue(text);
             const num = Number(text);
-            if (!isNaN(num) && num >= 0 && num <= 100) {
+            if (!Number.isNaN(num) && num >= 0 && num <= 100) {
                 setSplitPercentToPayer(num);
             }
         },
