@@ -9,7 +9,7 @@ import { fetchCategoryGroups, selectAccountById, selectActiveAccounts, selectBud
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { TotalAmountInput } from './TotalAmountInput';
 import { DatePickerInput } from 'react-native-paper-dates';
-import { AccountRadioSelection } from './AccountRadioSelection';
+import { AccountSelection } from './AccountSelection';
 import { PayerBudgetSelection } from './PayerBudgetSelection';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
@@ -182,7 +182,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                     payerBudgetIndex={payerBudgetIndex}
                     setPayerBudgetIndex={setPayerBudgetIndex}
                 />
-                <AccountRadioSelection
+                <AccountSelection
                     accounts={elegibleAccounts}
                     selectedAccountId={payerAccountID}
                     setSelectedAccountId={setPayerAccountID}
