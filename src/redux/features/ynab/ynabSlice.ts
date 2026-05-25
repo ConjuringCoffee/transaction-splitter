@@ -154,7 +154,7 @@ export const selectAccountById = (state: RootState, budgetId: string, accountId:
 // Memoized because filter() always returns a new array reference, which would cause unnecessary rerenders.
 export const selectActiveAccounts = createSelector(
     (state: RootState, budgetId: string) => selectBudgetById(state, budgetId),
-    (budget) => budget.accounts.filter((account) => account.onBudget && !account.closed && !account.deleted)
+    (budget) => budget.accounts.filter((account) => account.onBudget && !account.closed && !account.deleted),
 );
 
 export const selectCategoriesFetchStatus = (state: RootState, budgetId: string): LoadingStatus =>
