@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { LoadingStatus } from '../Helper/LoadingStatus';
 import { selectAccessTokenFetchStatus, fetchAccessToken, selectAccessToken } from '../redux/features/accessToken/accessTokenSlice';
 import { selectCategoryCombosFetchStatus, fetchCategoryCombos } from '../redux/features/categoryCombos/categoryCombosSlice';
@@ -21,7 +21,6 @@ export const useInitialFetchStatus = (): [InitialFetchStatus] => {
     const accessToken = useAppSelector(selectAccessToken);
     const profile = useAppSelector(selectProfile);
 
-    const [initialFetchStatus, setInitialFetchStatus] = useState<InitialFetchStatus>(InitialFetchStatus.UNKNOWN);
     const [connectionStatus, testConnection] = useConnectionTest();
     const accessTokenFetchStatus = useAppSelector(selectAccessTokenFetchStatus);
     const displaySettingsFetchStatus = useAppSelector(selectDisplaySettingsFetchStatus);
@@ -78,17 +77,17 @@ export const useInitialFetchStatus = (): [InitialFetchStatus] => {
         [accessTokenFetchStatus, categoryCombosFetchStatus, displaySettingsFetchStatus, profileFetchStatus],
     );
 
-    useEffect(
+    const initialFetchStatus = useMemo(
         () => {
-            if (!localLoaded || connectionStatus.status === LoadingStatus.IDLE || connectionStatus.status === LoadingStatus.LOADING) {
-                return;
-            } else if (connectionStatus.status === LoadingStatus.ERROR || profile === null) {
-                setInitialFetchStatus(InitialFetchStatus.SETUP_REQUIRED);
-            } else if (budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL) {
-                setInitialFetchStatus(InitialFetchStatus.READY);
+            if (localLoaded && (connectionStatus.status === LoadingStatus.ERROR || profile === null)) {
+                return InitialFetchStatus.SETUP_REQUIRED;
+            } else if (localLoaded && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL) {
+                return InitialFetchStatus.READY;
+            } else {
+                return InitialFetchStatus.UNKNOWN;
             }
         },
-        [localLoaded, connectionStatus, profile, budgetsFetchStatus, initialFetchStatus],
+        [localLoaded, connectionStatus, profile, budgetsFetchStatus],
     );
 
     return [
