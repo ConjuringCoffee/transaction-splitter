@@ -1,86 +1,70 @@
 import React, { useCallback, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { SplitPercentInput } from './SplitPercentInput';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { SubAmountInput } from './SubAmountInput';
-import { Divider, IconButton, TextInput } from 'react-native-paper';
+import { IconButton, Surface, TextInput } from 'react-native-paper';
 import { CategoryInput } from './CategoryInput';
 import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
 import { selectCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
+import { useTheme } from '../../Hooks/useTheme';
 
 type Props<T extends keyof StackParameterList> = {
-    index: number,
     amountText: string,
     payerBudgetId: string,
     debtorBudgetId: string,
-    setAmountText: (index: number, newAmount: string) => void,
-    setMemo: (index: number, memo: string) => void,
+    setAmountText: (newAmount: string) => void,
+    setMemo: (memo: string) => void,
     payerCategoryId: string | undefined,
-    setPayerCategoryId: (index: number, id: string | undefined) => void,
+    setPayerCategoryId: (id: string | undefined) => void,
     debtorCategoryId: string | undefined,
-    setDebtorCategoryId: (index: number, id: string | undefined) => void,
+    setDebtorCategoryId: (id: string | undefined) => void,
     splitPercentToPayer: number | undefined,
-    setSplitPercentToPayer: (index: number, splitPercent: number | undefined) => void,
-    onRemovePress: (index: number) => void,
+    setSplitPercentToPayer: (splitPercent: number | undefined) => void,
+    onRemovePress: () => void,
     navigation: MyStackNavigationProp<T>,
     quickModeEnabled: boolean,
 }
 
 const DEFAULT_SPLIT_PERCENT_TO_PAYER = 50;
 
-const ICON_CATEGORY_COMBO = 'vector-combine';
+const ICON_CATEGORY_COMBO = 'call-split';
 const ICON_DELETE = 'delete';
 
-export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) => {
+export const AmountView = <T extends keyof StackParameterList>({
+    amountText,
+    payerBudgetId,
+    debtorBudgetId,
+    setAmountText,
+    setMemo,
+    payerCategoryId,
+    setPayerCategoryId,
+    debtorCategoryId,
+    setDebtorCategoryId,
+    splitPercentToPayer,
+    setSplitPercentToPayer,
+    onRemovePress,
+    navigation,
+    quickModeEnabled,
+}: Props<T>) => {
+    const [theme] = useTheme();
     const categoryCombos = useAppSelector(selectCategoryCombos);
 
-    const setSplitPercentToPayer = useCallback(
-        (splitPercent?: number) => props.setSplitPercentToPayer(props.index, splitPercent),
-        [props],
-    );
-
-    const setAmountText = useCallback(
-        (amountText: string) => props.setAmountText(props.index, amountText),
-        [props],
-    );
-
-    const setPayerCategoryId = useCallback(
-        (id: string | undefined) => props.setPayerCategoryId(props.index, id),
-        [props],
-    );
-
-    const setDebtorCategoryId = useCallback(
-        (id: string | undefined) => props.setDebtorCategoryId(props.index, id),
-        [props],
-    );
-
-    const setMemo = useCallback(
-        (memo: string) => props.setMemo(props.index, memo),
-        [props],
-    );
-
-    const onRemovePress = useCallback(
-        () => props.onRemovePress(props.index),
-        [props],
-    );
-
     useEffect(() => {
-        // TODO: Clean this up
-        if (props.payerCategoryId === undefined || props.debtorCategoryId === undefined) {
-            if (props.splitPercentToPayer !== undefined) {
-                setSplitPercentToPayer();
+        if (payerCategoryId !== undefined && debtorCategoryId !== undefined) {
+            if (splitPercentToPayer === undefined) {
+                setSplitPercentToPayer(DEFAULT_SPLIT_PERCENT_TO_PAYER);
             }
-        } else if (props.payerCategoryId !== undefined && props.debtorCategoryId !== undefined && props.splitPercentToPayer === undefined) {
-            setSplitPercentToPayer(DEFAULT_SPLIT_PERCENT_TO_PAYER);
+        } else if (splitPercentToPayer !== undefined) {
+            setSplitPercentToPayer(undefined);
         }
-    }, [props, setSplitPercentToPayer]);
-
+    }, [payerCategoryId, debtorCategoryId, splitPercentToPayer, setSplitPercentToPayer]);
 
     const navigateToCategoryComboScreen = useCallback(
         () => {
-            props.navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
+            navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
                 onSelect: (categoryComboId) => {
                     const categoryCombo = categoryCombos.find((c) => c.id === categoryComboId);
 
@@ -89,9 +73,9 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                     }
 
                     categoryCombo.categories.forEach((category) => {
-                        if (props.payerBudgetId === category.budgetId) {
+                        if (payerBudgetId === category.budgetId) {
                             setPayerCategoryId(category.id);
-                        } else if (props.debtorBudgetId === category.budgetId) {
+                        } else if (debtorBudgetId === category.budgetId) {
                             setDebtorCategoryId(category.id);
                         } else {
                             throw new Error('Combination belongs to another budget');
@@ -100,87 +84,76 @@ export const AmountView = <T extends keyof StackParameterList>(props: Props<T>) 
                 },
             });
         },
-        [props.navigation, props.payerBudgetId, props.debtorBudgetId, categoryCombos, setPayerCategoryId, setDebtorCategoryId],
+        [navigation, payerBudgetId, debtorBudgetId, categoryCombos, setPayerCategoryId, setDebtorCategoryId],
     );
 
-    const payerCategories = useAppSelector((state) => selectCategories(state, props.payerBudgetId));
-    const debtorCategories = useAppSelector((state) => selectCategories(state, props.debtorBudgetId));
+    const payerCategories = useAppSelector((state) => selectCategories(state, payerBudgetId));
+    const debtorCategories = useAppSelector((state) => selectCategories(state, debtorBudgetId));
 
-    const payerCategory = props.payerCategoryId ? payerCategories[props.payerCategoryId] : undefined;
-    const debtorCategory = props.debtorCategoryId ? debtorCategories[props.debtorCategoryId] : undefined;
+    const payerCategory = payerCategoryId ? payerCategories[payerCategoryId] : undefined;
+    const debtorCategory = debtorCategoryId ? debtorCategories[debtorCategoryId] : undefined;
+
+    const cardStyle = {
+        padding: theme.cardPadding,
+        gap: theme.spacing,
+        borderRadius: theme.roundness * 3,
+    };
 
     return (
-        <View>
-            <View style={styles.mainView}>
-                <View style={styles.flexContainer}>
+        <Surface elevation={1} style={cardStyle}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                <View style={{ flex: 1 }}>
                     <SubAmountInput
-                        value={props.amountText}
+                        value={amountText}
                         setValue={setAmountText}
-                        navigation={props.navigation}
-                    />
-                    <IconButton
-                        icon={ICON_DELETE}
-                        onPress={onRemovePress}
+                        navigation={navigation}
                     />
                 </View>
-
-                <View style={styles.flexContainer}>
+                <IconButton
+                    icon={ICON_DELETE}
+                    onPress={onRemovePress}
+                />
+            </View>
+            <View style={{ flexDirection: 'row', gap: theme.spacing }}>
+                <View style={{ flex: 1, gap: theme.spacing }}>
                     <CategoryInput
                         label='Payer Category'
                         text={payerCategory?.name ?? ''}
-                        budgetId={props.payerBudgetId}
+                        budgetId={payerBudgetId}
                         onSelect={setPayerCategoryId}
-                        navigation={props.navigation}
-                    />
-                    <IconButton
-                        style={styles.categoryComboButton}
-                        icon={ICON_CATEGORY_COMBO}
-                        onPress={navigateToCategoryComboScreen}
+                        navigation={navigation}
                     />
                     <CategoryInput
                         label='Debtor Category'
                         text={debtorCategory?.name ?? ''}
-                        budgetId={props.debtorBudgetId}
+                        budgetId={debtorBudgetId}
                         onSelect={setDebtorCategoryId}
-                        navigation={props.navigation}
+                        navigation={navigation}
                     />
                 </View>
-                {!props.quickModeEnabled
-                    ? (
-                        <View>
-                            <SplitPercentInput
-                                payerCategoryChosen={props.payerCategoryId !== undefined}
-                                debtorCategoryChosen={props.debtorCategoryId !== undefined}
-                                splitPercentToPayer={props.splitPercentToPayer}
-                                setSplitPercentToPayer={setSplitPercentToPayer}
-                            />
-                            <TextInput
-                                label='Memo'
-                                placeholder='Enter memo'
-                                onChangeText={setMemo}
-                            />
-                        </View>
-                    )
-                    : null
-                }
+                <View style={{ justifyContent: 'center' }}>
+                    <IconButton icon={ICON_CATEGORY_COMBO} onPress={navigateToCategoryComboScreen} style={{ transform: [{ rotate: '270deg' }] }} />
+                </View>
             </View>
-            <Divider />
-        </View>
+            {quickModeEnabled
+                ? null
+                : (
+                    <View style={{ gap: theme.spacing }}>
+                        <TextInput
+                            label='Memo'
+                            placeholder='Enter memo'
+                            mode='outlined'
+                            onChangeText={setMemo}
+                        />
+                        <SplitPercentInput
+                            payerCategoryChosen={payerCategoryId !== undefined}
+                            debtorCategoryChosen={debtorCategoryId !== undefined}
+                            splitPercentToPayer={splitPercentToPayer}
+                            setSplitPercentToPayer={setSplitPercentToPayer}
+                        />
+                    </View>
+                )
+            }
+        </Surface>
     );
 };
-
-const styles = StyleSheet.create({
-    mainView: {
-        marginVertical: 10,
-    },
-    flexContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    categoryComboButton: {
-        // TODO: Fix this mess. Research table layout, see also:
-        //   https://github.com/steve192/opencookbook-frontend/blob/dbe12bd38d69ba0fc582a7dc7e3a39cc800b0825/src/components/IngredientList.tsx#L39
-        marginTop: 25,
-        marginBottom: 5,
-    },
-});

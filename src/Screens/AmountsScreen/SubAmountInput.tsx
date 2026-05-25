@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
@@ -51,7 +50,7 @@ export const SubAmountInput = <T extends keyof StackParameterList>({ value, setV
             error={!isValid}
             onChangeText={setValue}
             keyboardType='numeric'
-            style={styles.textInput}
+            mode='outlined'
             label='Amount'
             right={
                 <TextInput.Icon
@@ -62,12 +61,3 @@ export const SubAmountInput = <T extends keyof StackParameterList>({ value, setV
         />
     );
 };
-
-const styles = StyleSheet.create({
-    textInput: {
-        flex: 1,
-        flexGrow: 0,
-        flexShrink: 1,
-        flexBasis: '60%',
-    },
-});

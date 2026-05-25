@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
-import { Button, Text } from 'react-native-paper';
-import { StyleSheet, View } from 'react-native';
+import { TextInput, TouchableRipple } from 'react-native-paper';
+import { View } from 'react-native';
+import { useTheme } from '../../Hooks/useTheme';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
 
@@ -13,6 +14,8 @@ type Props<T extends keyof StackParameterList> = {
 }
 
 export const CategoryInput = <T extends keyof StackParameterList>({ navigation, budgetId, onSelect, ...props }: Props<T>) => {
+    const [theme] = useTheme();
+
     const navigateToCategoryScreen = useCallback(
         () => {
             navigation.navigate(ScreenNames.CATEGORY_SCREEN, {
@@ -24,24 +27,17 @@ export const CategoryInput = <T extends keyof StackParameterList>({ navigation, 
     );
 
     return (
-        <View style={styles.view}>
-            <Text>
-                {props.label}
-            </Text>
-
-            <Button
-                mode='contained'
-                onPress={navigateToCategoryScreen}
-            >
-                {props.text}
-            </Button>
-        </View>
+        <TouchableRipple onPress={navigateToCategoryScreen}>
+            <View pointerEvents='none'>
+                <TextInput
+                    label={props.label}
+                    value={props.text}
+                    mode='outlined'
+                    editable={false}
+                    outlineColor={props.text ? theme.colors.primary : undefined}
+                    style={props.text ? { backgroundColor: theme.colors.secondaryContainer } : undefined}
+                />
+            </View>
+        </TouchableRipple>
     );
 };
-
-const styles = StyleSheet.create({
-    view: {
-        flex: 1,
-        margin: 5,
-    },
-});

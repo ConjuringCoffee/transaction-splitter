@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Keyboard, StyleSheet, View } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { LoadingComponent } from '../../Component/LoadingComponent';
 import { roundToTwoDecimalPlaces } from '../../Helper/AmountHelper';
@@ -11,11 +11,11 @@ import { useAppSelector } from '../../Hooks/useAppSelector';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
-import { Button, Divider, Menu, Text } from 'react-native-paper';
+import { Appbar, Button, Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useAppDispatch } from '../../Hooks/useAppDispatch';
-import { AppBarMoreMenu } from '../../Component/AppBarMoreMenu';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
+import { useTheme } from '../../Hooks/useTheme';
 
 type ScreenName = 'Amounts';
 
@@ -30,11 +30,11 @@ type UserInterfaceAmountEntry = {
 const SCREEN_TITLE = 'Enter amounts';
 
 export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
-    const [menuVisible, setMenuVisible] = React.useState<boolean>(false);
     const [quickModeEnabled, setQuickModeEnabled] = useState<boolean>(true);
     const [amountEntries, setAmountEntries] = useState<Array<UserInterfaceAmountEntry>>([]);
     const [convertTextToNumber, convertNumberToText] = useAmountConversion();
     const accessToken = useAppSelector(selectAccessToken);
+    const [theme] = useTheme();
 
     const dispatch = useAppDispatch();
 
@@ -64,31 +64,15 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         [debtorCategoriesFetchStatus, dispatch, debtorBudgetId, accessToken],
     );
 
-    const toggleQuickModeAndCloseMenu = useCallback(
-        () => {
-            setQuickModeEnabled(!quickModeEnabled);
-            setMenuVisible(!menuVisible);
-        },
-        [setQuickModeEnabled, setMenuVisible, quickModeEnabled, menuVisible],
-    );
-
     const navigationBarAddition = useMemo(
-        () => {
-            const title = quickModeEnabled ? 'Disable Quick Mode' : 'Enable Quick Mode';
-
-            return (
-                <AppBarMoreMenu
-                    key='more'
-                    visible={menuVisible}
-                    setVisible={setMenuVisible}
-                >
-                    <Menu.Item
-                        title={title}
-                        onPress={toggleQuickModeAndCloseMenu}
-                    />
-                </AppBarMoreMenu>);
-        },
-        [toggleQuickModeAndCloseMenu, menuVisible, quickModeEnabled],
+        () => (
+            <Appbar.Action
+                icon={quickModeEnabled ? 'arrow-expand-vertical' : 'arrow-collapse-vertical'}
+                iconColor={theme.colors.onPrimary}
+                onPress={() => setQuickModeEnabled(!quickModeEnabled)}
+            />
+        ),
+        [quickModeEnabled, theme],
     );
 
     useNavigationSettings({
@@ -123,7 +107,6 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
             const entries = [...amountEntries, {
                 amountText: amountText ?? '',
                 memo: '',
-
             }];
             setAmountEntries(entries);
         },
@@ -247,75 +230,64 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         && debtorCategoriesFetchStatus === LoadingStatus.SUCCESSFUL;
 
     return (
-        <CustomScrollView>
-            {categoriesAreLoaded
-                ? (
-                    <View style={styles.view}>
-                        {amountEntries.map((amountEntry, index) => {
-                            return (
+        <View style={{ flex: 1 }}>
+            <CustomScrollView>
+                {categoriesAreLoaded
+                    ? (
+                        <View style={{ gap: theme.spacing }}>
+                            {amountEntries.map((amountEntry, index) => (
                                 <AmountView
                                     key={index}
-                                    index={index}
                                     amountText={amountEntry.amountText}
                                     payerBudgetId={basicData.payer.budgetId}
                                     debtorBudgetId={basicData.debtor.budgetId}
-                                    setAmountText={setAmountText}
-                                    setMemo={setMemo}
+                                    setAmountText={(text) => setAmountText(index, text)}
+                                    setMemo={(memo) => setMemo(index, memo)}
                                     payerCategoryId={amountEntry.payerCategoryId}
-                                    setPayerCategoryId={setPayerCategoryId}
+                                    setPayerCategoryId={(id) => setPayerCategoryId(index, id)}
                                     debtorCategoryId={amountEntry.debtorCategoryId}
-                                    setDebtorCategoryId={setDebtorCategoryId}
+                                    setDebtorCategoryId={(id) => setDebtorCategoryId(index, id)}
                                     splitPercentToPayer={amountEntry.splitPercentToPayer}
-                                    setSplitPercentToPayer={setSplitPercentToPayer}
-                                    onRemovePress={removeAmountEntry}
+                                    setSplitPercentToPayer={(pct) => setSplitPercentToPayer(index, pct)}
+                                    onRemovePress={() => removeAmountEntry(index)}
                                     navigation={navigation}
                                     quickModeEnabled={quickModeEnabled}
                                 />
-                            );
-                        })}
-
-                        <Button
-                            disabled={addingDisabled}
-                            mode='contained'
-                            style={styles.button}
-                            onPress={addEmptyAmountEntry}
-                        >
-                            Add
-                        </Button>
-                        <Button
-                            disabled={addingDisabled}
-                            mode='contained'
-                            style={styles.button}
-                            onPress={addRemainingAmountEntry}
-                        >
-                            Add remaining
-                        </Button>
-
-                        <Divider />
-
-                        <Text>
-                            {`Remaining amount: ${convertNumberToText(remainingAmount)}€`}
-                        </Text>
-
-                        <Button
-                            disabled={!okayToContinue}
-                            mode='contained'
-                            style={styles.button}
-                            onPress={navigateToSaveScreen}
-                        >
-                            Continue
-                        </Button>
-                    </View>
-                )
-                : <LoadingComponent />}
-        </CustomScrollView>);
+                            ))}
+                        </View>
+                    )
+                    : <LoadingComponent />}
+            </CustomScrollView>
+            <View style={{ padding: theme.cardPadding, gap: theme.spacing }}>
+                <Text variant='bodyMedium' style={{ textAlign: 'center' }}>
+                    {`Remaining: ${convertNumberToText(remainingAmount)}€`}
+                </Text>
+                <View style={{ flexDirection: 'row', gap: theme.spacing }}>
+                    <Button
+                        disabled={addingDisabled}
+                        mode='contained'
+                        style={{ flex: 1 }}
+                        onPress={addEmptyAmountEntry}
+                    >
+                        Add
+                    </Button>
+                    <Button
+                        disabled={addingDisabled}
+                        mode='contained'
+                        style={{ flex: 1 }}
+                        onPress={addRemainingAmountEntry}
+                    >
+                        Add remaining
+                    </Button>
+                </View>
+                <Button
+                    disabled={!okayToContinue}
+                    mode='contained'
+                    onPress={navigateToSaveScreen}
+                >
+                    Continue
+                </Button>
+            </View>
+        </View>
+    );
 };
-
-const styles = StyleSheet.create({
-    view: {
-        marginHorizontal: 10,
-    },
-    button: {
-        marginVertical: 5,
-    },
-});
