@@ -117,7 +117,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                 iconColor={theme.colors.onPrimary}
             />
         ),
-        [navigateToSettingsScreen],
+        [navigateToSettingsScreen, theme.colors.onPrimary],
     );
 
     useNavigationSettings({
