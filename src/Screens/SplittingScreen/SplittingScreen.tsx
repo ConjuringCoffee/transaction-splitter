@@ -114,6 +114,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
             <Appbar.Action
                 onPress={navigateToSettingsScreen}
                 icon={ICON_SETTINGS}
+                iconColor={theme.colors.onPrimary}
             />
         ),
         [navigateToSettingsScreen],

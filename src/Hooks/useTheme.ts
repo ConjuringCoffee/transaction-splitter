@@ -18,12 +18,14 @@ export const useTheme = () => {
     const lightTheme = useMemo(() => {
         const theme = merge(merge(PaperDefaultTheme, NavigationDefaultTheme), styles);
         theme.colors.primary = '#5C9CA4';
+        theme.colors.onPrimary = '#FFFFFF';
         return theme;
     }, [styles]);
 
     const darkTheme = useMemo(() => {
         const theme = merge(merge(PaperDarkTheme, NavigationDarkTheme), styles);
-        theme.colors.primary = '#5C9CA4';
+        theme.colors.primary = '#3D7A82';
+        theme.colors.onPrimary = '#FFFFFF';
         return theme;
     }, [styles]);
 
