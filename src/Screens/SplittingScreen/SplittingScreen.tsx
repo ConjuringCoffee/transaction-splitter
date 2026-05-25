@@ -167,17 +167,17 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
 
     return (
         <View style={{ flex: 1 }}>
+            <TotalAmountInput
+                value={totalAmountText}
+                setValue={setTotalAmountText}
+            />
             <CustomScrollView>
                 <View style={{ gap: theme.spacing }}>
                     <Surface
                         elevation={1}
                         style={cardStyle}
                     >
-                        <Text variant='titleMedium'>Transaction</Text>
-                        <TotalAmountInput
-                            value={totalAmountText}
-                            setValue={setTotalAmountText}
-                        />
+                        <Text variant='titleMedium'>Details</Text>
                         <TextInput
                             label='Payee'
                             mode='outlined'
