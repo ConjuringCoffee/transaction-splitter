@@ -1,5 +1,4 @@
-import { useCallback } from 'react';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { List } from 'react-native-paper';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectCategoryCombo } from '../../redux/features/categoryCombos/categoryCombosSlice';
