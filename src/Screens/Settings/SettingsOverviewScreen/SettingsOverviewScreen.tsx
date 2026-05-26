@@ -1,8 +1,6 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../../Navigation/ScreenNames';
 import { Appbar, List, Surface } from 'react-native-paper';
-
-const chevronRight = (props: object) => <List.Icon {...props} icon='chevron-right' />;
 import React, { useCallback, useMemo } from 'react';
 import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
 import { CustomScrollView } from '../../../Component/CustomScrollView';
@@ -10,6 +8,10 @@ import { BackHandler, View } from 'react-native';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../../Hooks/useInitialFetchStatus';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../../Hooks/useTheme';
+import { isPreviewVariant } from '../../../Helper/AppVariant';
+
+const IS_PREVIEW = isPreviewVariant();
+const chevronRight = (props: object) => <List.Icon {...props} icon='chevron-right' />;
 
 type ScreenName = 'Settings Overview';
 
@@ -123,11 +125,13 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
                         onPress={navigateToDisplaySettingsScreen}
                         right={chevronRight}
                     />
-                    <List.Item
-                        title='Development Settings'
-                        onPress={navigateToDevelopmentSettingsScreen}
-                        right={chevronRight}
-                    />
+                    {IS_PREVIEW && (
+                        <List.Item
+                            title='Development Settings'
+                            onPress={navigateToDevelopmentSettingsScreen}
+                            right={chevronRight}
+                        />
+                    )}
                 </Surface>
             </View>
         </CustomScrollView>
