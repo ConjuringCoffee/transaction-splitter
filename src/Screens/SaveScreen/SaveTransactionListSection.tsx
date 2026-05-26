@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react';
-import { DataTable, List } from 'react-native-paper';
+import { DataTable, List, Surface } from 'react-native-paper';
 import { SaveTransaction } from 'ynab';
-import { StyleSheet } from 'react-native';
 import { convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
 import { selectBudgetById, selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { SubTransactionsDataTable } from './SubTransactionsDataTable';
 import { MultiLineTextDataTableCellView } from './MultiLineTextDataTableCellView';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
+import { useTheme } from '../../Hooks/useTheme';
 
 type Props = {
     saveTransaction: SaveTransaction,
@@ -18,6 +18,7 @@ type Props = {
 }
 
 export const SaveTransactionListSection = (props: Props) => {
+    const [theme] = useTheme();
     const [, convertNumberToText] = useAmountConversion();
     const [detailsExpanded, setDetailsExpanded] = useState<boolean>(true);
     const [subTransactionsExpanded, setSubTransactionsExpanded] = useState<boolean>(true);
@@ -39,67 +40,67 @@ export const SaveTransactionListSection = (props: Props) => {
         [subTransactionsExpanded],
     );
 
-    const styles = StyleSheet.create({
-        sectionTitle: {
-            fontSize: 20,
-        },
-        subTransactionListSection: {
-            paddingTop: 20,
-        },
-    });
+    const cardStyle = {
+        borderRadius: theme.roundness * 3,
+        overflow: 'hidden' as const,
+    };
 
     return (
-        <List.Section title={props.sectionTitle} titleStyle={styles.sectionTitle}>
-            <List.Accordion
-                title='Transaction details'
-                expanded={detailsExpanded}
-                onPress={toggleDetailsExpanded}
-            >
-                <DataTable>
-                    <DataTable.Row>
-                        <DataTable.Cell>Budget</DataTable.Cell>
-                        <MultiLineTextDataTableCellView text={budget.name} />
-                    </DataTable.Row>
-                    <DataTable.Row>
-                        <DataTable.Cell>Account</DataTable.Cell>
-                        <MultiLineTextDataTableCellView text={accountName} />
-                    </DataTable.Row>
-                    {props.saveTransaction.category_id
-                        ? (
-                            <DataTable.Row>
-                                <DataTable.Cell>Category</DataTable.Cell>
-                                <MultiLineTextDataTableCellView text={categories[props.saveTransaction.category_id].name} />
-                            </DataTable.Row>
-                        )
-                        : null}
-                    <DataTable.Row>
-                        <DataTable.Cell>Total Amount</DataTable.Cell>
-                        <DataTable.Cell>{amountText}</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                        <DataTable.Cell>Payee</DataTable.Cell>
-                        <MultiLineTextDataTableCellView text={props.payeeName} />
-                    </DataTable.Row>
-                    <DataTable.Row>
-                        <DataTable.Cell>Memo</DataTable.Cell>
-                        <MultiLineTextDataTableCellView text={props.memo} />
-                    </DataTable.Row>
-                </DataTable>
-            </List.Accordion>
-            {props.saveTransaction.subtransactions
-                ? (
-                    <List.Accordion title='Subtransactions'
-                        expanded={subTransactionsExpanded}
-                        onPress={toggleSubTransactionsExpanded}
-                        style={styles.subTransactionListSection}
-                    >
-                        <SubTransactionsDataTable
-                            budgetId={props.budgetId}
-                            subTransactions={props.saveTransaction.subtransactions}
-                        />
-                    </List.Accordion>
-                )
-                : null}
-        </List.Section>
+        <Surface elevation={1} style={cardStyle}>
+            <List.Section title={props.sectionTitle} titleStyle={{ fontSize: 20 }}>
+                <List.Accordion
+                    title='Transaction details'
+                    expanded={detailsExpanded}
+                    onPress={toggleDetailsExpanded}
+                    style={{ backgroundColor: theme.colors.elevation.level1 }}
+                >
+                    <DataTable>
+                        <DataTable.Row>
+                            <DataTable.Cell>Budget</DataTable.Cell>
+                            <MultiLineTextDataTableCellView text={budget.name} />
+                        </DataTable.Row>
+                        <DataTable.Row>
+                            <DataTable.Cell>Account</DataTable.Cell>
+                            <MultiLineTextDataTableCellView text={accountName} />
+                        </DataTable.Row>
+                        {props.saveTransaction.category_id
+                            ? (
+                                <DataTable.Row>
+                                    <DataTable.Cell>Category</DataTable.Cell>
+                                    <MultiLineTextDataTableCellView text={categories[props.saveTransaction.category_id].name} />
+                                </DataTable.Row>
+                            )
+                            : null}
+                        <DataTable.Row>
+                            <DataTable.Cell>Total Amount</DataTable.Cell>
+                            <DataTable.Cell>{amountText}</DataTable.Cell>
+                        </DataTable.Row>
+                        <DataTable.Row>
+                            <DataTable.Cell>Payee</DataTable.Cell>
+                            <MultiLineTextDataTableCellView text={props.payeeName} />
+                        </DataTable.Row>
+                        <DataTable.Row>
+                            <DataTable.Cell>Memo</DataTable.Cell>
+                            <MultiLineTextDataTableCellView text={props.memo} />
+                        </DataTable.Row>
+                    </DataTable>
+                </List.Accordion>
+                {props.saveTransaction.subtransactions
+                    ? (
+                        <List.Accordion
+                            title='Subtransactions'
+                            expanded={subTransactionsExpanded}
+                            onPress={toggleSubTransactionsExpanded}
+                            style={{ backgroundColor: theme.colors.elevation.level1 }}
+                        >
+                            <SubTransactionsDataTable
+                                budgetId={props.budgetId}
+                                subTransactions={props.saveTransaction.subtransactions}
+                            />
+                        </List.Accordion>
+                    )
+                    : null}
+            </List.Section>
+        </Surface>
     );
 };
