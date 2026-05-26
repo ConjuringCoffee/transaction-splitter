@@ -1,6 +1,8 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../../Navigation/ScreenNames';
 import { Appbar, List, Surface } from 'react-native-paper';
+
+const chevronRight = (props: object) => <List.Icon {...props} icon='chevron-right' />;
 import React, { useCallback, useMemo } from 'react';
 import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
 import { CustomScrollView } from '../../../Component/CustomScrollView';
@@ -102,24 +104,29 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
                         title='Access Token'
                         description='Necessary to access the YNAB API'
                         onPress={navigateToAccessTokenScreen}
+                        right={chevronRight}
                     />
                     <List.Item
                         title='Profile'
                         description='Connect two budgets of your account'
                         onPress={navigateToProfileSettingsScreen}
+                        right={chevronRight}
                     />
                     <List.Item
                         title='Category Combinations'
                         description='Combine categories under a single name'
                         onPress={navigateToCategoryComboSettingsScreen}
+                        right={chevronRight}
                     />
                     <List.Item
                         title='Display Settings'
                         onPress={navigateToDisplaySettingsScreen}
+                        right={chevronRight}
                     />
                     <List.Item
                         title='Development Settings'
                         onPress={navigateToDevelopmentSettingsScreen}
+                        right={chevronRight}
                     />
                 </Surface>
             </View>
