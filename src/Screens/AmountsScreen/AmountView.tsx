@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { SplitPercentInput } from './SplitPercentInput';
@@ -52,6 +52,12 @@ export const AmountView = <T extends keyof StackParameterList>({
     const [theme] = useTheme();
     const categoryCombos = useAppSelector(selectCategoryCombos);
 
+    // The reference is needed for the onSelect callback of the category combo screen.
+    // A new category combo might be added while the user is on the category combo screen,
+    // and we want to make sure we have the latest list of category combos when the user selects one.
+    const categoryCombosRef = useRef(categoryCombos);
+    categoryCombosRef.current = categoryCombos;
+
     useEffect(() => {
         if (payerCategoryId !== undefined && debtorCategoryId !== undefined) {
             if (splitPercentToPayer === undefined) {
@@ -66,7 +72,7 @@ export const AmountView = <T extends keyof StackParameterList>({
         () => {
             navigation.navigate(ScreenNames.SELECT_CATEGORY_COMBO_SCREEN, {
                 onSelect: (categoryComboId) => {
-                    const categoryCombo = categoryCombos.find((c) => c.id === categoryComboId);
+                    const categoryCombo = categoryCombosRef.current.find((c) => c.id === categoryComboId);
 
                     if (!categoryCombo) {
                         throw new Error(`Expected to find a category como for ID ${categoryComboId}, but did not`);
@@ -84,7 +90,7 @@ export const AmountView = <T extends keyof StackParameterList>({
                 },
             });
         },
-        [navigation, payerBudgetId, debtorBudgetId, categoryCombos, setPayerCategoryId, setDebtorCategoryId],
+        [navigation, payerBudgetId, debtorBudgetId, setPayerCategoryId, setDebtorCategoryId],
     );
 
     const payerCategories = useAppSelector((state) => selectCategories(state, payerBudgetId));
