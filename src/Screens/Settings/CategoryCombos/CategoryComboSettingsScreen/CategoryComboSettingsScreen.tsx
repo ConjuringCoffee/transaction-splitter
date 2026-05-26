@@ -17,7 +17,7 @@ import { useTheme } from '../../../../Hooks/useTheme';
 
 type ScreenName = 'Category Combinations Settings';
 
-const SCREEN_TITLE = 'Category Combination Settings';
+const SCREEN_TITLE = 'Category Combos';
 const ICON_ADD = 'plus';
 
 export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
