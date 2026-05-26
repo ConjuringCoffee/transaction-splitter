@@ -6,16 +6,18 @@ import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectAccessToken } from '../../redux/features/accessToken/accessTokenSlice';
 import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { SaveTransactionListSection } from './SaveTransactionListSection';
-import { SaveFAB } from './SaveFAB';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { View } from 'react-native';
+import { Button } from 'react-native-paper';
+import { useTheme } from '../../Hooks/useTheme';
 
 type ScreenName = 'Save';
 
 const SCREEN_TITLE = 'Save';
 
 export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
+    const [theme] = useTheme();
     const [payerTransactionSaveStatus, setPayerTransactionSaveStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
     const [debtorTransactionSaveStatus, setDebtorTransactionSaveStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
     const accessToken = useAppSelector(selectAccessToken);
@@ -83,7 +85,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
     const overallSaveStatus = getOverallSaveStatus();
 
     return (
-        <View>
+        <View style={{ flex: 1 }}>
             <CustomScrollView>
                 <SaveTransactionListSection
                     saveTransaction={payerSaveTransaction}
@@ -92,7 +94,6 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
                     payeeName={basicData.payeeName}
                     memo={basicData.memo}
                 />
-
                 <SaveTransactionListSection
                     saveTransaction={debtorSaveTransaction}
                     sectionTitle='Debtor transaction'
@@ -101,10 +102,17 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
                     memo={basicData.memo}
                 />
             </CustomScrollView>
-            <SaveFAB
-                saveStatus={overallSaveStatus}
-                save={save}
-            />
+            <View style={{ padding: theme.cardPadding }}>
+                <Button
+                    mode='contained'
+                    loading={overallSaveStatus === LoadingStatus.LOADING}
+                    disabled={overallSaveStatus === LoadingStatus.LOADING}
+                    icon={overallSaveStatus === LoadingStatus.ERROR ? 'close-circle-outline' : 'check'}
+                    onPress={save}
+                >
+                    {overallSaveStatus === LoadingStatus.ERROR ? 'Retry' : 'Save'}
+                </Button>
+            </View>
         </View>
     );
 };
