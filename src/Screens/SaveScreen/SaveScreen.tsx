@@ -84,9 +84,12 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
 
     const overallSaveStatus = getOverallSaveStatus();
 
-    const saveButtonIcon = overallSaveStatus === LoadingStatus.ERROR ? 'close-circle-outline'
-        : overallSaveStatus === LoadingStatus.SUCCESSFUL ? 'check'
-        : 'content-save';
+    let saveButtonIcon = 'content-save';
+    if (overallSaveStatus === LoadingStatus.ERROR) {
+        saveButtonIcon = 'close-circle-outline';
+    } else if (overallSaveStatus === LoadingStatus.SUCCESSFUL) {
+        saveButtonIcon = 'check';
+    }
 
     return (
         <View style={{ flex: 1 }}>
