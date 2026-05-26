@@ -84,6 +84,10 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
 
     const overallSaveStatus = getOverallSaveStatus();
 
+    const saveButtonIcon = overallSaveStatus === LoadingStatus.ERROR ? 'close-circle-outline'
+        : overallSaveStatus === LoadingStatus.SUCCESSFUL ? 'check'
+        : 'content-save';
+
     return (
         <View style={{ flex: 1 }}>
             <CustomScrollView>
@@ -109,7 +113,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
                     mode='contained'
                     loading={overallSaveStatus === LoadingStatus.LOADING}
                     disabled={overallSaveStatus === LoadingStatus.LOADING}
-                    icon={overallSaveStatus === LoadingStatus.ERROR ? 'close-circle-outline' : overallSaveStatus === LoadingStatus.SUCCESSFUL ? 'check' : 'content-save'}
+                    icon={saveButtonIcon}
                     onPress={save}
                 >
                     {overallSaveStatus === LoadingStatus.ERROR ? 'Retry' : 'Save'}
