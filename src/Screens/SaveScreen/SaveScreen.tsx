@@ -109,7 +109,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
                     mode='contained'
                     loading={overallSaveStatus === LoadingStatus.LOADING}
                     disabled={overallSaveStatus === LoadingStatus.LOADING}
-                    icon={overallSaveStatus === LoadingStatus.ERROR ? 'close-circle-outline' : 'check'}
+                    icon={overallSaveStatus === LoadingStatus.ERROR ? 'close-circle-outline' : overallSaveStatus === LoadingStatus.SUCCESSFUL ? 'check' : 'content-save'}
                     onPress={save}
                 >
                     {overallSaveStatus === LoadingStatus.ERROR ? 'Retry' : 'Save'}
