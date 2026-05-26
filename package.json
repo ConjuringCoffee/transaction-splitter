@@ -17,6 +17,7 @@
     "@types/react": "~19.1.10",
     "deepmerge": "^4.2.2",
     "expo": "~54.0.34",
+    "expo-constants": "~18.0.13",
     "expo-localization": "~17.0.8",
     "expo-secure-store": "~15.0.8",
     "expo-splash-screen": "~31.0.13",

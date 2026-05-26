@@ -57,6 +57,7 @@ module.exports = ({ config }: ConfigContext): ExpoConfig => ({
         eas: {
             projectId: 'a696a7fc-1c64-400a-a279-c33ccdbce5db',
         },
+        isPreview: IS_PREVIEW_VARIANT,
     },
     runtimeVersion: {
         policy: 'sdkVersion',

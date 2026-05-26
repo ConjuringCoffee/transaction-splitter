@@ -1,12 +1,17 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../../Navigation/ScreenNames';
-import { Appbar, List } from 'react-native-paper';
+import { Appbar, List, Surface } from 'react-native-paper';
 import React, { useCallback, useMemo } from 'react';
 import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
+import { CustomScrollView } from '../../../Component/CustomScrollView';
 import { BackHandler, View } from 'react-native';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../../Hooks/useInitialFetchStatus';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../../Hooks/useTheme';
+import { isPreviewVariant } from '../../../Helper/AppVariant';
+
+const IS_PREVIEW = isPreviewVariant();
+const chevronRight = (props: object) => <List.Icon {...props} icon='chevron-right' />;
 
 type ScreenName = 'Settings Overview';
 
@@ -88,31 +93,47 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
         [navigation],
     );
 
+    const cardStyle = {
+        borderRadius: theme.roundness * 3,
+        overflow: 'hidden' as const,
+    };
+
     return (
-        <View style={{ padding: theme.spacing }}>
-            <List.Item
-                title='Access Token'
-                description='Necessary to access the YNAB API'
-                onPress={navigateToAccessTokenScreen}
-            />
-            <List.Item
-                title='Profile'
-                description='Connect two budgets of your account'
-                onPress={navigateToProfileSettingsScreen}
-            />
-            <List.Item
-                title='Category Combinations'
-                description='Combine categories under a single name'
-                onPress={navigateToCategoryComboSettingsScreen}
-            />
-            <List.Item
-                title='Display Settings'
-                onPress={navigateToDisplaySettingsScreen}
-            />
-            <List.Item
-                title='Development Settings'
-                onPress={navigateToDevelopmentSettingsScreen}
-            />
-        </View>
+        <CustomScrollView>
+            <View style={{ padding: theme.cardPadding }}>
+                <Surface elevation={1} style={cardStyle}>
+                    <List.Item
+                        title='Access Token'
+                        description='Necessary to access the YNAB API'
+                        onPress={navigateToAccessTokenScreen}
+                        right={chevronRight}
+                    />
+                    <List.Item
+                        title='Profile'
+                        description='Connect two budgets of your account'
+                        onPress={navigateToProfileSettingsScreen}
+                        right={chevronRight}
+                    />
+                    <List.Item
+                        title='Category Combinations'
+                        description='Combine categories under a single name'
+                        onPress={navigateToCategoryComboSettingsScreen}
+                        right={chevronRight}
+                    />
+                    <List.Item
+                        title='Display Settings'
+                        onPress={navigateToDisplaySettingsScreen}
+                        right={chevronRight}
+                    />
+                    {IS_PREVIEW && (
+                        <List.Item
+                            title='Development Settings'
+                            onPress={navigateToDevelopmentSettingsScreen}
+                            right={chevronRight}
+                        />
+                    )}
+                </Surface>
+            </View>
+        </CustomScrollView>
     );
 };
