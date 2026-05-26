@@ -51,9 +51,9 @@ export const AmountView = <T extends keyof StackParameterList>({
 }: Props<T>) => {
     const [theme] = useTheme();
     const categoryCombos = useAppSelector(selectCategoryCombos);
-    
+
     // The reference is needed for the onSelect callback of the category combo screen.
-    // A new category combo might be added while the user is on the category combo screen, 
+    // A new category combo might be added while the user is on the category combo screen,
     // and we want to make sure we have the latest list of category combos when the user selects one.
     const categoryCombosRef = useRef(categoryCombos);
     categoryCombosRef.current = categoryCombos;
