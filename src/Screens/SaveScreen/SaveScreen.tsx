@@ -84,11 +84,11 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
 
     const overallSaveStatus = getOverallSaveStatus();
 
-    let saveButtonIcon = 'content-save';
+    let saveButtonIcon = 'check';
     if (overallSaveStatus === LoadingStatus.ERROR) {
         saveButtonIcon = 'close-circle-outline';
     } else if (overallSaveStatus === LoadingStatus.SUCCESSFUL) {
-        saveButtonIcon = 'check';
+        saveButtonIcon = 'check-circle-outline';
     }
 
     return (
