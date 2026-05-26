@@ -4,7 +4,7 @@ import { Appbar, List, Surface } from 'react-native-paper';
 import React, { useCallback, useMemo } from 'react';
 import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
 import { CustomScrollView } from '../../../Component/CustomScrollView';
-import { BackHandler, View } from 'react-native';
+import { BackHandler } from 'react-native';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../../Hooks/useInitialFetchStatus';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../../Hooks/useTheme';
@@ -100,40 +100,38 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
 
     return (
         <CustomScrollView>
-            <View style={{ padding: theme.cardPadding }}>
-                <Surface elevation={1} style={cardStyle}>
+            <Surface elevation={1} style={cardStyle}>
+                <List.Item
+                    title='Access Token'
+                    description='Necessary to access the YNAB API'
+                    onPress={navigateToAccessTokenScreen}
+                    right={chevronRight}
+                />
+                <List.Item
+                    title='Profile'
+                    description='Connect two budgets of your account'
+                    onPress={navigateToProfileSettingsScreen}
+                    right={chevronRight}
+                />
+                <List.Item
+                    title='Category Combinations'
+                    description='Combine categories under a single name'
+                    onPress={navigateToCategoryComboSettingsScreen}
+                    right={chevronRight}
+                />
+                <List.Item
+                    title='Display Settings'
+                    onPress={navigateToDisplaySettingsScreen}
+                    right={chevronRight}
+                />
+                {IS_PREVIEW && (
                     <List.Item
-                        title='Access Token'
-                        description='Necessary to access the YNAB API'
-                        onPress={navigateToAccessTokenScreen}
+                        title='Development Settings'
+                        onPress={navigateToDevelopmentSettingsScreen}
                         right={chevronRight}
                     />
-                    <List.Item
-                        title='Profile'
-                        description='Connect two budgets of your account'
-                        onPress={navigateToProfileSettingsScreen}
-                        right={chevronRight}
-                    />
-                    <List.Item
-                        title='Category Combinations'
-                        description='Combine categories under a single name'
-                        onPress={navigateToCategoryComboSettingsScreen}
-                        right={chevronRight}
-                    />
-                    <List.Item
-                        title='Display Settings'
-                        onPress={navigateToDisplaySettingsScreen}
-                        right={chevronRight}
-                    />
-                    {IS_PREVIEW && (
-                        <List.Item
-                            title='Development Settings'
-                            onPress={navigateToDevelopmentSettingsScreen}
-                            right={chevronRight}
-                        />
-                    )}
-                </Surface>
-            </View>
+                )}
+            </Surface>
         </CustomScrollView>
     );
 };
