@@ -13,7 +13,7 @@ import { useTheme } from '../../../../Hooks/useTheme';
 
 type ScreenName = 'Edit Category Combo';
 
-const SCREEN_TITLE = 'Edit';
+const SCREEN_TITLE = 'Edit Cat. Combo';
 
 const ICON_SAVE = 'check';
 

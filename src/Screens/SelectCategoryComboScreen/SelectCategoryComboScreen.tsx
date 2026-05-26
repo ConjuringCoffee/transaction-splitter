@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import { Appbar, TextInput } from 'react-native-paper';
+import { Appbar, Surface, TextInput } from 'react-native-paper';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
@@ -65,21 +65,29 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
         />
     );
 
+    const cardStyle = {
+        borderRadius: theme.roundness * 3,
+        overflow: 'hidden' as const,
+    };
+
     return (
-        <View>
+        <View style={{ flex: 1, padding: theme.spacing, gap: theme.spacing }}>
             <TextInput
                 value={nameFilter}
                 autoFocus={true}
                 onChangeText={setNameFilter}
-                placeholder="Search category combos"
+                placeholder='Search category combos'
+                mode='outlined'
             />
-            <FlatList
-                data={categoryCombosToDisplay}
-                renderItem={renderListItem}
-                // keyboardShouldPersistTaps is needed to allow pressing buttons when keyboard is open
-                //   See: https://stackoverflow.com/a/57941568
-                keyboardShouldPersistTaps='handled'
-            />
+            <Surface elevation={1} style={cardStyle}>
+                <FlatList
+                    data={categoryCombosToDisplay}
+                    renderItem={renderListItem}
+                    // keyboardShouldPersistTaps is needed to allow pressing buttons when keyboard is open
+                    //   See: https://stackoverflow.com/a/57941568
+                    keyboardShouldPersistTaps='handled'
+                />
+            </Surface>
         </View>
     );
 };
