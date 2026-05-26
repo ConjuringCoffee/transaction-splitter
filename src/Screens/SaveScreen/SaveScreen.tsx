@@ -87,20 +87,22 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
     return (
         <View style={{ flex: 1 }}>
             <CustomScrollView>
-                <SaveTransactionListSection
-                    saveTransaction={payerSaveTransaction}
-                    sectionTitle='Payer transaction'
-                    budgetId={basicData.payer.budgetId}
-                    payeeName={basicData.payeeName}
-                    memo={basicData.memo}
-                />
-                <SaveTransactionListSection
-                    saveTransaction={debtorSaveTransaction}
-                    sectionTitle='Debtor transaction'
-                    budgetId={basicData.debtor.budgetId}
-                    payeeName={basicData.payeeName}
-                    memo={basicData.memo}
-                />
+                <View style={{ gap: theme.spacing }}>
+                    <SaveTransactionListSection
+                        saveTransaction={payerSaveTransaction}
+                        sectionTitle='Payer transaction'
+                        budgetId={basicData.payer.budgetId}
+                        payeeName={basicData.payeeName}
+                        memo={basicData.memo}
+                    />
+                    <SaveTransactionListSection
+                        saveTransaction={debtorSaveTransaction}
+                        sectionTitle='Debtor transaction'
+                        budgetId={basicData.debtor.budgetId}
+                        payeeName={basicData.payeeName}
+                        memo={basicData.memo}
+                    />
+                </View>
             </CustomScrollView>
             <View style={{ padding: theme.cardPadding }}>
                 <Button
