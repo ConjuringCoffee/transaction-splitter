@@ -44,7 +44,6 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
     const payerBudgetId = basicData.payer.budgetId;
     const debtorBudgetId = basicData.debtor.budgetId;
 
-    // TODO: Load these earlier
     const payerCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, payerBudgetId));
     const debtorCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, debtorBudgetId));
 
