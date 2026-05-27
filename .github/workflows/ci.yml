@@ -59,6 +59,19 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Check if native build is needed
+        id: check-build
+        run: |
+          CHANGED=$(git diff --name-only HEAD^ HEAD)
+          echo "Changed files:"
+          echo "$CHANGED"
+          if echo "$CHANGED" | grep -qE '^(package\.json|package-lock\.json|app\.json|eas\.json|android/|ios/)'; then
+            echo "needs_build=true" >> $GITHUB_OUTPUT
+          else
+            echo "needs_build=false" >> $GITHUB_OUTPUT
+          fi
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
@@ -75,6 +88,7 @@ jobs:
       - name: Update on EAS
         run: eas update --branch staging --auto
       - name: Build on EAS (Android)
+        if: steps.check-build.outputs.needs_build == 'true'
         run: eas build --platform android --profile staging --non-interactive
       # - name: Build on EAS (iOS)
       #   run: eas build --platform ios --profile staging --non-interactive
