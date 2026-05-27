@@ -95,7 +95,9 @@ const buildSaveTransactions = (amountEntries: AmountEntry[], basicData: BasicDat
                     memo: amountEntry.memo,
                     category_id: amountEntry.payerCategoryId,
                 });
-        } else if (amountEntry.debtorCategoryId !== undefined) {
+        } else if (amountEntry.debtorCategoryId === undefined) {
+            throw new Error('Should be impossible to get here');
+        } else {
             collectSaveSubtransaction(
                 payerSaveTransaction.subtransactions,
                 {
@@ -110,8 +112,6 @@ const buildSaveTransactions = (amountEntries: AmountEntry[], basicData: BasicDat
                     memo: amountEntry.memo,
                     category_id: amountEntry.debtorCategoryId,
                 });
-        } else {
-            throw new Error('Should be impossible to get here');
         }
     });
 
