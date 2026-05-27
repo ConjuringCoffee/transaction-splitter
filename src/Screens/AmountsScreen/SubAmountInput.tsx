@@ -20,7 +20,7 @@ export const SubAmountInput = <T extends keyof StackParameterList>({ value, setV
     const isValid = useMemo(
         () => {
             const number = convertTextToNumber(value);
-            return !isNaN(number);
+            return !Number.isNaN(number);
         },
         [value, convertTextToNumber],
     );
@@ -28,7 +28,7 @@ export const SubAmountInput = <T extends keyof StackParameterList>({ value, setV
     const navigateToCalculatorScreen = useCallback(
         () => {
             const number = convertTextToNumber(value);
-            const currentAmount = !isNaN(number) ? number : 0;
+            const currentAmount = Number.isFinite(number) ? number : 0;
 
             navigation.navigate(
                 ScreenNames.CALCULATOR_SCREEN,

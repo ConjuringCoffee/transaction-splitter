@@ -23,10 +23,10 @@ const collectSaveSubtransaction = (collectedSaveSubTransactions: ynab.SaveSubTra
             && element.payee_id === saveSubtransaction.payee_id;
     });
 
-    if (index !== -1) {
-        collectedSaveSubTransactions[index].amount += saveSubtransaction.amount;
-    } else {
+    if (index === -1) {
         collectedSaveSubTransactions.push(saveSubtransaction);
+    } else {
+        collectedSaveSubTransactions[index].amount += saveSubtransaction.amount;
     }
 };
 

@@ -88,7 +88,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
             amountEntries.forEach((amountEntry) => {
                 const amount = convertTextToNumber(amountEntry.amountText);
 
-                if (isNaN(amount)) {
+                if (Number.isNaN(amount)) {
                     // Skip invalid amounts
                     return;
                 }
@@ -183,7 +183,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
             for (const amountEntry of amountEntries) {
                 const amount = convertTextToNumber(amountEntry.amountText);
 
-                if (isNaN(amount)
+                if (Number.isNaN(amount)
                     || amount === 0
                     || (amountEntry.payerCategoryId === undefined && amountEntry.debtorCategoryId === undefined)) {
                     return false;

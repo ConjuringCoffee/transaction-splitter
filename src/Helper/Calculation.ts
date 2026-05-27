@@ -62,7 +62,7 @@ class Calculation {
 
         if (result === null || result.length === 0) {
             return false;
-        } else if (result.length !== 1) {
+        } else if (result.length > 1) {
             throw new Error('The regex should not be able to find multiple results');
         } else {
             return result[0] === '0';
