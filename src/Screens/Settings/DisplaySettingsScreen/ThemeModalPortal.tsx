@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
-import { Modal, Portal, RadioButton, useTheme } from 'react-native-paper';
+import { RadioButton } from 'react-native-paper';
 import { saveThemeTypeSetting, selectThemeTypeSetting } from '../../../redux/features/displaySettings/displaySettingsSlice';
 import { ThemeType } from '../../../redux/features/displaySettings/ThemeType';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
-import { StyleSheet } from 'react-native';
 import { useAppDispatch } from '../../../Hooks/useAppDispatch';
+import { PortalModal } from '../../../Component/PortalModal';
 
 type Props = {
     visible: boolean,
@@ -14,16 +14,6 @@ type Props = {
 export const ThemeModalPortal = (props: Props) => {
     const dispatch = useAppDispatch();
     const themeTypeSetting = useAppSelector(selectThemeTypeSetting);
-    const theme = useTheme();
-
-    const styles = useMemo(() => StyleSheet.create({
-        modalContainer: {
-            padding: 10,
-            margin: 20,
-            borderRadius: theme.roundness,
-            backgroundColor: theme.colors.background,
-        },
-    }), [theme]);
 
     const radioButton = (themeType: ThemeType) => (
         <RadioButton.Item
@@ -45,23 +35,18 @@ export const ThemeModalPortal = (props: Props) => {
     );
 
     return (
-        <Portal>
-            <Modal
-                visible={props.visible}
-                onDismiss={props.toggleVisible}
-                contentContainerStyle={styles.modalContainer}
+        <PortalModal
+            visible={props.visible}
+            toggleVisible={props.toggleVisible}
+        >
+            <RadioButton.Group
+                value={themeTypeSettingValue}
+                onValueChange={save}
             >
-                <RadioButton.Group
-                    value={themeTypeSettingValue}
-                    onValueChange={save}
-                >
-                    {radioButton(ThemeType.SYSTEM_DEFAULT)}
-                    {radioButton(ThemeType.DARK)}
-                    {radioButton(ThemeType.LIGHT)}
-                </RadioButton.Group>
-            </Modal>
-        </Portal>
+                {radioButton(ThemeType.SYSTEM_DEFAULT)}
+                {radioButton(ThemeType.DARK)}
+                {radioButton(ThemeType.LIGHT)}
+            </RadioButton.Group>
+        </PortalModal>
     );
 };
-
-
