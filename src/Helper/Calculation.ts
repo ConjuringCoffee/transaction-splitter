@@ -70,7 +70,7 @@ class Calculation {
     }
 
     private canDecimalSeparatorBeAdded(): boolean {
-        const regex = /(\d*\.\d*$)|([\+\-]$)/g;
+        const regex = /(\d*\.\d*$)|([+-]$)/g;
         const result = regex.exec(reverseNumberFormatSettingsFromLocale(this.calculationString, this.numberFormatSettings));
 
         return result === null || result.length === 0;
