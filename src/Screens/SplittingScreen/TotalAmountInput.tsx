@@ -23,7 +23,7 @@ export const TotalAmountInput = ({ value, setValue }: Props) => {
 
     return (
         <View style={{ alignItems: 'center', padding: theme.cardPadding }}>
-            {/* Text sizes the container to its content so the € always sits flush against the number.
+            {/* Text sizes the container to its content so the sign an currency symbol always sits flush against the number.
                 Pressable focuses the TextInput because iOS UIKit views with alpha=0 don't receive touches. */}
             <Pressable
                 onPress={() => inputRef.current?.focus()}
