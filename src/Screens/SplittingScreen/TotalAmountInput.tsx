@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
+import React, { useMemo, useRef } from 'react';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useTheme } from '../../Hooks/useTheme';
@@ -14,6 +14,7 @@ type Props = {
 export const TotalAmountInput = ({ value, setValue }: Props) => {
     const [convertTextToNumber] = useAmountConversion();
     const [theme] = useTheme();
+    const inputRef = useRef<TextInput>(null);
 
     const isValid = useMemo(
         () => !Number.isNaN(convertTextToNumber(value)),
@@ -23,18 +24,21 @@ export const TotalAmountInput = ({ value, setValue }: Props) => {
     return (
         <View style={{ alignItems: 'center', padding: theme.cardPadding }}>
             {/* Text sizes the container to its content so the € always sits flush against the number.
-                The invisible TextInput fills the same bounds to capture keyboard input. */}
-            <View>
+                Pressable focuses the TextInput because iOS UIKit views with alpha=0 don't receive touches. */}
+            <Pressable
+                onPress={() => inputRef.current?.focus()}
+            >
                 <Text style={[{ fontSize: FONT_SIZE }, !isValid && { color: theme.colors.error }]}>
                     {`-${value || '0'}€`}
                 </Text>
                 <TextInput
+                    ref={inputRef}
                     keyboardType='numeric'
                     value={value}
                     onChangeText={setValue}
                     style={[StyleSheet.absoluteFillObject, { opacity: 0 }]}
                 />
-            </View>
+            </Pressable>
         </View>
     );
 };
