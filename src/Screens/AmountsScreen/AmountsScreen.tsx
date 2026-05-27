@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { nanoid } from '@reduxjs/toolkit';
 import { Keyboard, View } from 'react-native';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { LoadingComponent } from '../../Component/LoadingComponent';
@@ -20,6 +21,7 @@ import { useTheme } from '../../Hooks/useTheme';
 type ScreenName = 'Amounts';
 
 type UserInterfaceAmountEntry = {
+    id: string,
     amountText: string,
     memo: string,
     payerCategoryId?: string,
@@ -105,6 +107,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         (amountText: string) => {
             Keyboard.dismiss();
             const entries = [...amountEntries, {
+                id: nanoid(),
                 amountText: amountText ?? '',
                 memo: '',
             }];
@@ -235,9 +238,9 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                 {categoriesAreLoaded
                     ? (
                         <View style={{ gap: theme.spacing }}>
-                            {amountEntries.map((amountEntry, index) => (
+                            {amountEntries.map((amountEntry) => (
                                 <AmountView
-                                    key={index}
+                                    key={amountEntry.id}
                                     amountText={amountEntry.amountText}
                                     payerBudgetId={basicData.payer.budgetId}
                                     debtorBudgetId={basicData.debtor.budgetId}
