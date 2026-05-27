@@ -52,7 +52,6 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
 
     const [currentCalculation, setCurrentCalculation] = useState<string>(defaultCalculation);
 
-    // TODO: Do not duplicate the state from the previous screen
     const [previousCalculations, setPreviousCalculations] = useState<Array<string>>([]);
 
     const { setAmount } = route.params;
