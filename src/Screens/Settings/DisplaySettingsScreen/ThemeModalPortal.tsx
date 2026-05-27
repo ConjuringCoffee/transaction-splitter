@@ -1,7 +1,7 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { RadioButton } from 'react-native-paper';
 import { saveThemeTypeSetting, selectThemeTypeSetting } from '../../../redux/features/displaySettings/displaySettingsSlice';
-import { ThemeType } from '../../../redux/features/displaySettings/ThemeType';
+import { THEME_TYPE_LABELS, ThemeType } from '../../../redux/features/displaySettings/ThemeType';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { useAppDispatch } from '../../../Hooks/useAppDispatch';
 import { PortalModal } from '../../../Component/PortalModal';
@@ -17,10 +17,9 @@ export const ThemeModalPortal = (props: Props) => {
 
     const radioButton = (themeType: ThemeType) => (
         <RadioButton.Item
-            key={themeType.toString()}
-            // TODO: Do not use ThemeType's toString on UI
-            label={themeType.toString()}
-            value={themeType.toString()}
+            key={themeType}
+            label={THEME_TYPE_LABELS[themeType]}
+            value={themeType}
         />
     );
 
@@ -29,18 +28,13 @@ export const ThemeModalPortal = (props: Props) => {
         [dispatch],
     );
 
-    const themeTypeSettingValue = useMemo(
-        () => themeTypeSetting.toString(),
-        [themeTypeSetting],
-    );
-
     return (
         <PortalModal
             visible={props.visible}
             toggleVisible={props.toggleVisible}
         >
             <RadioButton.Group
-                value={themeTypeSettingValue}
+                value={themeTypeSetting}
                 onValueChange={save}
             >
                 {radioButton(ThemeType.SYSTEM_DEFAULT)}
