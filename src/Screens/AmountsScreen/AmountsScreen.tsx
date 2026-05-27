@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { nanoid } from '@reduxjs/toolkit';
 import { Keyboard, View } from 'react-native';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { LoadingComponent } from '../../Component/LoadingComponent';
@@ -20,6 +21,7 @@ import { useTheme } from '../../Hooks/useTheme';
 type ScreenName = 'Amounts';
 
 type UserInterfaceAmountEntry = {
+    id: string,
     amountText: string,
     memo: string,
     payerCategoryId?: string,
@@ -42,7 +44,6 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
     const payerBudgetId = basicData.payer.budgetId;
     const debtorBudgetId = basicData.debtor.budgetId;
 
-    // TODO: Load these earlier
     const payerCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, payerBudgetId));
     const debtorCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, debtorBudgetId));
 
@@ -88,7 +89,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
             amountEntries.forEach((amountEntry) => {
                 const amount = convertTextToNumber(amountEntry.amountText);
 
-                if (isNaN(amount)) {
+                if (Number.isNaN(amount)) {
                     // Skip invalid amounts
                     return;
                 }
@@ -105,6 +106,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         (amountText: string) => {
             Keyboard.dismiss();
             const entries = [...amountEntries, {
+                id: nanoid(),
                 amountText: amountText ?? '',
                 memo: '',
             }];
@@ -183,7 +185,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
             for (const amountEntry of amountEntries) {
                 const amount = convertTextToNumber(amountEntry.amountText);
 
-                if (isNaN(amount)
+                if (Number.isNaN(amount)
                     || amount === 0
                     || (amountEntry.payerCategoryId === undefined && amountEntry.debtorCategoryId === undefined)) {
                     return false;
@@ -235,9 +237,9 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                 {categoriesAreLoaded
                     ? (
                         <View style={{ gap: theme.spacing }}>
-                            {amountEntries.map((amountEntry, index) => (
+                            {amountEntries.map((amountEntry) => (
                                 <AmountView
-                                    key={index}
+                                    key={amountEntry.id}
                                     amountText={amountEntry.amountText}
                                     payerBudgetId={basicData.payer.budgetId}
                                     debtorBudgetId={basicData.debtor.budgetId}

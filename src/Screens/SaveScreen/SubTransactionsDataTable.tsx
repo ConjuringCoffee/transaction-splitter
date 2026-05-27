@@ -58,7 +58,7 @@ export const SubTransactionsDataTable = ({ budgetId, subTransactions }: Props) =
                         : null
                     }
                 </DataTable.Header>
-                {subTransactions.map(renderRow)}
+                {subTransactions.map((row, index) => renderRow(row, index))}
             </DataTable>
         </View>
     );

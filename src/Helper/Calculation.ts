@@ -45,7 +45,7 @@ class Calculation {
         } else {
             // Make sure the eval below can't do anything except addition and subtraction
             // Assume the content of the decimal and grouping separator. If necessary, add additional ones later
-            if (!this.calculationString.match(/^[+\-.,0-9]+$/)) {
+            if (!/^[+.,0-9-]+$/.exec(this.calculationString)) {
                 throw new Error('Calculation string contains illegal characters');
             }
 
@@ -62,7 +62,7 @@ class Calculation {
 
         if (result === null || result.length === 0) {
             return false;
-        } else if (result.length !== 1) {
+        } else if (result.length > 1) {
             throw new Error('The regex should not be able to find multiple results');
         } else {
             return result[0] === '0';
@@ -70,7 +70,7 @@ class Calculation {
     }
 
     private canDecimalSeparatorBeAdded(): boolean {
-        const regex = /(\d*\.\d*$)|([\+\-]$)/g;
+        const regex = /(\d*\.\d*$)|([+-]$)/g;
         const result = regex.exec(reverseNumberFormatSettingsFromLocale(this.calculationString, this.numberFormatSettings));
 
         return result === null || result.length === 0;

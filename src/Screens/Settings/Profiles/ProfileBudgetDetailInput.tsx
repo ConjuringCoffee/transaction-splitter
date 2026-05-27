@@ -31,7 +31,7 @@ export const ProfileBudgetDetailInput = (props: Props) => {
         <Checkbox.Item
             key={account.id}
             label={account.name}
-            status={props.elegibleAccountIds.some((id) => id === account.id) ? 'checked' : 'unchecked'}
+            status={props.elegibleAccountIds.includes(account.id) ? 'checked' : 'unchecked'}
             onPress={() => props.toggleAccountElegible(account.id)}
             disabled={props.debtorAccountId === account.id}
         />

@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { List } from 'react-native-paper';
 import { selectNumberFormatSettings, selectThemeTypeSetting } from '../../../redux/features/displaySettings/displaySettingsSlice';
+import { THEME_TYPE_LABELS } from '../../../redux/features/displaySettings/ThemeType';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { ThemeModalPortal } from './ThemeModalPortal';
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
@@ -27,7 +28,7 @@ export const DisplaySettingsScreen = ({ navigation }: MyStackScreenProps<ScreenN
     );
 
     const themeTypeDescription = useMemo(
-        () => themeTypeSetting.toString(),
+        () => THEME_TYPE_LABELS[themeTypeSetting],
         [themeTypeSetting],
     );
 
@@ -42,7 +43,6 @@ export const DisplaySettingsScreen = ({ navigation }: MyStackScreenProps<ScreenN
         <View>
             <List.Item
                 title='Theme'
-                // TODO: Do not use ThemeType's toString on UI
                 description={themeTypeDescription}
                 onPress={showThemeModal}
             />
