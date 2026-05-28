@@ -1,12 +1,15 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { View } from 'react-native';
 import { List } from 'react-native-paper';
+
+const chevronRight = (props: object) => <List.Icon {...props} icon='chevron-right' />;
 import { selectNumberFormatSettings, selectThemeTypeSetting } from '../../../redux/features/displaySettings/displaySettingsSlice';
 import { THEME_TYPE_LABELS } from '../../../redux/features/displaySettings/ThemeType';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { ThemeModalPortal } from './ThemeModalPortal';
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
+import { CustomScrollView } from '../../../Component/CustomScrollView';
+import { CardSurface } from '../../../Component/CardSurface';
 
 type ScreenName = 'DisplaySettings';
 
@@ -40,20 +43,23 @@ export const DisplaySettingsScreen = ({ navigation }: MyStackScreenProps<ScreenN
     );
 
     return (
-        <View>
-            <List.Item
-                title='Theme'
-                description={themeTypeDescription}
-                onPress={showThemeModal}
-            />
-            <List.Item
-                title='Number Format'
-                description={numberFormatExample}
-            />
+        <CustomScrollView>
+            <CardSurface elevation={1}>
+                <List.Item
+                    title='Theme'
+                    description={themeTypeDescription}
+                    right={chevronRight}
+                    onPress={showThemeModal}
+                />
+                <List.Item
+                    title='Number Format'
+                    description={numberFormatExample}
+                />
+            </CardSurface>
             <ThemeModalPortal
                 visible={themeModalVisible}
                 toggleVisible={toggleThemeModalVisible}
             />
-        </View>
+        </CustomScrollView>
     );
 };

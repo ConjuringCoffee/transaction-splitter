@@ -1,9 +1,10 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../../Navigation/ScreenNames';
-import { Appbar, List, Surface } from 'react-native-paper';
+import { Appbar, List } from 'react-native-paper';
 import React, { useCallback, useMemo } from 'react';
 import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
 import { CustomScrollView } from '../../../Component/CustomScrollView';
+import { CardSurface } from '../../../Component/CardSurface';
 import { BackHandler } from 'react-native';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../../Hooks/useInitialFetchStatus';
 import { useFocusEffect } from '@react-navigation/native';
@@ -93,14 +94,9 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
         [navigation],
     );
 
-    const cardStyle = {
-        borderRadius: theme.roundness * 3,
-        overflow: 'hidden' as const,
-    };
-
     return (
         <CustomScrollView>
-            <Surface elevation={1} style={cardStyle}>
+            <CardSurface elevation={1}>
                 <List.Item
                     title='Access Token'
                     description='Necessary to access the YNAB API'
@@ -131,7 +127,7 @@ export const SettingsOverviewScreen = ({ navigation }: MyStackScreenProps<Screen
                         right={chevronRight}
                     />
                 )}
-            </Surface>
+            </CardSurface>
         </CustomScrollView>
     );
 };

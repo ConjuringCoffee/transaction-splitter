@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import { Appbar, Surface, TextInput } from 'react-native-paper';
+import { Appbar, TextInput } from 'react-native-paper';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { useNavigateBack } from '../../Hooks/useNavigateBack';
@@ -10,6 +10,7 @@ import { useAppSelector } from '../../Hooks/useAppSelector';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { useTheme } from '../../Hooks/useTheme';
 import { CategoryComboListItem } from './CategoryComboListItem';
+import { CardSurface } from '../../Component/CardSurface';
 
 type ScreenName = 'Category Combinations';
 
@@ -65,11 +66,6 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
         />
     );
 
-    const cardStyle = {
-        borderRadius: theme.roundness * 3,
-        overflow: 'hidden' as const,
-    };
-
     return (
         <View style={{ flex: 1, padding: theme.spacing, gap: theme.spacing }}>
             <TextInput
@@ -79,7 +75,7 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
                 placeholder='Search category combos'
                 mode='outlined'
             />
-            <Surface elevation={1} style={cardStyle}>
+            <CardSurface elevation={1}>
                 <FlatList
                     data={categoryCombosToDisplay}
                     renderItem={renderListItem}
@@ -87,7 +83,7 @@ export const SelectCategoryComboScreen = ({ route, navigation }: MyStackScreenPr
                     //   See: https://stackoverflow.com/a/57941568
                     keyboardShouldPersistTaps='handled'
                 />
-            </Surface>
+            </CardSurface>
         </View>
     );
 };
