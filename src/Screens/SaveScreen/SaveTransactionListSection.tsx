@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { DataTable, List, Surface } from 'react-native-paper';
+import { DataTable, List } from 'react-native-paper';
 import { SaveTransaction } from 'ynab';
 import { convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
 import { selectBudgetById, selectCategories } from '../../redux/features/ynab/ynabSlice';
@@ -8,6 +8,7 @@ import { SubTransactionsDataTable } from './SubTransactionsDataTable';
 import { MultiLineTextDataTableCellView } from './MultiLineTextDataTableCellView';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useTheme } from '../../Hooks/useTheme';
+import { CardSurface } from '../../Component/CardSurface';
 
 type Props = {
     saveTransaction: SaveTransaction,
@@ -40,13 +41,8 @@ export const SaveTransactionListSection = (props: Props) => {
         [subTransactionsExpanded],
     );
 
-    const cardStyle = {
-        borderRadius: theme.roundness * 3,
-        overflow: 'hidden' as const,
-    };
-
     return (
-        <Surface elevation={1} style={cardStyle}>
+        <CardSurface elevation={1}>
             <List.Section title={props.sectionTitle} titleStyle={{ fontSize: 20 }}>
                 <List.Accordion
                     title='Transaction details'
@@ -101,6 +97,6 @@ export const SaveTransactionListSection = (props: Props) => {
                     )
                     : null}
             </List.Section>
-        </Surface>
+        </CardSurface>
     );
 };

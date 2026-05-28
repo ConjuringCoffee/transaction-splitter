@@ -1,11 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Surface, TextInput } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import { MyStackNavigationProp, StackParameterList } from '../../../Navigation/ScreenParameters';
 import { selectProfile } from '../../../redux/features/profile/profileSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { ChooseCategoryListItem } from './ChooseCategoryListItem';
 import { CustomScrollView } from '../../../Component/CustomScrollView';
+import { CardSurface } from '../../../Component/CardSurface';
 import { useTheme } from '../../../Hooks/useTheme';
 
 type Props<T extends keyof StackParameterList> = {
@@ -22,11 +23,6 @@ export const CategoryComboInputView = <T extends keyof StackParameterList>(props
     const profile = useAppSelector(selectProfile);
     const [theme] = useTheme();
 
-    const cardStyle = {
-        borderRadius: theme.roundness * 3,
-        overflow: 'hidden' as const,
-    };
-
     return (
         <CustomScrollView>
             <View style={{ gap: theme.spacing }}>
@@ -36,7 +32,7 @@ export const CategoryComboInputView = <T extends keyof StackParameterList>(props
                     label='Category Combination Name'
                     mode='outlined'
                 />
-                <Surface elevation={1} style={cardStyle}>
+                <CardSurface elevation={1}>
                     <ChooseCategoryListItem
                         budgetId={profile!.budgets[0].budgetId}
                         budgetDisplayName={profile!.budgets[0].name}
@@ -51,7 +47,7 @@ export const CategoryComboInputView = <T extends keyof StackParameterList>(props
                         selectedCategoryId={props.categoryIdSecondProfile}
                         onCategorySelect={props.setCategoryIdSecondProfile}
                     />
-                </Surface>
+                </CardSurface>
             </View>
         </CustomScrollView>
     );

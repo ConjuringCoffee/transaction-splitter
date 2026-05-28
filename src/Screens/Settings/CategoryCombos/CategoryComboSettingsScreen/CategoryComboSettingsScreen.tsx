@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../../../Navigation/ScreenNames';
-import { Appbar, List, Surface } from 'react-native-paper';
+import { Appbar, List } from 'react-native-paper';
 import { CategoryCombo, selectCategoryCombos } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { View } from 'react-native';
 import { CustomScrollView } from '../../../../Component/CustomScrollView';
+import { CardSurface } from '../../../../Component/CardSurface';
 import { selectProfile } from '../../../../redux/features/profile/profileSlice';
 import { fetchCategoryGroups, selectCategoriesFetchStatus } from '../../../../redux/features/ynab/ynabSlice';
 import { LoadingStatus } from '../../../../Helper/LoadingStatus';
@@ -75,11 +76,6 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         additions: navigationBarAddition,
     });
 
-    const cardStyle = {
-        borderRadius: theme.roundness * 3,
-        overflow: 'hidden' as const,
-    };
-
     const chevronRight = (iconProps: object) => <List.Icon {...iconProps} icon='chevron-right' />;
 
     const renderListItem = (categoryCombo: CategoryCombo) => (
@@ -100,9 +96,9 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
             {everythingLoaded
                 ? (
                     <CustomScrollView>
-                        <Surface elevation={1} style={cardStyle}>
+                        <CardSurface elevation={1}>
                             {sortedCategoryCombos.map(renderListItem)}
-                        </Surface>
+                        </CardSurface>
                     </CustomScrollView>
                 )
                 : <LoadingComponent />}
