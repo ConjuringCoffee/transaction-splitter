@@ -1,5 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { List } from 'react-native-paper';
+
+const chevronRight = (props: object) => <List.Icon {...props} icon='chevron-right' />;
 import { selectNumberFormatSettings, selectThemeTypeSetting } from '../../../redux/features/displaySettings/displaySettingsSlice';
 import { THEME_TYPE_LABELS } from '../../../redux/features/displaySettings/ThemeType';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
@@ -46,6 +48,7 @@ export const DisplaySettingsScreen = ({ navigation }: MyStackScreenProps<ScreenN
                 <List.Item
                     title='Theme'
                     description={themeTypeDescription}
+                    right={chevronRight}
                     onPress={showThemeModal}
                 />
                 <List.Item
