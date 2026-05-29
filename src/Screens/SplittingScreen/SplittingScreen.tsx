@@ -128,6 +128,13 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
 
     const navigateToAmountsScreen = useCallback(
         (): void => {
+            // Trigger fetches again if they failed before
+            if (payerCategoriesFetchStatus === LoadingStatus.ERROR) {
+                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: payerBudgetInProfile.budgetId }));
+            }
+            if (debtorCategoriesFetchStatus === LoadingStatus.ERROR) {
+                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: debtorBudgetInProfile.budgetId }));
+            }
             navigation.navigate(
                 ScreenNames.AMOUNTS_SCREEN,
                 {
@@ -151,9 +158,10 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
             );
         },
         [
-            date, debtorBudgetInProfile.budgetId, debtorBudgetInProfile.debtorAccountId,
-            memo, navigation, payeeName, payerAccountID, payerBudgetInProfile.budgetId,
-            payerBudgetInProfile.debtorAccountId, payerTransferAccount.transferPayeeID, totalAmount,
+            accessToken, date, debtorBudgetInProfile.budgetId, debtorBudgetInProfile.debtorAccountId,
+            debtorCategoriesFetchStatus, dispatch, memo, navigation, payeeName, payerAccountID,
+            payerBudgetInProfile.budgetId, payerBudgetInProfile.debtorAccountId,
+            payerCategoriesFetchStatus, payerTransferAccount.transferPayeeID, totalAmount,
         ],
     );
 
