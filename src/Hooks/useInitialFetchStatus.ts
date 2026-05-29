@@ -13,6 +13,7 @@ export enum InitialFetchStatus {
     UNKNOWN,
     READY,
     SETUP_REQUIRED,
+    ERROR,
 }
 
 export const useInitialFetchStatus = (): [InitialFetchStatus] => {
@@ -67,27 +68,37 @@ export const useInitialFetchStatus = (): [InitialFetchStatus] => {
         }
     }, [categoryCombosFetchStatus, dispatch]);
 
-    const localLoaded = useMemo(
+    const localStatus = useMemo(
         () => {
-            return accessTokenFetchStatus.status === LoadingStatus.SUCCESSFUL
-                && displaySettingsFetchStatus.status === LoadingStatus.SUCCESSFUL
-                && profileFetchStatus.status === LoadingStatus.SUCCESSFUL
-                && categoryCombosFetchStatus.status === LoadingStatus.SUCCESSFUL;
+            const statuses = [accessTokenFetchStatus, displaySettingsFetchStatus, profileFetchStatus, categoryCombosFetchStatus];
+            if (statuses.some((s) => s.status === LoadingStatus.ERROR)) {
+                return LoadingStatus.ERROR;
+            }
+            if (statuses.every((s) => s.status === LoadingStatus.SUCCESSFUL)) {
+                return LoadingStatus.SUCCESSFUL;
+            }
+            return LoadingStatus.LOADING;
         },
-        [accessTokenFetchStatus, categoryCombosFetchStatus, displaySettingsFetchStatus, profileFetchStatus],
+        [accessTokenFetchStatus, displaySettingsFetchStatus, profileFetchStatus, categoryCombosFetchStatus],
     );
 
     const initialFetchStatus = useMemo(
         () => {
-            if (localLoaded && (connectionStatus.status === LoadingStatus.ERROR || profile === null)) {
-                return InitialFetchStatus.SETUP_REQUIRED;
-            } else if (localLoaded && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL) {
-                return InitialFetchStatus.READY;
-            } else {
-                return InitialFetchStatus.UNKNOWN;
+            if (localStatus === LoadingStatus.ERROR) {
+                return InitialFetchStatus.ERROR;
             }
+            if (localStatus === LoadingStatus.SUCCESSFUL && (connectionStatus.status === LoadingStatus.ERROR || profile === null)) {
+                return InitialFetchStatus.SETUP_REQUIRED;
+            }
+            if (localStatus === LoadingStatus.SUCCESSFUL && budgetsFetchStatus.status === LoadingStatus.SUCCESSFUL) {
+                return InitialFetchStatus.READY;
+            }
+            if (localStatus === LoadingStatus.SUCCESSFUL && budgetsFetchStatus.status === LoadingStatus.ERROR) {
+                return InitialFetchStatus.SETUP_REQUIRED;
+            }
+            return InitialFetchStatus.UNKNOWN;
         },
-        [localLoaded, connectionStatus, profile, budgetsFetchStatus],
+        [localStatus, connectionStatus, profile, budgetsFetchStatus],
     );
 
     return [
