@@ -39,21 +39,21 @@ export const AmountView = <T extends keyof StackParameterList>({
     const [theme] = useTheme();
     const categoryCombos = useAppSelector(selectCategoryCombos);
 
-    // The reference is needed for the onSelect callback of the category combo screen.
-    // A new category combo might be added while the user is on the category combo screen,
-    // and we want to make sure we have the latest list of category combos when the user selects one.
+    /** The reference is needed for the onSelect callback of the category combo screen.
+    A new category combo might be added while the user is on the category combo screen,
+    and we want to make sure we have the latest list of category combos when the user selects one. */
     const categoryCombosRef = useRef(categoryCombos);
     categoryCombosRef.current = categoryCombos;
 
     useEffect(() => {
         if (amountEntry.payerCategoryId !== undefined && amountEntry.debtorCategoryId !== undefined) {
-            if (amountEntry.splitPercentToPayer === undefined) {
-                updateAmountEntry({ splitPercentToPayer: DEFAULT_SPLIT_PERCENT_TO_PAYER });
+            if (amountEntry.splitPercentToPayerText === undefined) {
+                updateAmountEntry({ splitPercentToPayerText: String(DEFAULT_SPLIT_PERCENT_TO_PAYER) });
             }
-        } else if (amountEntry.splitPercentToPayer !== undefined) {
-            updateAmountEntry({ splitPercentToPayer: undefined });
+        } else if (amountEntry.splitPercentToPayerText !== undefined) {
+            updateAmountEntry({ splitPercentToPayerText: undefined });
         }
-    }, [amountEntry.payerCategoryId, amountEntry.debtorCategoryId, amountEntry.splitPercentToPayer, updateAmountEntry]);
+    }, [amountEntry.payerCategoryId, amountEntry.debtorCategoryId, amountEntry.splitPercentToPayerText, updateAmountEntry]);
 
     const navigateToCategoryComboScreen = useCallback(
         () => {
@@ -146,8 +146,8 @@ export const AmountView = <T extends keyof StackParameterList>({
                         <SplitPercentInput
                             payerCategoryChosen={amountEntry.payerCategoryId !== undefined}
                             debtorCategoryChosen={amountEntry.debtorCategoryId !== undefined}
-                            splitPercentToPayer={amountEntry.splitPercentToPayer}
-                            setSplitPercentToPayer={(pct) => updateAmountEntry({ splitPercentToPayer: pct })}
+                            splitPercentToPayerText={amountEntry.splitPercentToPayerText}
+                            setSplitPercentToPayerText={(text) => updateAmountEntry({ splitPercentToPayerText: text })}
                         />
                     </View>
                 )

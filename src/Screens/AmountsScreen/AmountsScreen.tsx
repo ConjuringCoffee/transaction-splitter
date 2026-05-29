@@ -17,6 +17,7 @@ import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useAppDispatch } from '../../Hooks/useAppDispatch';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { useTheme } from '../../Hooks/useTheme';
+import { isSplitPercentInvalid } from '../../Helper/SplitPercentHelper';
 
 type ScreenName = 'Amounts';
 
@@ -26,7 +27,7 @@ export type UserInterfaceAmountEntry = {
     memo: string,
     payerCategoryId?: string,
     debtorCategoryId?: string,
-    splitPercentToPayer?: number
+    splitPercentToPayerText?: string
 }
 
 const SCREEN_TITLE = 'Enter amounts';
@@ -148,10 +149,12 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
 
             for (const amountEntry of amountEntries) {
                 const amount = convertTextToNumber(amountEntry.amountText);
+                const bothCategoriesChosen = amountEntry.payerCategoryId !== undefined && amountEntry.debtorCategoryId !== undefined;
 
                 if (Number.isNaN(amount)
                     || amount === 0
-                    || (amountEntry.payerCategoryId === undefined && amountEntry.debtorCategoryId === undefined)) {
+                    || (amountEntry.payerCategoryId === undefined && amountEntry.debtorCategoryId === undefined)
+                    || (bothCategoriesChosen && isSplitPercentInvalid(amountEntry.splitPercentToPayerText))) {
                     return false;
                 }
             }
@@ -170,7 +173,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                     amount: convertTextToNumber(amountEntry.amountText),
                     debtorCategoryId: amountEntry.debtorCategoryId,
                     payerCategoryId: amountEntry.payerCategoryId,
-                    splitPercentToPayer: amountEntry.splitPercentToPayer,
+                    splitPercentToPayer: amountEntry.splitPercentToPayerText === undefined ? undefined : Number(amountEntry.splitPercentToPayerText),
                     memo: amountEntry.memo,
                 });
             });
