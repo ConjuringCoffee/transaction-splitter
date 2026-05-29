@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createTransaction } from '../../YnabApi/YnabApiWrapper';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
@@ -21,6 +21,8 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
     const [payerTransactionSaveStatus, setPayerTransactionSaveStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
     const [debtorTransactionSaveStatus, setDebtorTransactionSaveStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
     const accessToken = useAppSelector(selectAccessToken);
+    /** Ref so the double-tap guard is synchronous, before React re-renders the button as disabled. */
+    const isSavingRef = useRef(false);
 
     const {
         basicData,
@@ -48,25 +50,40 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
 
     const save = useCallback(
         (): void => {
+            if (isSavingRef.current) {
+                return;
+            }
+            isSavingRef.current = true;
+
+            const promises: Promise<void>[] = [];
+
             if (payerTransactionSaveStatus !== LoadingStatus.SUCCESSFUL) {
                 setPayerTransactionSaveStatus(LoadingStatus.LOADING);
-                createTransaction(basicData.payer.budgetId, payerSaveTransaction, accessToken)
-                    .then(() => setPayerTransactionSaveStatus(LoadingStatus.SUCCESSFUL))
-                    .catch((error) => {
-                        console.error(error);
-                        setPayerTransactionSaveStatus(LoadingStatus.ERROR);
-                    });
+                promises.push(
+                    createTransaction(basicData.payer.budgetId, payerSaveTransaction, accessToken)
+                        .then(() => setPayerTransactionSaveStatus(LoadingStatus.SUCCESSFUL))
+                        .catch((error) => {
+                            console.error(error);
+                            setPayerTransactionSaveStatus(LoadingStatus.ERROR);
+                        }),
+                );
             }
 
             if (debtorTransactionSaveStatus !== LoadingStatus.SUCCESSFUL) {
                 setDebtorTransactionSaveStatus(LoadingStatus.LOADING);
-                createTransaction(basicData.debtor.budgetId, debtorSaveTransaction, accessToken)
-                    .then(() => setDebtorTransactionSaveStatus(LoadingStatus.SUCCESSFUL))
-                    .catch((error) => {
-                        console.error(error);
-                        setDebtorTransactionSaveStatus(LoadingStatus.ERROR);
-                    });
+                promises.push(
+                    createTransaction(basicData.debtor.budgetId, debtorSaveTransaction, accessToken)
+                        .then(() => setDebtorTransactionSaveStatus(LoadingStatus.SUCCESSFUL))
+                        .catch((error) => {
+                            console.error(error);
+                            setDebtorTransactionSaveStatus(LoadingStatus.ERROR);
+                        }),
+                );
             }
+
+            Promise.allSettled(promises).then(() => {
+                isSavingRef.current = false;
+            });
         },
         [accessToken, basicData.debtor.budgetId, basicData.payer.budgetId, debtorSaveTransaction, payerSaveTransaction, payerTransactionSaveStatus, debtorTransactionSaveStatus],
     );
@@ -118,7 +135,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
                 <Button
                     mode='contained'
                     loading={overallSaveStatus === LoadingStatus.LOADING}
-                    disabled={overallSaveStatus === LoadingStatus.LOADING}
+                    disabled={overallSaveStatus === LoadingStatus.LOADING || overallSaveStatus === LoadingStatus.SUCCESSFUL}
                     icon={saveButtonIcon}
                     onPress={save}
                 >
