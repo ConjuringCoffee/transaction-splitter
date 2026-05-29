@@ -237,7 +237,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                 {categoriesAreLoaded
                     ? (
                         <View style={{ gap: theme.spacing }}>
-                            {amountEntries.map((amountEntry) => (
+                            {amountEntries.map((amountEntry, index) => (
                                 <AmountView
                                     key={amountEntry.id}
                                     amountText={amountEntry.amountText}
