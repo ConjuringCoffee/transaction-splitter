@@ -66,7 +66,7 @@ export const updateCategoryCombo = createAsyncThunk<
     CategoryCombo[], { categoryCombo: CategoryCombo }, { state: RootState }
 >('categoryCombos/updateCategoryCombo', async ({ categoryCombo }, { getState }) => {
     const newCategoryCombos = [...getState().categoryCombos.objects];
-    const index = newCategoryCombos.findIndex((c) => c.id = categoryCombo.id);
+    const index = newCategoryCombos.findIndex((c) => c.id === categoryCombo.id);
 
     newCategoryCombos[index] = categoryCombo;
 
