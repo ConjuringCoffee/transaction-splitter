@@ -173,7 +173,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                     amount: convertTextToNumber(amountEntry.amountText),
                     debtorCategoryId: amountEntry.debtorCategoryId,
                     payerCategoryId: amountEntry.payerCategoryId,
-                    splitPercentToPayer: amountEntry.splitPercentToPayerText !== undefined ? Number(amountEntry.splitPercentToPayerText) : undefined,
+                    splitPercentToPayer: amountEntry.splitPercentToPayerText === undefined ? undefined : Number(amountEntry.splitPercentToPayerText),
                     memo: amountEntry.memo,
                 });
             });
