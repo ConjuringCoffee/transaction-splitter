@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Text, TextInput } from 'react-native-paper';
 import { useTheme } from '../../Hooks/useTheme';
+import { isSplitPercentInvalid } from '../../Helper/SplitPercentHelper';
 
 type Props = {
     payerCategoryChosen: boolean,
@@ -25,7 +26,7 @@ export const SplitPercentInput = ({ setSplitPercentToPayerText, ...props }: Prop
 
     const sliderValue = Number(props.splitPercentToPayerText);
     const sliderValueValid = !Number.isNaN(sliderValue);
-    const isInvalid = !sliderValueValid || sliderValue < 0 || sliderValue > 100;
+    const isInvalid = isSplitPercentInvalid(props.splitPercentToPayerText);
 
     return (
         <View style={{ gap: 4 }}>

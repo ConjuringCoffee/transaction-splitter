@@ -17,6 +17,7 @@ import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useAppDispatch } from '../../Hooks/useAppDispatch';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { useTheme } from '../../Hooks/useTheme';
+import { isSplitPercentInvalid } from '../../Helper/SplitPercentHelper';
 
 type ScreenName = 'Amounts';
 
@@ -30,14 +31,6 @@ export type UserInterfaceAmountEntry = {
 }
 
 const SCREEN_TITLE = 'Enter amounts';
-
-const isSplitPercentInvalid = (amountEntry: UserInterfaceAmountEntry): boolean => {
-    const splitPercent = Number(amountEntry.splitPercentToPayerText);
-    return amountEntry.splitPercentToPayerText === undefined
-        || Number.isNaN(splitPercent)
-        || splitPercent < 0
-        || splitPercent > 100;
-};
 
 export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
     const [quickModeEnabled, setQuickModeEnabled] = useState<boolean>(true);
@@ -161,7 +154,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                 if (Number.isNaN(amount)
                     || amount === 0
                     || (amountEntry.payerCategoryId === undefined && amountEntry.debtorCategoryId === undefined)
-                    || (bothCategoriesChosen && isSplitPercentInvalid(amountEntry))) {
+                    || (bothCategoriesChosen && isSplitPercentInvalid(amountEntry.splitPercentToPayerText))) {
                     return false;
                 }
             }
