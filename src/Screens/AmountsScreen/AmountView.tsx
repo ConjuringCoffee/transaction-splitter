@@ -47,13 +47,13 @@ export const AmountView = <T extends keyof StackParameterList>({
 
     useEffect(() => {
         if (amountEntry.payerCategoryId !== undefined && amountEntry.debtorCategoryId !== undefined) {
-            if (amountEntry.splitPercentToPayer === undefined) {
-                updateAmountEntry({ splitPercentToPayer: DEFAULT_SPLIT_PERCENT_TO_PAYER });
+            if (amountEntry.splitPercentToPayerText === undefined) {
+                updateAmountEntry({ splitPercentToPayerText: String(DEFAULT_SPLIT_PERCENT_TO_PAYER) });
             }
-        } else if (amountEntry.splitPercentToPayer !== undefined) {
-            updateAmountEntry({ splitPercentToPayer: undefined });
+        } else if (amountEntry.splitPercentToPayerText !== undefined) {
+            updateAmountEntry({ splitPercentToPayerText: undefined });
         }
-    }, [amountEntry.payerCategoryId, amountEntry.debtorCategoryId, amountEntry.splitPercentToPayer, updateAmountEntry]);
+    }, [amountEntry.payerCategoryId, amountEntry.debtorCategoryId, amountEntry.splitPercentToPayerText, updateAmountEntry]);
 
     const navigateToCategoryComboScreen = useCallback(
         () => {
@@ -146,8 +146,8 @@ export const AmountView = <T extends keyof StackParameterList>({
                         <SplitPercentInput
                             payerCategoryChosen={amountEntry.payerCategoryId !== undefined}
                             debtorCategoryChosen={amountEntry.debtorCategoryId !== undefined}
-                            splitPercentToPayer={amountEntry.splitPercentToPayer}
-                            setSplitPercentToPayer={(pct) => updateAmountEntry({ splitPercentToPayer: pct })}
+                            splitPercentToPayerText={amountEntry.splitPercentToPayerText}
+                            setSplitPercentToPayerText={(text) => updateAmountEntry({ splitPercentToPayerText: text })}
                         />
                     </View>
                 )

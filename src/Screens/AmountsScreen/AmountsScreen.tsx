@@ -26,7 +26,7 @@ export type UserInterfaceAmountEntry = {
     memo: string,
     payerCategoryId?: string,
     debtorCategoryId?: string,
-    splitPercentToPayer?: number
+    splitPercentToPayerText?: string
 }
 
 const SCREEN_TITLE = 'Enter amounts';
@@ -148,10 +148,13 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
 
             for (const amountEntry of amountEntries) {
                 const amount = convertTextToNumber(amountEntry.amountText);
+                const splitPercent = Number(amountEntry.splitPercentToPayerText);
 
                 if (Number.isNaN(amount)
                     || amount === 0
-                    || (amountEntry.payerCategoryId === undefined && amountEntry.debtorCategoryId === undefined)) {
+                    || (amountEntry.payerCategoryId === undefined && amountEntry.debtorCategoryId === undefined)
+                    || (amountEntry.payerCategoryId !== undefined && amountEntry.debtorCategoryId !== undefined
+                        && (amountEntry.splitPercentToPayerText === undefined || Number.isNaN(splitPercent) || splitPercent < 0 || splitPercent > 100))) {
                     return false;
                 }
             }
@@ -170,7 +173,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                     amount: convertTextToNumber(amountEntry.amountText),
                     debtorCategoryId: amountEntry.debtorCategoryId,
                     payerCategoryId: amountEntry.payerCategoryId,
-                    splitPercentToPayer: amountEntry.splitPercentToPayer,
+                    splitPercentToPayer: amountEntry.splitPercentToPayerText !== undefined ? Number(amountEntry.splitPercentToPayerText) : undefined,
                     memo: amountEntry.memo,
                 });
             });
