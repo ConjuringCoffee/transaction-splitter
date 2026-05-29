@@ -1,11 +1,12 @@
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { Button, List } from 'react-native-paper';
 import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
+import { Alert } from 'react-native';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as Updates from 'expo-updates';
 import { UpdateCheckResult } from 'expo-updates';
-import { useAppDispatch } from '../../../Hooks/useAppDispatch';
+import { useThrowingDispatch } from '../../../Hooks/useThrowingDispatch';
 import { deleteAllCategoryCombos } from '../../../redux/features/categoryCombos/categoryCombosSlice';
 import { deleteProfile } from '../../../redux/features/profile/profileSlice';
 import { CustomScrollView } from '../../../Component/CustomScrollView';
@@ -17,7 +18,7 @@ const SCREEN_TITLE = 'Development Settings';
 export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const [refreshing, setRefreshing] = useState(false);
     const [latestUpdate, setLatestUpdate] = useState<UpdateCheckResult | undefined>(undefined);
-    const dispatch = useAppDispatch();
+    const throwingDispatch = useThrowingDispatch();
 
     useNavigationSettings({
         title: SCREEN_TITLE,
@@ -114,10 +115,14 @@ export const DevelopmentSettingsScreen = ({ navigation }: MyStackScreenProps<Scr
 
     const onDeleteButtonPress = useCallback(
         async () => {
-            await dispatch(deleteAllCategoryCombos());
-            await dispatch(deleteProfile());
+            try {
+                await throwingDispatch(deleteAllCategoryCombos());
+                await throwingDispatch(deleteProfile());
+            } catch {
+                Alert.alert('Error', 'Could not delete. Please try again.');
+            }
         },
-        [dispatch],
+        [throwingDispatch],
     );
 
     return (
