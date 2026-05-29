@@ -25,6 +25,7 @@ export const SplitPercentInput = ({ setSplitPercentToPayerText, ...props }: Prop
 
     const sliderValue = Number(props.splitPercentToPayerText);
     const sliderValueValid = !Number.isNaN(sliderValue);
+    const isInvalid = !sliderValueValid || sliderValue < 0 || sliderValue > 100;
 
     return (
         <View style={{ gap: 4 }}>
@@ -53,6 +54,7 @@ export const SplitPercentInput = ({ setSplitPercentToPayerText, ...props }: Prop
                     dense
                     style={{ width: 88 }}
                     right={<TextInput.Affix text='%' />}
+                    error={isInvalid}
                 />
             </View>
         </View>
