@@ -20,7 +20,7 @@ import { useTheme } from '../../Hooks/useTheme';
 
 type ScreenName = 'Amounts';
 
-type UserInterfaceAmountEntry = {
+export type UserInterfaceAmountEntry = {
     id: string,
     amountText: string,
     memo: string,
@@ -105,14 +105,13 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
     const addAmountEntry = useCallback(
         (amountText: string) => {
             Keyboard.dismiss();
-            const entries = [...amountEntries, {
+            setAmountEntries((prev) => [...prev, {
                 id: nanoid(),
                 amountText: amountText ?? '',
                 memo: '',
-            }];
-            setAmountEntries(entries);
+            }]);
         },
-        [amountEntries],
+        [],
     );
 
     const addEmptyAmountEntry = useCallback(
@@ -125,55 +124,20 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
         [addAmountEntry, convertNumberToText, remainingAmount],
     );
 
-    const setAmountText = useCallback(
-        (index: number, amountText: string) => {
-            const entries = [...amountEntries];
-            entries[index].amountText = amountText;
-            setAmountEntries(entries);
+    const updateAmountEntry = useCallback(
+        (index: number, update: Partial<UserInterfaceAmountEntry>) => {
+            setAmountEntries((prev) => prev.map((entry, i) =>
+                i === index ? { ...entry, ...update } : entry,
+            ));
         },
-        [amountEntries],
+        [],
     );
-
-    const setMemo = useCallback(
-        (index: number, memo: string) => {
-            const entries = [...amountEntries];
-            entries[index].memo = memo;
-            setAmountEntries(entries);
-        },
-        [amountEntries],
-    );
-
-    const setPayerCategoryId = useCallback(
-        (index: number, id: string | undefined) => {
-            const entries = [...amountEntries];
-            entries[index].payerCategoryId = id;
-            setAmountEntries(entries);
-        },
-        [amountEntries],
-    );
-
-    const setDebtorCategoryId = useCallback(
-        (index: number, id: string | undefined) => {
-            const entries = [...amountEntries];
-            entries[index].debtorCategoryId = id;
-            setAmountEntries(entries);
-        },
-        [amountEntries],
-    );
-
-    const setSplitPercentToPayer = useCallback((index: number, splitPercent: number | undefined) => {
-        const entries = [...amountEntries];
-        entries[index].splitPercentToPayer = splitPercent;
-        setAmountEntries(entries);
-    }, [amountEntries]);
 
     const removeAmountEntry = useCallback(
         (index: number) => {
-            const entries = [...amountEntries];
-            entries.splice(index, 1);
-            setAmountEntries(entries);
+            setAmountEntries((prev) => prev.filter((_, i) => i !== index));
         },
-        [amountEntries],
+        [],
     );
 
     const okayToContinue = useMemo(
@@ -240,17 +204,10 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                             {amountEntries.map((amountEntry, index) => (
                                 <AmountView
                                     key={amountEntry.id}
-                                    amountText={amountEntry.amountText}
+                                    amountEntry={amountEntry}
                                     payerBudgetId={basicData.payer.budgetId}
                                     debtorBudgetId={basicData.debtor.budgetId}
-                                    setAmountText={(text) => setAmountText(index, text)}
-                                    setMemo={(memo) => setMemo(index, memo)}
-                                    payerCategoryId={amountEntry.payerCategoryId}
-                                    setPayerCategoryId={(id) => setPayerCategoryId(index, id)}
-                                    debtorCategoryId={amountEntry.debtorCategoryId}
-                                    setDebtorCategoryId={(id) => setDebtorCategoryId(index, id)}
-                                    splitPercentToPayer={amountEntry.splitPercentToPayer}
-                                    setSplitPercentToPayer={(pct) => setSplitPercentToPayer(index, pct)}
+                                    updateAmountEntry={(changes) => updateAmountEntry(index, changes)}
                                     onRemovePress={() => removeAmountEntry(index)}
                                     navigation={navigation}
                                     quickModeEnabled={quickModeEnabled}
