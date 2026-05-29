@@ -65,20 +65,20 @@ export const accessTokenSlice = createSlice({
                 };
             })
             .addCase(saveAccessToken.pending, (state) => {
-                state.fetchStatus = {
+                state.saveStatus = {
                     status: LoadingStatus.LOADING,
                     error: null,
                 };
             })
             .addCase(saveAccessToken.fulfilled, (state, action) => {
-                state.fetchStatus = {
+                state.saveStatus = {
                     status: LoadingStatus.SUCCESSFUL,
                     error: null,
                 };
                 state.accessToken = action.payload;
             })
             .addCase(saveAccessToken.rejected, (state, action) => {
-                state.fetchStatus = {
+                state.saveStatus = {
                     status: LoadingStatus.ERROR,
                     error: action.error,
                 };
