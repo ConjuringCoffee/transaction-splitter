@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { DataTable, List } from 'react-native-paper';
+import { View } from 'react-native';
+import { ActivityIndicator, DataTable, Icon, List, Text } from 'react-native-paper';
 import { SaveTransaction } from 'ynab';
 import { convertApiAmountToHumanAmount } from '../../Helper/AmountHelper';
+import { LoadingStatus } from '../../Helper/LoadingStatus';
 import { selectBudgetById, selectCategories } from '../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { SubTransactionsDataTable } from './SubTransactionsDataTable';
@@ -16,7 +18,23 @@ type Props = {
     budgetId: string,
     payeeName: string,
     memo: string,
+    saveStatus: LoadingStatus,
 }
+
+const SaveStatusIndicator = ({ saveStatus }: { saveStatus: LoadingStatus }) => {
+    const [theme] = useTheme();
+
+    if (saveStatus === LoadingStatus.LOADING) {
+        return <ActivityIndicator />;
+    }
+    if (saveStatus === LoadingStatus.SUCCESSFUL) {
+        return <Icon source='check-circle-outline' size={20} color={theme.colors.primary} />;
+    }
+    if (saveStatus === LoadingStatus.ERROR) {
+        return <Icon source='close-circle-outline' size={20} color={theme.colors.error} />;
+    }
+    return null;
+};
 
 export const SaveTransactionListSection = (props: Props) => {
     const [theme] = useTheme();
@@ -43,7 +61,11 @@ export const SaveTransactionListSection = (props: Props) => {
 
     return (
         <CardSurface elevation={1}>
-            <List.Section title={props.sectionTitle} titleStyle={{ fontSize: 20 }}>
+            <List.Section>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 8 }}>
+                    <Text variant='titleLarge'>{props.sectionTitle}</Text>
+                    <SaveStatusIndicator saveStatus={props.saveStatus} />
+                </View>
                 <List.Accordion
                     title='Transaction details'
                     expanded={detailsExpanded}
