@@ -1,14 +1,15 @@
 import React, { ReactNode } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { isPreviewVariant } from '../Helper/AppVariant';
 
 type Props = { children: ReactNode };
-type State = { hasError: boolean; errorName: string | null };
+type State = { hasError: boolean; errorName: string | null; errorMessage: string | null };
 
 export class ErrorBoundary extends React.Component<Props, State> {
-    state: State = { hasError: false, errorName: null };
+    state: State = { hasError: false, errorName: null, errorMessage: null };
 
     static getDerivedStateFromError(error: Error): State {
-        return { hasError: true, errorName: error.name };
+        return { hasError: true, errorName: error.name, errorMessage: error.message };
     }
 
     componentDidCatch(error: Error) {
@@ -22,7 +23,11 @@ export class ErrorBoundary extends React.Component<Props, State> {
                     <Text style={styles.title}>Something went wrong</Text>
                     <Text style={styles.body}>Please restart the app to continue.</Text>
                     {this.state.errorName !== null && (
-                        <Text style={styles.errorName}>{this.state.errorName}</Text>
+                        <Text style={styles.errorName}>
+                            {isPreviewVariant() && this.state.errorMessage !== null
+                                ? `${this.state.errorName}: ${this.state.errorMessage}`
+                                : this.state.errorName}
+                        </Text>
                     )}
                 </View>
             );
