@@ -12,7 +12,7 @@ export const useThrowingDispatch = () => {
     const dispatch = useAppDispatch();
     return useCallback(
         async (action: Dispatchable) => {
-            const result = await dispatch(action as UnknownAction);
+            const result = await Promise.resolve(dispatch(action as UnknownAction));
             if (isRejected(result)) {
                 throw new Error(result.error.message ?? 'Unexpected error');
             }
