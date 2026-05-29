@@ -65,9 +65,8 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     }, [previousCalculations, routeSetPreviousCalculations]);
 
     const addPreviousCalculation = useCallback((calculation: string) => {
-        const calculations = [...previousCalculations, calculation];
-        setPreviousCalculations(calculations);
-    }, [previousCalculations]);
+        setPreviousCalculations((prev) => [...prev, calculation]);
+    }, []);
 
     const navigateToHistoryScreen = useCallback(
         () => {
