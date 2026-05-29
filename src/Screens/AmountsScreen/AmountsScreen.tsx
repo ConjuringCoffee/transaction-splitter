@@ -194,6 +194,10 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
 
     const addingDisabled = remainingAmount === 0;
 
+    if (payerCategoriesFetchStatus === LoadingStatus.ERROR || debtorCategoriesFetchStatus === LoadingStatus.ERROR) {
+        throw new Error('Failed to load categories');
+    }
+
     const categoriesAreLoaded
         = payerCategoriesFetchStatus === LoadingStatus.SUCCESSFUL
         && debtorCategoriesFetchStatus === LoadingStatus.SUCCESSFUL;
