@@ -154,7 +154,10 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
                     || amount === 0
                     || (amountEntry.payerCategoryId === undefined && amountEntry.debtorCategoryId === undefined)
                     || (amountEntry.payerCategoryId !== undefined && amountEntry.debtorCategoryId !== undefined
-                        && (amountEntry.splitPercentToPayerText === undefined || Number.isNaN(splitPercent) || splitPercent < 0 || splitPercent > 100))) {
+                        && (amountEntry.splitPercentToPayerText === undefined
+                            || Number.isNaN(splitPercent)
+                            || splitPercent < 0
+                            || splitPercent > 100))) {
                     return false;
                 }
             }
