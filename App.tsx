@@ -12,6 +12,7 @@ import { de, registerTranslation } from 'react-native-paper-dates';
 import { useTheme } from './src/Hooks/useTheme';
 import { ScreenNames } from './src/Navigation/ScreenNames';
 import { InitialFetchStatus, useInitialFetchStatus } from './src/Hooks/useInitialFetchStatus';
+import { ErrorBoundary } from './src/Component/ErrorBoundary';
 
 LogBox.ignoreLogs([
     // Ignore this because we don't use state persistence or deep screen linking,
@@ -69,7 +70,9 @@ const ReduxProvidedApp = () => {
 const App = () => {
     return (
         <ReduxProvider store={Store}>
-            <ReduxProvidedApp />
+            <ErrorBoundary>
+                <ReduxProvidedApp />
+            </ErrorBoundary>
         </ReduxProvider>
     );
 };
