@@ -63,7 +63,7 @@ export const useEditableBudgetsInProfiles = (): Returning => {
                 finalizeEditableBudgetInProfile(budgetInProfile2),
             ],
         };
-        dispatch(saveProfile(profile));
+        await dispatch(saveProfile(profile));
     }, [finalizeEditableBudgetInProfile, budgetInProfile1, budgetInProfile2, dispatch]);
 
     return [

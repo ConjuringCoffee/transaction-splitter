@@ -27,7 +27,7 @@ export const ProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
     const [theme] = useTheme();
 
     const saveAndNavigate = useCallback(async (): Promise<void> => {
-        save();
+        await save();
         navigateBack();
     }, [navigateBack, save]);
 

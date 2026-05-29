@@ -33,8 +33,8 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
             <Appbar.Action
                 icon={ICON_SAVE}
                 iconColor={theme.colors.onPrimary}
-                onPress={() => {
-                    dispatch(saveAccessToken(enteredToken));
+                onPress={async () => {
+                    await dispatch(saveAccessToken(enteredToken));
                     navigateBack();
                 }}
             />

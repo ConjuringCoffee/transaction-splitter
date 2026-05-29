@@ -29,12 +29,12 @@ export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<Scr
     const readyToSave = name.length > 0 && categoryIdFirstProfile;
 
     const saveAndNavigate = useCallback(
-        () => {
+        async () => {
             if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
                 throw new Error('Not ready to save yet');
             }
 
-            dispatch(addCategoryCombo({
+            await dispatch(addCategoryCombo({
                 name: name,
                 categories: [
                     {

@@ -24,7 +24,9 @@ export const ThemeModalPortal = (props: Props) => {
     );
 
     const save = useCallback(
-        (newThemeType: string) => dispatch(saveThemeTypeSetting(newThemeType as ThemeType)),
+        async (newThemeType: string) => {
+            await dispatch(saveThemeTypeSetting(newThemeType as ThemeType));
+        },
         [dispatch],
     );
 

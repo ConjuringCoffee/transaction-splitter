@@ -35,8 +35,8 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile;
 
     const onSelectDeletion = useCallback(
-        (): void => {
-            dispatch(deleteCategoryCombo(categoryCombo.id));
+        async (): Promise<void> => {
+            await dispatch(deleteCategoryCombo(categoryCombo.id));
             setMenuVisible(false);
             navigateBack();
         },
@@ -60,12 +60,12 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     );
 
     const saveAndNavigate = useCallback(
-        () => {
+        async () => {
             if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
                 throw new Error('Not ready to save yet');
             }
 
-            dispatch(updateCategoryCombo(
+            await dispatch(updateCategoryCombo(
                 {
                     categoryCombo: {
                         id: categoryCombo.id,
