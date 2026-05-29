@@ -48,26 +48,27 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
 
     const save = useCallback(
         (): void => {
-            setPayerTransactionSaveStatus(LoadingStatus.LOADING);
-            setDebtorTransactionSaveStatus(LoadingStatus.LOADING);
+            if (payerTransactionSaveStatus !== LoadingStatus.SUCCESSFUL) {
+                setPayerTransactionSaveStatus(LoadingStatus.LOADING);
+                createTransaction(basicData.payer.budgetId, payerSaveTransaction, accessToken)
+                    .then(() => setPayerTransactionSaveStatus(LoadingStatus.SUCCESSFUL))
+                    .catch((error) => {
+                        console.error(error);
+                        setPayerTransactionSaveStatus(LoadingStatus.ERROR);
+                    });
+            }
 
-            createTransaction(basicData.payer.budgetId, payerSaveTransaction, accessToken)
-                .then(() => {
-                    setPayerTransactionSaveStatus(LoadingStatus.SUCCESSFUL);
-                }).catch((error) => {
-                    console.error(error);
-                    setPayerTransactionSaveStatus(LoadingStatus.ERROR);
-                });
-
-            createTransaction(basicData.debtor.budgetId, debtorSaveTransaction, accessToken)
-                .then(() => {
-                    setDebtorTransactionSaveStatus(LoadingStatus.SUCCESSFUL);
-                }).catch((error) => {
-                    console.error(error);
-                    setDebtorTransactionSaveStatus(LoadingStatus.ERROR);
-                });
+            if (debtorTransactionSaveStatus !== LoadingStatus.SUCCESSFUL) {
+                setDebtorTransactionSaveStatus(LoadingStatus.LOADING);
+                createTransaction(basicData.debtor.budgetId, debtorSaveTransaction, accessToken)
+                    .then(() => setDebtorTransactionSaveStatus(LoadingStatus.SUCCESSFUL))
+                    .catch((error) => {
+                        console.error(error);
+                        setDebtorTransactionSaveStatus(LoadingStatus.ERROR);
+                    });
+            }
         },
-        [accessToken, basicData.debtor.budgetId, basicData.payer.budgetId, debtorSaveTransaction, payerSaveTransaction],
+        [accessToken, basicData.debtor.budgetId, basicData.payer.budgetId, debtorSaveTransaction, payerSaveTransaction, payerTransactionSaveStatus, debtorTransactionSaveStatus],
     );
 
     const getOverallSaveStatus = (): LoadingStatus => {
@@ -101,6 +102,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
                         budgetId={basicData.payer.budgetId}
                         payeeName={basicData.payeeName}
                         memo={basicData.memo}
+                        saveStatus={payerTransactionSaveStatus}
                     />
                     <SaveTransactionListSection
                         saveTransaction={debtorSaveTransaction}
@@ -108,6 +110,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
                         budgetId={basicData.debtor.budgetId}
                         payeeName={basicData.payeeName}
                         memo={basicData.memo}
+                        saveStatus={debtorTransactionSaveStatus}
                     />
                 </View>
             </CustomScrollView>
@@ -119,7 +122,7 @@ export const SaveScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>
                     icon={saveButtonIcon}
                     onPress={save}
                 >
-                    {overallSaveStatus === LoadingStatus.ERROR ? 'Retry' : 'Save'}
+                    {overallSaveStatus === LoadingStatus.ERROR ? 'Retry failed transactions' : 'Save'}
                 </Button>
             </View>
         </View>
