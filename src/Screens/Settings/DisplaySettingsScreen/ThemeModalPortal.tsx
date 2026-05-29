@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
+import { Alert } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { saveThemeTypeSetting, selectThemeTypeSetting } from '../../../redux/features/displaySettings/displaySettingsSlice';
 import { THEME_TYPE_LABELS, ThemeType } from '../../../redux/features/displaySettings/ThemeType';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
-import { useAppDispatch } from '../../../Hooks/useAppDispatch';
+import { useThrowingDispatch } from '../../../Hooks/useThrowingDispatch';
 import { PortalModal } from '../../../Component/PortalModal';
 
 type Props = {
@@ -12,7 +13,7 @@ type Props = {
 }
 
 export const ThemeModalPortal = (props: Props) => {
-    const dispatch = useAppDispatch();
+    const throwingDispatch = useThrowingDispatch();
     const themeTypeSetting = useAppSelector(selectThemeTypeSetting);
 
     const radioButton = (themeType: ThemeType) => (
@@ -25,9 +26,13 @@ export const ThemeModalPortal = (props: Props) => {
 
     const save = useCallback(
         async (newThemeType: string) => {
-            await dispatch(saveThemeTypeSetting(newThemeType as ThemeType));
+            try {
+                await throwingDispatch(saveThemeTypeSetting(newThemeType as ThemeType));
+            } catch {
+                Alert.alert('Error', 'Could not save. Please try again.');
+            }
         },
-        [dispatch],
+        [throwingDispatch],
     );
 
     return (
