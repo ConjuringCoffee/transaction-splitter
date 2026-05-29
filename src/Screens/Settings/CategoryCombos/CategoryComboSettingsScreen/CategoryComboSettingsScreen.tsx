@@ -50,6 +50,10 @@ export const CategoryComboSettingsScreen = ({ navigation }: MyStackScreenProps<S
         }
     }, [dispatch, budgets, categoriesSecondProfileFetchStatus, accessToken]);
 
+    if (categoriesFirstProfileFetchStatus === LoadingStatus.ERROR || categoriesSecondProfileFetchStatus === LoadingStatus.ERROR) {
+        throw new Error('Failed to load categories');
+    }
+
     const everythingLoaded
         = categoriesFirstProfileFetchStatus === LoadingStatus.SUCCESSFUL
         && categoriesSecondProfileFetchStatus === LoadingStatus.SUCCESSFUL;

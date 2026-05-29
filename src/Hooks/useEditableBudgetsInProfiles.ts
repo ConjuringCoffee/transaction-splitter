@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { Updater, useImmer } from 'use-immer';
 import { BudgetInProfile, Profile, saveProfile, selectProfile } from '../redux/features/profile/profileSlice';
-import { useAppDispatch } from './useAppDispatch';
+import { useThrowingDispatch } from './useThrowingDispatch';
 import { useAppSelector } from './useAppSelector';
 
 export type EditableBudgetInProfile = {
@@ -28,7 +28,7 @@ export const useEditableBudgetsInProfiles = (): Returning => {
     const [budgetInProfile1, setBudgetInProfile1] = useImmer<EditableBudgetInProfile>(savedProfile ? savedProfile.budgets[0] : emptyBudgetInProfile);
     const [budgetInProfile2, setBudgetInProfile2] = useImmer<EditableBudgetInProfile>(savedProfile ? savedProfile.budgets[1] : emptyBudgetInProfile);
 
-    const dispatch = useAppDispatch();
+    const throwingDispatch = useThrowingDispatch();
 
     const isBudgetInProfileValid = useCallback((budgetInProfile: EditableBudgetInProfile): boolean => {
         return [
@@ -63,8 +63,8 @@ export const useEditableBudgetsInProfiles = (): Returning => {
                 finalizeEditableBudgetInProfile(budgetInProfile2),
             ],
         };
-        dispatch(saveProfile(profile));
-    }, [finalizeEditableBudgetInProfile, budgetInProfile1, budgetInProfile2, dispatch]);
+        await throwingDispatch(saveProfile(profile));
+    }, [finalizeEditableBudgetInProfile, budgetInProfile1, budgetInProfile2, throwingDispatch]);
 
     return [
         budgetInProfile1,

@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { Alert } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { CategoryComboInputView } from '../CategoryComboInputView';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
@@ -6,7 +7,7 @@ import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { addCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { selectProfile } from '../../../../redux/features/profile/profileSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
-import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
+import { useThrowingDispatch } from '../../../../Hooks/useThrowingDispatch';
 import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
 import { useTheme } from '../../../../Hooks/useTheme';
 
@@ -17,7 +18,7 @@ const ICON_SAVE = 'check';
 const SCREEN_TITLE = 'Create Category Combo';
 
 export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
-    const dispatch = useAppDispatch();
+    const throwingDispatch = useThrowingDispatch();
     const [navigateBack] = useNavigateBack(navigation);
     const [theme] = useTheme();
     const profile = useAppSelector(selectProfile);
@@ -29,26 +30,30 @@ export const CreateCategoryComboScreen = ({ navigation }: MyStackScreenProps<Scr
     const readyToSave = name.length > 0 && categoryIdFirstProfile;
 
     const saveAndNavigate = useCallback(
-        () => {
+        async () => {
             if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
                 throw new Error('Not ready to save yet');
             }
 
-            dispatch(addCategoryCombo({
-                name: name,
-                categories: [
-                    {
-                        budgetId: budgets[0].budgetId,
-                        id: categoryIdFirstProfile,
-                    },
-                    {
-                        budgetId: budgets[1].budgetId,
-                        id: categoryIdSecondProfile,
-                    }],
-            }));
-            navigateBack();
+            try {
+                await throwingDispatch(addCategoryCombo({
+                    name: name,
+                    categories: [
+                        {
+                            budgetId: budgets[0].budgetId,
+                            id: categoryIdFirstProfile,
+                        },
+                        {
+                            budgetId: budgets[1].budgetId,
+                            id: categoryIdSecondProfile,
+                        }],
+                }));
+                navigateBack();
+            } catch {
+                Alert.alert('Error', 'Could not save. Please try again.');
+            }
         },
-        [categoryIdFirstProfile, categoryIdSecondProfile, dispatch, name, navigateBack, budgets],
+        [categoryIdFirstProfile, categoryIdSecondProfile, throwingDispatch, name, navigateBack, budgets],
     );
 
     const navigationBarAddition = useMemo(

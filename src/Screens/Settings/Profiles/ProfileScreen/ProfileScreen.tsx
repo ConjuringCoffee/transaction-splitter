@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import { Alert } from 'react-native';
 import { CustomScrollView } from '../../../../Component/CustomScrollView';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { BudgetInProfileInputSection } from '../BudgetInProfileInputSection';
@@ -27,8 +28,12 @@ export const ProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
     const [theme] = useTheme();
 
     const saveAndNavigate = useCallback(async (): Promise<void> => {
-        save();
-        navigateBack();
+        try {
+            await save();
+            navigateBack();
+        } catch {
+            Alert.alert('Error', 'Could not save. Please try again.');
+        }
     }, [navigateBack, save]);
 
     const navigationBarAddition = useMemo(

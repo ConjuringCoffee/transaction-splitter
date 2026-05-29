@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { saveAccessToken, selectAccessToken } from '../../../redux/features/accessToken/accessTokenSlice';
@@ -8,7 +8,7 @@ import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { AccessTokenInput } from './AccessTokenInput';
 import { useNavigateBack } from '../../../Hooks/useNavigateBack';
 import { useConnectionTest } from '../../../Hooks/useConnectionTest';
-import { useAppDispatch } from '../../../Hooks/useAppDispatch';
+import { useThrowingDispatch } from '../../../Hooks/useThrowingDispatch';
 import { useNavigationSettings } from '../../../Hooks/useNavigationSettings';
 import { useTheme } from '../../../Hooks/useTheme';
 
@@ -21,7 +21,7 @@ const ICON_CONNECTION_SUCCESS = 'check';
 const ICON_CONNECTION_ERROR = 'alert-circle';
 
 export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
-    const dispatch = useAppDispatch();
+    const throwingDispatch = useThrowingDispatch();
     const accessToken = useAppSelector(selectAccessToken);
     const [enteredToken, setEnteredToken] = useState<string>(accessToken);
     const [connectionStatus, testConnection] = useConnectionTest();
@@ -33,13 +33,17 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
             <Appbar.Action
                 icon={ICON_SAVE}
                 iconColor={theme.colors.onPrimary}
-                onPress={() => {
-                    dispatch(saveAccessToken(enteredToken));
-                    navigateBack();
+                onPress={async () => {
+                    try {
+                        await throwingDispatch(saveAccessToken(enteredToken));
+                        navigateBack();
+                    } catch {
+                        Alert.alert('Error', 'Could not save. Please try again.');
+                    }
                 }}
             />
         ),
-        [dispatch, enteredToken, navigateBack, theme],
+        [throwingDispatch, enteredToken, navigateBack, theme],
     );
 
     useNavigationSettings({

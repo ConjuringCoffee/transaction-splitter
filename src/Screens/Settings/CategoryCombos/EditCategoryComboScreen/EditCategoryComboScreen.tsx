@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { Alert } from 'react-native';
 import { Appbar, Menu } from 'react-native-paper';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { deleteCategoryCombo, updateCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
@@ -7,7 +8,7 @@ import { selectProfile } from '../../../../redux/features/profile/profileSlice';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { CategoryComboInputView } from '../CategoryComboInputView';
 import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
-import { useAppDispatch } from '../../../../Hooks/useAppDispatch';
+import { useThrowingDispatch } from '../../../../Hooks/useThrowingDispatch';
 import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
 import { useTheme } from '../../../../Hooks/useTheme';
 
@@ -18,7 +19,7 @@ const SCREEN_TITLE = 'Edit Cat. Combo';
 const ICON_SAVE = 'check';
 
 export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProps<ScreenName>) => {
-    const dispatch = useAppDispatch();
+    const throwingDispatch = useThrowingDispatch();
     const { categoryCombo } = route.params;
 
     const profile = useAppSelector(selectProfile);
@@ -35,12 +36,16 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile;
 
     const onSelectDeletion = useCallback(
-        (): void => {
-            dispatch(deleteCategoryCombo(categoryCombo.id));
-            setMenuVisible(false);
-            navigateBack();
+        async (): Promise<void> => {
+            try {
+                await throwingDispatch(deleteCategoryCombo(categoryCombo.id));
+                setMenuVisible(false);
+                navigateBack();
+            } catch {
+                Alert.alert('Error', 'Could not delete. Please try again.');
+            }
         },
-        [categoryCombo.id, dispatch, navigateBack],
+        [categoryCombo.id, throwingDispatch, navigateBack],
     );
 
     const moreMenu = useMemo(
@@ -60,31 +65,35 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     );
 
     const saveAndNavigate = useCallback(
-        () => {
+        async () => {
             if (!categoryIdFirstProfile || !categoryIdSecondProfile) {
                 throw new Error('Not ready to save yet');
             }
 
-            dispatch(updateCategoryCombo(
-                {
-                    categoryCombo: {
-                        id: categoryCombo.id,
-                        name: name,
-                        categories: [
-                            {
-                                budgetId: budgets[0].budgetId,
-                                id: categoryIdFirstProfile,
-                            },
-                            {
-                                budgetId: budgets[1].budgetId,
-                                id: categoryIdSecondProfile,
-                            }],
+            try {
+                await throwingDispatch(updateCategoryCombo(
+                    {
+                        categoryCombo: {
+                            id: categoryCombo.id,
+                            name: name,
+                            categories: [
+                                {
+                                    budgetId: budgets[0].budgetId,
+                                    id: categoryIdFirstProfile,
+                                },
+                                {
+                                    budgetId: budgets[1].budgetId,
+                                    id: categoryIdSecondProfile,
+                                }],
+                        },
                     },
-                },
-            ));
-            navigateBack();
+                ));
+                navigateBack();
+            } catch {
+                Alert.alert('Error', 'Could not save. Please try again.');
+            }
         },
-        [categoryCombo.id, categoryIdFirstProfile, categoryIdSecondProfile, dispatch, name, navigateBack, budgets],
+        [categoryCombo.id, categoryIdFirstProfile, categoryIdSecondProfile, throwingDispatch, name, navigateBack, budgets],
     );
 
     const navigationBarAdditions = useMemo(
