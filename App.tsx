@@ -35,6 +35,10 @@ const ReduxProvidedApp = () => {
         return null;
     }
 
+    if (initialFetchStatus === InitialFetchStatus.ERROR) {
+        throw new Error('Failed to load app data');
+    }
+
     return (
         <View
             style={[styles.rootView, { backgroundColor: theme.colors.background }]}
