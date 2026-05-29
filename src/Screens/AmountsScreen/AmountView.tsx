@@ -10,19 +10,13 @@ import { CategoryInput } from './CategoryInput';
 import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
 import { selectCategoryCombos } from '../../redux/features/categoryCombos/categoryCombosSlice';
 import { useTheme } from '../../Hooks/useTheme';
+import { UserInterfaceAmountEntry } from './AmountsScreen';
 
 type Props<T extends keyof StackParameterList> = {
-    amountText: string,
+    amountEntry: UserInterfaceAmountEntry,
     payerBudgetId: string,
     debtorBudgetId: string,
-    setAmountText: (newAmount: string) => void,
-    setMemo: (memo: string) => void,
-    payerCategoryId: string | undefined,
-    setPayerCategoryId: (id: string | undefined) => void,
-    debtorCategoryId: string | undefined,
-    setDebtorCategoryId: (id: string | undefined) => void,
-    splitPercentToPayer: number | undefined,
-    setSplitPercentToPayer: (splitPercent: number | undefined) => void,
+    updateAmountEntry: (changes: Partial<UserInterfaceAmountEntry>) => void,
     onRemovePress: () => void,
     navigation: MyStackNavigationProp<T>,
     quickModeEnabled: boolean,
@@ -34,17 +28,10 @@ const ICON_CATEGORY_COMBO = 'call-split';
 const ICON_DELETE = 'delete';
 
 export const AmountView = <T extends keyof StackParameterList>({
-    amountText,
+    amountEntry,
     payerBudgetId,
     debtorBudgetId,
-    setAmountText,
-    setMemo,
-    payerCategoryId,
-    setPayerCategoryId,
-    debtorCategoryId,
-    setDebtorCategoryId,
-    splitPercentToPayer,
-    setSplitPercentToPayer,
+    updateAmountEntry,
     onRemovePress,
     navigation,
     quickModeEnabled,
@@ -59,14 +46,14 @@ export const AmountView = <T extends keyof StackParameterList>({
     categoryCombosRef.current = categoryCombos;
 
     useEffect(() => {
-        if (payerCategoryId !== undefined && debtorCategoryId !== undefined) {
-            if (splitPercentToPayer === undefined) {
-                setSplitPercentToPayer(DEFAULT_SPLIT_PERCENT_TO_PAYER);
+        if (amountEntry.payerCategoryId !== undefined && amountEntry.debtorCategoryId !== undefined) {
+            if (amountEntry.splitPercentToPayer === undefined) {
+                updateAmountEntry({ splitPercentToPayer: DEFAULT_SPLIT_PERCENT_TO_PAYER });
             }
-        } else if (splitPercentToPayer !== undefined) {
-            setSplitPercentToPayer(undefined);
+        } else if (amountEntry.splitPercentToPayer !== undefined) {
+            updateAmountEntry({ splitPercentToPayer: undefined });
         }
-    }, [payerCategoryId, debtorCategoryId, splitPercentToPayer, setSplitPercentToPayer]);
+    }, [amountEntry.payerCategoryId, amountEntry.debtorCategoryId, amountEntry.splitPercentToPayer, updateAmountEntry]);
 
     const navigateToCategoryComboScreen = useCallback(
         () => {
@@ -80,9 +67,9 @@ export const AmountView = <T extends keyof StackParameterList>({
 
                     categoryCombo.categories.forEach((category) => {
                         if (payerBudgetId === category.budgetId) {
-                            setPayerCategoryId(category.id);
+                            updateAmountEntry({ payerCategoryId: category.id });
                         } else if (debtorBudgetId === category.budgetId) {
-                            setDebtorCategoryId(category.id);
+                            updateAmountEntry({ debtorCategoryId: category.id });
                         } else {
                             throw new Error('Combination belongs to another budget');
                         }
@@ -90,14 +77,14 @@ export const AmountView = <T extends keyof StackParameterList>({
                 },
             });
         },
-        [navigation, payerBudgetId, debtorBudgetId, setPayerCategoryId, setDebtorCategoryId],
+        [navigation, payerBudgetId, debtorBudgetId, updateAmountEntry],
     );
 
     const payerCategories = useAppSelector((state) => selectCategories(state, payerBudgetId));
     const debtorCategories = useAppSelector((state) => selectCategories(state, debtorBudgetId));
 
-    const payerCategory = payerCategoryId ? payerCategories[payerCategoryId] : undefined;
-    const debtorCategory = debtorCategoryId ? debtorCategories[debtorCategoryId] : undefined;
+    const payerCategory = amountEntry.payerCategoryId ? payerCategories[amountEntry.payerCategoryId] : undefined;
+    const debtorCategory = amountEntry.debtorCategoryId ? debtorCategories[amountEntry.debtorCategoryId] : undefined;
 
     const cardStyle = {
         padding: theme.cardPadding,
@@ -110,8 +97,8 @@ export const AmountView = <T extends keyof StackParameterList>({
             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
                 <View style={{ flex: 1 }}>
                     <SubAmountInput
-                        value={amountText}
-                        setValue={setAmountText}
+                        value={amountEntry.amountText}
+                        setValue={(text) => updateAmountEntry({ amountText: text })}
                         navigation={navigation}
                     />
                 </View>
@@ -126,19 +113,23 @@ export const AmountView = <T extends keyof StackParameterList>({
                         label='Payer Category'
                         text={payerCategory?.name ?? ''}
                         budgetId={payerBudgetId}
-                        onSelect={setPayerCategoryId}
+                        onSelect={(id) => updateAmountEntry({ payerCategoryId: id })}
                         navigation={navigation}
                     />
                     <CategoryInput
                         label='Debtor Category'
                         text={debtorCategory?.name ?? ''}
                         budgetId={debtorBudgetId}
-                        onSelect={setDebtorCategoryId}
+                        onSelect={(id) => updateAmountEntry({ debtorCategoryId: id })}
                         navigation={navigation}
                     />
                 </View>
                 <View style={{ justifyContent: 'center' }}>
-                    <IconButton icon={ICON_CATEGORY_COMBO} onPress={navigateToCategoryComboScreen} style={{ transform: [{ rotate: '270deg' }] }} />
+                    <IconButton
+                        icon={ICON_CATEGORY_COMBO}
+                        onPress={navigateToCategoryComboScreen}
+                        style={{ transform: [{ rotate: '270deg' }] }}
+                    />
                 </View>
             </View>
             {quickModeEnabled
@@ -149,13 +140,13 @@ export const AmountView = <T extends keyof StackParameterList>({
                             label='Memo'
                             placeholder='Enter memo'
                             mode='outlined'
-                            onChangeText={setMemo}
+                            onChangeText={(text) => updateAmountEntry({ memo: text })}
                         />
                         <SplitPercentInput
-                            payerCategoryChosen={payerCategoryId !== undefined}
-                            debtorCategoryChosen={debtorCategoryId !== undefined}
-                            splitPercentToPayer={splitPercentToPayer}
-                            setSplitPercentToPayer={setSplitPercentToPayer}
+                            payerCategoryChosen={amountEntry.payerCategoryId !== undefined}
+                            debtorCategoryChosen={amountEntry.debtorCategoryId !== undefined}
+                            splitPercentToPayer={amountEntry.splitPercentToPayer}
+                            setSplitPercentToPayer={(pct) => updateAmountEntry({ splitPercentToPayer: pct })}
                         />
                     </View>
                 )
