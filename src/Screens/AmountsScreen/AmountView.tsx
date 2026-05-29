@@ -140,6 +140,7 @@ export const AmountView = <T extends keyof StackParameterList>({
                             label='Memo'
                             placeholder='Enter memo'
                             mode='outlined'
+                            value={amountEntry.memo}
                             onChangeText={(text) => updateAmountEntry({ memo: text })}
                         />
                         <SplitPercentInput
