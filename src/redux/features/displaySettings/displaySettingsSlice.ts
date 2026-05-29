@@ -16,7 +16,6 @@ type DisplaySettings = {
 }
 
 type SavedDisplaySettings = {
-    numberFormat?: NumberFormatSettings,
     themeType?: ThemeType,
 }
 
@@ -62,12 +61,8 @@ const readDisplaySettings = async (): Promise<SavedDisplaySettings> => {
     return JSON.parse(jsonValue);
 };
 
-const saveDisplaySettings = async (displaySettings: DisplaySettings): Promise<void> => {
-    const jsonValue = JSON.stringify(displaySettings);
-    await SecureStore.setItemAsync(STORAGE_KEY, jsonValue, { keychainAccessible: SecureStore.WHEN_UNLOCKED });
-};
 
-const getDefaultNumberFormatSettings = (): NumberFormatSettings => {
+const getLocaleNumberFormatSettings = (): NumberFormatSettings => {
     const locales = getLocales();
     const localeToUse = locales[0];
 
@@ -80,7 +75,7 @@ const getDefaultNumberFormatSettings = (): NumberFormatSettings => {
 export const fetchDisplaySettings = createAsyncThunk<DisplaySettings, void, {}>('displaySettings/fetchDisplaySettings', async () => {
     const displaySettingsRead = await readDisplaySettings();
 
-    const numberFormatSettings = displaySettingsRead.numberFormat ?? getDefaultNumberFormatSettings();
+    const numberFormatSettings = getLocaleNumberFormatSettings();
     const themeType = displaySettingsRead.themeType ?? initialState.displaySettings.themeType;
 
     return {
@@ -97,7 +92,8 @@ export const saveThemeTypeSetting = createAsyncThunk<
         themeType: themeType,
     };
 
-    await saveDisplaySettings(displaySettings);
+    const toSave: SavedDisplaySettings = { themeType: displaySettings.themeType };
+    await SecureStore.setItemAsync(STORAGE_KEY, JSON.stringify(toSave), { keychainAccessible: SecureStore.WHEN_UNLOCKED });
     return displaySettings;
 });
 
