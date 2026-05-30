@@ -35,17 +35,31 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
 
     const readyToSave = name.length > 0 && categoryIdFirstProfile && categoryIdSecondProfile;
 
-    const onSelectDeletion = useCallback(
+    const performDeletionAndNavigateBack = useCallback(
         async (): Promise<void> => {
             try {
                 await throwingDispatch(deleteCategoryCombo(categoryCombo.id));
-                setMenuVisible(false);
                 navigateBack();
             } catch {
                 Alert.alert('Error', 'Could not delete. Please try again.');
             }
         },
         [categoryCombo.id, throwingDispatch, navigateBack],
+    );
+
+    const onSelectDeletion = useCallback(
+        (): void => {
+            setMenuVisible(false);
+            Alert.alert(
+                'Delete Category Combination',
+                'Are you sure you want to delete this category combination?',
+                [
+                    { text: 'Cancel', style: 'cancel' },
+                    { text: 'Delete', style: 'destructive', onPress: performDeletionAndNavigateBack },
+                ],
+            );
+        },
+        [performDeletionAndNavigateBack],
     );
 
     const moreMenu = useMemo(
