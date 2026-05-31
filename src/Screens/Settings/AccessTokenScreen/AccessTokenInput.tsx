@@ -22,6 +22,7 @@ export const AccessTokenInput = (props: Props) => {
                 label="YNAB Personal Access Token"
                 onChangeText={props.setToken}
                 value={props.token}
+                mode='outlined'
                 secureTextEntry={inputHidden}
                 error={props.connectionStatus.status === LoadingStatus.ERROR}
                 right={
