@@ -67,19 +67,20 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
     );
 
     return (
-        <View style={{ padding: theme.spacing }}>
+        <View style={{ padding: theme.spacing, gap: theme.spacing }}>
             <AccessTokenInput
                 token={enteredToken}
                 setToken={setEnteredToken}
                 connectionStatus={connectionStatus}
             />
             <Button
+                mode='contained'
                 loading={connectionStatus.status === LoadingStatus.LOADING}
                 icon={iconForButton}
                 onPress={() => testConnection(enteredToken)}
             >
-                Test connection
+                    Test connection
             </Button>
-        </View >
+        </View>
     );
 };
