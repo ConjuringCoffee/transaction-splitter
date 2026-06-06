@@ -10,6 +10,7 @@ import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
 import { useTheme } from '../../../../Hooks/useTheme';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { useThrowingDispatch } from '../../../../Hooks/useThrowingDispatch';
+import { deleteAllCategoryCombos, selectCategoryCombos } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { BudgetInProfile, Profile, saveProfile, selectProfile } from '../../../../redux/features/profile/profileSlice';
 
 type ScreenName = 'Profile';
@@ -20,6 +21,7 @@ const EMPTY_BUDGET: EditableBudgetInProfile = { elegibleAccountIds: [] };
 
 export const ProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const savedProfile = useAppSelector(selectProfile);
+    const categoryCombos = useAppSelector(selectCategoryCombos);
     const throwingDispatch = useThrowingDispatch();
     const [navigateBack] = useNavigateBack(navigation);
     const [theme] = useTheme();
@@ -49,8 +51,14 @@ export const ProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
         };
     }, []);
 
-    const saveAndNavigate = useCallback(async (): Promise<void> => {
+    const budgetIdsChanged = budgetInProfile1.budgetId !== savedProfile?.budgets[0].budgetId
+        || budgetInProfile2.budgetId !== savedProfile?.budgets[1].budgetId;
+
+    const performSave = useCallback(async (): Promise<void> => {
         try {
+            if (budgetIdsChanged && categoryCombos.length > 0) {
+                await throwingDispatch(deleteAllCategoryCombos());
+            }
             const profile: Profile = {
                 budgets: [finalizeBudget(budgetInProfile1), finalizeBudget(budgetInProfile2)],
             };
@@ -59,7 +67,23 @@ export const ProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
         } catch {
             Alert.alert('Error', 'Could not save. Please try again.');
         }
-    }, [budgetInProfile1, budgetInProfile2, finalizeBudget, navigateBack, throwingDispatch]);
+    }, [budgetIdsChanged, budgetInProfile1, budgetInProfile2, categoryCombos.length, finalizeBudget, navigateBack, throwingDispatch]);
+
+    const saveAndNavigate = useCallback((): void => {
+        if (budgetIdsChanged && categoryCombos.length > 0) {
+            const count = categoryCombos.length;
+            Alert.alert(
+                'Delete category combos?',
+                `Changing the budget will delete all ${count} category combo${count !== 1 ? 's' : ''}. This cannot be undone.`,
+                [
+                    { text: 'Cancel', style: 'cancel' },
+                    { text: 'Delete & Save', style: 'destructive', onPress: performSave },
+                ],
+            );
+        } else {
+            void performSave();
+        }
+    }, [budgetIdsChanged, categoryCombos.length, performSave]);
 
     const navigationBarAddition = useMemo(
         () => (
