@@ -38,7 +38,7 @@ const buildSaveTransactions = (amountEntries: AmountEntry[], basicData: BasicDat
         payee_name: basicData.payeeName,
         memo: basicData.memo,
         subtransactions: [],
-        approved: true,
+        approved: basicData.approved,
     };
 
     const debtorSaveTransaction: ynab.SaveTransaction = {
@@ -48,7 +48,7 @@ const buildSaveTransactions = (amountEntries: AmountEntry[], basicData: BasicDat
         payee_name: basicData.payeeName,
         memo: basicData.memo,
         subtransactions: [],
-        approved: true,
+        approved: basicData.approved,
     };
 
     amountEntries.forEach((amountEntry) => {

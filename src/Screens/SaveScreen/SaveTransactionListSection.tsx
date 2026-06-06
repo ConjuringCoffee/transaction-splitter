@@ -103,6 +103,10 @@ export const SaveTransactionListSection = (props: Props) => {
                             <DataTable.Cell>Memo</DataTable.Cell>
                             <MultiLineTextDataTableCellView text={props.memo} />
                         </DataTable.Row>
+                        <DataTable.Row>
+                            <DataTable.Cell>Approved</DataTable.Cell>
+                            <DataTable.Cell>{props.saveTransaction.approved ? 'Yes' : 'No'}</DataTable.Cell>
+                        </DataTable.Row>
                     </DataTable>
                 </List.Accordion>
                 {props.saveTransaction.subtransactions
