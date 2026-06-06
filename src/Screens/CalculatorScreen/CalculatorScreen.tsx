@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParameterList } from '../../Navigation/ScreenParameters';
 import { CalculatorKeyboard } from './CalculatorKeyboard';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Calculation } from '../../Helper/Calculation';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { useAppSelector } from '../../Hooks/useAppSelector';
@@ -89,6 +89,25 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     );
 
     const [theme] = useTheme();
+
+    const resultText: string = useMemo(
+        () => {
+            const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
+            return convertNumberToText(currentResult);
+        },
+        [currentCalculation, numberFormatSettings, convertNumberToText],
+    );
+
+    const calculationScrollRef = useRef<ScrollView>(null);
+    const resultScrollRef = useRef<ScrollView>(null);
+
+    useEffect(() => {
+        calculationScrollRef.current?.scrollToEnd({ animated: false });
+    }, [currentCalculation]);
+
+    useEffect(() => {
+        resultScrollRef.current?.scrollToEnd({ animated: false });
+    }, [resultText]);
 
     const navigationBarAddition = useMemo(
         () => (
@@ -179,30 +198,33 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         [navigation],
     );
 
-    const resultText: string = useMemo(
-        () => {
-            const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
-            return convertNumberToText(currentResult);
-        },
-        [currentCalculation, numberFormatSettings, convertNumberToText],
-    );
-
     return (
         <View style={{ flex: 1, padding: theme.spacing }}>
             <CardSurface elevation={1}>
                 <View style={{ padding: theme.spacing }}>
-                    <Text
-                        variant='displaySmall'
-                        style={{ textAlign: 'right' }}
+                    <ScrollView
+                        ref={calculationScrollRef}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}
                     >
-                        {currentCalculation}
-                    </Text>
-                    <Text
-                        variant='headlineMedium'
-                        style={{ textAlign: 'right', color: theme.colors.onSurfaceVariant }}
+                        <Text variant='displaySmall'>
+                            {currentCalculation}
+                        </Text>
+                    </ScrollView>
+                    <ScrollView
+                        ref={resultScrollRef}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}
                     >
-                        {`= ${resultText}`}
-                    </Text>
+                        <Text
+                            variant='headlineMedium'
+                            style={{ color: theme.colors.onSurfaceVariant }}
+                        >
+                            {`= ${resultText}`}
+                        </Text>
+                    </ScrollView>
                 </View>
             </CardSurface>
             <CalculatorKeyboard
