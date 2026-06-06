@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chip, HelperText, List, TextInput } from 'react-native-paper';
+import { Chip, HelperText, Text, TextInput } from 'react-native-paper';
 import { selectActiveAccounts, selectBudgetById } from '../../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Account } from '../../../YnabApi/YnabApiWrapper';
@@ -47,24 +47,40 @@ export const ProfileBudgetDetailInput = (props: Props) => {
     );
 
     return (
-        <View style={{ padding: theme.cardPadding, gap: theme.spacing }}>
-            <TextInput
-                label='Displayed name'
-                value={props.displayName}
-                placeholder={budget.name}
-                onChangeText={props.setDisplayName}
-                mode='outlined'
-            />
-            <HelperText type='info'>
-                Leave empty to use the budget&apos;s name
-            </HelperText>
-            <List.Subheader>Debtor account</List.Subheader>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing }}>
-                {activeAccounts.map(renderDebtorChip)}
+        <View style={{ padding: theme.cardPadding, gap: theme.cardPadding }}>
+            <View>
+                <TextInput
+                    label='Displayed name'
+                    value={props.displayName}
+                    placeholder={budget.name}
+                    onChangeText={props.setDisplayName}
+                    mode='outlined'
+                />
+                <HelperText type='info'>
+                    Leave empty to use the budget&apos;s name
+                </HelperText>
             </View>
-            <List.Subheader>Eligible accounts</List.Subheader>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing }}>
-                {activeAccounts.map(renderEligibleChip)}
+            <View style={{ gap: 4 }}>
+                <Text
+                    variant='labelLarge'
+                    style={{ color: theme.colors.onSurfaceVariant }}
+                >
+                    Debtor account
+                </Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing }}>
+                    {activeAccounts.map(renderDebtorChip)}
+                </View>
+            </View>
+            <View style={{ gap: 4 }}>
+                <Text
+                    variant='labelLarge'
+                    style={{ color: theme.colors.onSurfaceVariant }}
+                >
+                    Eligible accounts
+                </Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing }}>
+                    {activeAccounts.map(renderEligibleChip)}
+                </View>
             </View>
         </View>
     );
