@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
 import { API } from 'ynab';
@@ -32,59 +32,61 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
     const [navigateBack] = useNavigateBack(navigation);
     const [theme] = useTheme();
 
+    const onSavePress = useCallback(async () => {
+        let newUserId: string;
+        try {
+            const response = await new API(enteredToken).user.getUser();
+            newUserId = response.data.user.id;
+        } catch {
+            Alert.alert('Invalid Token', 'Could not connect with this token. Please test the connection first.');
+            return;
+        }
+
+        if (profile?.ynabUserId !== undefined && newUserId !== profile.ynabUserId) {
+            Alert.alert(
+                'Different YNAB Account',
+                'This token belongs to a different YNAB account. All profiles and category combos will be deleted. Continue?',
+                [
+                    { text: 'Cancel', style: 'cancel' },
+                    {
+                        text: 'Continue',
+                        style: 'destructive',
+                        onPress: async () => {
+                            try {
+                                await throwingDispatch(deleteAllCategoryCombos());
+                                await throwingDispatch(deleteProfile());
+                                await throwingDispatch(saveAccessToken(enteredToken));
+                                navigateBack();
+                            } catch {
+                                Alert.alert('Error', 'Could not save. Please try again.');
+                            }
+                        },
+                    },
+                ],
+            );
+            return;
+        }
+
+        try {
+            await throwingDispatch(saveAccessToken(enteredToken));
+            if (profile !== null) {
+                await throwingDispatch(saveProfile({ ...profile, ynabUserId: newUserId }));
+            }
+            navigateBack();
+        } catch {
+            Alert.alert('Error', 'Could not save. Please try again.');
+        }
+    }, [throwingDispatch, enteredToken, profile, navigateBack]);
+
     const navigationBarAddition = useMemo(
         () => (
             <Appbar.Action
                 icon={ICON_SAVE}
                 iconColor={theme.colors.onPrimary}
-                onPress={async () => {
-                    let newUserId: string;
-                    try {
-                        const response = await new API(enteredToken).user.getUser();
-                        newUserId = response.data.user.id;
-                    } catch {
-                        Alert.alert('Invalid Token', 'Could not connect with this token. Please test the connection first.');
-                        return;
-                    }
-
-                    if (profile?.ynabUserId !== undefined && newUserId !== profile.ynabUserId) {
-                        Alert.alert(
-                            'Different YNAB Account',
-                            'This token belongs to a different YNAB account. All profiles and category combos will be deleted. Continue?',
-                            [
-                                { text: 'Cancel', style: 'cancel' },
-                                {
-                                    text: 'Continue',
-                                    style: 'destructive',
-                                    onPress: async () => {
-                                        try {
-                                            await throwingDispatch(deleteAllCategoryCombos());
-                                            await throwingDispatch(deleteProfile());
-                                            await throwingDispatch(saveAccessToken(enteredToken));
-                                            navigateBack();
-                                        } catch {
-                                            Alert.alert('Error', 'Could not save. Please try again.');
-                                        }
-                                    },
-                                },
-                            ],
-                        );
-                        return;
-                    }
-
-                    try {
-                        await throwingDispatch(saveAccessToken(enteredToken));
-                        if (profile !== null) {
-                            await throwingDispatch(saveProfile({ ...profile, ynabUserId: newUserId }));
-                        }
-                        navigateBack();
-                    } catch {
-                        Alert.alert('Error', 'Could not save. Please try again.');
-                    }
-                }}
+                onPress={onSavePress}
             />
         ),
-        [throwingDispatch, enteredToken, profile, navigateBack, theme],
+        [onSavePress, theme],
     );
 
     useNavigationSettings({
