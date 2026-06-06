@@ -21,11 +21,21 @@ type Props = {
 export const CalculatorKeyboard = (props: Props) => {
     const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
     const [theme] = useTheme();
+    const buttonGap = theme.spacing / 2;
 
     return (
-        <View style={[styles.mainLayout, { borderTopColor: theme.colors.outlineVariant, backgroundColor: theme.colors.elevation.level1 }]}>
-            <View style={styles.numberLayout}>
-                <View style={styles.numberRow}>
+        <View
+            style={[styles.mainLayout, {
+                borderTopColor: theme.colors.outlineVariant,
+                backgroundColor: theme.colors.elevation.level1,
+                borderTopLeftRadius: theme.roundness * 3,
+                borderTopRightRadius: theme.roundness * 3,
+                padding: theme.spacing,
+                gap: theme.spacing,
+            }]}
+        >
+            <View style={[styles.numberLayout, { gap: buttonGap }]}>
+                <View style={[styles.numberRow, { gap: buttonGap }]}>
                     <KeyboardButton
                         value='AC'
                         variant='action'
@@ -37,22 +47,22 @@ export const CalculatorKeyboard = (props: Props) => {
                         onPress={props.onBackPress}
                     />
                 </View>
-                <View style={styles.numberRow}>
+                <View style={[styles.numberRow, { gap: buttonGap }]}>
                     <KeyboardNumberButton number={7} onPress={props.onDigitPress} />
                     <KeyboardNumberButton number={8} onPress={props.onDigitPress} />
                     <KeyboardNumberButton number={9} onPress={props.onDigitPress} />
                 </View>
-                <View style={styles.numberRow}>
+                <View style={[styles.numberRow, { gap: buttonGap }]}>
                     <KeyboardNumberButton number={4} onPress={props.onDigitPress} />
                     <KeyboardNumberButton number={5} onPress={props.onDigitPress} />
                     <KeyboardNumberButton number={6} onPress={props.onDigitPress} />
                 </View>
-                <View style={styles.numberRow}>
+                <View style={[styles.numberRow, { gap: buttonGap }]}>
                     <KeyboardNumberButton number={3} onPress={props.onDigitPress} />
                     <KeyboardNumberButton number={2} onPress={props.onDigitPress} />
                     <KeyboardNumberButton number={1} onPress={props.onDigitPress} />
                 </View>
-                <View style={styles.numberRow}>
+                <View style={[styles.numberRow, { gap: buttonGap }]}>
                     <KeyboardButton
                         value='Cancel'
                         variant='action'
@@ -66,7 +76,7 @@ export const CalculatorKeyboard = (props: Props) => {
                     />
                 </View>
             </View>
-            <View style={styles.operatorLayout}>
+            <View style={[styles.operatorLayout, { gap: buttonGap }]}>
                 <KeyboardButton value='-' variant='action' onPress={props.onOperatorSubtractPress} />
                 <KeyboardButton value='+' variant='action' onPress={props.onOperatorAddPress} />
                 <KeyboardButton value='=' variant='action' onPress={props.onCalculatePress} />
@@ -79,16 +89,17 @@ export const CalculatorKeyboard = (props: Props) => {
 const styles = StyleSheet.create({
     mainLayout: {
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
         borderTopWidth: 1,
         position: 'absolute',
         bottom: 0,
+        left: 0,
+        right: 0,
     },
     numberLayout: {
-        width: '82%',
+        flex: 5,
     },
     operatorLayout: {
-        width: '18%',
+        flex: 1,
     },
     numberRow: {
         flexDirection: 'row',
