@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, HelperText, List, RadioButton, TextInput } from 'react-native-paper';
+import { Chip, HelperText, List, TextInput } from 'react-native-paper';
 import { selectActiveAccounts, selectBudgetById } from '../../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Account } from '../../../YnabApi/YnabApiWrapper';
@@ -21,22 +21,29 @@ export const ProfileBudgetDetailInput = (props: Props) => {
     const activeAccounts = useAppSelector((state) => selectActiveAccounts(state, props.budgetId));
     const [theme] = useTheme();
 
-    const renderRadioButton = (account: Account) => (
-        <RadioButton.Item
+    const renderDebtorChip = (account: Account) => (
+        <Chip
             key={account.id}
-            value={account.id}
-            label={account.name}
-        />
+            mode='outlined'
+            selected={account.id === props.debtorAccountId}
+            style={account.id === props.debtorAccountId ? { backgroundColor: theme.colors.secondaryContainer } : undefined}
+            onPress={() => props.setDebtorAccountId(account.id)}
+        >
+            {account.name}
+        </Chip>
     );
 
-    const renderCheckbox = (account: Account) => (
-        <Checkbox.Item
+    const renderEligibleChip = (account: Account) => (
+        <Chip
             key={account.id}
-            label={account.name}
-            status={props.elegibleAccountIds.includes(account.id) ? 'checked' : 'unchecked'}
+            mode='outlined'
+            selected={props.elegibleAccountIds.includes(account.id)}
+            style={props.elegibleAccountIds.includes(account.id) ? { backgroundColor: theme.colors.secondaryContainer } : undefined}
             onPress={() => props.toggleAccountElegible(account.id)}
             disabled={props.debtorAccountId === account.id}
-        />
+        >
+            {account.name}
+        </Chip>
     );
 
     return (
@@ -52,14 +59,13 @@ export const ProfileBudgetDetailInput = (props: Props) => {
                 Leave empty to use the budget&apos;s name
             </HelperText>
             <List.Subheader>Debtor account</List.Subheader>
-            <RadioButton.Group
-                value={props.debtorAccountId}
-                onValueChange={props.setDebtorAccountId}
-            >
-                {activeAccounts.map(renderRadioButton)}
-            </RadioButton.Group>
-            <List.Subheader>Elegible accounts</List.Subheader>
-            {activeAccounts.map(renderCheckbox)}
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing }}>
+                {activeAccounts.map(renderDebtorChip)}
+            </View>
+            <List.Subheader>Eligible accounts</List.Subheader>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing }}>
+                {activeAccounts.map(renderEligibleChip)}
+            </View>
         </View>
     );
 };
