@@ -1,13 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
-import { Appbar, Menu } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { deleteCategoryCombo, updateCategoryCombo } from '../../../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../../../Hooks/useAppSelector';
 import { selectProfile } from '../../../../redux/features/profile/profileSlice';
 import { useNavigateBack } from '../../../../Hooks/useNavigateBack';
 import { CategoryComboInputView } from '../CategoryComboInputView';
-import { AppBarMoreMenu } from '../../../../Component/AppBarMoreMenu';
 import { useThrowingDispatch } from '../../../../Hooks/useThrowingDispatch';
 import { useNavigationSettings } from '../../../../Hooks/useNavigationSettings';
 import { useTheme } from '../../../../Hooks/useTheme';
@@ -28,8 +27,6 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
     const [name, setName] = useState<string>(categoryCombo?.name ?? '');
     const [categoryIdFirstProfile, setCategoryIdFirstProfile] = useState<string | undefined>(categoryCombo?.categories[0].id);
     const [categoryIdSecondProfile, setCategoryIdSecondProfile] = useState<string | undefined>(categoryCombo?.categories[1].id);
-    const [menuVisible, setMenuVisible] = React.useState<boolean>(false);
-
     const [navigateBack] = useNavigateBack(navigation);
     const [theme] = useTheme();
 
@@ -47,9 +44,8 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
         [categoryCombo.id, throwingDispatch, navigateBack],
     );
 
-    const onSelectDeletion = useCallback(
+    const onDeletePress = useCallback(
         (): void => {
-            setMenuVisible(false);
             Alert.alert(
                 'Delete Category Combination',
                 'Are you sure you want to delete this category combination?',
@@ -62,20 +58,16 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
         [performDeletionAndNavigateBack],
     );
 
-    const moreMenu = useMemo(
+    const deleteButton = useMemo(
         () => (
-            <AppBarMoreMenu
-                key='more'
-                visible={menuVisible}
-                setVisible={setMenuVisible}
-            >
-                <Menu.Item
-                    title="Delete"
-                    onPress={onSelectDeletion}
-                />
-            </AppBarMoreMenu>
+            <Appbar.Action
+                key='delete'
+                icon='delete'
+                iconColor={theme.colors.onPrimary}
+                onPress={onDeletePress}
+            />
         ),
-        [menuVisible, onSelectDeletion],
+        [onDeletePress, theme],
     );
 
     const saveAndNavigate = useCallback(
@@ -120,10 +112,10 @@ export const EditCategoryComboScreen = ({ navigation, route }: MyStackScreenProp
                     disabled={!readyToSave}
                     onPress={saveAndNavigate}
                 />,
-                moreMenu,
+                deleteButton,
             ]
         ),
-        [moreMenu, readyToSave, saveAndNavigate, theme],
+        [deleteButton, readyToSave, saveAndNavigate, theme],
     );
 
     useNavigationSettings({
