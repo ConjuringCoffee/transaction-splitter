@@ -6,7 +6,7 @@ import { useTheme } from '../../Hooks/useTheme';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectProfile } from '../../redux/features/profile/profileSlice';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../Hooks/useInitialFetchStatus';
-import { fetchCategoryGroups, selectAccountById, selectActiveAccounts, selectBudgetById, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
+import { fetchCategoryGroups, selectAccountById, selectActiveAccounts, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { TotalAmountInput } from './TotalAmountInput';
 import { DatePickerInput } from 'react-native-paper-dates';
@@ -61,25 +61,30 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
         [profile, payerBudgetIndex],
     );
 
-    const payerBudget = useAppSelector((state) => selectBudgetById(state, payerBudgetInProfile.budgetId));
-    const [payerAccountID, setPayerAccountID] = useState<string>(() => {
-        const initial = profile.budgets[0];
-        const defaultId = initial.defaultEligibleAccountId;
-        if (defaultId && initial.elegibleAccountIds.includes(defaultId)) {
-            return defaultId;
-        }
-        return initial.elegibleAccountIds[0] ?? payerBudget.accounts[0].id;
-    });
     const payerTransferAccount = useAppSelector((state) => selectAccountById(state, payerBudgetInProfile.budgetId, payerBudgetInProfile.debtorAccountId));
 
-    const activeOnBudgetAccounts = useAppSelector((state) => selectActiveAccounts(state, payerBudgetInProfile.budgetId));
-    const elegibleAccounts = activeOnBudgetAccounts.filter((account) => payerBudgetInProfile.elegibleAccountIds.find((id) => id === account.id));
+    const activeAccountsBudget0 = useAppSelector((state) => selectActiveAccounts(state, profile.budgets[0].budgetId));
+    const activeAccountsBudget1 = useAppSelector((state) => selectActiveAccounts(state, profile.budgets[1].budgetId));
+    const elegibleAccounts = (payerBudgetIndex === 0 ? activeAccountsBudget0 : activeAccountsBudget1)
+        .filter((account) => payerBudgetInProfile.elegibleAccountIds.includes(account.id));
 
-    useEffect(() => {
-        const defaultId = payerBudgetInProfile.defaultEligibleAccountId;
-        const isDefaultValid = defaultId && elegibleAccounts.some((a) => a.id === defaultId);
-        setPayerAccountID(isDefaultValid ? defaultId : elegibleAccounts[0]?.id ?? '');
-    }, [payerBudgetInProfile, elegibleAccounts]);
+    const getPreselectedAccountForBudget = useCallback((budgetIndex: number): string => {
+        const budgetInProfile = profile.budgets[budgetIndex];
+        const activeAccounts = budgetIndex === 0 ? activeAccountsBudget0 : activeAccountsBudget1;
+        const eligible = activeAccounts.filter((a) => budgetInProfile.elegibleAccountIds.includes(a.id));
+        const defaultId = budgetInProfile.defaultEligibleAccountId;
+        if (defaultId && eligible.some((a) => a.id === defaultId)) {
+            return defaultId;
+        }
+        return eligible[0]?.id ?? '';
+    }, [profile, activeAccountsBudget0, activeAccountsBudget1]);
+
+    const [payerAccountID, setPayerAccountID] = useState<string>(() => getPreselectedAccountForBudget(0));
+
+    const handlePayerBudgetChange = useCallback((newIndex: number) => {
+        setPayerBudgetIndex(newIndex);
+        setPayerAccountID(getPreselectedAccountForBudget(newIndex));
+    }, [getPreselectedAccountForBudget]);
 
     const totalAmount = useMemo(
         () => convertTextToNumber(totalAmountText),
@@ -202,7 +207,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                         <Text variant='titleMedium'>Payer</Text>
                         <PayerBudgetSelection
                             payerBudgetIndex={payerBudgetIndex}
-                            setPayerBudgetIndex={setPayerBudgetIndex}
+                            setPayerBudgetIndex={handlePayerBudgetChange}
                         />
                         <AccountSelection
                             accounts={elegibleAccounts}
