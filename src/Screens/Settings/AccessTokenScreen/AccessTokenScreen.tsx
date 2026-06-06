@@ -45,7 +45,7 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
         if (profile?.ynabUserId !== undefined && newUserId !== profile.ynabUserId) {
             Alert.alert(
                 'Different YNAB Account',
-                'This token belongs to a different YNAB account. All profiles and category combos will be deleted. Continue?',
+                'This token belongs to a different YNAB account. The profile and all category combos will be deleted. Continue?',
                 [
                     { text: 'Cancel', style: 'cancel' },
                     {
