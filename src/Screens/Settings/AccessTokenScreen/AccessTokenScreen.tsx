@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
-import { API } from 'ynab';
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
+import { getUserId } from '../../../YnabApi/YnabApiWrapper';
 import { saveAccessToken, selectAccessToken } from '../../../redux/features/accessToken/accessTokenSlice';
 import { deleteProfile, saveProfile, selectProfile } from '../../../redux/features/profile/profileSlice';
 import { deleteAllCategoryCombos } from '../../../redux/features/categoryCombos/categoryCombosSlice';
@@ -35,8 +35,7 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
     const onSavePress = useCallback(async () => {
         let newUserId: string;
         try {
-            const response = await new API(enteredToken).user.getUser();
-            newUserId = response.data.user.id;
+            newUserId = await getUserId(enteredToken);
         } catch {
             Alert.alert('Invalid Token', 'Could not connect with this token. Please test the connection first.');
             return;
