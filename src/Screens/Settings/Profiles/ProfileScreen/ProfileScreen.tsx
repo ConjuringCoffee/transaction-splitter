@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import { CustomScrollView } from '../../../../Component/CustomScrollView';
 import { MyStackScreenProps } from '../../../../Navigation/ScreenParameters';
 import { BudgetInProfileInputSection } from '../BudgetInProfileInputSection';
@@ -57,14 +57,16 @@ export const ProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
 
     return (
         <CustomScrollView>
-            <BudgetInProfileInputSection
-                editableBudgetInProfile={budgetInProfile1}
-                setEditableBudgetInProfile={setBudgetInProfile1}
-            />
-            <BudgetInProfileInputSection
-                editableBudgetInProfile={budgetInProfile2}
-                setEditableBudgetInProfile={setBudgetInProfile2}
-            />
+            <View style={{ gap: theme.spacing }}>
+                <BudgetInProfileInputSection
+                    editableBudgetInProfile={budgetInProfile1}
+                    setEditableBudgetInProfile={setBudgetInProfile1}
+                />
+                <BudgetInProfileInputSection
+                    editableBudgetInProfile={budgetInProfile2}
+                    setEditableBudgetInProfile={setBudgetInProfile2}
+                />
+            </View>
         </CustomScrollView>
     );
 };
