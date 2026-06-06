@@ -75,6 +75,12 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     const activeOnBudgetAccounts = useAppSelector((state) => selectActiveAccounts(state, payerBudgetInProfile.budgetId));
     const elegibleAccounts = activeOnBudgetAccounts.filter((account) => payerBudgetInProfile.elegibleAccountIds.find((id) => id === account.id));
 
+    useEffect(() => {
+        const defaultId = payerBudgetInProfile.defaultEligibleAccountId;
+        const isDefaultValid = defaultId && elegibleAccounts.some((a) => a.id === defaultId);
+        setPayerAccountID(isDefaultValid ? defaultId : elegibleAccounts[0]?.id ?? '');
+    }, [payerBudgetInProfile, elegibleAccounts]);
+
     const totalAmount = useMemo(
         () => convertTextToNumber(totalAmountText),
         [totalAmountText, convertTextToNumber],
@@ -202,7 +208,6 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                             accounts={elegibleAccounts}
                             selectedAccountId={payerAccountID}
                             setSelectedAccountId={setPayerAccountID}
-                            defaultAccountId={payerBudgetInProfile.defaultEligibleAccountId}
                         />
                     </Surface>
                     <Surface
