@@ -70,10 +70,9 @@ export const ProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
 
     const saveAndNavigate = useCallback((): void => {
         if (budgetIdsChanged && categoryCombos.length > 0) {
-            const count = categoryCombos.length;
             Alert.alert(
                 'Delete category combos?',
-                `Changing the budget will delete all ${count} category combo${count !== 1 ? 's' : ''}. This cannot be undone.`,
+                'Changing the budget will delete all category combos. This cannot be undone.',
                 [
                     { text: 'Cancel', style: 'cancel' },
                     { text: 'Delete & Save', style: 'destructive', onPress: performSave },
