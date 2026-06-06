@@ -3,7 +3,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParameterList } from '../../Navigation/ScreenParameters';
 import { CalculatorKeyboard } from './CalculatorKeyboard';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { Calculation } from '../../Helper/Calculation';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { useAppSelector } from '../../Hooks/useAppSelector';
@@ -12,6 +12,7 @@ import { Appbar, Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { useTheme } from '../../Hooks/useTheme';
+import { CardSurface } from '../../Component/CardSurface';
 
 type ScreenName = 'Calculator';
 
@@ -187,15 +188,23 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     );
 
     return (
-        <View style={styles.container}>
-            <View>
-                <Text style={[styles.text, styles.calculation]}>
-                    {currentCalculation}
-                </Text>
-                <Text style={[styles.text, styles.result]}>
-                    {resultText}
-                </Text>
-            </View>
+        <View style={{ flex: 1, padding: theme.spacing }}>
+            <CardSurface elevation={1}>
+                <View style={{ padding: theme.spacing }}>
+                    <Text
+                        variant='displaySmall'
+                        style={{ textAlign: 'right' }}
+                    >
+                        {currentCalculation}
+                    </Text>
+                    <Text
+                        variant='headlineMedium'
+                        style={{ textAlign: 'right', color: theme.colors.onSurfaceVariant }}
+                    >
+                        {resultText}
+                    </Text>
+                </View>
+            </CardSurface>
             <CalculatorKeyboard
                 onDigitPress={onDigitPress}
                 onDecimalSeparatorPress={onDecimalSeparatorPress}
@@ -210,23 +219,3 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'space-between', // Ensures display is at top, keyboard at bottom
-    },
-    calculation: {
-        fontSize: 40,
-    },
-    result: {
-        fontSize: 30,
-    },
-    text: {
-        textAlign: 'right',
-        margin: 10,
-    },
-    historyButton: {
-        marginRight: 10,
-    },
-});

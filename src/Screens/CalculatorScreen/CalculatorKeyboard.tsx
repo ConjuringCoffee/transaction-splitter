@@ -4,6 +4,7 @@ import { KeyboardButton } from './KeyboardButton';
 import { KeyboardNumberButton } from './KeyboardNumberButton';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { selectNumberFormatSettings } from '../../redux/features/displaySettings/displaySettingsSlice';
+import { useTheme } from '../../Hooks/useTheme';
 
 type Props = {
     onDigitPress: (digit: number) => void
@@ -19,9 +20,10 @@ type Props = {
 
 export const CalculatorKeyboard = (props: Props) => {
     const numberFormatSettings = useAppSelector(selectNumberFormatSettings);
+    const [theme] = useTheme();
 
     return (
-        <View style={styles.mainLayout}>
+        <View style={[styles.mainLayout, { borderTopColor: theme.colors.outlineVariant }]}>
             <View style={styles.numberLayout}>
                 <View style={styles.numberRow}>
                     <KeyboardButton
@@ -78,7 +80,6 @@ const styles = StyleSheet.create({
     mainLayout: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        borderTopColor: 'grey',
         borderTopWidth: 1,
         position: 'absolute',
         bottom: 0,
