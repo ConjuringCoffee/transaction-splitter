@@ -8,16 +8,19 @@ type Props = {
     accounts: Account[],
     selectedAccountId: string,
     setSelectedAccountId: (id: string) => void,
+    defaultAccountId?: string,
 }
 
-export const AccountSelection = ({ accounts, selectedAccountId, setSelectedAccountId }: Props) => {
+export const AccountSelection = ({ accounts, selectedAccountId, setSelectedAccountId, defaultAccountId }: Props) => {
     const [theme] = useTheme();
 
     useEffect(() => {
         if (!accounts.some((account) => account.id === selectedAccountId)) {
-            setSelectedAccountId(accounts[0].id);
+            const isDefaultValid = defaultAccountId && accounts.some((a) => a.id === defaultAccountId);
+            const fallback = isDefaultValid ? defaultAccountId : accounts[0].id;
+            setSelectedAccountId(fallback);
         }
-    }, [accounts, selectedAccountId, setSelectedAccountId]);
+    }, [accounts, selectedAccountId, setSelectedAccountId, defaultAccountId]);
 
     const onPress = useCallback((id: string) => {
         Keyboard.dismiss();

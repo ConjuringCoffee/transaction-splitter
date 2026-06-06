@@ -62,7 +62,14 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     );
 
     const payerBudget = useAppSelector((state) => selectBudgetById(state, payerBudgetInProfile.budgetId));
-    const [payerAccountID, setPayerAccountID] = useState<string>(payerBudget.accounts[0].id);
+    const [payerAccountID, setPayerAccountID] = useState<string>(() => {
+        const initial = profile.budgets[0];
+        const defaultId = initial.defaultEligibleAccountId;
+        if (defaultId && initial.elegibleAccountIds.includes(defaultId)) {
+            return defaultId;
+        }
+        return initial.elegibleAccountIds[0] ?? payerBudget.accounts[0].id;
+    });
     const payerTransferAccount = useAppSelector((state) => selectAccountById(state, payerBudgetInProfile.budgetId, payerBudgetInProfile.debtorAccountId));
 
     const activeOnBudgetAccounts = useAppSelector((state) => selectActiveAccounts(state, payerBudgetInProfile.budgetId));
@@ -195,6 +202,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                             accounts={elegibleAccounts}
                             selectedAccountId={payerAccountID}
                             setSelectedAccountId={setPayerAccountID}
+                            defaultAccountId={payerBudgetInProfile.defaultEligibleAccountId}
                         />
                     </Surface>
                     <Surface
