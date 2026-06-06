@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { List } from 'react-native-paper';
 import { Updater } from 'use-immer';
 import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
@@ -7,6 +6,7 @@ import { Budget } from '../../../YnabApi/YnabApiWrapper';
 import { ChooseBudgetListItem } from './ChooseBudgetListItem';
 import { EditableBudgetInProfile } from '../../../Hooks/useEditableBudgetsInProfiles';
 import { ProfileBudgetDetailInput } from './ProfileBudgetDetailInput';
+import { CardSurface } from '../../../Component/CardSurface';
 
 type Props = {
     editableBudgetInProfile: EditableBudgetInProfile,
@@ -62,7 +62,7 @@ export const BudgetInProfileInputSection = ({ editableBudgetInProfile, setEditab
     }, [setEditableBudgetInProfile]);
 
     return (
-        <List.Section>
+        <CardSurface elevation={1}>
             <ChooseBudgetListItem
                 selectedBudgetId={editableBudgetInProfile.budgetId}
                 selectBudgetId={setBudget}
@@ -82,6 +82,6 @@ export const BudgetInProfileInputSection = ({ editableBudgetInProfile, setEditab
                 )
                 : null
             }
-        </List.Section>
+        </CardSurface>
     );
 };

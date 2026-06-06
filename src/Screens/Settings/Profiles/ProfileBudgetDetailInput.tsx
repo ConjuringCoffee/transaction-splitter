@@ -4,6 +4,7 @@ import { selectActiveAccounts, selectBudgetById } from '../../../redux/features/
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Account } from '../../../YnabApi/YnabApiWrapper';
 import { View } from 'react-native';
+import { useTheme } from '../../../Hooks/useTheme';
 
 type Props = {
     budgetId: string,
@@ -18,6 +19,7 @@ type Props = {
 export const ProfileBudgetDetailInput = (props: Props) => {
     const budget = useAppSelector((state) => selectBudgetById(state, props.budgetId));
     const activeAccounts = useAppSelector((state) => selectActiveAccounts(state, props.budgetId));
+    const [theme] = useTheme();
 
     const renderRadioButton = (account: Account) => (
         <RadioButton.Item
@@ -38,12 +40,13 @@ export const ProfileBudgetDetailInput = (props: Props) => {
     );
 
     return (
-        <View>
+        <View style={{ padding: theme.cardPadding, gap: theme.spacing }}>
             <TextInput
                 label='Displayed name'
                 value={props.displayName}
                 placeholder={budget.name}
                 onChangeText={props.setDisplayName}
+                mode='outlined'
             />
             <HelperText type='info'>
                 Leave empty to use the budget&apos;s name
