@@ -4,9 +4,16 @@ import { selectBudgets } from '../../../redux/features/ynab/ynabSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { Budget } from '../../../YnabApi/YnabApiWrapper';
 import { ChooseBudgetListItem } from './ChooseBudgetListItem';
-import { EditableBudgetInProfile } from '../../../Hooks/useEditableBudgetsInProfiles';
 import { ProfileBudgetDetailInput } from './ProfileBudgetDetailInput';
 import { CardSurface } from '../../../Component/CardSurface';
+
+export type EditableBudgetInProfile = {
+    budgetId?: string,
+    name?: string,
+    debtorAccountId?: string,
+    elegibleAccountIds: Array<string>,
+    defaultEligibleAccountId?: string,
+}
 
 type Props = {
     editableBudgetInProfile: EditableBudgetInProfile,
