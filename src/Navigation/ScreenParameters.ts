@@ -17,7 +17,8 @@ type BasicData = {
     payeeName: string,
     date: string,
     memo: string
-    totalAmount: number
+    totalAmount: number,
+    approved: boolean
 }
 
 type StackParameterList = {

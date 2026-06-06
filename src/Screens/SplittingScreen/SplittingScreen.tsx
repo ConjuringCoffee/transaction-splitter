@@ -3,7 +3,7 @@ import { Account } from '../../YnabApi/YnabApiWrapper';
 import { BudgetInProfile, selectProfile } from '../../redux/features/profile/profileSlice';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
-import { Appbar, Button, Surface, Text, TextInput } from 'react-native-paper';
+import { Appbar, Button, Surface, Switch, Text, TextInput } from 'react-native-paper';
 import { useTheme } from '../../Hooks/useTheme';
 import { useAppSelector } from '../../Hooks/useAppSelector';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../Hooks/useInitialFetchStatus';
@@ -60,6 +60,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     const [totalAmountText, setTotalAmountText] = useState<string>('');
     const [date, setDate] = useState<Date>(new Date());
     const [memo, setMemo] = useState<string>('[Generated]');
+    const [approved, setApproved] = useState<boolean>(true);
 
     const payerBudgetInProfile = profile.budgets[payerBudgetIndex];
     const debtorBudgetInProfile = profile.budgets[1 - payerBudgetIndex];
@@ -166,12 +167,13 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                         date: toIsoDateString(date),
                         memo,
                         totalAmount,
+                        approved,
                     },
                 },
             );
         },
         [
-            accessToken, date, debtorBudgetInProfile.budgetId, debtorBudgetInProfile.debtorAccountId,
+            accessToken, approved, date, debtorBudgetInProfile.budgetId, debtorBudgetInProfile.debtorAccountId,
             debtorCategoriesFetchStatus, dispatch, memo, navigation, payeeName, payerAccountID,
             payerBudgetInProfile.budgetId, payerBudgetInProfile.debtorAccountId,
             payerCategoriesFetchStatus, payerTransferAccount.transferPayeeID, totalAmount,
@@ -231,6 +233,13 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                             value={memo}
                             onChangeText={setMemo}
                         />
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Text variant='bodyLarge'>Approved</Text>
+                            <Switch
+                                value={approved}
+                                onValueChange={setApproved}
+                            />
+                        </View>
                     </Surface>
                 </View>
             </CustomScrollView>
