@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Account } from '../../YnabApi/YnabApiWrapper';
-import { BudgetInProfile } from '../../redux/features/profile/profileSlice';
+import { BudgetInProfile, selectProfile } from '../../redux/features/profile/profileSlice';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { Appbar, Button, Surface, Text, TextInput } from 'react-native-paper';
 import { useTheme } from '../../Hooks/useTheme';
 import { useAppSelector } from '../../Hooks/useAppSelector';
-import { selectProfile } from '../../redux/features/profile/profileSlice';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../Hooks/useInitialFetchStatus';
 import { fetchCategoryGroups, selectAccountById, selectActiveAccounts, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { CustomScrollView } from '../../Component/CustomScrollView';
@@ -98,7 +97,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     useEffect(
         () => {
             if (payerCategoriesFetchStatus === LoadingStatus.IDLE) {
-                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: payerBudgetInProfile.budgetId }));
+                dispatch(fetchCategoryGroups({ accessToken, budgetId: payerBudgetInProfile.budgetId }));
             }
         },
         [payerCategoriesFetchStatus, accessToken, payerBudgetInProfile.budgetId, dispatch],
@@ -107,7 +106,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     useEffect(
         () => {
             if (debtorCategoriesFetchStatus === LoadingStatus.IDLE) {
-                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: debtorBudgetInProfile.budgetId }));
+                dispatch(fetchCategoryGroups({ accessToken, budgetId: debtorBudgetInProfile.budgetId }));
             }
         },
         [debtorCategoriesFetchStatus, accessToken, debtorBudgetInProfile.budgetId, dispatch],
@@ -144,10 +143,10 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
         (): void => {
             // Trigger fetches again if they failed before
             if (payerCategoriesFetchStatus === LoadingStatus.ERROR) {
-                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: payerBudgetInProfile.budgetId }));
+                dispatch(fetchCategoryGroups({ accessToken, budgetId: payerBudgetInProfile.budgetId }));
             }
             if (debtorCategoriesFetchStatus === LoadingStatus.ERROR) {
-                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: debtorBudgetInProfile.budgetId }));
+                dispatch(fetchCategoryGroups({ accessToken, budgetId: debtorBudgetInProfile.budgetId }));
             }
             navigation.navigate(
                 ScreenNames.AMOUNTS_SCREEN,
@@ -218,9 +217,9 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                             label="Date"
                             mode='outlined'
                             value={date}
-                            onChange={(date) => {
-                                if (date) {
-                                    setDate(date);
+                            onChange={(newDate) => {
+                                if (newDate) {
+                                    setDate(newDate);
                                 }
                             }}
                             inputMode="start"
