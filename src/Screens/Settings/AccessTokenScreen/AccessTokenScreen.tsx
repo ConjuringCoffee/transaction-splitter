@@ -1,8 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
+import { getUserId } from '../../../YnabApi/YnabApiWrapper';
 import { saveAccessToken, selectAccessToken } from '../../../redux/features/accessToken/accessTokenSlice';
+import { deleteProfile, saveProfile, selectProfile } from '../../../redux/features/profile/profileSlice';
+import { deleteAllCategoryCombos } from '../../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { AccessTokenInput } from './AccessTokenInput';
@@ -23,27 +26,66 @@ const ICON_CONNECTION_ERROR = 'alert-circle';
 export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const throwingDispatch = useThrowingDispatch();
     const accessToken = useAppSelector(selectAccessToken);
+    const profile = useAppSelector(selectProfile);
     const [enteredToken, setEnteredToken] = useState<string>(accessToken);
     const [connectionStatus, testConnection] = useConnectionTest();
     const [navigateBack] = useNavigateBack(navigation);
     const [theme] = useTheme();
+
+    const onSavePress = useCallback(async () => {
+        let newUserId: string;
+        try {
+            newUserId = await getUserId(enteredToken);
+        } catch {
+            Alert.alert('Invalid Token', 'Could not connect with this token. Please test the connection first.');
+            return;
+        }
+
+        if (profile?.ynabUserId !== undefined && newUserId !== profile.ynabUserId) {
+            Alert.alert(
+                'Different YNAB Account',
+                'This token belongs to a different YNAB account. The profile and all category combos will be deleted. Continue?',
+                [
+                    { text: 'Cancel', style: 'cancel' },
+                    {
+                        text: 'Continue',
+                        style: 'destructive',
+                        onPress: async () => {
+                            try {
+                                await throwingDispatch(deleteAllCategoryCombos());
+                                await throwingDispatch(deleteProfile());
+                                await throwingDispatch(saveAccessToken(enteredToken));
+                                navigateBack();
+                            } catch {
+                                Alert.alert('Error', 'Could not save. Please try again.');
+                            }
+                        },
+                    },
+                ],
+            );
+            return;
+        }
+
+        try {
+            await throwingDispatch(saveAccessToken(enteredToken));
+            if (profile !== null) {
+                await throwingDispatch(saveProfile({ ...profile, ynabUserId: newUserId }));
+            }
+            navigateBack();
+        } catch {
+            Alert.alert('Error', 'Could not save. Please try again.');
+        }
+    }, [throwingDispatch, enteredToken, profile, navigateBack]);
 
     const navigationBarAddition = useMemo(
         () => (
             <Appbar.Action
                 icon={ICON_SAVE}
                 iconColor={theme.colors.onPrimary}
-                onPress={async () => {
-                    try {
-                        await throwingDispatch(saveAccessToken(enteredToken));
-                        navigateBack();
-                    } catch {
-                        Alert.alert('Error', 'Could not save. Please try again.');
-                    }
-                }}
+                onPress={onSavePress}
             />
         ),
-        [throwingDispatch, enteredToken, navigateBack, theme],
+        [onSavePress, theme],
     );
 
     useNavigationSettings({

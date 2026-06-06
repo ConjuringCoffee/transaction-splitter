@@ -13,7 +13,8 @@ export type BudgetInProfile = {
 }
 
 export type Profile = {
-    budgets: [BudgetInProfile, BudgetInProfile]
+    budgets: [BudgetInProfile, BudgetInProfile],
+    ynabUserId?: string,
 }
 
 type ProfileState = {

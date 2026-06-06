@@ -15,6 +15,12 @@ export type Budget = {
     accounts: Array<Account>;
 }
 
+export const getUserId = async (apiKey: string): Promise<string> => {
+    const ynabAPI = new API(apiKey);
+    const response = await ynabAPI.user.getUser();
+    return response.data.user.id;
+};
+
 const getCategoriesGroupedByCategoryGroup = async (apiKey: string, budgetId: string): Promise<CategoryGroupWithCategories[]> => {
     const ynabAPI = new API(apiKey);
     const response = await ynabAPI.categories.getCategories(budgetId);

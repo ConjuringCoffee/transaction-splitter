@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
-import { API } from 'ynab';
 import { LoadingStatus } from '../Helper/LoadingStatus';
+import { getUserId } from '../YnabApi/YnabApiWrapper';
 
 export type ConnectionStatus = {
     status: LoadingStatus,
@@ -17,7 +17,7 @@ export const useConnectionTest = (): [ConnectionStatus, (accessToken: string) =>
         setConnectionStatus({ status: LoadingStatus.LOADING });
 
         try {
-            await new API(accessToken).user.getUser();
+            await getUserId(accessToken);
             setConnectionStatus({ status: LoadingStatus.SUCCESSFUL });
         } catch (error: any) {
             setConnectionStatus({
