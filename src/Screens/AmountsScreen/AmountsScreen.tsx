@@ -15,6 +15,7 @@ import { selectAccessToken } from '../../redux/features/accessToken/accessTokenS
 import { Appbar, Button, Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useAppDispatch } from '../../Hooks/useAppDispatch';
+import { useCurrencyFormat } from '../../Hooks/useCurrencyFormat';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { useTheme } from '../../Hooks/useTheme';
 import { isSplitPercentInvalid } from '../../Helper/SplitPercentHelper';
@@ -44,6 +45,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
     const basicData = route.params.basicData;
     const payerBudgetId = basicData.payer.budgetId;
     const debtorBudgetId = basicData.debtor.budgetId;
+    const { formatAmount } = useCurrencyFormat(payerBudgetId);
 
     const payerCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, payerBudgetId));
     const debtorCategoriesFetchStatus = useAppSelector((state) => selectCategoriesFetchStatus(state, debtorBudgetId));
@@ -226,7 +228,7 @@ export const AmountsScreen = ({ navigation, route }: MyStackScreenProps<ScreenNa
             </CustomScrollView>
             <View style={{ padding: theme.cardPadding, gap: theme.spacing }}>
                 <Text variant='bodyMedium' style={{ textAlign: 'center' }}>
-                    {`Remaining: ${convertNumberToText(remainingAmount)}€`}
+                    {`Remaining: ${formatAmount(convertNumberToText(remainingAmount))}`}
                 </Text>
                 <View style={{ flexDirection: 'row', gap: theme.spacing }}>
                     <Button

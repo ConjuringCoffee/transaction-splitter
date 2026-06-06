@@ -100,6 +100,7 @@ export const AmountView = <T extends keyof StackParameterList>({
                         value={amountEntry.amountText}
                         setValue={(text) => updateAmountEntry({ amountText: text })}
                         navigation={navigation}
+                        budgetId={payerBudgetId}
                     />
                 </View>
                 <IconButton

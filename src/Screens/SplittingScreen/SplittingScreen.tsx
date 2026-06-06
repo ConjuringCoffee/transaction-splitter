@@ -183,6 +183,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
             <TotalAmountInput
                 value={totalAmountText}
                 setValue={setTotalAmountText}
+                budgetId={payerBudgetInProfile.budgetId}
             />
             <CustomScrollView>
                 <View style={{ gap: theme.spacing }}>
