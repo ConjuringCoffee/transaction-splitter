@@ -8,7 +8,8 @@ export type EditableBudgetInProfile = {
     budgetId?: string,
     name?: string,
     debtorAccountId?: string,
-    elegibleAccountIds: Array<string>
+    elegibleAccountIds: Array<string>,
+    defaultEligibleAccountId?: string,
 }
 
 export type Returning = [
@@ -53,6 +54,7 @@ export const useEditableBudgetsInProfiles = (): Returning => {
             name: editableBudgetInProfile.name === '' ? undefined : editableBudgetInProfile.name,
             debtorAccountId: editableBudgetInProfile.debtorAccountId,
             elegibleAccountIds: editableBudgetInProfile.elegibleAccountIds,
+            defaultEligibleAccountId: editableBudgetInProfile.defaultEligibleAccountId,
         };
     }, []);
 

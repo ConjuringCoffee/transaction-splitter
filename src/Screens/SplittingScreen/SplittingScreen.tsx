@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Account } from '../../YnabApi/YnabApiWrapper';
+import { BudgetInProfile, selectProfile } from '../../redux/features/profile/profileSlice';
 import { MyStackScreenProps } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { Appbar, Button, Surface, Text, TextInput } from 'react-native-paper';
 import { useTheme } from '../../Hooks/useTheme';
 import { useAppSelector } from '../../Hooks/useAppSelector';
-import { selectProfile } from '../../redux/features/profile/profileSlice';
 import { InitialFetchStatus, useInitialFetchStatus } from '../../Hooks/useInitialFetchStatus';
-import { fetchCategoryGroups, selectAccountById, selectActiveAccounts, selectBudgetById, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
+import { fetchCategoryGroups, selectAccountById, selectActiveAccounts, selectCategoriesFetchStatus } from '../../redux/features/ynab/ynabSlice';
 import { CustomScrollView } from '../../Component/CustomScrollView';
 import { TotalAmountInput } from './TotalAmountInput';
 import { DatePickerInput } from 'react-native-paper-dates';
@@ -20,6 +21,15 @@ import { useAppDispatch } from '../../Hooks/useAppDispatch';
 import { View } from 'react-native';
 
 type ScreenName = 'Split Transaction';
+
+const getPreselectedAccountForBudget = (budgetInProfile: BudgetInProfile, activeAccounts: Account[]): string => {
+    const eligible = activeAccounts.filter((a) => budgetInProfile.elegibleAccountIds.includes(a.id));
+    const defaultId = budgetInProfile.defaultEligibleAccountId;
+    if (defaultId && eligible.some((a) => a.id === defaultId)) {
+        return defaultId;
+    }
+    return eligible[0]?.id ?? '';
+};
 
 const SCREEN_TITLE = 'Transaction Splitter';
 const ICON_SETTINGS = 'cog';
@@ -51,22 +61,25 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     const [date, setDate] = useState<Date>(new Date());
     const [memo, setMemo] = useState<string>('[Generated]');
 
-    const payerBudgetInProfile = useMemo(
-        () => profile.budgets[payerBudgetIndex],
-        [profile, payerBudgetIndex],
-    );
+    const payerBudgetInProfile = profile.budgets[payerBudgetIndex];
+    const debtorBudgetInProfile = profile.budgets[1 - payerBudgetIndex];
 
-    const debtorBudgetInProfile = useMemo(
-        () => profile.budgets[1 - payerBudgetIndex],
-        [profile, payerBudgetIndex],
-    );
-
-    const payerBudget = useAppSelector((state) => selectBudgetById(state, payerBudgetInProfile.budgetId));
-    const [payerAccountID, setPayerAccountID] = useState<string>(payerBudget.accounts[0].id);
     const payerTransferAccount = useAppSelector((state) => selectAccountById(state, payerBudgetInProfile.budgetId, payerBudgetInProfile.debtorAccountId));
 
-    const activeOnBudgetAccounts = useAppSelector((state) => selectActiveAccounts(state, payerBudgetInProfile.budgetId));
-    const elegibleAccounts = activeOnBudgetAccounts.filter((account) => payerBudgetInProfile.elegibleAccountIds.find((id) => id === account.id));
+    const activeAccountsBudget0 = useAppSelector((state) => selectActiveAccounts(state, profile.budgets[0].budgetId));
+    const activeAccountsBudget1 = useAppSelector((state) => selectActiveAccounts(state, profile.budgets[1].budgetId));
+    const elegibleAccounts = (payerBudgetIndex === 0 ? activeAccountsBudget0 : activeAccountsBudget1)
+        .filter((account) => payerBudgetInProfile.elegibleAccountIds.includes(account.id));
+
+    const [payerAccountID, setPayerAccountID] = useState<string>(
+        () => getPreselectedAccountForBudget(profile.budgets[0], activeAccountsBudget0),
+    );
+
+    const handlePayerBudgetChange = useCallback((newIndex: number) => {
+        const activeAccounts = newIndex === 0 ? activeAccountsBudget0 : activeAccountsBudget1;
+        setPayerBudgetIndex(newIndex);
+        setPayerAccountID(getPreselectedAccountForBudget(profile.budgets[newIndex], activeAccounts));
+    }, [profile, activeAccountsBudget0, activeAccountsBudget1]);
 
     const totalAmount = useMemo(
         () => convertTextToNumber(totalAmountText),
@@ -84,19 +97,19 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
     useEffect(
         () => {
             if (payerCategoriesFetchStatus === LoadingStatus.IDLE) {
-                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: payerBudgetInProfile.budgetId }));
+                dispatch(fetchCategoryGroups({ accessToken, budgetId: payerBudgetInProfile.budgetId }));
             }
         },
-        [payerCategoriesFetchStatus, accessToken, payerBudgetInProfile, dispatch],
+        [payerCategoriesFetchStatus, accessToken, payerBudgetInProfile.budgetId, dispatch],
     );
 
     useEffect(
         () => {
             if (debtorCategoriesFetchStatus === LoadingStatus.IDLE) {
-                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: debtorBudgetInProfile.budgetId }));
+                dispatch(fetchCategoryGroups({ accessToken, budgetId: debtorBudgetInProfile.budgetId }));
             }
         },
-        [debtorCategoriesFetchStatus, accessToken, debtorBudgetInProfile, dispatch],
+        [debtorCategoriesFetchStatus, accessToken, debtorBudgetInProfile.budgetId, dispatch],
     );
 
     const [theme] = useTheme();
@@ -130,10 +143,10 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
         (): void => {
             // Trigger fetches again if they failed before
             if (payerCategoriesFetchStatus === LoadingStatus.ERROR) {
-                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: payerBudgetInProfile.budgetId }));
+                dispatch(fetchCategoryGroups({ accessToken, budgetId: payerBudgetInProfile.budgetId }));
             }
             if (debtorCategoriesFetchStatus === LoadingStatus.ERROR) {
-                dispatch(fetchCategoryGroups({ accessToken: accessToken, budgetId: debtorBudgetInProfile.budgetId }));
+                dispatch(fetchCategoryGroups({ accessToken, budgetId: debtorBudgetInProfile.budgetId }));
             }
             navigation.navigate(
                 ScreenNames.AMOUNTS_SCREEN,
@@ -165,15 +178,6 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
         ],
     );
 
-    const setDateIfProvided = useCallback(
-        (date: Date | undefined) => {
-            if (date) {
-                setDate(date);
-            }
-        },
-        [],
-    );
-
     return (
         <View style={{ flex: 1 }}>
             <TotalAmountInput
@@ -189,7 +193,7 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                         <Text variant='titleMedium'>Payer</Text>
                         <PayerBudgetSelection
                             payerBudgetIndex={payerBudgetIndex}
-                            setPayerBudgetIndex={setPayerBudgetIndex}
+                            setPayerBudgetIndex={handlePayerBudgetChange}
                         />
                         <AccountSelection
                             accounts={elegibleAccounts}
@@ -213,7 +217,11 @@ const SplittingScreenContent = ({ navigation }: MyStackScreenProps<ScreenName>) 
                             label="Date"
                             mode='outlined'
                             value={date}
-                            onChange={setDateIfProvided}
+                            onChange={(newDate) => {
+                                if (newDate) {
+                                    setDate(newDate);
+                                }
+                            }}
                             inputMode="start"
                         />
                         <TextInput

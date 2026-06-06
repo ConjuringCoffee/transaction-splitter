@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Keyboard, View } from 'react-native';
 import { Chip } from 'react-native-paper';
 import { Account } from '../../YnabApi/YnabApiWrapper';
@@ -12,12 +12,6 @@ type Props = {
 
 export const AccountSelection = ({ accounts, selectedAccountId, setSelectedAccountId }: Props) => {
     const [theme] = useTheme();
-
-    useEffect(() => {
-        if (!accounts.some((account) => account.id === selectedAccountId)) {
-            setSelectedAccountId(accounts[0].id);
-        }
-    }, [accounts, selectedAccountId, setSelectedAccountId]);
 
     const onPress = useCallback((id: string) => {
         Keyboard.dismiss();

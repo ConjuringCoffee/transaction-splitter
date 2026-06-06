@@ -14,12 +14,16 @@ type Props = {
     setDebtorAccountId: (id: string) => void,
     elegibleAccountIds: string[],
     toggleAccountElegible: (id: string) => void,
+    defaultEligibleAccountId?: string,
+    setDefaultEligibleAccountId: (id: string | undefined) => void,
 }
 
 export const ProfileBudgetDetailInput = (props: Props) => {
     const budget = useAppSelector((state) => selectBudgetById(state, props.budgetId));
     const activeAccounts = useAppSelector((state) => selectActiveAccounts(state, props.budgetId));
     const [theme] = useTheme();
+
+    const eligibleAccounts = activeAccounts.filter((account) => props.elegibleAccountIds.includes(account.id));
 
     const renderDebtorChip = (account: Account) => (
         <Chip
@@ -45,6 +49,21 @@ export const ProfileBudgetDetailInput = (props: Props) => {
             {account.name}
         </Chip>
     );
+
+    const renderDefaultChip = (account: Account) => {
+        const isSelected = account.id === props.defaultEligibleAccountId;
+        return (
+            <Chip
+                key={account.id}
+                mode='outlined'
+                selected={isSelected}
+                style={isSelected ? { backgroundColor: theme.colors.secondaryContainer } : undefined}
+                onPress={() => props.setDefaultEligibleAccountId(isSelected ? undefined : account.id)}
+            >
+                {account.name}
+            </Chip>
+        );
+    };
 
     return (
         <View style={{ padding: theme.cardPadding, gap: theme.cardPadding }}>
@@ -82,6 +101,22 @@ export const ProfileBudgetDetailInput = (props: Props) => {
                     {activeAccounts.map(renderEligibleChip)}
                 </View>
             </View>
+            {eligibleAccounts.length > 0 && (
+                <View style={{ gap: 4 }}>
+                    <Text
+                        variant='labelLarge'
+                        style={{ color: theme.colors.onSurfaceVariant }}
+                    >
+                        Default account
+                    </Text>
+                    <HelperText type='info'>
+                        Pre-selected when opening the splitting screen
+                    </HelperText>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing }}>
+                        {eligibleAccounts.map(renderDefaultChip)}
+                    </View>
+                </View>
+            )}
         </View>
     );
 };

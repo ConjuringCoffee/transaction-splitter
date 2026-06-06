@@ -8,7 +8,8 @@ export type BudgetInProfile = {
     budgetId: string,
     name?: string,
     debtorAccountId: string,
-    elegibleAccountIds: Array<string>
+    elegibleAccountIds: Array<string>,
+    defaultEligibleAccountId?: string,
 }
 
 export type Profile = {

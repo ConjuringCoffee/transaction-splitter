@@ -29,6 +29,7 @@ export const BudgetInProfileInputSection = ({ editableBudgetInProfile, setEditab
             draft.name = undefined;
             draft.debtorAccountId = findBudget(id)!.accounts[0].id;
             draft.elegibleAccountIds = [];
+            draft.defaultEligibleAccountId = undefined;
         });
     }, [findBudget, setEditableBudgetInProfile]);
 
@@ -46,6 +47,10 @@ export const BudgetInProfileInputSection = ({ editableBudgetInProfile, setEditab
             if (index >= 0) {
                 draft.elegibleAccountIds.splice(index, 1);
             }
+
+            if (draft.defaultEligibleAccountId === id) {
+                draft.defaultEligibleAccountId = undefined;
+            }
         });
     }, [setEditableBudgetInProfile]);
 
@@ -55,9 +60,19 @@ export const BudgetInProfileInputSection = ({ editableBudgetInProfile, setEditab
 
             if (index >= 0) {
                 draft.elegibleAccountIds.splice(index, 1);
+
+                if (draft.defaultEligibleAccountId === id) {
+                    draft.defaultEligibleAccountId = undefined;
+                }
             } else {
                 draft.elegibleAccountIds.push(id);
             }
+        });
+    }, [setEditableBudgetInProfile]);
+
+    const setDefaultEligibleAccountId = useCallback((id: string | undefined) => {
+        setEditableBudgetInProfile((draft) => {
+            draft.defaultEligibleAccountId = id;
         });
     }, [setEditableBudgetInProfile]);
 
@@ -78,6 +93,8 @@ export const BudgetInProfileInputSection = ({ editableBudgetInProfile, setEditab
                         setDebtorAccountId={setDebtorAccountId}
                         elegibleAccountIds={editableBudgetInProfile.elegibleAccountIds}
                         toggleAccountElegible={toggleAccountElegible}
+                        defaultEligibleAccountId={editableBudgetInProfile.defaultEligibleAccountId}
+                        setDefaultEligibleAccountId={setDefaultEligibleAccountId}
                     />
                 )
                 : null
