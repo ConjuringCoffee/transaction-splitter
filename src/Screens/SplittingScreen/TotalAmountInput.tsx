@@ -2,6 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
+import { useCurrencyFormat } from '../../Hooks/useCurrencyFormat';
 import { useTheme } from '../../Hooks/useTheme';
 
 const FONT_SIZE = 40;
@@ -9,11 +10,13 @@ const FONT_SIZE = 40;
 type Props = {
     value: string,
     setValue: (newValue: string) => void,
+    budgetId: string,
 }
 
-export const TotalAmountInput = ({ value, setValue }: Props) => {
+export const TotalAmountInput = ({ value, setValue, budgetId }: Props) => {
     const [convertTextToNumber] = useAmountConversion();
     const [theme] = useTheme();
+    const { formatAmount } = useCurrencyFormat(budgetId);
     const inputRef = useRef<TextInput>(null);
 
     const isValid = useMemo(
@@ -29,7 +32,7 @@ export const TotalAmountInput = ({ value, setValue }: Props) => {
                 onPress={() => inputRef.current?.focus()}
             >
                 <Text style={[{ fontSize: FONT_SIZE }, !isValid && { color: theme.colors.error }]}>
-                    {`-${value || '0'}€`}
+                    {`-${formatAmount(value || '0')}`}
                 </Text>
                 <TextInput
                     ref={inputRef}

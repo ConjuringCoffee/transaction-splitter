@@ -3,17 +3,20 @@ import { TextInput } from 'react-native-paper';
 import { MyStackNavigationProp, StackParameterList } from '../../Navigation/ScreenParameters';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
+import { useCurrencyFormat } from '../../Hooks/useCurrencyFormat';
 
 type Props<T extends keyof StackParameterList> = {
     value: string,
     setValue: (newValue: string) => void,
     navigation: MyStackNavigationProp<T>,
+    budgetId: string,
 }
 
 const ICON_CALCULATOR = 'calculator-variant';
 
-export const SubAmountInput = <T extends keyof StackParameterList>({ value, setValue, navigation }: Props<T>) => {
+export const SubAmountInput = <T extends keyof StackParameterList>({ value, setValue, navigation, budgetId }: Props<T>) => {
     const [convertTextToNumber, convertNumberToText] = useAmountConversion();
+    const { currencySymbol } = useCurrencyFormat(budgetId);
 
     const [previousCalculations, setPreviousCalculations] = useState<Array<string>>([]);
 
@@ -45,7 +48,7 @@ export const SubAmountInput = <T extends keyof StackParameterList>({ value, setV
 
     return (
         <TextInput
-            placeholder='€'
+            placeholder={currencySymbol}
             value={value}
             error={!isValid}
             onChangeText={setValue}

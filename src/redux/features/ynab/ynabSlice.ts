@@ -169,6 +169,12 @@ export const selectCategories = (state: RootState, budgetId: string): { [categor
     return state.ynab.categoryGroups[budgetId].categories;
 };
 
+export const selectBudgetCurrencySymbol = (state: RootState, budgetId: string): string =>
+    selectBudgetById(state, budgetId).currencySymbol;
+
+export const selectBudgetSymbolFirst = (state: RootState, budgetId: string): boolean =>
+    selectBudgetById(state, budgetId).symbolFirst;
+
 export const selectCategoryGroups = (state: RootState, budgetId: string): { [categoryGroupId: string]: CategoryGroup } => {
     return state.ynab.categoryGroups[budgetId].groups;
 };

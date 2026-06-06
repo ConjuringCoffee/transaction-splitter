@@ -19,7 +19,7 @@ export const useAmountConversion = (): Return => {
     );
 
     const convertNumberToText = useCallback(
-        (number: number) => number.toString().replace('.', numberFormatSettings.decimalSeparator),
+        (number: number) => number.toFixed(2).replace('.', numberFormatSettings.decimalSeparator),
         [numberFormatSettings],
     );
 

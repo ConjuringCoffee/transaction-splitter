@@ -9,6 +9,7 @@ import { useAppSelector } from '../../Hooks/useAppSelector';
 import { SubTransactionsDataTable } from './SubTransactionsDataTable';
 import { MultiLineTextDataTableCellView } from './MultiLineTextDataTableCellView';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
+import { useCurrencyFormat } from '../../Hooks/useCurrencyFormat';
 import { useTheme } from '../../Hooks/useTheme';
 import { CardSurface } from '../../Component/CardSurface';
 
@@ -39,6 +40,7 @@ const SaveStatusIndicator = ({ saveStatus }: { saveStatus: LoadingStatus }) => {
 export const SaveTransactionListSection = (props: Props) => {
     const [theme] = useTheme();
     const [, convertNumberToText] = useAmountConversion();
+    const { formatAmount } = useCurrencyFormat(props.budgetId);
     const [detailsExpanded, setDetailsExpanded] = useState<boolean>(true);
     const [subTransactionsExpanded, setSubTransactionsExpanded] = useState<boolean>(true);
 
@@ -47,7 +49,7 @@ export const SaveTransactionListSection = (props: Props) => {
 
     const accountName = budget.accounts.find((account) => account.id === props.saveTransaction.account_id)?.name;
     const amountHuman = convertApiAmountToHumanAmount(props.saveTransaction.amount);
-    const amountText = convertNumberToText(amountHuman);
+    const amountText = formatAmount(convertNumberToText(amountHuman));
 
     const toggleDetailsExpanded = useCallback(
         (): void => setDetailsExpanded(!detailsExpanded),
