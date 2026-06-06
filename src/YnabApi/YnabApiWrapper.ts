@@ -13,6 +13,8 @@ export type Budget = {
     id: string;
     name: string;
     accounts: Array<Account>;
+    currencySymbol: string;
+    symbolFirst: boolean;
 }
 
 export const getUserId = async (apiKey: string): Promise<string> => {
@@ -46,10 +48,16 @@ export const getBudgetsWithAccountsFromApi = async (apiKey: string): Promise<Bud
                 };
             });
         }
+        if (!budgetSummary.currency_format) {
+            throw new Error(`Budget ${budgetSummary.name} has no currency format`);
+        }
+
         return {
             id: budgetSummary.id,
             name: budgetSummary.name,
             accounts: accounts,
+            currencySymbol: budgetSummary.currency_format.currency_symbol,
+            symbolFirst: budgetSummary.currency_format.symbol_first,
         };
     });
 };
