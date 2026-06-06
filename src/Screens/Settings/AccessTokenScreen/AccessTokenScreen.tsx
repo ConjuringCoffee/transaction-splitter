@@ -1,8 +1,11 @@
 import { useMemo, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
+import { API } from 'ynab';
 import { MyStackScreenProps } from '../../../Navigation/ScreenParameters';
 import { saveAccessToken, selectAccessToken } from '../../../redux/features/accessToken/accessTokenSlice';
+import { deleteProfile, saveProfile, selectProfile } from '../../../redux/features/profile/profileSlice';
+import { deleteAllCategoryCombos } from '../../../redux/features/categoryCombos/categoryCombosSlice';
 import { useAppSelector } from '../../../Hooks/useAppSelector';
 import { LoadingStatus } from '../../../Helper/LoadingStatus';
 import { AccessTokenInput } from './AccessTokenInput';
@@ -23,6 +26,7 @@ const ICON_CONNECTION_ERROR = 'alert-circle';
 export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>) => {
     const throwingDispatch = useThrowingDispatch();
     const accessToken = useAppSelector(selectAccessToken);
+    const profile = useAppSelector(selectProfile);
     const [enteredToken, setEnteredToken] = useState<string>(accessToken);
     const [connectionStatus, testConnection] = useConnectionTest();
     const [navigateBack] = useNavigateBack(navigation);
@@ -34,8 +38,45 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
                 icon={ICON_SAVE}
                 iconColor={theme.colors.onPrimary}
                 onPress={async () => {
+                    let newUserId: string;
+                    try {
+                        const response = await new API(enteredToken).user.getUser();
+                        newUserId = response.data.user.id;
+                    } catch {
+                        Alert.alert('Invalid Token', 'Could not connect with this token. Please test the connection first.');
+                        return;
+                    }
+
+                    if (profile?.ynabUserId !== undefined && newUserId !== profile.ynabUserId) {
+                        Alert.alert(
+                            'Different YNAB Account',
+                            'This token belongs to a different YNAB account. All profiles and category combos will be deleted. Continue?',
+                            [
+                                { text: 'Cancel', style: 'cancel' },
+                                {
+                                    text: 'Continue',
+                                    style: 'destructive',
+                                    onPress: async () => {
+                                        try {
+                                            await throwingDispatch(deleteAllCategoryCombos());
+                                            await throwingDispatch(deleteProfile());
+                                            await throwingDispatch(saveAccessToken(enteredToken));
+                                            navigateBack();
+                                        } catch {
+                                            Alert.alert('Error', 'Could not save. Please try again.');
+                                        }
+                                    },
+                                },
+                            ],
+                        );
+                        return;
+                    }
+
                     try {
                         await throwingDispatch(saveAccessToken(enteredToken));
+                        if (profile !== null) {
+                            await throwingDispatch(saveProfile({ ...profile, ynabUserId: newUserId }));
+                        }
                         navigateBack();
                     } catch {
                         Alert.alert('Error', 'Could not save. Please try again.');
@@ -43,7 +84,7 @@ export const AccessTokenScreen = ({ navigation }: MyStackScreenProps<ScreenName>
                 }}
             />
         ),
-        [throwingDispatch, enteredToken, navigateBack, theme],
+        [throwingDispatch, enteredToken, profile, navigateBack, theme],
     );
 
     useNavigationSettings({

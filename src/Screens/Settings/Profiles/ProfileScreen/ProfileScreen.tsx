@@ -60,13 +60,14 @@ export const ProfileScreen = ({ navigation }: MyStackScreenProps<ScreenName>) =>
             }
             const profile: Profile = {
                 budgets: [finalizeBudget(budgetInProfile1), finalizeBudget(budgetInProfile2)],
+                ynabUserId: savedProfile?.ynabUserId,
             };
             await throwingDispatch(saveProfile(profile));
             navigateBack();
         } catch {
             Alert.alert('Error', 'Could not save. Please try again.');
         }
-    }, [budgetIdsChanged, budgetInProfile1, budgetInProfile2, categoryCombos.length, navigateBack, throwingDispatch]);
+    }, [budgetIdsChanged, budgetInProfile1, budgetInProfile2, categoryCombos.length, navigateBack, savedProfile?.ynabUserId, throwingDispatch]);
 
     const saveAndNavigate = useCallback((): void => {
         if (budgetIdsChanged && categoryCombos.length > 0) {
