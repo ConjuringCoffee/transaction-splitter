@@ -201,7 +201,7 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
                         variant='headlineMedium'
                         style={{ textAlign: 'right', color: theme.colors.onSurfaceVariant }}
                     >
-                        {resultText}
+                        {`= ${resultText}`}
                     </Text>
                 </View>
             </CardSurface>
