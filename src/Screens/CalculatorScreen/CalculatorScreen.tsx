@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParameterList } from '../../Navigation/ScreenParameters';
 import { CalculatorKeyboard } from './CalculatorKeyboard';
-import { ScrollView, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Calculation } from '../../Helper/Calculation';
 import { ScreenNames } from '../../Navigation/ScreenNames';
 import { useAppSelector } from '../../Hooks/useAppSelector';
@@ -12,7 +12,6 @@ import { Appbar, Text } from 'react-native-paper';
 import { useAmountConversion } from '../../Hooks/useAmountConversion';
 import { useNavigationSettings } from '../../Hooks/useNavigationSettings';
 import { useTheme } from '../../Hooks/useTheme';
-import { CardSurface } from '../../Component/CardSurface';
 
 type ScreenName = 'Calculator';
 
@@ -89,25 +88,6 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     );
 
     const [theme] = useTheme();
-
-    const resultText: string = useMemo(
-        () => {
-            const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
-            return convertNumberToText(currentResult);
-        },
-        [currentCalculation, numberFormatSettings, convertNumberToText],
-    );
-
-    const calculationScrollRef = useRef<ScrollView>(null);
-    const resultScrollRef = useRef<ScrollView>(null);
-
-    useEffect(() => {
-        calculationScrollRef.current?.scrollToEnd({ animated: false });
-    }, [currentCalculation]);
-
-    useEffect(() => {
-        resultScrollRef.current?.scrollToEnd({ animated: false });
-    }, [resultText]);
 
     const navigationBarAddition = useMemo(
         () => (
@@ -198,35 +178,24 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         [navigation],
     );
 
+    const resultText: string = useMemo(
+        () => {
+            const currentResult = new Calculation(currentCalculation, numberFormatSettings).getResult();
+            return convertNumberToText(currentResult);
+        },
+        [currentCalculation, numberFormatSettings, convertNumberToText],
+    );
+
     return (
-        <View style={{ flex: 1, padding: theme.spacing }}>
-            <CardSurface elevation={1}>
-                <View style={{ padding: theme.spacing }}>
-                    <ScrollView
-                        ref={calculationScrollRef}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}
-                    >
-                        <Text variant='displaySmall'>
-                            {currentCalculation}
-                        </Text>
-                    </ScrollView>
-                    <ScrollView
-                        ref={resultScrollRef}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}
-                    >
-                        <Text
-                            variant='headlineMedium'
-                            style={{ color: theme.colors.onSurfaceVariant }}
-                        >
-                            {`= ${resultText}`}
-                        </Text>
-                    </ScrollView>
-                </View>
-            </CardSurface>
+        <View style={styles.container}>
+            <View>
+                <Text style={[styles.text, styles.calculation]}>
+                    {currentCalculation}
+                </Text>
+                <Text style={[styles.text, styles.result]}>
+                    {resultText}
+                </Text>
+            </View>
             <CalculatorKeyboard
                 onDigitPress={onDigitPress}
                 onDecimalSeparatorPress={onDecimalSeparatorPress}
@@ -241,3 +210,23 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'space-between', // Ensures display is at top, keyboard at bottom
+    },
+    calculation: {
+        fontSize: 40,
+    },
+    result: {
+        fontSize: 30,
+    },
+    text: {
+        textAlign: 'right',
+        margin: 10,
+    },
+    historyButton: {
+        marginRight: 10,
+    },
+});

@@ -10,15 +10,12 @@ type Props = {
 
 export const KeyboardButton = ({ value, variant, onPress }: Props) => {
     const theme = useTheme();
-    const backgroundColor = variant === 'action' ? theme.colors.secondaryContainer : theme.colors.elevation.level1;
+    const backgroundColor = variant === 'action' ? theme.colors.surfaceVariant : theme.colors.surface;
 
     return (
         <Pressable
             style={({ pressed }) => [
-                {
-                    backgroundColor: pressed ? theme.colors.primaryContainer : backgroundColor,
-                    borderRadius: theme.roundness * 2,
-                },
+                { backgroundColor: pressed ? theme.colors.surfaceVariant : backgroundColor },
                 styles.pressable,
             ]}
             onPress={onPress}
