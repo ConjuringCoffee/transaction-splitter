@@ -23,7 +23,7 @@ export const CalculatorKeyboard = (props: Props) => {
     const [theme] = useTheme();
 
     return (
-        <View style={[styles.mainLayout, { borderTopColor: theme.colors.outlineVariant }]}>
+        <View style={[styles.mainLayout, { borderTopColor: theme.colors.outlineVariant, backgroundColor: theme.colors.elevation.level1 }]}>
             <View style={styles.numberLayout}>
                 <View style={styles.numberRow}>
                     <KeyboardButton
