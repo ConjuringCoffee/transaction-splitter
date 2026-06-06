@@ -77,7 +77,7 @@ export const CalculatorKeyboard = (props: Props) => {
                 </View>
             </View>
             <View style={[styles.operatorLayout, { gap: buttonGap }]}>
-                <KeyboardButton value='-' variant='action' onPress={props.onOperatorSubtractPress} />
+                <KeyboardButton value='−' variant='action' onPress={props.onOperatorSubtractPress} />
                 <KeyboardButton value='+' variant='action' onPress={props.onOperatorAddPress} />
                 <KeyboardButton value='=' variant='action' onPress={props.onCalculatePress} />
                 <KeyboardButton value='OK' variant='action' onPress={props.onConfirmPress} />
