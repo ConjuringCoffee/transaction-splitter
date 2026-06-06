@@ -36,7 +36,7 @@ export const CalculatorScreen = ({ route, navigation }: Props) => {
     const defaultCalculation: string = useMemo(
         () => {
             if (routePreviousCalculations.length === 0) {
-                return convertNumberToText(currentAmount);
+                return currentAmount === 0 ? '' : convertNumberToText(currentAmount);
             }
 
             const lastCalculation = routePreviousCalculations[routePreviousCalculations.length - 1];
